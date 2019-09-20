@@ -16,7 +16,6 @@ import {
   RouterStateSerializer,
   StoreRouterConnectingModule
 } from '@ngrx/router-store';
-import { RouteSerializer, CoreModule } from './core';
 import { RoutingModule } from './app.routes';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -26,6 +25,8 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { NgxDhis2MenuModule } from '@iapps/ngx-dhis2-menu';
 import * as fromPages from './pages';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { RouteSerializer, CoreModule } from './core';
+import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -38,16 +39,15 @@ export function HttpLoaderFactory(http: HttpClient) {
     BrowserModule,
     HttpClientModule,
     RoutingModule,
-    CoreModule.forRoot({
-      namespace: 'iapps',
-      version: 1,
-      models: {
-        users: 'id'
-      }
-    }),
+    CoreModule,
     BrowserAnimationsModule,
     StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot(effects),
+    NgxDhis2HttpClientModule.forRoot({
+      version: 1,
+      namespace: 'iapps',
+      models: {}
+    }),
     /**
      * Menu  module
      */
