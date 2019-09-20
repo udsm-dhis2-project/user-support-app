@@ -1,39 +1,35 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
-import { Observable, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/internal/operators';
-import { UserService, User } from '../../core';
+import { NgxDhis2HttpClientService, User } from '@iapps/ngx-dhis2-http-client';
+import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
+import { of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
-import { Action } from '@ngrx/store';
 import {
-  addSystemInfo,
-  loadCurrentUser,
   addCurrentUser,
+  loadCurrentUser,
   loadCurrentUserFail
 } from '../actions';
 
 @Injectable()
-export class UserEffects {
-  systemInfoLoaded$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(addSystemInfo),
-      map(({ systemInfo }) => loadCurrentUser({ systemInfo }))
-    )
-  );
-
+export class UserEffects implements OnInitEffects {
   loadCurrentUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadCurrentUser),
-      switchMap(({ systemInfo }) =>
-        this.userService.loadCurrentUser().pipe(
-          map((currentUser: User) =>
-            addCurrentUser({ currentUser, systemInfo })
-          ),
+      switchMap(() =>
+        this.httpClient.me().pipe(
+          map((currentUser: User) => addCurrentUser({ currentUser })),
           catchError((error: any) => of(loadCurrentUserFail({ error })))
         )
       )
     )
   );
 
-  constructor(private actions$: Actions, private userService: UserService) {}
+  ngrxOnInitEffects() {
+    return loadCurrentUser();
+  }
+
+  constructor(
+    private actions$: Actions,
+    private httpClient: NgxDhis2HttpClientService
+  ) {}
 }

@@ -25,7 +25,7 @@
     "@angular/pwa": "^0.800.3",
     "@angular/router": "^8.0.1",
     "@angular/service-worker": "^8.0.1",
-    "@iapps/ngx-dhis2-http-client": "^2.0.2",
+    "@iapps/ngx-dhis2-http-client": "^2.0.8-beta.3",
     "@iapps/ngx-dhis2-menu": "^1.0.9",
     "@ngrx/effects": "^8.0.1",
     "@ngrx/entity": "^8.0.1",
