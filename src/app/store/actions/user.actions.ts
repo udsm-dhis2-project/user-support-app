@@ -1,6 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-
-import { ErrorMessage, SystemInfo, User } from '../../core';
+import { User, ErrorMessage } from '@iapps/ngx-dhis2-http-client';
 
 export enum UserActionTypes {
   LoadCurrentUser = '[User] Load current User',
@@ -8,14 +7,11 @@ export enum UserActionTypes {
   LoadCurrentUserFail = '[User] Load Current User fail'
 }
 
-export const loadCurrentUser = createAction(
-  '[User] Load current User',
-  props<{ systemInfo: SystemInfo }>()
-);
+export const loadCurrentUser = createAction('[User] Load current User');
 
 export const addCurrentUser = createAction(
   '[User] Add Current User',
-  props<{ currentUser: User; systemInfo: SystemInfo }>()
+  props<{ currentUser: User }>()
 );
 
 export const loadCurrentUserFail = createAction(
