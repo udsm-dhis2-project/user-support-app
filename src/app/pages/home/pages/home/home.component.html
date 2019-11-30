@@ -162,6 +162,21 @@
         <div class="mb-5">
           <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         </div>
+
+        <div class="mt-5"></div>
+        <h2>Organisation unit filter</h2>
+        <hr>
+        <ngx-dhis2-org-unit-filter></ngx-dhis2-org-unit-filter>
+
+        <div class="mt-5"></div>
+        <h2>Data filter</h2>
+        <hr>
+        <ngx-dhis2-data-filter></ngx-dhis2-data-filter>
+
+        <div class="mt-5"></div>
+        <h2>Period filter</h2>
+        <hr>
+        <ngx-dhis2-period-filter [selectedPeriods]="[]"></ngx-dhis2-period-filter>
       </div>
     </div>
   </div>

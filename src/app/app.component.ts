@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
+import { Fn } from '@iapps/function-analytics';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,12 @@ export class AppComponent {
 
     // Set application title
     this.setTitle('Seed application');
+
+    if (Fn) {
+      Fn.init({
+        baseUrl: '../../../'
+      });
+    }
   }
 
   public setTitle(newTitle: string) {
