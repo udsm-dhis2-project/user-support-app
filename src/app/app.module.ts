@@ -40,7 +40,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     NgxDhis2HttpClientModule.forRoot({
       version: 1,
       namespace: 'iapps',
-      models: {}
+      models: {
+        organisationUnits: 'id,level',
+        organisationUnitLevels: 'id,level',
+        organisationUnitGroups: 'id'
+      }
     }),
     /**
      * Menu  module
