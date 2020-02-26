@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { OrgUnitFilterConfig } from '@iapps/ngx-dhis2-org-unit-filter';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -29,9 +30,15 @@ export class HomeComponent implements OnInit {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
   pageEvent: any;
+  orgUnitFilterConfig: OrgUnitFilterConfig;
   constructor(private _snackBar: MatSnackBar) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.orgUnitFilterConfig = {
+      reportUse: false,
+      singleSelection: false
+    };
+  }
 
   openSnackBar() {
     this._snackBar.open('This is working', 'OK', {

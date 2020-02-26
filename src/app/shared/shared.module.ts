@@ -16,6 +16,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { NgxDhis2OrgUnitFilterModule } from '@iapps/ngx-dhis2-org-unit-filter';
+import { NgxDhis2DataFilterModule } from '@iapps/ngx-dhis2-data-filter';
+import { NgxDhis2PeriodFilterModule } from '@iapps/ngx-dhis2-period-filter';
 
 @NgModule({
   imports: [
@@ -34,7 +37,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatInputModule,
     MatCheckboxModule,
     MatSlideToggleModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    NgxDhis2OrgUnitFilterModule,
+    NgxDhis2DataFilterModule,
+    NgxDhis2PeriodFilterModule
   ],
   exports: [
     MatButtonModule,
@@ -51,7 +57,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatInputModule,
     MatCheckboxModule,
     MatSlideToggleModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    NgxDhis2OrgUnitFilterModule,
+    NgxDhis2DataFilterModule,
+    NgxDhis2PeriodFilterModule
   ],
   declarations: []
 })
