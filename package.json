@@ -42,7 +42,7 @@
     "bootstrap": "^4.4.1",
     "core-js": "^3.6.4",
     "d2": "^31.8.1",
-    "dexie": "^2.0.4",
+    "dexie": "^3.0.0",
     "ng2-dragula": "^2.1.1",
     "ngx-color-picker": "^9.0.0",
     "ngx-pagination": "^5.0.0",
