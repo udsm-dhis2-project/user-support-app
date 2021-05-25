@@ -7,6 +7,6 @@ import { pages } from './pages';
 
 @NgModule({
   declarations: [...pages],
-  imports: [CommonModule, SharedModule, HomeRoutingModule]
+  imports: [CommonModule, SharedModule, HomeRoutingModule],
 })
 export class HomeModule {}
