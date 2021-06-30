@@ -8,7 +8,7 @@ import { NgxDhis2MenuModule } from '@iapps/ngx-dhis2-menu';
 import { EffectsModule } from '@ngrx/effects';
 import {
   RouterStateSerializer,
-  StoreRouterConnectingModule
+  StoreRouterConnectingModule, DefaultRouterStateSerializer
 } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -65,7 +65,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     /**
      * @ngrx/router-store keeps router state up-to-date in the store
      */
-    StoreRouterConnectingModule.forRoot(),
+    StoreRouterConnectingModule.forRoot({ serializer: DefaultRouterStateSerializer }),
 
     !environment.production ? StoreDevtoolsModule.instrument() : [],
 
