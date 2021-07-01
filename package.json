@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build --configuration production --aot && cd dist/ngx-seed-app && zip -r -D ngx-seed-app.zip .",
     "test": "ng test",
-    "test:travis": "ng test -- --no-watch --no-progress --code-coverage --browsers=ChromeHeadlessCI",
+    "test:ci": "ng test -- --no-watch --no-progress --code-coverage --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "e2e:travis": "ng e2e -- --protractor-config=e2e/protractor-ci.conf.js",
