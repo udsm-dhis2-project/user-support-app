@@ -19,49 +19,22 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgxDhis2OrgUnitFilterModule } from '@iapps/ngx-dhis2-org-unit-filter';
 import { NgxDhis2DataFilterModule } from '@iapps/ngx-dhis2-data-filter';
 import { NgxDhis2PeriodFilterModule } from '@iapps/ngx-dhis2-period-filter';
+import { materialModules } from './materials.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    MatButtonModule,
-    MatCardModule,
-    MatChipsModule,
-    MatTabsModule,
-    MatSnackBarModule,
-    MatTooltipModule,
-    MatPaginatorModule,
-    MatTableModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatRadioModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatSlideToggleModule,
-    MatProgressBarModule,
+    ...materialModules,
     NgxDhis2OrgUnitFilterModule,
     NgxDhis2DataFilterModule,
-    NgxDhis2PeriodFilterModule
+    NgxDhis2PeriodFilterModule,
   ],
   exports: [
-    MatButtonModule,
-    MatCardModule,
-    MatChipsModule,
-    MatTabsModule,
-    MatSnackBarModule,
-    MatTooltipModule,
-    MatPaginatorModule,
-    MatTableModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatRadioModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatSlideToggleModule,
-    MatProgressBarModule,
+    ...materialModules,
     NgxDhis2OrgUnitFilterModule,
     NgxDhis2DataFilterModule,
-    NgxDhis2PeriodFilterModule
+    NgxDhis2PeriodFilterModule,
   ],
-  declarations: []
+  declarations: [],
 })
 export class SharedModule {}
