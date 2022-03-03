@@ -1,10 +1,10 @@
 {
-  "name": "ngx-seed-app",
+  "name": "user-support-app",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --configuration production --aot && cd dist/ngx-seed-app && zip -r -D ngx-seed-app.zip .",
+    "build": "ng build --configuration production --aot && cd dist/user-support-app && zip -r -D user-support-app.zip .",
     "test": "ng test",
     "test:ci": "ng test -- --no-watch --no-progress --code-coverage --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
@@ -31,7 +31,7 @@
     "@iapps/ngx-dhis2-data-filter": "^1.0.0-beta.21",
     "@iapps/ngx-dhis2-http-client": "^2.0.8-rc.5",
     "@iapps/ngx-dhis2-menu": "^1.0.11-beta.9",
-    "@iapps/ngx-dhis2-org-unit-filter": "^1.1.31",
+    "@iapps/ngx-dhis2-org-unit-filter": "^1.1.32",
     "@iapps/ngx-dhis2-period-filter": "^2.0.0-rc.14",
     "@ngrx/effects": "^12.2.0",
     "@ngrx/entity": "^12.2.0",
