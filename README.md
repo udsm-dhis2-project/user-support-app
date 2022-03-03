@@ -5,9 +5,9 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/dbe97dbdfbd55344c38f/test_coverage)](https://codeclimate.com/github/hisptz/ngx-seed-app/test_coverage)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/) [![Greenkeeper badge](https://badges.greenkeeper.io/hisptz/ngx-seed-app.svg)](https://greenkeeper.io/)
 
-# Angular DHIS2 based seed app
+# DHIS2 based User Support App
 
-Boilerplate codes to fast track developing DHIS2 applications based on Angular framework
+User support app
 
 ## Prerequisites
 
@@ -20,13 +20,13 @@ Boilerplate codes to fast track developing DHIS2 applications based on Angular f
 Clone repository
 
 ```bash
- git clone https://github.com/hisptz/ngx-seed-app.git
+ git clone git@github.com:udsm-dhis2-project/user-support-app.git
 ```
 
 Navigate to application root folder
 
 ```bash
-cd ngx-seed-app
+cd user-support-app
 ```
 
 Install all required dependencies for the app
