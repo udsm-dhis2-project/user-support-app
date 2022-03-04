@@ -1,45 +1,64 @@
-<div class="row p-2">
-  <div class="col-12 d-flex align-items-center mb-3">
-    <button mat-flat-button routerLink="/">
-      <mat-icon>home</mat-icon>
-      <span class="ml-2">Home</span>
-    </button>
-    <div class="ml-3 report-title">User accounts</div>
+<div class="container-fluid">
+  <div class="row">
+    <div
+      style="
+        position: fixed;
+        height: 50px;
+        z-index: 1000;
+        background-color: #fff;
+      "
+      class="w-100 d-flex align-items-center mb-3"
+    >
+      <button mat-flat-button routerLink="/">
+        <mat-icon>home</mat-icon>
+        <span class="ml-2">Home</span>
+      </button>
+      <div class="ml-3 report-title">User accounts</div>
+    </div>
+    <div class="w-100">
+      <mat-drawer-container class="user-accounts-container w-100">
+        <mat-drawer mode="side" class="side-navigation-menu" opened>
+          <mat-list role="list">
+            <mat-list-item
+              role="listitem"
+              class="list-item"
+              routerLinkActive="active-menu-item"
+              [routerLink]="'request'"
+              >Request account</mat-list-item
+            >
+            <mat-list-item
+              role="listitem"
+              class="list-item"
+              routerLinkActive="active-menu-item"
+              [routerLink]="'password-recovery'"
+              >Password recovery</mat-list-item
+            >
+          </mat-list>
+        </mat-drawer>
+        <mat-drawer-content>
+          <div class="drawer-contents-container p-2">
+            <mat-list role="list" class="top-menu">
+              <mat-list-item
+                role="listitem"
+                class="list-item"
+                routerLinkActive="active-menu-item"
+                [routerLink]="'request'"
+                >Request account</mat-list-item
+              >
+              <mat-list-item
+                role="listitem"
+                routerLinkActive="active-menu-item"
+                class="list-item"
+                [routerLink]="'password-recovery'"
+                >Password recovery</mat-list-item
+              >
+            </mat-list>
+            <div class="contents-container" style="margin-top: 60px">
+              <router-outlet></router-outlet>
+            </div>
+          </div>
+        </mat-drawer-content>
+      </mat-drawer-container>
+    </div>
   </div>
 </div>
-<mat-drawer-container class="user-accounts-container w-100">
-  <mat-drawer mode="side" class="side-navigation-menu" opened>
-    <mat-list role="list">
-      <mat-list-item role="listitem" class="list-item" [routerLink]="'request'"
-        >Request account</mat-list-item
-      >
-      <mat-list-item
-        role="listitem"
-        class="list-item"
-        [routerLink]="'password-recovery'"
-        >Password recovery</mat-list-item
-      >
-    </mat-list>
-  </mat-drawer>
-  <mat-drawer-content>
-    <div class="drawer-contents-container p-2">
-      <mat-list role="list" class="top-menu">
-        <mat-list-item
-          role="listitem"
-          class="list-item"
-          [routerLink]="'request'"
-          >Request account</mat-list-item
-        >
-        <mat-list-item
-          role="listitem"
-          class="list-item"
-          [routerLink]="'password-recovery'"
-          >Password recovery</mat-list-item
-        >
-      </mat-list>
-      <div class="contents-container">
-        <router-outlet></router-outlet>
-      </div>
-    </div>
-  </mat-drawer-content>
-</mat-drawer-container>
