@@ -1,0 +1,46 @@
+.user-accounts-container {
+  width: 500px;
+  height: 100vh;
+  border: 1px solid #f9fafb;
+}
+
+.example-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-sidenav {
+  padding: 20px;
+}
+
+.top-menu {
+  display: none;
+}
+
+.list-item {
+  cursor: pointer;
+}
+
+.side-navigation-menu {
+  width: 18%;
+  height: 100vh;
+}
+
+@media screen and (max-width: 720px) {
+  .side-navigation-menu {
+    display: none;
+  }
+  .top-menu {
+    display: block;
+  }
+
+  .contents-container {
+    padding: 4px 16px;
+  }
+}
+
+::ng-deep .mat-drawer-side {
+  border-right: solid 1px #f4f8fd !important;
+}

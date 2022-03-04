@@ -30,6 +30,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CdkTreeModule } from '@angular/cdk/tree';
 import { MatTreeModule } from '@angular/material/tree';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 export const materialModules = [
   MatMenuModule,
@@ -65,4 +66,5 @@ export const materialModules = [
   MatProgressSpinnerModule,
   CdkTreeModule,
   MatTreeModule,
+  MatSidenavModule,
 ];
