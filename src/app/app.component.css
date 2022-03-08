@@ -1,3 +1,125 @@
 .application-content {
   margin-top: 50px;
 }
+
+.user-accounts-container {
+  width: 500px;
+  height: 100vh;
+  border: 1px solid #f9fafb;
+}
+
+.example-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.top-menu {
+  display: none;
+  margin-top: 30px;
+  width: 100% !important;
+}
+
+.list-item {
+  cursor: pointer;
+  display: flex;
+  -webkit-box-align: stretch;
+  align-items: stretch;
+  padding: 0px;
+  cursor: pointer;
+  list-style: none;
+  transition: background-color 150ms ease-in-out 0s;
+  background-color: rgb(255, 255, 255);
+  color: rgb(33, 41, 52);
+  fill: rgb(33, 41, 52);
+  font-size: 15px;
+  line-height: 18px;
+  user-select: none;
+  margin-bottom: 5px;
+  border-radius: 20px;
+  box-shadow: 0 1px 3px #0003, 0 1px 1px #00000024, 0 1px 3px #0000001f;
+}
+
+.list-item:hover {
+  background-color: rgb(243, 243, 243);
+}
+
+.active-menu-item {
+  background-color: #edf2f6;
+  border-radius: 20px;
+}
+
+.menu-list-item {
+  border: 1px solid rgb(153, 153, 153);
+  height: 100%;
+}
+
+.side-navigation-menu {
+  width: 18%;
+  height: 100vh;
+  /* height: calc(100vh - 80px); */
+  /* background: rgb(255, 255, 255); */
+  border-radius: 5px !important;
+  box-shadow: rgb(33 41 52 / 10%) 0px 10px 15px -3px,
+    rgb(33 41 52 / 5%) 0px 4px 6px -2px;
+  display: inline-block;
+  padding: 4px 0px;
+  /* position: fixed; */
+  /* margin-top: 98px; */
+}
+
+.drawer-contents-container {
+  height: 100%;
+  border: solid 1px rgb(146, 146, 146);
+  margin-top: 5px;
+  border-radius: 1px;
+}
+
+@media screen and (max-width: 780px) {
+  .side-navigation-menu {
+    display: none;
+  }
+  .top-menu {
+    display: block;
+  }
+
+  .contents-container {
+    padding: 4px 16px;
+  }
+  .list-item {
+    border-radius: 0 !important;
+  }
+}
+
+::ng-deep .mat-drawer-side {
+  border-right: solid 1px #f4f8fd !important;
+}
+
+.welcome-user-item {
+  border: solid 1px rgb(175, 175, 175);
+  border-radius: 4px;
+}
+
+.welcome-user-item:hover {
+  background-color: rgb(243, 243, 243) !important;
+  border-radius: none !important;
+}
+
+.meu-list {
+  padding: 5px;
+}
+
+.new-message-button {
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px #0003, 0 1px 1px #00000024, 0 1px 3px #0000001f;
+}
+
+.new-message-button:hover {
+  background-color: rgb(243, 243, 243) !important;
+}
+
+.current-user-name {
+  color: #276696;
+}

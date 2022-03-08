@@ -5,18 +5,25 @@ export const routes: Routes = [
   {
     path: '',
     loadChildren: () =>
-      import('./pages/home/home.module').then(m => m.HomeModule)
-  }
+      import('./pages/home/home.module').then((m) => m.HomeModule),
+  },
+  {
+    path: 'user-accounts',
+    loadChildren: () =>
+      import('./pages/user-accounts/user-accounts.module').then(
+        (m) => m.UserAccountsModule
+      ),
+  },
 ];
 
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-    useHash: true,
-    preloadingStrategy: PreloadAllModules,
-    relativeLinkResolution: 'legacy'
-})
+      useHash: true,
+      preloadingStrategy: PreloadAllModules,
+      relativeLinkResolution: 'legacy',
+    }),
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class RoutingModule {}

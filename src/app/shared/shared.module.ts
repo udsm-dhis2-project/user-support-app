@@ -20,6 +20,7 @@ import { NgxDhis2OrgUnitFilterModule } from '@iapps/ngx-dhis2-org-unit-filter';
 import { NgxDhis2DataFilterModule } from '@iapps/ngx-dhis2-data-filter';
 import { NgxDhis2PeriodFilterModule } from '@iapps/ngx-dhis2-period-filter';
 import { materialModules } from './materials.module';
+import { sharedComponents, sharedEntryComponents } from './components';
 
 @NgModule({
   imports: [
@@ -35,6 +36,6 @@ import { materialModules } from './materials.module';
     NgxDhis2DataFilterModule,
     NgxDhis2PeriodFilterModule,
   ],
-  declarations: [],
+  declarations: [...sharedComponents, ...sharedEntryComponents],
 })
 export class SharedModule {}
