@@ -22,7 +22,6 @@ import { RoutingModule } from './app.routes';
 import { CoreModule, RouteSerializer } from './core';
 import { effects } from './store/effects';
 import { metaReducers, reducers } from './store/reducers';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { materialModules } from './shared/materials.module';
 
 // AoT requires an exported function for factories

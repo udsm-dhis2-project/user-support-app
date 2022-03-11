@@ -33,6 +33,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 export const materialModules = [
+  ReactiveFormsModule,
   MatMenuModule,
   MatNativeDateModule,
   MatExpansionModule,

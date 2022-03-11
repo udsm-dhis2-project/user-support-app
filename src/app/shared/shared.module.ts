@@ -21,16 +21,21 @@ import { NgxDhis2DataFilterModule } from '@iapps/ngx-dhis2-data-filter';
 import { NgxDhis2PeriodFilterModule } from '@iapps/ngx-dhis2-period-filter';
 import { materialModules } from './materials.module';
 import { sharedComponents, sharedEntryComponents } from './components';
+import { otherSharedModules } from './modules';
+import { FormModule } from './modules/form/form.module';
 
 @NgModule({
   imports: [
     CommonModule,
+    FormModule,
     ...materialModules,
     NgxDhis2OrgUnitFilterModule,
     NgxDhis2DataFilterModule,
     NgxDhis2PeriodFilterModule,
   ],
   exports: [
+    CommonModule,
+    FormModule,
     ...materialModules,
     NgxDhis2OrgUnitFilterModule,
     NgxDhis2DataFilterModule,

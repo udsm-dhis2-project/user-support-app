@@ -1,1 +1,43 @@
-<p>request-user-accounts works!</p>
+<div class="request-accounts-container">
+  <div class="d-flex justify-contend-left">
+    <button mat-icon-button [routerLink]="''" matTooltip="Go to Home page">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="h5 ml-2 mt-2">REQUEST FOR ACCOUNT CREATION</div>
+  </div>
+  <div class="account-creation-container">
+    <div class="row">
+      <div class="col-md-8 col-sx-12">
+        <app-form
+          [fields]="formFields"
+          (formUpdate)="onUpdateForm($event)"
+        ></app-form>
+      </div>
+      <div class="col-md-4 col-sx-12">
+        <mat-card class="example-card">
+          <mat-card-subtitle>Important</mat-card-subtitle>
+          <mat-card-title>Attachment</mat-card-title>
+          <mat-card-content>
+            <p>
+              Please attach a signed copy the letter for the accounts you will
+              create.
+            </p>
+          </mat-card-content>
+          <mat-divider inset></mat-divider>
+          <mat-card-actions>
+            <button mat-button>Upload letter</button>
+            <button mat-button>Template</button>
+            <button mat-button>Upload users</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+      <div class="col-12">
+        <div class="d-flex justify-content-end">
+          <button mat-stroked-button>Cancel</button>
+          <button mat-stroked-button class="ml-2">Save & Add new</button>
+          <button mat-stroked-button class="ml-2">Save & Exit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
