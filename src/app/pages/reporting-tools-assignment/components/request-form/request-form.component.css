@@ -1,0 +1,31 @@
+.merged-datasets-container {
+  height: 400px;
+  overflow: auto;
+}
+
+.actions-btn {
+  border-color: rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  border: 1px solid currentColor;
+  box-sizing: border-box;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+  display: inline-block;
+  white-space: nowrap;
+  text-decoration: none;
+  vertical-align: baseline;
+  text-align: center;
+  margin: 0;
+  min-width: 32px;
+  line-height: 24px;
+  padding: 0 8px;
+  border-radius: 2px;
+  overflow: visible;
+}

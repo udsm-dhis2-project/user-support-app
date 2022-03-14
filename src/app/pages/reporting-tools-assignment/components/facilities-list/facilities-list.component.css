@@ -1,0 +1,11 @@
+.pagination-buttons {
+  border: solid 1px #edf2f6;
+}
+
+.pagination-buttons:hover {
+  background-color: #edf2f6;
+}
+
+.action-btns {
+  background-color: #edf2f6;
+}

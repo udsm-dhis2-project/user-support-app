@@ -1,0 +1,92 @@
+<div
+  class="facilities-list-container"
+  *ngIf="{ reportingToolsResponse: reportingToolsResponse$ | async } as params"
+>
+  <div class="w-100">
+    <mat-form-field class="w-25">
+      <mat-label>Search </mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput (keyup)="searchFacility($event)" />
+    </mat-form-field>
+  </div>
+  <div *ngIf="params?.reportingToolsResponse">
+    <table class="table table-bordered" style="height: 100%; overflow: auto">
+      <thead>
+        <tr>
+          <td style="width: 15px">SN</td>
+          <td>Facility</td>
+          <td>Data sets</td>
+          <td style="min-width: 100px">Action</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let dataRow of params?.reportingToolsResponse?.data;
+            let count = index
+          "
+        >
+          <td>
+            {{ count + 1 }}
+          </td>
+          <td>{{ dataRow?.name }}</td>
+          <td>{{ dataRow?.dataSets }}</td>
+          <td>
+            <button
+              (click)="openRequestFormModal($event, dataRow)"
+              mat-stroked-button
+              class="action-btns"
+            >
+              Request form
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination d-flex justify-content-end">
+      <span class="mt-3">
+        {{ params?.reportingToolsResponse?.pagination?.total }}
+      </span>
+      <button
+        mat-button
+        class="pagination-buttons ml-2"
+        [disabled]="params?.reportingToolsResponse?.pagination?.page == 1"
+        (click)="
+          getFacilities(
+            $event,
+            'previous',
+            params?.reportingToolsResponse?.pagination
+          )
+        "
+      >
+        <mat-icon>
+          <svg viewBox="0 0 24 24" focusable="false" class="mat-paginator-icon">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+          </svg> </mat-icon
+        >Previous
+      </button>
+      <button
+        mat-button
+        class="pagination-buttons ml-2"
+        (click)="
+          getFacilities(
+            $event,
+            'next',
+            params?.reportingToolsResponse?.pagination
+          )
+        "
+      >
+        Next
+        <mat-icon>
+          <svg viewBox="0 0 24 24" focusable="false" class="mat-paginator-icon">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+          </svg>
+        </mat-icon>
+      </button>
+    </div>
+  </div>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.reportingToolsResponse"
+  ></mat-progress-bar>
+</div>

@@ -1,1 +1,13 @@
-<p>request-tool-assignment works!</p>
+<div
+  class="tools-assignment-container"
+  *ngIf="currentUser$ | async as currentUser"
+>
+  <div *ngIf="currentUser">
+    <app-facilities-list [currentUser]="currentUser"></app-facilities-list>
+  </div>
+
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!currentUser"
+  ></mat-progress-bar>
+</div>

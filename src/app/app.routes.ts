@@ -14,6 +14,13 @@ export const routes: Routes = [
         (m) => m.UserAccountsModule
       ),
   },
+  {
+    path: 'reporting-tools',
+    loadChildren: () =>
+      import(
+        './pages/reporting-tools-assignment/reporting-tools-assignment.module'
+      ).then((m) => m.ReportingToolsAssignmentModule),
+  },
 ];
 
 @NgModule({

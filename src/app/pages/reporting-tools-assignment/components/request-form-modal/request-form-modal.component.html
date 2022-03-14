@@ -1,0 +1,38 @@
+<div
+  class="request-container"
+  *ngIf="{
+    assignedDataSets: assignedDataSets$ | async,
+    allDataSets: allDataSets$ | async
+  } as params"
+>
+  <h5>
+    {{ dialogData?.facility?.name }}
+  </h5>
+  <div class="contents" *ngIf="params?.assignedDataSets && params?.allDataSets">
+    <app-request-form
+      [assignedDataSets]="params?.assignedDataSets"
+      [allDataSets]="params?.allDataSets"
+      (assignmentDetails)="onGetAssignmentDetails($event)"
+    ></app-request-form>
+  </div>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.assignedDataSets || !params?.allDataSets"
+  ></mat-progress-bar>
+
+  <div mat-dialog-actions class="d-flex justify-content-end">
+    <button mat-button (click)="onClose($event)">Close</button>
+    <button
+      mat-button
+      class="ml-2"
+      [disabled]="
+        !assignmentDetails ||
+        (assignmentDetails?.deletions?.length === 0 &&
+          assignmentDetails?.additions?.length === 0)
+      "
+      (click)="onSave($event)"
+    >
+      Save
+    </button>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+<div class="merged-datasets-container">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <td>SN</td>
+        <td>Dataset</td>
+        <td></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let mergedDataSet of mergedDataSets; let count = index">
+        <td>
+          {{ count + 1 }}
+        </td>
+        <td [ngStyle]="{ color: mergedDataSet?.assigned ? '' : '#F00' }">
+          {{ mergedDataSet?.name }}
+        </td>
+        <td>
+          <button
+            class="actions-btn remove-btn"
+            [ngClass]="{
+              'btn-success': !mergedDataSet?.assigned,
+              'btn-danger': mergedDataSet?.assigned
+            }"
+            (click)="
+              toggleAssignment(
+                $event,
+                mergedDataSet,
+                mergedDataSets,
+                mergedDataSet?.assigned ? 'Remove' : 'Assign'
+              )
+            "
+          >
+            {{ mergedDataSet?.assigned ? 'Remove' : 'Assign' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
