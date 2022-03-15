@@ -37,7 +37,6 @@ export class RequestFormModalComponent implements OnInit {
       this.dialogData?.facility?.id
     );
     this.allDataSets$ = this.reportingToolsService.getAllDataSets();
-    this.uids$ = this.uidsFromSystemService.getUidsFromSystem(1);
   }
 
   onClose(event: Event): void {
@@ -48,19 +47,20 @@ export class RequestFormModalComponent implements OnInit {
   onSave(
     event: Event,
     assignmentDetails: any,
-    uids: string[],
     facility: { id: string; name: string }
   ): void {
     event.stopPropagation();
+    // TODO: Add logic to get ticket number
     this.savingData = true;
     assignmentDetails = {
       ...assignmentDetails,
       organisationUnit: facility,
+      ticketNumber: 'DS' + Date.now(),
     };
     const message = constructMessageForFacilityAssignment(assignmentDetails);
     const messageData = {
-      id: uids[0],
       subject: message?.subject,
+      messageType: 'TICKET',
       users: [],
       userGroups: [{ id: 'QYrzIjSfI8z' }],
       organisationUnits: [],
@@ -71,7 +71,7 @@ export class RequestFormModalComponent implements OnInit {
       getDataStoreDetailsForFormRequests(assignmentDetails);
     this.messagesAndDatastoreService
       .createMessageAndUpdateDataStore(messageData, {
-        id: uids[0],
+        id: assignmentDetails?.ticketNumber,
         ...dataStorePayload,
       })
       .subscribe((response) => {

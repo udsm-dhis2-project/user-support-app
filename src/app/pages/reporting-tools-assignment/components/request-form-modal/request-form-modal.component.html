@@ -12,8 +12,7 @@
     class="request-container"
     *ngIf="{
       assignedDataSets: assignedDataSets$ | async,
-      allDataSets: allDataSets$ | async,
-      uids: uids$ | async
+      allDataSets: allDataSets$ | async
     } as params"
   >
     <h5>
@@ -44,9 +43,7 @@
           (assignmentDetails?.deletions?.length === 0 &&
             assignmentDetails?.additions?.length === 0)
         "
-        (click)="
-          onSave($event, assignmentDetails, params?.uids, dialogData?.facility)
-        "
+        (click)="onSave($event, assignmentDetails, dialogData?.facility)"
       >
         Save
       </button>

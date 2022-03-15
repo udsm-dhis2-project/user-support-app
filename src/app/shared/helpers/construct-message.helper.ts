@@ -2,7 +2,11 @@ export function constructMessageForFacilityAssignment(assignmentDetails: any) {
   let message = '';
   message +=
     assignmentDetails?.additions?.length > 0
-      ? `Naomba kuongezewa fomu zifuatazo kwenye kituo: ${assignmentDetails?.organisationUnit?.name} \n` +
+      ? `Naomba kuongezewa fomu zifuatazo kwenye kituo: ${
+          assignmentDetails?.organisationUnit?.name +
+          ' - ' +
+          assignmentDetails?.organisationUnit?.parent?.name
+        } \n` +
         assignmentDetails?.additions
           .map((addition, index) => {
             return index + 1 + '. ' + addition?.name;
@@ -12,14 +16,21 @@ export function constructMessageForFacilityAssignment(assignmentDetails: any) {
 
   message +=
     assignmentDetails?.deletions?.length > 0
-      ? `\n\nNaomba kuondolewa fomu ya zifuatazo kwenye kituo: ${assignmentDetails?.organisationUnit?.name} \n` +
+      ? `\n\nNaomba kuondolewa fomu ya zifuatazo kwenye kituo: ${
+          assignmentDetails?.organisationUnit?.name +
+          ' - ' +
+          assignmentDetails?.organisationUnit?.parent?.name
+        } \n` +
         assignmentDetails?.deletions
           .map((deletion, index) => {
             return index + 1 + '. ' + deletion?.name;
           })
           .join(',\n')
       : '';
-  return { subject: 'MAOMBI YA FOMU', message };
+  return {
+    subject: assignmentDetails?.ticketNumber + ' - MAOMBI YA FOMU',
+    message,
+  };
 }
 
 export function getDataStoreDetailsForFormRequests(assignmentDetails) {
@@ -29,7 +40,9 @@ export function getDataStoreDetailsForFormRequests(assignmentDetails) {
       ? 'Remove ' +
         assignmentDetails?.deletions?.length +
         ' datasets from ' +
-        assignmentDetails?.organisationUnit?.name
+        assignmentDetails?.organisationUnit?.name +
+        ' - ' +
+        assignmentDetails?.organisationUnit?.parent?.name
       : '';
 
   action +=
@@ -43,10 +56,42 @@ export function getDataStoreDetailsForFormRequests(assignmentDetails) {
       ? 'Assign ' +
         assignmentDetails?.additions?.length +
         ' datasets to ' +
-        assignmentDetails?.organisationUnit?.name
+        assignmentDetails?.organisationUnit?.name +
+        ' - ' +
+        assignmentDetails?.organisationUnit?.parent?.name
       : '';
+
+  let replyMessage = '';
+  replyMessage +=
+    assignmentDetails?.deletions?.length > 0
+      ? 'Removed ' +
+        assignmentDetails?.deletions?.length +
+        ' datasets from ' +
+        assignmentDetails?.organisationUnit?.name +
+        ' - ' +
+        assignmentDetails?.organisationUnit?.parent?.name
+      : '';
+
+  replyMessage +=
+    assignmentDetails?.deletions?.length > 0 &&
+    assignmentDetails?.additions?.length > 0
+      ? ' and '
+      : '';
+
+  replyMessage +=
+    assignmentDetails?.additions?.length > 0
+      ? 'Assigned ' +
+        assignmentDetails?.additions?.length +
+        ' datasets to ' +
+        assignmentDetails?.organisationUnit?.name +
+        ' - ' +
+        assignmentDetails?.organisationUnit?.parent?.name
+      : '';
+
   return {
     action: action,
+    replyMessage: replyMessage,
+    ticketNumber: assignmentDetails?.ticketNumber,
     method: 'POST',
     payload: {
       deletions: assignmentDetails?.deletions.map((deletion) => {
@@ -62,7 +107,6 @@ export function getDataStoreDetailsForFormRequests(assignmentDetails) {
         };
       }),
     },
-    status: 'OPEN',
     url: `organisationUnits/${assignmentDetails?.organisationUnit?.id}/dataSets.json`,
   };
 }

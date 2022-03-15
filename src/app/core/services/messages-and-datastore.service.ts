@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
-import { Observable, zip } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of, zip } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +25,8 @@ export class MessagesAndDatastoreService {
     ).pipe(
       map((responses) => {
         return responses;
-      })
+      }),
+      catchError((error) => of(error))
     );
   }
 }
