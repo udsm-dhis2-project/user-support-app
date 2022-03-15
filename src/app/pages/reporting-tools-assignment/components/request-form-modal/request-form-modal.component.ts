@@ -71,7 +71,7 @@ export class RequestFormModalComponent implements OnInit {
       getDataStoreDetailsForFormRequests(assignmentDetails);
     this.messagesAndDatastoreService
       .createMessageAndUpdateDataStore(messageData, {
-        id: assignmentDetails?.ticketNumber,
+        id: assignmentDetails?.ticketNumber + '_' + facility?.id,
         ...dataStorePayload,
       })
       .subscribe((response) => {
