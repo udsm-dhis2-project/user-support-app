@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { getDateDifferenceBetweenDates } from 'src/app/shared/helpers/date-formatting.helper';
 import {
   DataSets,
   ReportingToolsResponseModel,
@@ -18,7 +19,8 @@ export class ReportingToolsService {
     level: number,
     page?: number,
     pageCount?: number,
-    searchingText?: string
+    searchingText?: string,
+    userSupportKeys?: string[]
   ): Observable<ReportingToolsResponseModel> {
     return this.httpClient
       .get(
@@ -31,7 +33,28 @@ export class ReportingToolsService {
       .pipe(
         map((response) => {
           return {
-            data: response?.organisationUnits,
+            data: response?.organisationUnits.map((orgUnit) => {
+              const matchedKeys =
+                userSupportKeys.filter(
+                  (key) => key?.indexOf(orgUnit?.id) > -1
+                ) || [];
+              return {
+                ...orgUnit,
+                hasPendingRequest: matchedKeys?.length > 0,
+                timeSinceLastResponse:
+                  matchedKeys.length > 0
+                    ? getDateDifferenceBetweenDates(
+                        Date.now(),
+                        Number(matchedKeys[0].split('_')[0].replace('DS', ''))
+                      )
+                    : '',
+                date:
+                  matchedKeys.length > 0
+                    ? Date.now() -
+                      Number(matchedKeys[0].split('_')[0].replace('DS', ''))
+                    : null,
+              };
+            }),
             pagination: response?.pager,
           };
         }),

@@ -10,8 +10,10 @@
     "128": "assets/icons/icon-128x128.png"
   },
   "developer": {
-    "name": "HISPTZ",
-    "url": "https://hisptanzania.org"
+    "name": "UDSM DHIS2",
+    "email": "udsm-dhis2-team@googlegroups.com",
+    "website": "https://dhis2.udsm.ac.tz",
+    "twitter": "https://twitter.com/udsmdhis2lab"
   },
   "default_locale": "en",
   "activities": {

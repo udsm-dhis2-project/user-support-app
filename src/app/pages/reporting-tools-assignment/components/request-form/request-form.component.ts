@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { mergeDataSetsWithAssignedOnes } from 'src/app/shared/helpers/merge-assigned-datasets.helper';
-import { DataSets } from 'src/app/shared/models/reporting-tools.models';
+import {
+  DataSets,
+  FacilityModel,
+} from 'src/app/shared/models/reporting-tools.models';
 import { keyBy } from 'lodash';
 
 @Component({
@@ -11,6 +14,9 @@ import { keyBy } from 'lodash';
 export class RequestFormComponent implements OnInit {
   @Input() assignedDataSets: DataSets[];
   @Input() allDataSets: DataSets[];
+  @Input() userSupportKeys: string[];
+  @Input() facility: FacilityModel;
+  @Input() dataStoreMessageDetails: any;
   mergedDataSets: DataSets[];
   @Output() assignmentDetails = new EventEmitter<any>();
   constructor() {}
@@ -18,14 +24,15 @@ export class RequestFormComponent implements OnInit {
   ngOnInit(): void {
     this.mergedDataSets = mergeDataSetsWithAssignedOnes(
       this.assignedDataSets,
-      this.allDataSets
+      this.allDataSets,
+      this.dataStoreMessageDetails
     );
     this.assignedDataSets = this.mergedDataSets;
   }
 
   toggleAssignment(
     event: Event,
-    facility: DataSets,
+    dataSetDetails: DataSets,
     mergedDataSets: DataSets[],
     action: string
   ): void {
@@ -34,9 +41,9 @@ export class RequestFormComponent implements OnInit {
       return {
         ...dataSet,
         assigned:
-          dataSet?.id === facility?.id && action === 'Remove'
+          dataSet?.id === dataSetDetails?.id && action === 'Remove'
             ? false
-            : dataSet?.id === facility?.id && action === 'Assign'
+            : dataSet?.id === dataSetDetails?.id && action === 'Assign'
             ? true
             : dataSet?.assigned,
       };

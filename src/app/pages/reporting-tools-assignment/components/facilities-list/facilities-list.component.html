@@ -33,12 +33,22 @@
           <td>{{ dataRow?.dataSets }}</td>
           <td>
             <button
-              (click)="openRequestFormModal($event, dataRow)"
+              (click)="openRequestFormModal($event, dataRow, userSupportKeys)"
               mat-stroked-button
+              [ngClass]="{
+                'disabled-button': dataRow?.hasPendingRequest
+              }"
               class="action-btns"
+              [title]="dataRow?.hasPendingRequest ? 'Waiting for response' : ''"
             >
-              Request form
+              {{ dataRow?.hasPendingRequest ? 'View' : 'Request form' }}
             </button>
+            <span style="font-size: 0.8rem" *ngIf="dataRow?.hasPendingRequest">
+              {{ dataRow?.hasPendingRequest ? 'Waiting' : '' }} ({{
+                dataRow?.timeSinceLastResponse
+              }})
+            </span>
+            <span> </span>
           </td>
         </tr>
       </tbody>

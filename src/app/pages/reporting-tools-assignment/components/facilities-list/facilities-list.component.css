@@ -8,4 +8,5 @@
 
 .action-btns {
   background-color: #edf2f6;
+  min-width: 125px;
 }

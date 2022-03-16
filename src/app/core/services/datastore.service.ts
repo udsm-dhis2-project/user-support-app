@@ -20,4 +20,27 @@ export class DataStoreService {
         catchError((error) => of(error))
       );
   }
+
+  getDataStoreKeys(): Observable<string[]> {
+    return this.httpClient.get('dataStore/dhis2-user-support').pipe(
+      map((response) => response),
+      catchError((error) => of(error))
+    );
+  }
+
+  getUserSupportConfigurations(): Observable<any> {
+    return this.httpClient
+      .get('dataStore/dhis2-user-support/configurations')
+      .pipe(
+        map((response) => response),
+        catchError((error) => of(error))
+      );
+  }
+
+  getDataViaKey(key: string): Observable<any> {
+    return this.httpClient.get(`dataStore/dhis2-user-support/${key}`).pipe(
+      map((response) => response),
+      catchError((error) => of(error))
+    );
+  }
 }

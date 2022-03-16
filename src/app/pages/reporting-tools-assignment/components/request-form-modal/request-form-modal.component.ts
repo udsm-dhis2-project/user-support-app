@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { UIDsFromSystemService } from 'src/app/core/services/get-uids-from-system.service';
+import { DataStoreService } from 'src/app/core/services/datastore.service';
 import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
 import { ReportingToolsService } from 'src/app/core/services/reporting-tools.service';
 import {
@@ -22,17 +22,29 @@ export class RequestFormModalComponent implements OnInit {
   assignmentDetails: any;
   savingData: boolean = false;
   uids$: Observable<string[]>;
+  dataStoreMessageDetails$: Observable<any>;
+  ouHasPendingRequest: boolean = false;
   constructor(
     private reportingToolsService: ReportingToolsService,
     private dialogRef: MatDialogRef<RequestFormModalComponent>,
     @Inject(MAT_DIALOG_DATA) data,
-    private uidsFromSystemService: UIDsFromSystemService,
-    private messagesAndDatastoreService: MessagesAndDatastoreService
+    private messagesAndDatastoreService: MessagesAndDatastoreService,
+    private dataStoreService: DataStoreService
   ) {
     this.dialogData = data;
   }
 
   ngOnInit(): void {
+    const matchedKeys =
+      this.dialogData?.userSupportKeys.filter(
+        (key) => key?.indexOf(this.dialogData?.facility?.id) > -1
+      ) || [];
+    if (matchedKeys.length > 0) {
+      this.ouHasPendingRequest = true;
+      this.dataStoreMessageDetails$ = this.dataStoreService.getDataViaKey(
+        matchedKeys[0]
+      );
+    }
     this.assignedDataSets$ = this.reportingToolsService.getAssignedDataSets(
       this.dialogData?.facility?.id
     );
@@ -69,13 +81,17 @@ export class RequestFormModalComponent implements OnInit {
     };
     const dataStorePayload =
       getDataStoreDetailsForFormRequests(assignmentDetails);
+    const dataStoreKey = assignmentDetails?.ticketNumber + '_' + facility?.id;
     this.messagesAndDatastoreService
       .createMessageAndUpdateDataStore(messageData, {
-        id: assignmentDetails?.ticketNumber + '_' + facility?.id,
+        id: dataStoreKey,
         ...dataStorePayload,
       })
       .subscribe((response) => {
         this.savingData = false;
+        this.ouHasPendingRequest = true;
+        this.dataStoreMessageDetails$ =
+          this.dataStoreService.getDataViaKey(dataStoreKey);
       });
   }
 

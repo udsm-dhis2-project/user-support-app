@@ -12,7 +12,8 @@
     class="request-container"
     *ngIf="{
       assignedDataSets: assignedDataSets$ | async,
-      allDataSets: allDataSets$ | async
+      allDataSets: allDataSets$ | async,
+      dataStoreMessageDetails: dataStoreMessageDetails$ | async
     } as params"
   >
     <h5>
@@ -20,17 +21,32 @@
     </h5>
     <div
       class="contents"
-      *ngIf="params?.assignedDataSets && params?.allDataSets"
+      *ngIf="
+        (params?.assignedDataSets &&
+          params?.allDataSets &&
+          ouHasPendingRequest &&
+          params?.dataStoreMessageDetails) ||
+        (!ouHasPendingRequest &&
+          params?.assignedDataSets &&
+          params?.allDataSets)
+      "
     >
       <app-request-form
         [assignedDataSets]="params?.assignedDataSets"
         [allDataSets]="params?.allDataSets"
+        [userSupportKeys]="dialogData?.userSupportKeys"
+        [dataStoreMessageDetails]="params?.dataStoreMessageDetails"
+        [facility]="dialogData?.facility"
         (assignmentDetails)="onGetAssignmentDetails($event)"
       ></app-request-form>
     </div>
     <mat-progress-bar
       mode="indeterminate"
-      *ngIf="!params?.assignedDataSets || !params?.allDataSets"
+      *ngIf="
+        !params?.assignedDataSets ||
+        !params?.allDataSets ||
+        (!params?.dataStoreMessageDetails && ouHasPendingRequest)
+      "
     ></mat-progress-bar>
 
     <div mat-dialog-actions class="d-flex justify-content-end">

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { ReportingToolsService } from 'src/app/core/services/reporting-tools.service';
@@ -15,21 +15,32 @@ import { RequestFormModalComponent } from '../request-form-modal/request-form-mo
 })
 export class FacilitiesListComponent implements OnInit {
   @Input() currentUser: any;
+  @Input() userSupportKeys: string[];
+  @Input() configurations: any;
+  @Output() dataStoreChanged = new EventEmitter<true>();
   searchingText: string;
   reportingToolsResponse$: Observable<ReportingToolsResponseModel>;
+  pageCount: number = 10;
   constructor(
     private reportingToolsService: ReportingToolsService,
     private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
+    let currentPage;
+    currentPage = localStorage.getItem('currentFacilityListPage');
+    if (Number(currentPage)) {
+      currentPage = 1;
+    }
+    localStorage.setItem('currentFacilityListPage', '1');
     this.reportingToolsResponse$ =
       this.reportingToolsService.getFacilitiesWithNumberOfDataSets(
         this.currentUser?.organisationUnits[0]?.id,
         4,
-        1,
-        10,
-        null
+        Number(currentPage),
+        this.pageCount,
+        null,
+        this.userSupportKeys
       );
   }
 
@@ -40,8 +51,9 @@ export class FacilitiesListComponent implements OnInit {
         this.currentUser?.organisationUnits[0]?.id,
         4,
         1,
-        10,
-        this.searchingText
+        this.pageCount,
+        this.searchingText,
+        this.userSupportKeys
       );
   }
 
@@ -51,28 +63,39 @@ export class FacilitiesListComponent implements OnInit {
     paginationDetails: PaginationModel
   ): void {
     event.stopPropagation();
+    const currentPage =
+      type === 'next'
+        ? paginationDetails?.page + 1
+        : paginationDetails?.page - 1;
+    localStorage.setItem('currentFacilityListPage', currentPage.toString());
     this.reportingToolsResponse$ =
       this.reportingToolsService.getFacilitiesWithNumberOfDataSets(
         this.currentUser?.organisationUnits[0]?.id,
         4,
-        type === 'next'
-          ? paginationDetails?.page + 1
-          : paginationDetails?.page - 1,
-        10,
-        this.searchingText
+        currentPage,
+        this.pageCount,
+        this.searchingText,
+        this.userSupportKeys
       );
   }
 
   openRequestFormModal(
     event: Event,
-    dataRow: FacilitiesWithNumberOfDatasets
+    dataRow: FacilitiesWithNumberOfDatasets,
+    userSupportKeys: String[]
   ): void {
     event.stopPropagation();
-    this.dialog.open(RequestFormModalComponent, {
-      width: '50%',
-      data: {
-        facility: dataRow,
-      },
-    });
+    this.dialog
+      .open(RequestFormModalComponent, {
+        width: '50%',
+        data: {
+          facility: dataRow,
+          userSupportKeys,
+        },
+      })
+      .afterClosed()
+      .subscribe((response) => {
+        this.dataStoreChanged.emit(true);
+      });
   }
 }

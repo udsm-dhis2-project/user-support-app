@@ -1,0 +1,17 @@
+<div
+  class="feedback-container"
+  *ngIf="{ userSupportKeys: userSupportKeys$ | async } as params"
+>
+  <app-facilities-list
+    *ngIf="!isFeedbackRecepient && params?.userSupportKeys"
+    [currentUser]="currentUser"
+    [configurations]="configurations"
+    [userSupportKeys]="params?.userSupportKeys"
+    (dataStoreChanged)="onDataStoreChange($event)"
+  ></app-facilities-list>
+
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.userSupportKeys"
+  ></mat-progress-bar>
+</div>

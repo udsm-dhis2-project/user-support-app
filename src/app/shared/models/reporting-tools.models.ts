@@ -6,6 +6,17 @@ export interface FacilitiesWithNumberOfDatasets {
     id: string;
     name: string;
   };
+  hasPendingRequest?: boolean;
+  timeSinceLastResponse?: number;
+}
+
+export interface FacilityModel {
+  id: string;
+  name: string;
+  parent: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface PaginationModel {
@@ -25,4 +36,5 @@ export interface DataSets {
   id: string;
   name: string;
   assigned?: boolean;
+  hasPendingRequest?: boolean;
 }

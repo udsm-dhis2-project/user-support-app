@@ -19,9 +19,12 @@
           <button
             class="actions-btn remove-btn"
             [ngClass]="{
-              'btn-success': !mergedDataSet?.assigned,
-              'btn-danger': mergedDataSet?.assigned
+              'btn-success':
+                !mergedDataSet?.assigned && !mergedDataSet?.hasPendingRequest,
+              'btn-danger':
+                mergedDataSet?.assigned && !mergedDataSet?.hasPendingRequest
             }"
+            [disabled]="mergedDataSet?.hasPendingRequest"
             (click)="
               toggleAssignment(
                 $event,
@@ -31,7 +34,13 @@
               )
             "
           >
-            {{ mergedDataSet?.assigned ? 'Remove' : 'Assign' }}
+            {{
+              mergedDataSet?.assigned && !mergedDataSet?.hasPendingRequest
+                ? 'Remove'
+                : !mergedDataSet?.assigned && !mergedDataSet?.hasPendingRequest
+                ? 'Assign'
+                : 'Waiting'
+            }}
           </button>
         </td>
       </tr>

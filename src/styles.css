@@ -18,3 +18,8 @@ body {
 .shared-card {
   margin-bottom: 15px;
 }
+
+.disabled-button {
+  background-color: #eee;
+  cursor: not-allowed;
+}
