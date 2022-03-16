@@ -62,13 +62,15 @@
     </table>
   </div>
   <div
+    style="padding: 15% 10%"
     *ngIf="
       params?.allDataForUserSupport &&
       params?.allDataForUserSupport?.data?.length === 0
     "
   >
-    <div class="alert alert-warning" role="alert">
-      No any feedback on form request
+    <div style="border: solid 1px #eee; height: 20%"></div>
+    <div class="alert alert-warning mt-2" role="alert">
+      No any feedback to attend
     </div>
   </div>
   <mat-progress-bar

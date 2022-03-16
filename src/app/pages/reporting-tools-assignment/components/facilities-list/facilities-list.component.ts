@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { ReportingToolsService } from 'src/app/core/services/reporting-tools.service';
+import { OrgUnitLevelsModel } from 'src/app/shared/models/organisation-units.model';
 import {
   FacilitiesWithNumberOfDatasets,
   PaginationModel,
@@ -19,16 +20,19 @@ export class FacilitiesListComponent implements OnInit {
   @Input() userSupportKeys: string[];
   @Input() configurations: any;
   @Input() systemConfigs: SystemConfigsModel;
+  @Input() orgUnitLevels: OrgUnitLevelsModel;
   @Output() dataStoreChanged = new EventEmitter<true>();
   searchingText: string;
   reportingToolsResponse$: Observable<ReportingToolsResponseModel>;
   pageCount: number = 10;
+  lowestLevel: number;
   constructor(
     private reportingToolsService: ReportingToolsService,
     private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
+    this.lowestLevel = this.orgUnitLevels[0]?.level;
     let currentPage;
     currentPage = localStorage.getItem('currentFacilityListPage');
     if (Number(currentPage)) {
@@ -38,7 +42,7 @@ export class FacilitiesListComponent implements OnInit {
     this.reportingToolsResponse$ =
       this.reportingToolsService.getFacilitiesWithNumberOfDataSets(
         this.currentUser?.organisationUnits[0]?.id,
-        4,
+        this.lowestLevel,
         Number(currentPage),
         this.pageCount,
         null,
@@ -51,7 +55,7 @@ export class FacilitiesListComponent implements OnInit {
     this.reportingToolsResponse$ =
       this.reportingToolsService.getFacilitiesWithNumberOfDataSets(
         this.currentUser?.organisationUnits[0]?.id,
-        4,
+        this.lowestLevel,
         1,
         this.pageCount,
         this.searchingText,
@@ -73,7 +77,7 @@ export class FacilitiesListComponent implements OnInit {
     this.reportingToolsResponse$ =
       this.reportingToolsService.getFacilitiesWithNumberOfDataSets(
         this.currentUser?.organisationUnits[0]?.id,
-        4,
+        this.lowestLevel,
         currentPage,
         this.pageCount,
         this.searchingText,

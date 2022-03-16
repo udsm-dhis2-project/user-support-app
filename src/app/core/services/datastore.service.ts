@@ -19,7 +19,10 @@ export class DataStoreDataService {
   constructor(private httpClient: NgxDhis2HttpClientService) {}
 
   createNameSpaceIfMissing(): Observable<string[]> {
-    const configurations = {};
+    const configurations = {
+      defaultToRequest: true,
+      messageKeys: {},
+    };
     return this.httpClient
       .post(`dataStore/dhis2-user-support/configurations`, configurations)
       .pipe(
