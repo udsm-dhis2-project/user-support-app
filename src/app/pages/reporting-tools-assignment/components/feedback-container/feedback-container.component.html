@@ -5,6 +5,16 @@
     orgUnitLevels: orgUnitLevels$ | async
   } as params"
 >
+  <div class="w-100" *ngIf="configurations?.defaultToRequest">
+    <mat-slide-toggle
+      class="float-right"
+      [color]="color"
+      (click)="toggleSupport($event)"
+      [checked]="showRequest ? true : false"
+    >
+      {{ showRequest ? 'Feebacks' : 'Requests' }}
+    </mat-slide-toggle>
+  </div>
   <app-facilities-list
     *ngIf="
       !isFeedbackRecepient && params?.userSupportKeys && params?.orgUnitLevels

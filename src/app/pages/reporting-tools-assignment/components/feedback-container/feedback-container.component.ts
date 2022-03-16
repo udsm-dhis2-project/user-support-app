@@ -17,6 +17,7 @@ export class FeedbackContainerComponent implements OnInit {
   isFeedbackRecepient: boolean = false;
   userSupportKeys$: Observable<string[]>;
   orgUnitLevels$: Observable<OrgUnitLevelsModel[]>;
+  showRequest: boolean = false;
   constructor(
     private dataStoreService: DataStoreDataService,
     private orgUnitsProvisionalService: OrgUnitsProvisionalService
@@ -37,5 +38,11 @@ export class FeedbackContainerComponent implements OnInit {
 
   onDataStoreChange(event: boolean): void {
     this.userSupportKeys$ = this.dataStoreService.getDataStoreKeys();
+  }
+
+  toggleSupport(event: Event): void {
+    event.stopPropagation();
+    this.showRequest = !this.showRequest;
+    this.isFeedbackRecepient = this.showRequest;
   }
 }
