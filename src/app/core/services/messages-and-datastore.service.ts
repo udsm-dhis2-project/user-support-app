@@ -19,7 +19,7 @@ export class MessagesAndDatastoreService {
         messageData
       ),
       this.httpClient.post(
-        `dataStore/user-support/${dataStoreInformation?.id}`,
+        `dataStore/dhis2-user-support/${dataStoreInformation?.id}`,
         dataStoreInformation
       )
     ).pipe(

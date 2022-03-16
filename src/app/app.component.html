@@ -2,7 +2,10 @@
   <ngx-dhis2-menu></ngx-dhis2-menu>
   <div
     class="application-content"
-    *ngIf="{ currentUser: currentUser$ | async } as params"
+    *ngIf="{
+      currentUser: currentUser$ | async,
+      userSupportNameSpaceResponse: userSupportNameSpaceResponse$ | async
+    } as params"
   >
     <div class="container-fluid">
       <div class="row">

@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { getCurrentUser } from './store/selectors';
 import { MatDialog } from '@angular/material/dialog';
 import { MessagesModalComponent } from './shared/components/messages-modal/messages-modal.component';
+import { DataStoreService } from './core/services/datastore.service';
 
 @Component({
   selector: 'app-root',
@@ -15,11 +16,13 @@ import { MessagesModalComponent } from './shared/components/messages-modal/messa
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
+  userSupportNameSpaceResponse$: Observable<any>;
   constructor(
     private translate: TranslateService,
     private titleService: Title,
     private store: Store<State>,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private dataStoreService: DataStoreService
   ) {
     // this language will be used as a fallback when a translation isn't found in the current language
     this.translate.setDefaultLang('en');
@@ -41,6 +44,9 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUser$ = this.store.select(getCurrentUser);
+    // Check if the key dhis2-user-support exists on datastore, otherwise create withd default configurations
+    this.userSupportNameSpaceResponse$ =
+      this.dataStoreService.createNameSpaceIfMissing();
   }
 
   public setTitle(newTitle: string) {
