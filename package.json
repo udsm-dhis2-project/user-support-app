@@ -44,6 +44,7 @@
     "core-js": "^3.6.5",
     "d2": "^31.8.1",
     "dexie": "^3.0.1",
+    "moment": "^2.29.1",
     "ng2-dragula": "^2.1.1",
     "ngx-color-picker": "^9.1.0",
     "ngx-pagination": "^5.0.0",

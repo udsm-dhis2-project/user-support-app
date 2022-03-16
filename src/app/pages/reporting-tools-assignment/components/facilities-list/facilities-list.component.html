@@ -9,14 +9,15 @@
       <input matInput (keyup)="searchFacility($event)" />
     </mat-form-field>
   </div>
+
   <div *ngIf="params?.reportingToolsResponse">
-    <table class="table table-bordered" style="height: 100%; overflow: auto">
+    <table class="table mat-elevation-z1" style="height: 100%; overflow: auto">
       <thead>
         <tr>
           <td style="width: 15px">SN</td>
           <td>Facility</td>
           <td>Data sets</td>
-          <td style="min-width: 100px">Action</td>
+          <td></td>
         </tr>
       </thead>
       <tbody>
@@ -32,30 +33,39 @@
           <td>{{ dataRow?.name }}</td>
           <td>{{ dataRow?.dataSets }}</td>
           <td>
-            <button
-              (click)="
-                openRequestFormModal(
-                  $event,
-                  dataRow,
-                  userSupportKeys,
-                  systemConfigs
-                )
-              "
-              mat-stroked-button
-              [ngClass]="{
-                'disabled-button': dataRow?.hasPendingRequest
-              }"
-              class="action-btns"
-              [title]="dataRow?.hasPendingRequest ? 'Waiting for response' : ''"
-            >
-              {{ dataRow?.hasPendingRequest ? 'View' : 'Request form' }}
-            </button>
-            <span style="font-size: 0.8rem" *ngIf="dataRow?.hasPendingRequest">
-              {{ dataRow?.hasPendingRequest ? 'Waiting' : '' }} ({{
-                dataRow?.timeSinceLastResponse
-              }})
-            </span>
-            <span> </span>
+            <div class="d-flex justify-content-end">
+              <div
+                class="w-50"
+                style="font-size: 0.8rem"
+                *ngIf="dataRow?.hasPendingRequest"
+              >
+                <mat-chip-list>
+                  <mat-chip>
+                    {{ dataRow?.timeSinceLastResponse }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+              <button
+                (click)="
+                  openRequestFormModal(
+                    $event,
+                    dataRow,
+                    userSupportKeys,
+                    systemConfigs
+                  )
+                "
+                mat-stroked-button
+                [ngClass]="{
+                  'disabled-button': dataRow?.hasPendingRequest
+                }"
+                class="action-btns"
+                [title]="
+                  dataRow?.hasPendingRequest ? 'Waiting for response' : ''
+                "
+              >
+                {{ dataRow?.hasPendingRequest ? 'View' : 'Request form' }}
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>

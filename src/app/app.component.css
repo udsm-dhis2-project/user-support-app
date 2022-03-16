@@ -30,13 +30,13 @@
   cursor: pointer;
   list-style: none;
   transition: background-color 150ms ease-in-out 0s;
-  background-color: rgb(255, 255, 255);
   color: rgb(33, 41, 52);
   fill: rgb(33, 41, 52);
   font-size: 15px;
   line-height: 18px;
   user-select: none;
   margin-bottom: 5px;
+  background-color: #fff;
   /* border-radius: 20px;
   box-shadow: 0 1px 3px #0003, 0 1px 1px #00000024, 0 1px 3px #0000001f; */
 }
@@ -52,7 +52,6 @@
 }
 
 .menu-list-item {
-  border-right: 1px solid rgb(207, 207, 207);
   height: 100%;
 }
 
@@ -62,8 +61,8 @@
   /* height: calc(100vh - 80px); */
   /* background: rgb(255, 255, 255); */
   border-radius: 5px !important;
-  box-shadow: rgb(33 41 52 / 10%) 0px 10px 15px -3px,
-    rgb(33 41 52 / 5%) 0px 4px 6px -2px;
+  /* box-shadow: rgb(33 41 52 / 10%) 0px 10px 15px -3px,
+    rgb(33 41 52 / 5%) 0px 4px 6px -2px; */
   display: inline-block;
   padding: 4px 0px;
   /* position: fixed; */

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
+import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { getDateDifferenceBetweenDates } from 'src/app/shared/helpers/date-formatting.helper';
@@ -26,7 +27,7 @@ export class ReportingToolsService {
       .get(
         `organisationUnits.json?${page ? 'page=' + page + '&' : ''}${
           pageCount ? 'pageSize=' + pageCount + '&' : ''
-        }filter=level:eq:${level}&fields=id,name,dataSets~size,parent[id,name]${
+        }filter=level:eq:${level}&fields=id,name,dataSets~size,parent[id,name,level,parent[id,name,level]]${
           searchingText ? '&filter=name:ilike:' + searchingText : ''
         }&filter=path:ilike:${ouId}`
       )
@@ -43,10 +44,9 @@ export class ReportingToolsService {
                 hasPendingRequest: matchedKeys?.length > 0,
                 timeSinceLastResponse:
                   matchedKeys.length > 0
-                    ? getDateDifferenceBetweenDates(
-                        Date.now(),
+                    ? moment(
                         Number(matchedKeys[0].split('_')[0].replace('DS', ''))
-                      )
+                      ).fromNow()
                     : '',
                 date:
                   matchedKeys.length > 0
