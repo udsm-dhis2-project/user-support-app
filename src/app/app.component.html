@@ -26,7 +26,7 @@
                     }}</b></mat-list-item
                   >
 
-                  <mat-list-item
+                  <!-- <mat-list-item
                     role="listitem"
                     class="new-message-button mt-5 mb-3"
                     (click)="newMessageModal($event, params?.currentUser)"
@@ -39,7 +39,7 @@
                     <span style="margin-left: 5px">
                       Write Message
                     </span></mat-list-item
-                  >
+                  > -->
 
                   <mat-list-item
                     role="listitem"
@@ -51,6 +51,7 @@
                   <mat-list-item
                     role="listitem"
                     class="list-item"
+                    [disabled]="true"
                     routerLinkActive="active-menu-item"
                     [routerLink]="'user-accounts/request'"
                     >Request account</mat-list-item
@@ -58,6 +59,7 @@
                   <mat-list-item
                     role="listitem"
                     class="list-item"
+                    [disabled]="true"
                     routerLinkActive="active-menu-item"
                     [routerLink]="'user-accounts/password-recovery'"
                     >Password recovery</mat-list-item
@@ -72,13 +74,22 @@
                     role="listitem"
                     class="list-item"
                     routerLinkActive="active-menu-item"
+                    [routerLink]="'reporting-tools/request'"
+                    >Request form</mat-list-item
+                  >
+                  <mat-list-item
+                    role="listitem"
+                    class="list-item"
+                    routerLinkActive="active-menu-item"
                     [routerLink]="'request'"
+                    [disabled]="true"
                     >Request account</mat-list-item
                   >
                   <mat-list-item
                     role="listitem"
                     routerLinkActive="active-menu-item"
                     class="list-item"
+                    [disabled]="true"
                     [routerLink]="'password-recovery'"
                     >Password recovery</mat-list-item
                   >

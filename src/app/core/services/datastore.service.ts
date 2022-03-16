@@ -59,7 +59,7 @@ export class DataStoreDataService {
     keys = keys.filter((key) => key !== 'configurations') || [];
     if (keys?.length === 0) {
       return of({
-        data: {},
+        data: [],
       });
     }
 
@@ -116,8 +116,6 @@ export class DataStoreDataService {
       key: undefined,
       namespace: undefined,
     };
-
-    console.log('key', key);
 
     if (key) {
       return this.findOne(namespace, key);

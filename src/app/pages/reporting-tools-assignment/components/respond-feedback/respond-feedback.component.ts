@@ -37,7 +37,6 @@ export class RespondFeedbackComponent implements OnInit {
   }
 
   onSave(event: Event, data: any, messageConversation: any): void {
-    console.log(data);
     // TODO: Use configurations for handling response messages
     event.stopPropagation();
     this.savingData = true;

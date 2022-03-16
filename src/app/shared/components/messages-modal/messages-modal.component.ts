@@ -13,7 +13,6 @@ export class MessagesModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) data
   ) {
     this.dialogData = data;
-    console.log(this.dialogData);
   }
 
   ngOnInit(): void {}

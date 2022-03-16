@@ -1,11 +1,15 @@
 <div
   *ngIf="{ allDataForUserSupport: allDataForUserSupport$ | async } as params"
 >
-  <!-- {{ params?.allDataForUserSupport | json }} -->
   <div class="h5 feedback-header">User feedback</div>
 
-  <div *ngIf="params?.allDataForUserSupport">
-    <table class="table">
+  <div
+    *ngIf="
+      params?.allDataForUserSupport &&
+      params?.allDataForUserSupport?.data?.length > 0
+    "
+  >
+    <table class="table table-bordered p-2">
       <thead>
         <tr>
           <td style="width: 15px">SN</td>
@@ -56,6 +60,16 @@
         </tr>
       </tbody>
     </table>
+  </div>
+  <div
+    *ngIf="
+      params?.allDataForUserSupport &&
+      params?.allDataForUserSupport?.data?.length === 0
+    "
+  >
+    <div class="alert alert-warning" role="alert">
+      No any feedback on form request
+    </div>
   </div>
   <mat-progress-bar
     mode="indeterminate"
