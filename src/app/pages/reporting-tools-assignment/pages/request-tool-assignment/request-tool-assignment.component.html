@@ -2,19 +2,27 @@
   class="tools-assignment-container"
   *ngIf="{
     currentUser: currentUser$ | async,
-    configurations: configurations$ | async
+    configurations: configurations$ | async,
+    systemConfigs: systemConfigs$ | async
   } as params"
 >
-  <div *ngIf="params?.currentUser && params?.configurations">
+  <div
+    *ngIf="
+      params?.currentUser && params?.configurations && params?.systemConfigs
+    "
+  >
     <app-feedback-container
       [currentUser]="params?.currentUser"
       [configurations]="params?.configurations"
+      [systemConfigs]="params?.systemConfigs"
       (dataStoreChanged)="onDataStoreChange($event)"
     ></app-feedback-container>
   </div>
 
   <mat-progress-bar
     mode="indeterminate"
-    *ngIf="!params?.currentUser || !params?.configurations"
+    *ngIf="
+      !params?.currentUser || !params?.configurations || !params?.systemConfigs
+    "
   ></mat-progress-bar>
 </div>

@@ -9,6 +9,7 @@ import { getCurrentUser } from './store/selectors';
 import { MatDialog } from '@angular/material/dialog';
 import { MessagesModalComponent } from './shared/components/messages-modal/messages-modal.component';
 import { DataStoreService } from './core/services/datastore.service';
+import { loadSystemConfigurations } from './store/actions';
 
 @Component({
   selector: 'app-root',
@@ -47,6 +48,7 @@ export class AppComponent implements OnInit {
     // Check if the key dhis2-user-support exists on datastore, otherwise create withd default configurations
     this.userSupportNameSpaceResponse$ =
       this.dataStoreService.createNameSpaceIfMissing();
+    this.store.dispatch(loadSystemConfigurations());
   }
 
   public setTitle(newTitle: string) {
