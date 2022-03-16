@@ -13,4 +13,6 @@ button:hover {
 
 .feedback-header {
   padding: 8px 4px;
+  border-bottom: solid 1px #eee;
+  width: 100%;
 }
