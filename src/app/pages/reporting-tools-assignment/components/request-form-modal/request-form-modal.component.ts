@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { DataStoreService } from 'src/app/core/services/datastore.service';
+import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
 import { ReportingToolsService } from 'src/app/core/services/reporting-tools.service';
 import {
@@ -9,6 +9,7 @@ import {
   getDataStoreDetailsForFormRequests,
 } from 'src/app/shared/helpers/construct-message.helper';
 import { DataSets } from 'src/app/shared/models/reporting-tools.models';
+import { SystemConfigsModel } from 'src/app/shared/models/system-configurations.model';
 
 @Component({
   selector: 'app-request-form-modal',
@@ -29,7 +30,7 @@ export class RequestFormModalComponent implements OnInit {
     private dialogRef: MatDialogRef<RequestFormModalComponent>,
     @Inject(MAT_DIALOG_DATA) data,
     private messagesAndDatastoreService: MessagesAndDatastoreService,
-    private dataStoreService: DataStoreService
+    private dataStoreService: DataStoreDataService
   ) {
     this.dialogData = data;
   }
@@ -59,7 +60,8 @@ export class RequestFormModalComponent implements OnInit {
   onSave(
     event: Event,
     assignmentDetails: any,
-    facility: { id: string; name: string }
+    facility: { id: string; name: string },
+    systemConfigs: SystemConfigsModel
   ): void {
     event.stopPropagation();
     // TODO: Add logic to get ticket number
@@ -74,7 +76,7 @@ export class RequestFormModalComponent implements OnInit {
       subject: message?.subject,
       messageType: 'TICKET',
       users: [],
-      userGroups: [{ id: 'QYrzIjSfI8z' }],
+      userGroups: [{ id: systemConfigs?.feedbackRecipients?.id }],
       organisationUnits: [],
       attachments: [],
       text: message?.message,
@@ -85,6 +87,7 @@ export class RequestFormModalComponent implements OnInit {
     this.messagesAndDatastoreService
       .createMessageAndUpdateDataStore(messageData, {
         id: dataStoreKey,
+        message: message,
         ...dataStorePayload,
       })
       .subscribe((response) => {

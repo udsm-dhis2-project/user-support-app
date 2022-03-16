@@ -1,0 +1,37 @@
+<div class="loading-overlay" *ngIf="savingData">
+  <div class="text-center">
+    <div>Saving ....</div>
+    <div class="mt-3 d-flex justify-content-center w-100">
+      <mat-spinner diameter="50" strokeWidth="2"></mat-spinner>
+    </div>
+  </div>
+</div>
+
+<div class="approve-container" *ngIf="!savingData">
+  <div *ngIf="{ messageConversation: messageConversation$ | async } as params">
+    <p>
+      {{ dialogData?.action }}
+    </p>
+    <a (click)="toggleDetails($event)">{{
+      viewDetails ? 'View less' : 'View details'
+    }}</a>
+
+    <p *ngIf="viewDetails" class="mt-2">
+      {{ dialogData?.message?.message }}
+    </p>
+
+    <div mat-dialog-actions class="d-flex justify-content-end">
+      <button mat-button (click)="onClose($event)">
+        {{ successfullyApproved ? 'Done' : 'Close' }}
+      </button>
+      <button
+        mat-button
+        [disabled]="successfullyApproved"
+        class="ml-2 btn-success"
+        (click)="onSave($event, dialogData, params?.messageConversation)"
+      >
+        Confirm
+      </button>
+    </div>
+  </div>
+</div>

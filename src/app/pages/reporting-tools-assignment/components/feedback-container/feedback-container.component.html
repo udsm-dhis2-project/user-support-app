@@ -6,12 +6,21 @@
     *ngIf="!isFeedbackRecepient && params?.userSupportKeys"
     [currentUser]="currentUser"
     [configurations]="configurations"
+    [systemConfigs]="systemConfigs"
     [userSupportKeys]="params?.userSupportKeys"
     (dataStoreChanged)="onDataStoreChange($event)"
   ></app-facilities-list>
+  <app-feedbacks-list
+    *ngIf="isFeedbackRecepient && params?.userSupportKeys"
+    [currentUser]="currentUser"
+    [configurations]="configurations"
+    [systemConfigs]="systemConfigs"
+    [userSupportKeys]="params?.userSupportKeys"
+  >
+  </app-feedbacks-list>
 
   <mat-progress-bar
     mode="indeterminate"
-    *ngIf="!params?.userSupportKeys"
+    *ngIf="!params?.userSupportKeys || !params?.userSupportKeys"
   ></mat-progress-bar>
 </div>

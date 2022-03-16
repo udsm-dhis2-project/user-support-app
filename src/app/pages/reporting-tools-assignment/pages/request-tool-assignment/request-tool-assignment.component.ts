@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { DataStoreService } from 'src/app/core/services/datastore.service';
+import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { SystemConfigsModel } from 'src/app/shared/models/system-configurations.model';
 import { State } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors';
@@ -18,7 +18,7 @@ export class RequestToolAssignmentComponent implements OnInit {
   systemConfigs$: Observable<SystemConfigsModel>;
   constructor(
     private store: Store<State>,
-    private dataStoreService: DataStoreService
+    private dataStoreService: DataStoreDataService
   ) {}
 
   ngOnInit(): void {

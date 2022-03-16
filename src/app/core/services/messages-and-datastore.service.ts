@@ -29,4 +29,19 @@ export class MessagesAndDatastoreService {
       catchError((error) => of(error))
     );
   }
+
+  searchMessageConversationByTicketNumber(
+    searchingText: string
+  ): Observable<any> {
+    return this.httpClient
+      .get(
+        `messageConversations?messageType=TICKET&filter=subject:ilike:${searchingText}`
+      )
+      .pipe(
+        map((response) => {
+          return response?.messageConversations[0];
+        }),
+        catchError((error) => of(error))
+      );
+  }
 }

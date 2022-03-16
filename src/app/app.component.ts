@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { getCurrentUser } from './store/selectors';
 import { MatDialog } from '@angular/material/dialog';
 import { MessagesModalComponent } from './shared/components/messages-modal/messages-modal.component';
-import { DataStoreService } from './core/services/datastore.service';
+import { DataStoreDataService } from './core/services/datastore.service';
 import { loadSystemConfigurations } from './store/actions';
 
 @Component({
@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
     private titleService: Title,
     private store: Store<State>,
     private dialog: MatDialog,
-    private dataStoreService: DataStoreService
+    private dataStoreService: DataStoreDataService
   ) {
     // this language will be used as a fallback when a translation isn't found in the current language
     this.translate.setDefaultLang('en');

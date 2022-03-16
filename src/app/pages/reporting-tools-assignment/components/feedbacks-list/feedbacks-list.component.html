@@ -1,0 +1,64 @@
+<div
+  *ngIf="{ allDataForUserSupport: allDataForUserSupport$ | async } as params"
+>
+  <!-- {{ params?.allDataForUserSupport | json }} -->
+  <div class="h5 feedback-header">User feedback</div>
+
+  <div *ngIf="params?.allDataForUserSupport">
+    <table class="table">
+      <thead>
+        <tr>
+          <td style="width: 15px">SN</td>
+          <td>Request</td>
+          <td style="width: 200px">Actions</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let dataRow of params?.allDataForUserSupport?.data;
+            let count = index
+          "
+        >
+          <td>{{ count + 1 }}</td>
+          <td>
+            <ng-container>
+              <span>
+                {{ dataRow?.action }}
+              </span>
+            </ng-container>
+            <ng-container *ngIf="moreOpenedDetails[dataRow?.id]">
+              <div
+                class="more-contents"
+                [innerHtml]="dataRow?.message?.message"
+              ></div>
+            </ng-container>
+            <ng-container>
+              <span>
+                <a
+                  (click)="toggleViewMore($event, dataRow)"
+                  style="float: right; font-size: 0.7rem"
+                >
+                  {{ moreOpenedDetails[dataRow?.id] ? 'Less' : 'More' }}</a
+                >
+              </span>
+            </ng-container>
+          </td>
+          <td>
+            <button
+              mat-stroked-button
+              (click)="onApprove($event, dataRow)"
+              class="btn-success"
+            >
+              Approve
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.allDataForUserSupport"
+  ></mat-progress-bar>
+</div>

@@ -16,7 +16,7 @@ export function constructMessageForFacilityAssignment(assignmentDetails: any) {
 
   message +=
     assignmentDetails?.deletions?.length > 0
-      ? `\n\nNaomba kuondolewa fomu ya zifuatazo kwenye kituo: ${
+      ? `\n\nNaomba kuondolewa fomu zifuatazo kwenye kituo: ${
           assignmentDetails?.organisationUnit?.name +
           ' - ' +
           assignmentDetails?.organisationUnit?.parent?.name

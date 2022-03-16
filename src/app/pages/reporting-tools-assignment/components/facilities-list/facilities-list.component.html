@@ -33,7 +33,14 @@
           <td>{{ dataRow?.dataSets }}</td>
           <td>
             <button
-              (click)="openRequestFormModal($event, dataRow, userSupportKeys)"
+              (click)="
+                openRequestFormModal(
+                  $event,
+                  dataRow,
+                  userSupportKeys,
+                  systemConfigs
+                )
+              "
               mat-stroked-button
               [ngClass]="{
                 'disabled-button': dataRow?.hasPendingRequest

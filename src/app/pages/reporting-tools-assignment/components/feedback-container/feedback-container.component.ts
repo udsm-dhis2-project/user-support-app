@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DataStoreService } from 'src/app/core/services/datastore.service';
+import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { SystemConfigsModel } from 'src/app/shared/models/system-configurations.model';
 
 @Component({
@@ -14,12 +14,17 @@ export class FeedbackContainerComponent implements OnInit {
   @Input() systemConfigs: SystemConfigsModel;
   isFeedbackRecepient: boolean = false;
   userSupportKeys$: Observable<string[]>;
-  constructor(private dataStoreService: DataStoreService) {}
+  constructor(private dataStoreService: DataStoreDataService) {}
 
   ngOnInit(): void {
     this.userSupportKeys$ = this.dataStoreService.getDataStoreKeys();
-    console.log('systemConfigs', this.systemConfigs);
-    console.log(this.currentUser);
+    this.isFeedbackRecepient =
+      (
+        this.currentUser?.userGroups.filter(
+          (userGroup) =>
+            userGroup?.id === this.systemConfigs?.feedbackRecipients?.id
+        ) || []
+      )?.length > 0;
   }
 
   onDataStoreChange(event: boolean): void {

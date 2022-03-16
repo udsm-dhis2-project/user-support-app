@@ -1,0 +1,16 @@
+button {
+  outline: none;
+}
+
+button:hover {
+  outline: none;
+}
+
+.more-contents {
+  padding: 4px 8px !important;
+  background-color: #eee;
+}
+
+.feedback-header {
+  padding: 8px 4px;
+}

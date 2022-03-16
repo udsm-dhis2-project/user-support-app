@@ -59,7 +59,14 @@
           (assignmentDetails?.deletions?.length === 0 &&
             assignmentDetails?.additions?.length === 0)
         "
-        (click)="onSave($event, assignmentDetails, dialogData?.facility)"
+        (click)="
+          onSave(
+            $event,
+            assignmentDetails,
+            dialogData?.facility,
+            dialogData?.systemConfigs
+          )
+        "
       >
         Save
       </button>

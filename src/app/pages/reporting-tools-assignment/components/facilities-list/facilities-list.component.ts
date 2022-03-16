@@ -7,6 +7,7 @@ import {
   PaginationModel,
   ReportingToolsResponseModel,
 } from 'src/app/shared/models/reporting-tools.models';
+import { SystemConfigsModel } from 'src/app/shared/models/system-configurations.model';
 import { RequestFormModalComponent } from '../request-form-modal/request-form-modal.component';
 @Component({
   selector: 'app-facilities-list',
@@ -17,6 +18,7 @@ export class FacilitiesListComponent implements OnInit {
   @Input() currentUser: any;
   @Input() userSupportKeys: string[];
   @Input() configurations: any;
+  @Input() systemConfigs: SystemConfigsModel;
   @Output() dataStoreChanged = new EventEmitter<true>();
   searchingText: string;
   reportingToolsResponse$: Observable<ReportingToolsResponseModel>;
@@ -82,7 +84,8 @@ export class FacilitiesListComponent implements OnInit {
   openRequestFormModal(
     event: Event,
     dataRow: FacilitiesWithNumberOfDatasets,
-    userSupportKeys: String[]
+    userSupportKeys: String[],
+    systemConfigs: SystemConfigsModel
   ): void {
     event.stopPropagation();
     this.dialog
@@ -91,6 +94,7 @@ export class FacilitiesListComponent implements OnInit {
         data: {
           facility: dataRow,
           userSupportKeys,
+          systemConfigs,
         },
       })
       .afterClosed()
