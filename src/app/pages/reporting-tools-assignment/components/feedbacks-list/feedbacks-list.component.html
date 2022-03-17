@@ -9,7 +9,7 @@
       params?.allDataForUserSupport?.data?.length > 0
     "
   >
-    <table class="table table-bordered p-2">
+    <table class="table mat-elevation-z1 p-2">
       <thead>
         <tr>
           <td style="width: 15px">SN</td>
@@ -18,46 +18,52 @@
         </tr>
       </thead>
       <tbody>
-        <tr
+        <ng-container
           *ngFor="
             let dataRow of params?.allDataForUserSupport?.data;
             let count = index
           "
         >
-          <td>{{ count + 1 }}</td>
-          <td>
-            <ng-container>
-              <span>
-                {{ dataRow?.action }}
-              </span>
-            </ng-container>
-            <ng-container *ngIf="moreOpenedDetails[dataRow?.id]">
-              <div
-                class="more-contents"
-                [innerHtml]="dataRow?.message?.message"
-              ></div>
-            </ng-container>
-            <ng-container>
-              <span>
-                <a
+          <tr>
+            <td>{{ count + 1 }}</td>
+            <td>
+              {{ dataRow?.action }}
+            </td>
+            <td>
+              <div class="d-flex justify-content-end">
+                <button
+                  class="details-toggle"
+                  mat-stroked-button
                   (click)="toggleViewMore($event, dataRow)"
-                  style="float: right; font-size: 0.7rem"
                 >
-                  {{ moreOpenedDetails[dataRow?.id] ? 'Less' : 'More' }}</a
-                >
-              </span>
-            </ng-container>
-          </td>
-          <td>
-            <button
-              mat-stroked-button
-              (click)="onApprove($event, dataRow)"
-              class="btn-success"
-            >
-              Approve
-            </button>
-          </td>
-        </tr>
+                  {{ moreOpenedDetails[dataRow?.id] ? 'Back' : 'View Details' }}
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="moreOpenedDetails[dataRow?.id]">
+            <td></td>
+            <td colspan="100%">
+              <div class="w-100 d-flex justify-content-between">
+                <div style="width: 90%" class="more-contents">
+                  <div class="h6">
+                    {{ dataRow?.message?.subject }}
+                  </div>
+                  <div [innerHtml]="dataRow?.message?.message"></div>
+                </div>
+                <div style="width: 10%">
+                  <button
+                    mat-stroked-button
+                    (click)="onApprove($event, dataRow)"
+                    class="btn-success float-right"
+                  >
+                    Approve
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
   </div>

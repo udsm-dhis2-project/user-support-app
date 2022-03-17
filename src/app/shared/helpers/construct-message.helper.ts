@@ -14,9 +14,11 @@ export function constructMessageForFacilityAssignment(assignmentDetails: any) {
           .join(',\n')
       : '';
 
+  message += assignmentDetails?.additions?.length > 0 ? '\n\n' : '';
+
   message +=
     assignmentDetails?.deletions?.length > 0
-      ? `\n\nNaomba kuondolewa fomu zifuatazo kwenye kituo: ${
+      ? `Naomba kuondolewa fomu zifuatazo kwenye kituo: ${
           assignmentDetails?.organisationUnit?.name +
           ' - ' +
           assignmentDetails?.organisationUnit?.parent?.name

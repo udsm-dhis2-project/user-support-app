@@ -28,7 +28,12 @@
           "
         >
           <td>
-            {{ count + 1 }}
+            {{
+              count +
+                1 +
+                (params?.reportingToolsResponse?.pagination?.page - 1) *
+                  pageCount
+            }}
           </td>
           <td>{{ dataRow?.name }}</td>
           <td>{{ dataRow?.dataSets }}</td>
@@ -71,11 +76,34 @@
       </tbody>
     </table>
     <div class="pagination d-flex justify-content-end">
-      <span class="mt-3">
-        {{ params?.reportingToolsResponse?.pagination?.total }}
-      </span>
+      <div style="width: 150" class="mt-2">
+        <span>
+          <span>{{ pageCount }}</span> of
+          <span>
+            {{ params?.reportingToolsResponse?.pagination?.total }}
+          </span>
+          {{ orgUnitLevels[0]?.name }}
+        </span>
+      </div>
+      <select
+        class="ml-2 page-count"
+        (change)="
+          getItemsPerPage($event, params?.reportingToolsResponse?.pagination)
+        "
+      >
+        <option
+          *ngFor="
+            let itemPerPage of params?.reportingToolsResponse?.pagination
+              ?.itemPerPageOptions
+          "
+          [value]="itemPerPage"
+        >
+          {{ itemPerPage }}
+        </option>
+      </select>
       <button
         mat-button
+        title="Previous"
         class="pagination-buttons ml-2"
         [disabled]="params?.reportingToolsResponse?.pagination?.page == 1"
         (click)="
@@ -89,11 +117,12 @@
         <mat-icon>
           <svg viewBox="0 0 24 24" focusable="false" class="mat-paginator-icon">
             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
-          </svg> </mat-icon
-        >Previous
+          </svg>
+        </mat-icon>
       </button>
       <button
         mat-button
+        title="Next"
         class="pagination-buttons ml-2"
         (click)="
           getFacilities(
@@ -103,7 +132,6 @@
           )
         "
       >
-        Next
         <mat-icon>
           <svg viewBox="0 0 24 24" focusable="false" class="mat-paginator-icon">
             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>

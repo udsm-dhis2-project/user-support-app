@@ -19,6 +19,7 @@ export class RequestFormComponent implements OnInit {
   @Input() dataStoreMessageDetails: any;
   mergedDataSets: DataSets[];
   @Output() assignmentDetails = new EventEmitter<any>();
+  searchingText: string;
   constructor() {}
 
   ngOnInit(): void {

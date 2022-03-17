@@ -55,7 +55,10 @@ export class ReportingToolsService {
                     : null,
               };
             }),
-            pagination: response?.pager,
+            pagination: {
+              ...response?.pager,
+              itemPerPageOptions: [10, 20, 30, 50],
+            },
           };
         }),
         catchError((error) => of(error))

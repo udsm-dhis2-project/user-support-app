@@ -106,4 +106,18 @@ export class FacilitiesListComponent implements OnInit {
         this.dataStoreChanged.emit(true);
       });
   }
+
+  getItemsPerPage(event: any, paginationDetails: PaginationModel): void {
+    this.pageCount = Number(event.target.value);
+    const currentPage = paginationDetails?.page;
+    this.reportingToolsResponse$ =
+      this.reportingToolsService.getFacilitiesWithNumberOfDataSets(
+        this.currentUser?.organisationUnits[0]?.id,
+        this.lowestLevel,
+        currentPage,
+        this.pageCount,
+        this.searchingText,
+        this.userSupportKeys
+      );
+  }
 }

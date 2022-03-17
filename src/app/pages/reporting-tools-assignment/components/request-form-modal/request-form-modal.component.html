@@ -50,15 +50,16 @@
     ></mat-progress-bar>
 
     <div mat-dialog-actions class="d-flex justify-content-end">
-      <button mat-button (click)="onClose($event)">Close</button>
+      <button mat-stroked-button (click)="onClose($event)">Close</button>
       <button
-        mat-button
+        mat-stroked-button
         class="ml-2"
         [disabled]="
           !assignmentDetails ||
           (assignmentDetails?.deletions?.length === 0 &&
             assignmentDetails?.additions?.length === 0)
         "
+        color="primary"
         (click)="
           onSave(
             $event,

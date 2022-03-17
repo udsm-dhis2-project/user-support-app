@@ -10,3 +10,10 @@
   background-color: #edf2f6;
   min-width: 125px;
 }
+
+.page-count {
+  width: 60px;
+  border: solid 1px #eee;
+  border-radius: 8px;
+  background-color: transparent;
+}

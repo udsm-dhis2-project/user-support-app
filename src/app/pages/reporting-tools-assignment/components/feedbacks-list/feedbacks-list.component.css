@@ -7,12 +7,16 @@ button:hover {
 }
 
 .more-contents {
-  padding: 4px 8px !important;
-  background-color: #eee;
+  padding: 8px 8px !important;
+  background-color: #eeeeee75;
 }
 
 .feedback-header {
   padding: 8px 4px;
   border-bottom: solid 1px #eee;
   width: 100%;
+}
+
+.details-toggle {
+  min-width: 120px !important;
 }

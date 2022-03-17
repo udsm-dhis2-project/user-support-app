@@ -53,7 +53,9 @@ export class DataStoreDataService {
 
   getDataViaKey(key: string): Observable<any> {
     return this.httpClient.get(`dataStore/dhis2-user-support/${key}`).pipe(
-      map((response) => response),
+      map((response) => {
+        return response;
+      }),
       catchError((error) => of(error))
     );
   }
@@ -111,7 +113,18 @@ export class DataStoreDataService {
   }
 
   findOne(namespace: string, key: string): Observable<any> {
-    return this.httpClient.get(`${'dataStore/' + namespace}/${key}`);
+    return this.httpClient.get(`${'dataStore/' + namespace}/${key}`).pipe(
+      map((response) => {
+        return {
+          ...response,
+          message: {
+            ...response?.message,
+            message: response?.message?.message.split('\n').join('<br />'),
+          },
+        };
+      }),
+      catchError((error) => of(error))
+    );
   }
 
   getAllFromNameSpace(dataStoreUrl: string): Observable<any> {
