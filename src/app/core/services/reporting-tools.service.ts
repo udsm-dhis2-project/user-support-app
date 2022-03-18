@@ -27,34 +27,39 @@ export class ReportingToolsService {
       .get(
         `organisationUnits.json?${page ? 'page=' + page + '&' : ''}${
           pageCount ? 'pageSize=' + pageCount + '&' : ''
-        }filter=level:eq:${level}&fields=id,name,dataSets~size,parent[id,name,level,parent[id,name,level]]${
+        }filter=level:eq:${level}&fields=id,name,dataSets~size,closedDate,parent[id,name,level,parent[id,name,level]]${
           searchingText ? '&filter=name:ilike:' + searchingText : ''
         }&filter=path:ilike:${ouId}`
       )
       .pipe(
         map((response) => {
+          const closedOnes = response?.organisationUnits.filter(
+            (ou) => ou?.closedDate
+          );
           return {
-            data: response?.organisationUnits.map((orgUnit) => {
-              const matchedKeys =
-                userSupportKeys.filter(
-                  (key) => key?.indexOf(orgUnit?.id) > -1
-                ) || [];
-              return {
-                ...orgUnit,
-                hasPendingRequest: matchedKeys?.length > 0,
-                timeSinceLastResponse:
-                  matchedKeys.length > 0
-                    ? moment(
+            data: response?.organisationUnits
+              .filter((ou) => !ou?.closedDate)
+              .map((orgUnit) => {
+                const matchedKeys =
+                  userSupportKeys.filter(
+                    (key) => key?.indexOf(orgUnit?.id) > -1
+                  ) || [];
+                return {
+                  ...orgUnit,
+                  hasPendingRequest: matchedKeys?.length > 0,
+                  timeSinceLastResponse:
+                    matchedKeys.length > 0
+                      ? moment(
+                          Number(matchedKeys[0].split('_')[0].replace('DS', ''))
+                        ).fromNow()
+                      : '',
+                  date:
+                    matchedKeys.length > 0
+                      ? Date.now() -
                         Number(matchedKeys[0].split('_')[0].replace('DS', ''))
-                      ).fromNow()
-                    : '',
-                date:
-                  matchedKeys.length > 0
-                    ? Date.now() -
-                      Number(matchedKeys[0].split('_')[0].replace('DS', ''))
-                    : null,
-              };
-            }),
+                      : null,
+                };
+              }),
             pagination: {
               ...response?.pager,
               itemPerPageOptions: [10, 20, 30, 50],
