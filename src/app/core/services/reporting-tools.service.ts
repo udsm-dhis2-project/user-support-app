@@ -33,9 +33,6 @@ export class ReportingToolsService {
       )
       .pipe(
         map((response) => {
-          const closedOnes = response?.organisationUnits.filter(
-            (ou) => ou?.closedDate
-          );
           return {
             data: response?.organisationUnits
               .filter((ou) => !ou?.closedDate)
