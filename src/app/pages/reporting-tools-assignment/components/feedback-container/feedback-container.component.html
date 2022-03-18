@@ -5,7 +5,10 @@
     orgUnitLevels: orgUnitLevels$ | async
   } as params"
 >
-  <div class="w-100" *ngIf="configurations?.defaultToRequest">
+  <div
+    class="w-100"
+    *ngIf="configurations?.defaultToRequest && isFeedbackRecepient"
+  >
     <mat-slide-toggle
       class="float-right"
       [color]="color"

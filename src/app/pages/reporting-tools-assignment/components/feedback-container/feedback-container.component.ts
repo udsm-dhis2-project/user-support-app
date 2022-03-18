@@ -26,14 +26,13 @@ export class FeedbackContainerComponent implements OnInit {
   ngOnInit(): void {
     this.orgUnitLevels$ = this.orgUnitsProvisionalService.getOrgUnitLevels();
     this.userSupportKeys$ = this.dataStoreService.getDataStoreKeys();
-    this.isFeedbackRecepient = this.configurations?.defaultToRequest
-      ? false
-      : (
-          this.currentUser?.userGroups.filter(
-            (userGroup) =>
-              userGroup?.id === this.systemConfigs?.feedbackRecipients?.id
-          ) || []
-        )?.length > 0;
+    this.isFeedbackRecepient =
+      (
+        this.currentUser?.userGroups.filter(
+          (userGroup) =>
+            userGroup?.id === this.systemConfigs?.feedbackRecipients?.id
+        ) || []
+      )?.length > 0;
   }
 
   onDataStoreChange(event: boolean): void {
