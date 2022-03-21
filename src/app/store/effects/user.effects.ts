@@ -16,10 +16,12 @@ export class UserEffects implements OnInitEffects {
     this.actions$.pipe(
       ofType(loadCurrentUser),
       switchMap(() =>
-        this.httpClient.get('me?fields=*,userGroups[id,name]').pipe(
-          map((currentUser: User) => addCurrentUser({ currentUser })),
-          catchError((error: any) => of(loadCurrentUserFail({ error })))
-        )
+        this.httpClient
+          .get('me?fields=*,organisationUnits[id,name],userGroups[id,name]')
+          .pipe(
+            map((currentUser: User) => addCurrentUser({ currentUser })),
+            catchError((error: any) => of(loadCurrentUserFail({ error })))
+          )
       )
     )
   );

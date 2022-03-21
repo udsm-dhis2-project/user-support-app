@@ -89,7 +89,8 @@ export class FacilitiesListComponent implements OnInit {
     event: Event,
     dataRow: FacilitiesWithNumberOfDatasets,
     userSupportKeys: String[],
-    systemConfigs: SystemConfigsModel
+    systemConfigs: SystemConfigsModel,
+    currentUser: any
   ): void {
     event.stopPropagation();
     this.dialog
@@ -99,6 +100,7 @@ export class FacilitiesListComponent implements OnInit {
           facility: dataRow,
           userSupportKeys,
           systemConfigs,
+          currentUser,
         },
       })
       .afterClosed()

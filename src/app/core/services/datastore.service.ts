@@ -121,7 +121,6 @@ export class DataStoreDataService {
   findOne(namespace: string, key: string): Observable<any> {
     return this.httpClient.get(`${'dataStore/' + namespace}/${key}`).pipe(
       map((response) => {
-        console.log(response);
         return {
           ...response,
           timeSinceResponseSent: moment(
@@ -172,6 +171,13 @@ export class DataStoreDataService {
           map((values) => values)
         );
       })
+    );
+  }
+
+  getKeyData(key: string): Observable<any> {
+    return this.httpClient.get(`dataStore/dhis2-user-support/${key}`).pipe(
+      map((response) => response),
+      catchError((error) => of(error))
     );
   }
 }

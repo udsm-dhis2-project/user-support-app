@@ -7,8 +7,17 @@
   </div>
 </div>
 
-<div class="approve-container" *ngIf="!savingData">
+<div class="approve-container" *ngIf="!savingData && !savedData && !missingKey">
   <div *ngIf="{ messageConversation: messageConversation$ | async } as params">
+    <div class="w-100" *ngIf="dataRow?.user">
+      From:
+      <span class="ml-4">
+        From {{ dataRow?.user?.displayName }}
+        <span *ngIf="dataRow?.user?.phoneNumber">
+          ({{ dataRow?.user?.phoneNumber }})
+        </span>
+      </span>
+    </div>
     <p>
       {{ dialogData?.action }}
     </p>
@@ -16,9 +25,11 @@
       viewDetails ? 'View less' : 'View details'
     }}</a>
 
-    <p *ngIf="viewDetails" class="mt-2">
-      {{ dialogData?.message?.message }}
-    </p>
+    <div
+      *ngIf="viewDetails"
+      class="mt-2"
+      [innerHtml]="dialogData?.message?.message"
+    ></div>
 
     <div mat-dialog-actions class="d-flex justify-content-end">
       <button mat-button (click)="onClose($event)">
@@ -34,4 +45,12 @@
       </button>
     </div>
   </div>
+</div>
+
+<div class="w-100 success-message" *ngIf="savedData && !missingKey">
+  <p>Successfully updated!</p>
+</div>
+
+<div *ngIf="missingKey">
+  <p>Already attended!</p>
 </div>

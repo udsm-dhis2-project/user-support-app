@@ -68,7 +68,8 @@ export class RequestFormModalComponent implements OnInit {
     event: Event,
     assignmentDetails: any,
     facility: { id: string; name: string },
-    systemConfigs: SystemConfigsModel
+    systemConfigs: SystemConfigsModel,
+    currentUser: any
   ): void {
     event.stopPropagation();
     // TODO: Add logic to get ticket number
@@ -95,6 +96,15 @@ export class RequestFormModalComponent implements OnInit {
     this.messagesAndDatastoreService
       .createMessageAndUpdateDataStore(messageData, {
         id: dataStoreKey,
+        user: {
+          id: currentUser?.id,
+          displayName: currentUser?.displayName,
+          userName: currentUser?.userCredentials?.username,
+          jobTitle: currentUser?.jobTitle,
+          email: currentUser?.email,
+          organisationUnits: currentUser?.organisationUnits,
+          phoneNumber: currentUser?.phoneNumber,
+        },
         message: message,
         ...dataStorePayload,
       })

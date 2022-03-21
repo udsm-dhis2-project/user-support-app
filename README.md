@@ -9,6 +9,14 @@
 
 User support app
 
+## Features
+
+Some advantages are
+
+1. Some form requests are confusing since the datasets name listed were sometimes confusing.
+2. One might forget to mention the hierarchy hence long process to get it on the feedback team side
+3. When one has a request to remove all datasets it was necessary to go to data entry app and see the datasets.
+
 ## Prerequisites
 
 1. [NodeJs (10 or higher)](https://nodejs.org)

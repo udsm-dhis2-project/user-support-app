@@ -5,3 +5,7 @@ button {
 button:hover {
   outline: none;
 }
+
+.success-message {
+  color: #155724;
+}
