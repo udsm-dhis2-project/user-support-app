@@ -17,6 +17,10 @@ export class ApproveFeedbackService {
         this.httpClient.post(
           `messageConversations/${data?.messageConversation?.id}`,
           data?.approvalMessage
+        ),
+        this.httpClient.post(
+          `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
+          null
         )
       ).pipe(
         map((response) => response),

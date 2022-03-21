@@ -15,8 +15,8 @@ export class MessagesAndDatastoreService {
   ): Observable<any> {
     return zip(
       this.httpClient.post(
-        'messageConversations?messageType=TICKET',
-        messageData
+        `messageConversations/feedback?subject=${messageData?.subject}`,
+        messageData?.text
       ),
       this.httpClient.post(
         `dataStore/dhis2-user-support/${dataStoreInformation?.id}`,
