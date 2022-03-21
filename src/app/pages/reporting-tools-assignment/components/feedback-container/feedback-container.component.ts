@@ -24,6 +24,22 @@ export class FeedbackContainerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.configurations = {
+      ...this.configurations,
+      showToggleFeedbackAndRequests: this.configurations
+        ?.userGroupsToToggleFormRequests
+        ? (
+            this.currentUser?.userGroups.filter(
+              (userGroup) =>
+                (
+                  this.configurations?.userGroupsToToggleFormRequests.filter(
+                    (group) => group?.id === userGroup?.id
+                  ) || []
+                )?.length > 0
+            ) || []
+          )?.length
+        : false,
+    };
     this.orgUnitLevels$ = this.orgUnitsProvisionalService.getOrgUnitLevels();
     this.userSupportKeys$ = this.dataStoreService.getDataStoreKeys();
     this.isFeedbackRecepient =

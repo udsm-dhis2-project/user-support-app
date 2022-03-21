@@ -44,7 +44,7 @@ export class ReportingToolsService {
                 return {
                   ...orgUnit,
                   hasPendingRequest: matchedKeys?.length > 0,
-                  timeSinceLastResponse:
+                  timeSinceResponseSent:
                     matchedKeys.length > 0
                       ? moment(
                           Number(matchedKeys[0].split('_')[0].replace('DS', ''))

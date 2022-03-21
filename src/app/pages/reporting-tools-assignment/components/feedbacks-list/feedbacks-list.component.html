@@ -12,9 +12,10 @@
     <table class="table mat-elevation-z1 p-2">
       <thead>
         <tr>
-          <td style="width: 15px">SN</td>
-          <td>Request</td>
-          <td style="width: 200px">Actions</td>
+          <th style="width: 15px">SN</th>
+          <th>Request</th>
+          <th>Date</th>
+          <th style="width: 200px">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -28,6 +29,9 @@
             <td>{{ count + 1 }}</td>
             <td>
               {{ dataRow?.action }}
+            </td>
+            <td>
+              {{ dataRow?.timeSinceResponseSent }}
             </td>
             <td>
               <div class="d-flex justify-content-end">

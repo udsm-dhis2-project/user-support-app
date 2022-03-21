@@ -7,7 +7,7 @@ export interface FacilitiesWithNumberOfDatasets {
     name: string;
   };
   hasPendingRequest?: boolean;
-  timeSinceLastResponse?: number;
+  timeSinceResponseSent?: number;
 }
 
 export interface FacilityModel {

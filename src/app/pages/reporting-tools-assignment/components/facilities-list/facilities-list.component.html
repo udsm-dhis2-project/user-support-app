@@ -14,10 +14,10 @@
     <table class="table mat-elevation-z1" style="height: 100%; overflow: auto">
       <thead>
         <tr>
-          <td style="width: 15px">SN</td>
-          <td>Facility</td>
-          <td>Data sets</td>
-          <td></td>
+          <th style="width: 15px">SN</th>
+          <th>Facility</th>
+          <th>Data sets</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -46,7 +46,7 @@
               >
                 <mat-chip-list>
                   <mat-chip>
-                    {{ dataRow?.timeSinceLastResponse }}
+                    {{ dataRow?.timeSinceResponseSent }}
                   </mat-chip>
                 </mat-chip-list>
               </div>

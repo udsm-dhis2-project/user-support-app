@@ -1,4 +1,3 @@
-import { flatten } from 'lodash';
 import { Injectable } from '@angular/core';
 import {
   ErrorMessage,
@@ -11,6 +10,7 @@ import {
   getDataStoreUrlParams,
   getPaginatedDataStoreKeys,
 } from 'src/app/shared/helpers/datastore.helper';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +22,12 @@ export class DataStoreDataService {
     const configurations = {
       defaultToRequest: true,
       messageKeys: {},
+      userGroupsToToggleFormRequests: [
+        {
+          id: '',
+          name: '',
+        },
+      ],
     };
     return this.httpClient
       .post(`dataStore/dhis2-user-support/configurations`, configurations)
@@ -115,8 +121,12 @@ export class DataStoreDataService {
   findOne(namespace: string, key: string): Observable<any> {
     return this.httpClient.get(`${'dataStore/' + namespace}/${key}`).pipe(
       map((response) => {
+        console.log(response);
         return {
           ...response,
+          timeSinceResponseSent: moment(
+            Number(response?.ticketNumber?.replace('DS', ''))
+          ).fromNow(),
           message: {
             ...response?.message,
             message: response?.message?.message.split('\n').join('<br />'),
