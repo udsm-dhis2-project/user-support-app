@@ -7,7 +7,7 @@
   </div>
 </div>
 
-<div *ngIf="!savingData">
+<div *ngIf="!savingData && !savedData">
   <div
     class="request-container"
     *ngIf="{
@@ -69,8 +69,12 @@
           )
         "
       >
-        Save
+        Send
       </button>
     </div>
   </div>
+</div>
+
+<div *ngIf="savedData">
+  <p class="success-message">Successfully sent form request</p>
 </div>

@@ -10,6 +10,7 @@ import {
 } from 'src/app/shared/helpers/construct-message.helper';
 import { DataSets } from 'src/app/shared/models/reporting-tools.models';
 import { SystemConfigsModel } from 'src/app/shared/models/system-configurations.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-request-form-modal',
@@ -25,14 +26,20 @@ export class RequestFormModalComponent implements OnInit {
   uids$: Observable<string[]>;
   dataStoreMessageDetails$: Observable<any>;
   ouHasPendingRequest: boolean = false;
+  savedData: boolean = false;
   constructor(
     private reportingToolsService: ReportingToolsService,
     private dialogRef: MatDialogRef<RequestFormModalComponent>,
     @Inject(MAT_DIALOG_DATA) data,
     private messagesAndDatastoreService: MessagesAndDatastoreService,
-    private dataStoreService: DataStoreDataService
+    private dataStoreService: DataStoreDataService,
+    private _snackBar: MatSnackBar
   ) {
     this.dialogData = data;
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
   }
 
   ngOnInit(): void {
@@ -66,6 +73,7 @@ export class RequestFormModalComponent implements OnInit {
     event.stopPropagation();
     // TODO: Add logic to get ticket number
     this.savingData = true;
+    this.savedData = false;
     assignmentDetails = {
       ...assignmentDetails,
       organisationUnit: facility,
@@ -93,6 +101,14 @@ export class RequestFormModalComponent implements OnInit {
       .subscribe((response) => {
         this.savingData = false;
         this.ouHasPendingRequest = true;
+        this.savedData = true;
+        this.openSnackBar('Successfully sent form request', 'Close');
+        setTimeout(() => {
+          this.dialogRef.close();
+        }, 500);
+        setTimeout(() => {
+          this._snackBar.dismiss();
+        }, 2000);
         this.dataStoreMessageDetails$ =
           this.dataStoreService.getDataViaKey(dataStoreKey);
       });

@@ -1,8 +1,3 @@
-.merged-datasets-container {
-  height: 400px;
-  overflow: auto;
-}
-
 .actions-btn {
   border-color: rgba(0, 0, 0, 0.12);
   cursor: pointer;
