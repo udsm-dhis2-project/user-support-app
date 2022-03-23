@@ -2,15 +2,17 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 export const routes: Routes = [
-  // {
-  //   path: '',
-  //   loadChildren: () =>
-  //     import('./pages/home/home.module').then((m) => m.HomeModule),
-  // },
   {
     path: '',
     redirectTo: 'reporting-tools',
     pathMatch: 'full',
+  },
+  {
+    path: 'reports',
+    loadChildren: () =>
+      import('./pages/reports/reports.module').then(
+        (m) => m.ReportsModule
+      ),
   },
   {
     path: 'user-accounts',
