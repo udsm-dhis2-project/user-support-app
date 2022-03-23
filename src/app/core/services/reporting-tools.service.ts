@@ -69,7 +69,9 @@ export class ReportingToolsService {
 
   getAssignedDataSets(ouId: string): Observable<DataSets[]> {
     return this.httpClient
-      .get(`organisationUnits/${ouId}.json?fields=dataSets[id,name]`)
+      .get(
+        `organisationUnits/${ouId}.json?fields=dataSets[id,name],attributeValues`
+      )
       .pipe(
         map((response) => {
           return response?.dataSets;
@@ -78,12 +80,26 @@ export class ReportingToolsService {
       );
   }
 
-  getAllDataSets(): Observable<DataSets[]> {
+  getAllDataSets(datasetClosedDateAttribute: {
+    id: string;
+    name?: string;
+  }): Observable<DataSets[]> {
     return this.httpClient
-      .get(`dataSets.json?paging=false&fields=id,name`)
+      .get(`dataSets.json?paging=false&fields=id,name,attributeValues`)
       .pipe(
         map((response) => {
-          return response?.dataSets;
+          return datasetClosedDateAttribute
+            ? response?.dataSets.filter(
+                (dataSet) =>
+                  (
+                    dataSet?.attributeValues?.filter(
+                      (attributeValue) =>
+                        attributeValue?.attribute?.id ===
+                        datasetClosedDateAttribute
+                    ) || []
+                  ).length === 0
+              ) || []
+            : response?.dataSets;
         }),
         catchError((error) => of(error))
       );

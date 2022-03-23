@@ -101,6 +101,7 @@ export class FacilitiesListComponent implements OnInit {
           userSupportKeys,
           systemConfigs,
           currentUser,
+          configurations: this.configurations,
         },
       })
       .afterClosed()

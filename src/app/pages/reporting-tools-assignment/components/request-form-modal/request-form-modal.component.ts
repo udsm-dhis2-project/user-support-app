@@ -56,7 +56,12 @@ export class RequestFormModalComponent implements OnInit {
     this.assignedDataSets$ = this.reportingToolsService.getAssignedDataSets(
       this.dialogData?.facility?.id
     );
-    this.allDataSets$ = this.reportingToolsService.getAllDataSets();
+    this.allDataSets$ = this.reportingToolsService.getAllDataSets(
+      this.dialogData?.configurations &&
+        this.dialogData?.configurations?.datasetClosedDateAttribute?.id
+        ? this.dialogData?.configurations?.datasetClosedDateAttribute?.id
+        : null
+    );
   }
 
   onClose(event: Event): void {

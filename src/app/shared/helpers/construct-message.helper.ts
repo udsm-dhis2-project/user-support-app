@@ -5,7 +5,10 @@ export function constructMessageForFacilityAssignment(assignmentDetails: any) {
       ? `Naomba kuongezewa fomu zifuatazo kwenye kituo: ${
           assignmentDetails?.organisationUnit?.name +
           ' - ' +
-          assignmentDetails?.organisationUnit?.parent?.name
+          assignmentDetails?.organisationUnit?.parent?.name +
+          assignmentDetails?.organisationUnit?.parent?.parent?.name
+            ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
+            : ''
         } \n` +
         assignmentDetails?.additions
           .map((addition, index) => {
@@ -21,7 +24,10 @@ export function constructMessageForFacilityAssignment(assignmentDetails: any) {
       ? `Naomba kuondolewa fomu zifuatazo kwenye kituo: ${
           assignmentDetails?.organisationUnit?.name +
           ' - ' +
-          assignmentDetails?.organisationUnit?.parent?.name
+          assignmentDetails?.organisationUnit?.parent?.name +
+          assignmentDetails?.organisationUnit?.parent?.parent?.name
+            ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
+            : ''
         } \n` +
         assignmentDetails?.deletions
           .map((deletion, index) => {
@@ -44,7 +50,10 @@ export function getDataStoreDetailsForFormRequests(assignmentDetails) {
         ' datasets from ' +
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
-        assignmentDetails?.organisationUnit?.parent?.name
+        assignmentDetails?.organisationUnit?.parent?.name +
+        assignmentDetails?.organisationUnit?.parent?.parent?.name
+        ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
+        : ''
       : '';
 
   action +=
@@ -60,7 +69,10 @@ export function getDataStoreDetailsForFormRequests(assignmentDetails) {
         ' datasets to ' +
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
-        assignmentDetails?.organisationUnit?.parent?.name
+        assignmentDetails?.organisationUnit?.parent?.name +
+        assignmentDetails?.organisationUnit?.parent?.parent?.name
+        ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
+        : ''
       : '';
 
   let replyMessage = '';
@@ -71,7 +83,10 @@ export function getDataStoreDetailsForFormRequests(assignmentDetails) {
         ' datasets from ' +
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
-        assignmentDetails?.organisationUnit?.parent?.name
+        assignmentDetails?.organisationUnit?.parent?.name +
+        assignmentDetails?.organisationUnit?.parent?.parent?.name
+        ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
+        : ''
       : '';
 
   replyMessage +=
@@ -87,7 +102,10 @@ export function getDataStoreDetailsForFormRequests(assignmentDetails) {
         ' datasets to ' +
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
-        assignmentDetails?.organisationUnit?.parent?.name
+        assignmentDetails?.organisationUnit?.parent?.name +
+        assignmentDetails?.organisationUnit?.parent?.parent?.name
+        ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
+        : ''
       : '';
 
   return {
