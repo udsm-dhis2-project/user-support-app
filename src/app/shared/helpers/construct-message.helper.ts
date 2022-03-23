@@ -6,9 +6,10 @@ export function constructMessageForFacilityAssignment(assignmentDetails: any) {
           assignmentDetails?.organisationUnit?.name +
           ' - ' +
           assignmentDetails?.organisationUnit?.parent?.name +
+          (assignmentDetails?.organisationUnit?.parent?.parent &&
           assignmentDetails?.organisationUnit?.parent?.parent?.name
             ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
-            : ''
+            : '')
         } \n` +
         assignmentDetails?.additions
           .map((addition, index) => {
@@ -25,9 +26,10 @@ export function constructMessageForFacilityAssignment(assignmentDetails: any) {
           assignmentDetails?.organisationUnit?.name +
           ' - ' +
           assignmentDetails?.organisationUnit?.parent?.name +
+          (assignmentDetails?.organisationUnit?.parent?.parent &&
           assignmentDetails?.organisationUnit?.parent?.parent?.name
             ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
-            : ''
+            : '')
         } \n` +
         assignmentDetails?.deletions
           .map((deletion, index) => {
@@ -51,9 +53,10 @@ export function getDataStoreDetailsForFormRequests(assignmentDetails) {
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
         assignmentDetails?.organisationUnit?.parent?.name +
+        (assignmentDetails?.organisationUnit?.parent?.parent &&
         assignmentDetails?.organisationUnit?.parent?.parent?.name
-        ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
-        : ''
+          ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
+          : '')
       : '';
 
   action +=
@@ -70,9 +73,10 @@ export function getDataStoreDetailsForFormRequests(assignmentDetails) {
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
         assignmentDetails?.organisationUnit?.parent?.name +
+        (assignmentDetails?.organisationUnit?.parent?.parent &&
         assignmentDetails?.organisationUnit?.parent?.parent?.name
-        ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
-        : ''
+          ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
+          : '')
       : '';
 
   let replyMessage = '';
@@ -84,9 +88,10 @@ export function getDataStoreDetailsForFormRequests(assignmentDetails) {
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
         assignmentDetails?.organisationUnit?.parent?.name +
+        (assignmentDetails?.organisationUnit?.parent?.parent &&
         assignmentDetails?.organisationUnit?.parent?.parent?.name
-        ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
-        : ''
+          ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
+          : '')
       : '';
 
   replyMessage +=
@@ -103,9 +108,10 @@ export function getDataStoreDetailsForFormRequests(assignmentDetails) {
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
         assignmentDetails?.organisationUnit?.parent?.name +
+        (assignmentDetails?.organisationUnit?.parent?.parent &&
         assignmentDetails?.organisationUnit?.parent?.parent?.name
-        ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
-        : ''
+          ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
+          : '')
       : '';
 
   return {

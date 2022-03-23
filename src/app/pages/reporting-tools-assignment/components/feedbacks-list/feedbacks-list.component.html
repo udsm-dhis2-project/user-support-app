@@ -49,8 +49,11 @@
             <td></td>
             <td colspan="100%">
               <div class="w-100 d-flex justify-content-between">
-                <div style="width: 90%" class="more-contents">
-                  <div class="h6">
+                <div style="width: 85%" class="more-contents">
+                  <div
+                    class="h6"
+                    [ngClass]="{ 'text-danger': dataRow?.shouldAlert }"
+                  >
                     <span>{{ dataRow?.message?.subject }}</span>
                     <span class="ml-4" *ngIf="dataRow?.user">
                       From {{ dataRow?.user?.displayName }}
@@ -61,11 +64,19 @@
                   </div>
                   <div [innerHtml]="dataRow?.message?.message"></div>
                 </div>
-                <div style="width: 10%">
+                <div style="width: 15%">
+                  <p
+                    *ngIf="dataRow?.shouldAlert"
+                    class="text-center"
+                    [ngClass]="{ 'text-danger': dataRow?.shouldAlert }"
+                  >
+                    This is alerting request. Approve only when you have
+                    confirmed
+                  </p>
                   <button
                     mat-stroked-button
                     (click)="onApprove($event, dataRow)"
-                    class="btn-success float-right"
+                    class="btn-success float-right mt-5"
                   >
                     Approve
                   </button>

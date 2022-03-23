@@ -24,7 +24,8 @@ export class FeedbacksListComponent implements OnInit {
 
   ngOnInit(): void {
     this.allDataForUserSupport$ = this.dataStoreService.getAllFromNameSpace(
-      'dataStore/dhis2-user-support'
+      'dataStore/dhis2-user-support',
+      this.configurations
     );
   }
 
@@ -49,7 +50,8 @@ export class FeedbacksListComponent implements OnInit {
         if (shouldReload) {
           this.allDataForUserSupport$ =
             this.dataStoreService.getAllFromNameSpace(
-              'dataStore/dhis2-user-support'
+              'dataStore/dhis2-user-support',
+              this.configurations
             );
         }
       });

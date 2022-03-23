@@ -66,7 +66,12 @@ export class DataStoreDataService {
     );
   }
 
-  findByKeys(namespace: string, keys: string[], pager?: any): Observable<any> {
+  findByKeys(
+    namespace: string,
+    keys: string[],
+    pager?: any,
+    configurations?: any
+  ): Observable<any> {
     keys = keys.filter((key) => key !== 'configurations') || [];
     if (keys?.length === 0) {
       return of({
@@ -83,7 +88,7 @@ export class DataStoreDataService {
         paginatedKeys,
         10,
         async.reflect((key, callback) => {
-          this.findOne(namespace, key).subscribe(
+          this.findOne(namespace, key, configurations).subscribe(
             (results) => {
               data = [...data, results];
               callback(null, results);
@@ -118,7 +123,11 @@ export class DataStoreDataService {
     });
   }
 
-  findOne(namespace: string, key: string): Observable<any> {
+  findOne(
+    namespace: string,
+    key: string,
+    configurations: any
+  ): Observable<any> {
     return this.httpClient.get(`${'dataStore/' + namespace}/${key}`).pipe(
       map((response) => {
         return {
@@ -126,8 +135,13 @@ export class DataStoreDataService {
           timeSinceResponseSent: moment(
             Number(response?.ticketNumber?.replace('DS', ''))
           ).fromNow(),
+          shouldAlert: configurations?.minimumNormalMessageLength
+            ? response?.message?.message?.length >
+              configurations?.minimumNormalMessageLength
+            : false,
           message: {
             ...response?.message,
+            messageContentsLength: response?.message?.message?.length,
             message: response?.message?.message.split('\n').join('<br />'),
           },
         };
@@ -136,17 +150,20 @@ export class DataStoreDataService {
     );
   }
 
-  getAllFromNameSpace(dataStoreUrl: string): Observable<any> {
+  getAllFromNameSpace(
+    dataStoreUrl: string,
+    configurations: any
+  ): Observable<any> {
     const { key, namespace, pager } = getDataStoreUrlParams(dataStoreUrl) || {
       key: undefined,
       namespace: undefined,
     };
 
     if (key) {
-      return this.findOne(namespace, key);
+      return this.findOne(namespace, key, configurations);
     }
 
-    return this.findAll(namespace, pager);
+    return this.findAll(namespace, pager, configurations);
   }
 
   findNamespaceKeys(namespace: string): Observable<string[]> {
@@ -163,11 +180,12 @@ export class DataStoreDataService {
 
   findAll(
     namespace: string,
-    pager?: any
+    pager?: any,
+    configurations?: any
   ): Observable<{ [namespace: string]: any }> {
     return this.findNamespaceKeys(namespace).pipe(
       switchMap((keys: string[]) => {
-        return this.findByKeys(namespace, keys, pager).pipe(
+        return this.findByKeys(namespace, keys, pager, configurations).pipe(
           map((values) => values)
         );
       })
