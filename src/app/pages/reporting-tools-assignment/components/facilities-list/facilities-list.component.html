@@ -50,27 +50,73 @@
                   </mat-chip>
                 </mat-chip-list>
               </div>
-              <button
-                (click)="
-                  openRequestFormModal(
-                    $event,
-                    dataRow,
-                    userSupportKeys,
-                    systemConfigs,
-                    currentUser
-                  )
-                "
-                mat-stroked-button
-                [ngClass]="{
-                  'disabled-button': dataRow?.hasPendingRequest
-                }"
-                class="action-btns"
-                [title]="
-                  dataRow?.hasPendingRequest ? 'Waiting for response' : ''
-                "
-              >
-                {{ dataRow?.hasPendingRequest ? 'View' : 'Request form' }}
-              </button>
+              <div class="w-50">
+                <div class="w-100 d-flex justify-content-end">
+                  <div class="w-50">
+                    <button
+                      (click)="
+                        openRequestFormModal(
+                          $event,
+                          dataRow,
+                          userSupportKeys,
+                          systemConfigs,
+                          currentUser
+                        )
+                      "
+                      mat-stroked-button
+                      [ngClass]="{
+                        'disabled-button': dataRow?.hasPendingRequest
+                      }"
+                      class="action-btns"
+                      [title]="
+                        dataRow?.hasPendingRequest ? 'Waiting for response' : ''
+                      "
+                    >
+                      {{ dataRow?.hasPendingRequest ? 'View' : 'Request form' }}
+                    </button>
+                  </div>
+                  <div class="w-50">
+                    <div class="w-100">
+                      <button
+                        class="ml-2"
+                        style="color: red"
+                        mat-stroked-button
+                        (click)="onCancelAll($event, dataRow, dataRow, false)"
+                        *ngIf="dataRow?.hasPendingRequest"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                    <div
+                      class="w-100"
+                      *ngIf="
+                        showConfirmButtons && dataRow?.id === currentOrgUnit?.id
+                      "
+                    >
+                      <button
+                        mat-button
+                        (click)="onUnConfirm($event)"
+                        class="ml-2 btn-danger"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        mat-button
+                        class="ml-2 btn-success"
+                        (click)="onCancelAll($event, dataRow, dataRow, true)"
+                      >
+                        Confirm
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="w-100"
+                  *ngIf="updating && dataRow?.id === currentOrgUnit?.id"
+                >
+                  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                </div>
+              </div>
             </div>
           </td>
         </tr>

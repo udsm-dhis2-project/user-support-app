@@ -57,9 +57,44 @@
                     : !mergedDataSet?.assigned &&
                       !mergedDataSet?.hasPendingRequest
                     ? 'Assign'
-                    : 'Waiting'
+                    : mergedDataSet?.forAddition
+                    ? 'Waiting assignment'
+                    : 'Waiting un-assignment'
                 }}
               </button>
+              <a
+                *ngIf="mergedDataSet?.hasPendingRequest"
+                class="ml-2 cancel-request"
+                (click)="
+                  onCancelRequest($event, mergedDataSet, mergedDataSets, false)
+                "
+                >Cancel</a
+              >
+              <span
+                *ngIf="
+                  showConfirmingButtons &&
+                  mergedDataSet?.id === currentDataset?.id
+                "
+              >
+                <button mat-button class="ml-2 btn-danger">Cancel</button>
+                <button
+                  mat-button
+                  class="ml-2 btn-success"
+                  (click)="
+                    onCancelRequest($event, mergedDataSet, mergedDataSets, true)
+                  "
+                >
+                  Confirm
+                </button>
+              </span>
+              <div
+                class="w-100"
+                *ngIf="
+                  updatingRequest && mergedDataSet?.id === currentDataset?.id
+                "
+              >
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+              </div>
             </td>
           </tr>
         </ng-container>

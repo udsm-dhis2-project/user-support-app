@@ -120,18 +120,24 @@ export function getDataStoreDetailsForFormRequests(assignmentDetails) {
     ticketNumber: assignmentDetails?.ticketNumber,
     method: 'POST',
     payload: {
-      deletions: assignmentDetails?.deletions.map((deletion) => {
-        return {
-          id: deletion?.id,
-          name: deletion?.name,
-        };
-      }),
-      additions: assignmentDetails?.additions.map((addition) => {
-        return {
-          id: addition?.id,
-          name: addition?.name,
-        };
-      }),
+      deletions:
+        assignmentDetails?.deletions?.length > 0
+          ? assignmentDetails?.deletions.map((deletion) => {
+              return {
+                id: deletion?.id,
+                name: deletion?.name,
+              };
+            })
+          : [],
+      additions:
+        assignmentDetails?.additions?.length > 0
+          ? assignmentDetails?.additions.map((addition) => {
+              return {
+                id: addition?.id,
+                name: addition?.name,
+              };
+            })
+          : [],
     },
     url: `organisationUnits/${assignmentDetails?.organisationUnit?.id}/dataSets.json`,
   };

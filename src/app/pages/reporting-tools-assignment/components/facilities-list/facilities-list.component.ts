@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
+import { DataStoreDataService } from 'src/app/core/services/datastore.service';
+import { MessagesDataService } from 'src/app/core/services/messages.service';
 import { ReportingToolsService } from 'src/app/core/services/reporting-tools.service';
 import { OrgUnitLevelsModel } from 'src/app/shared/models/organisation-units.model';
 import {
@@ -26,10 +29,20 @@ export class FacilitiesListComponent implements OnInit {
   reportingToolsResponse$: Observable<ReportingToolsResponseModel>;
   pageCount: number = 10;
   lowestLevel: number;
+  updating: boolean = false;
+  showConfirmButtons: boolean = false;
+  currentOrgUnit: any;
   constructor(
     private reportingToolsService: ReportingToolsService,
-    private dialog: MatDialog
+    private dataStoreService: DataStoreDataService,
+    private messageService: MessagesDataService,
+    private dialog: MatDialog,
+    private _snackBar: MatSnackBar
   ) {}
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
+  }
 
   ngOnInit(): void {
     this.lowestLevel = this.orgUnitLevels[0]?.level;
@@ -122,5 +135,45 @@ export class FacilitiesListComponent implements OnInit {
         this.searchingText,
         this.userSupportKeys
       );
+  }
+
+  onCancelAll(event: Event, data: any, ou: any, confirm: boolean): void {
+    event.stopPropagation();
+    this.currentOrgUnit = ou;
+    if (confirm) {
+      this.showConfirmButtons = false;
+      this.updating = true;
+      this.messageService
+        .getMessagesMatchingTicketNumbers(data?.keys)
+        .subscribe((messageResponse) => {
+          if (messageResponse) {
+            console.log(messageResponse);
+            this.dataStoreService
+              .deleteAllKeysAndUpdateMessage(data?.keys, messageResponse)
+              .subscribe((response) => {
+                if (response) {
+                  // TODO: Add support to handle errors
+                  this.updating = false;
+                  this.openSnackBar(
+                    'Successfully cancelled all requests',
+                    'Close'
+                  );
+
+                  this.dataStoreChanged.emit(true);
+                  setTimeout(() => {
+                    this._snackBar.dismiss();
+                  }, 2000);
+                }
+              });
+          }
+        });
+    } else {
+      this.showConfirmButtons = true;
+    }
+  }
+
+  onUnConfirm(event: Event): void {
+    event.stopPropagation();
+    this.showConfirmButtons = false;
   }
 }

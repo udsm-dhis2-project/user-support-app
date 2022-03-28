@@ -57,13 +57,31 @@ export class DataStoreDataService {
       );
   }
 
-  getDataViaKey(key: string): Observable<any> {
-    return this.httpClient.get(`dataStore/dhis2-user-support/${key}`).pipe(
-      map((response) => {
-        return response;
-      }),
-      catchError((error) => of(error))
-    );
+  getDataViaKey(keys: string[]): Observable<any[]> {
+    let data = [];
+    let errors = {};
+    return new Observable((observer) => {
+      async.mapLimit(
+        keys,
+        2,
+        async.reflect((key, callback) => {
+          this.httpClient.get(`dataStore/dhis2-user-support/${key}`).subscribe(
+            (results) => {
+              data = [...data, results];
+              callback(null, results);
+            },
+            (err) => {
+              errors[key] = err;
+              callback(err, null);
+            }
+          );
+        }),
+        () => {
+          observer.next(data);
+          observer.complete();
+        }
+      );
+    });
   }
 
   findByKeys(
@@ -197,5 +215,74 @@ export class DataStoreDataService {
       map((response) => response),
       catchError((error) => of(error))
     );
+  }
+
+  updateKeyAndCreateMessage(
+    key: string,
+    data: any,
+    message: any
+  ): Observable<any> {
+    return zip(
+      this.httpClient.put(`dataStore/dhis2-user-support/${key}`, data),
+      this.httpClient.post(`messageConversations/${message?.id}`, message?.text)
+    ).pipe(
+      map((response) => response),
+      catchError((error) => of(error))
+    );
+  }
+
+  deleteKeyAndSendMessage(key: string, message: any): Observable<any> {
+    return zip(
+      this.httpClient.delete(`dataStore/dhis2-user-support/${key}`),
+      this.httpClient.post(`messageConversations/${message?.id}`, message?.text)
+    ).pipe(
+      map((response) => response),
+      catchError((error) => of(error))
+    );
+  }
+
+  deleteAllKeysAndUpdateMessage(
+    keys: string[],
+    keyedMessages: any
+  ): Observable<any> {
+    let data = [];
+    let errors = {};
+    return new Observable((observer) => {
+      async.mapLimit(
+        keys,
+        10,
+        async.reflect((key, callback) => {
+          zip(
+            this.httpClient.delete(`dataStore/dhis2-user-support/${key}`),
+            this.httpClient.post(
+              `messageConversations/${keyedMessages[key]?.id}`,
+              keyedMessages[key]?.text
+            ),
+            this.httpClient.post(
+              `messageConversations/${keyedMessages[key]?.id}/status?messageConversationStatus=INVALID`,
+              null
+            )
+          ).subscribe(
+            (results) => {
+              data = [...data, results];
+              callback(null, results);
+            },
+            (err) => {
+              errors[key] = err;
+              callback(err, null);
+            }
+          );
+        }),
+        () => {
+          const response = {
+            data,
+            errors,
+          };
+
+          observer.next(response);
+          observer.complete();
+        }
+      );
+    });
   }
 }

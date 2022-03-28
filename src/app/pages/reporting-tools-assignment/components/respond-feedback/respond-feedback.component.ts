@@ -59,7 +59,7 @@ export class RespondFeedbackComponent implements OnInit {
           .approveChanges({
             ...data,
             messageConversation,
-            approvalMessage: 'Ombi lako limeshughulikiwa',
+            approvalMessage: 'Ombi lako limeshughulikiwa\n\n Karibu!',
           })
           .subscribe((response) => {
             if (response) {

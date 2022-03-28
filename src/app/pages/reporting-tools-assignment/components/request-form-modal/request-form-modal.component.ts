@@ -49,9 +49,8 @@ export class RequestFormModalComponent implements OnInit {
       ) || [];
     if (matchedKeys.length > 0) {
       this.ouHasPendingRequest = true;
-      this.dataStoreMessageDetails$ = this.dataStoreService.getDataViaKey(
-        matchedKeys[0]
-      );
+      this.dataStoreMessageDetails$ =
+        this.dataStoreService.getDataViaKey(matchedKeys);
     }
     this.assignedDataSets$ = this.reportingToolsService.getAssignedDataSets(
       this.dialogData?.facility?.id
@@ -124,8 +123,9 @@ export class RequestFormModalComponent implements OnInit {
         setTimeout(() => {
           this._snackBar.dismiss();
         }, 2000);
-        this.dataStoreMessageDetails$ =
-          this.dataStoreService.getDataViaKey(dataStoreKey);
+        this.dataStoreMessageDetails$ = this.dataStoreService.getDataViaKey([
+          dataStoreKey,
+        ]);
       });
   }
 
