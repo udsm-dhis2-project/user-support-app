@@ -243,7 +243,8 @@ export class DataStoreDataService {
 
   deleteAllKeysAndUpdateMessage(
     keys: string[],
-    keyedMessages: any
+    keyedMessages: any,
+    reasonForCancellingRequest: string
   ): Observable<any> {
     let data = [];
     let errors = {};
@@ -256,7 +257,7 @@ export class DataStoreDataService {
             this.httpClient.delete(`dataStore/dhis2-user-support/${key}`),
             this.httpClient.post(
               `messageConversations/${keyedMessages[key]?.id}`,
-              keyedMessages[key]?.text
+              keyedMessages[key]?.text + '\n \n' + reasonForCancellingRequest
             ),
             this.httpClient.post(
               `messageConversations/${keyedMessages[key]?.id}/status?messageConversationStatus=INVALID`,

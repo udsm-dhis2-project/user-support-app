@@ -32,6 +32,7 @@ export class FacilitiesListComponent implements OnInit {
   updating: boolean = false;
   showConfirmButtons: boolean = false;
   currentOrgUnit: any;
+  reasonForCancellingRequest: string;
   constructor(
     private reportingToolsService: ReportingToolsService,
     private dataStoreService: DataStoreDataService,
@@ -147,12 +148,16 @@ export class FacilitiesListComponent implements OnInit {
         .getMessagesMatchingTicketNumbers(data?.keys)
         .subscribe((messageResponse) => {
           if (messageResponse) {
-            console.log(messageResponse);
             this.dataStoreService
-              .deleteAllKeysAndUpdateMessage(data?.keys, messageResponse)
+              .deleteAllKeysAndUpdateMessage(
+                data?.keys,
+                messageResponse,
+                this.reasonForCancellingRequest
+              )
               .subscribe((response) => {
                 if (response) {
                   // TODO: Add support to handle errors
+                  this.reasonForCancellingRequest = null;
                   this.updating = false;
                   this.openSnackBar(
                     'Successfully cancelled all requests',

@@ -172,4 +172,9 @@ export class RequestFormComponent implements OnInit {
       this.showConfirmingButtons = true;
     }
   }
+
+  onUnConfirm(event: Event): void {
+    event.stopPropagation();
+    this.showConfirmingButtons = false;
+  }
 }

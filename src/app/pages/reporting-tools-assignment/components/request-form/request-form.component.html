@@ -76,7 +76,13 @@
                   mergedDataSet?.id === currentDataset?.id
                 "
               >
-                <button mat-button class="ml-2 btn-danger">Cancel</button>
+                <button
+                  mat-button
+                  (click)="onUnConfirm($event)"
+                  class="ml-2 btn-danger"
+                >
+                  Cancel
+                </button>
                 <button
                   mat-button
                   class="ml-2 btn-success"

@@ -16,7 +16,7 @@
         <tr>
           <th style="width: 15px">SN</th>
           <th>Facility</th>
-          <th>Data sets</th>
+          <th style="width: 30px">Data sets</th>
           <th></th>
         </tr>
       </thead>
@@ -35,12 +35,20 @@
                   pageCount
             }}
           </td>
-          <td>{{ dataRow?.name }}</td>
+          <td>
+            {{
+              dataRow?.parent && dataRow?.parent?.parent
+                ? dataRow?.parent?.parent?.name + ', '
+                : ''
+            }}
+            {{ dataRow?.parent ? dataRow?.parent?.name + ', ' : '' }}
+            {{ dataRow?.name }}
+          </td>
           <td>{{ dataRow?.dataSets }}</td>
           <td>
             <div class="d-flex justify-content-end">
               <div
-                class="w-50"
+                class="w-25"
                 style="font-size: 0.8rem"
                 *ngIf="dataRow?.hasPendingRequest"
               >
@@ -50,7 +58,7 @@
                   </mat-chip>
                 </mat-chip-list>
               </div>
-              <div class="w-50">
+              <div class="w-75">
                 <div class="w-100 d-flex justify-content-end">
                   <div class="w-50">
                     <button
@@ -88,25 +96,39 @@
                       </button>
                     </div>
                     <div
-                      class="w-100"
+                      class="w-100 mt-2"
                       *ngIf="
                         showConfirmButtons && dataRow?.id === currentOrgUnit?.id
                       "
                     >
-                      <button
-                        mat-button
-                        (click)="onUnConfirm($event)"
-                        class="ml-2 btn-danger"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        mat-button
-                        class="ml-2 btn-success"
-                        (click)="onCancelAll($event, dataRow, dataRow, true)"
-                      >
-                        Confirm
-                      </button>
+                      <div class="w-100">
+                        <mat-form-field class="w-100">
+                          <mat-label>Reason for cancelling</mat-label>
+                          <textarea
+                            [(ngModel)]="reasonForCancellingRequest"
+                            required
+                            matInput
+                            placeholder="E.g Nilituma kimakosa"
+                          ></textarea>
+                        </mat-form-field>
+                      </div>
+                      <div class="w-100">
+                        <button
+                          mat-button
+                          (click)="onUnConfirm($event)"
+                          class="ml-2 btn-danger"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          mat-button
+                          [disabled]="!reasonForCancellingRequest"
+                          class="ml-2 btn-success"
+                          (click)="onCancelAll($event, dataRow, dataRow, true)"
+                        >
+                          Confirm
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
