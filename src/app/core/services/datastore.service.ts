@@ -160,7 +160,9 @@ export class DataStoreDataService {
           message: {
             ...response?.message,
             messageContentsLength: response?.message?.message?.length,
-            message: response?.message?.message.split('\n').join('<br />'),
+            message: response?.message?.message
+              ? response?.message?.message.split('\n').join('<br />')
+              : response?.message?.text.split('\n').join('<br />'),
           },
         };
       }),
@@ -181,7 +183,12 @@ export class DataStoreDataService {
       return this.findOne(namespace, key, configurations);
     }
 
-    return this.findAll(namespace, pager, configurations);
+    return this.findAll(namespace, pager, configurations).pipe(
+      map((response) => {
+        return response;
+      }),
+      catchError((error) => of(error))
+    );
   }
 
   findNamespaceKeys(namespace: string): Observable<string[]> {

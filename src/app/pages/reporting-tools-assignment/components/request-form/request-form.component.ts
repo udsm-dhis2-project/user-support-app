@@ -114,7 +114,7 @@ export class RequestFormComponent implements OnInit {
                 (deletion) => deletion?.id !== requestDetails?.id
               ) || []
             : [],
-        addtions:
+        additions:
           requestDetails?.details?.payload?.additions?.length > 0
             ? requestDetails?.details?.payload?.additions.filter(
                 (addition) => addition?.id !== requestDetails?.id
@@ -133,17 +133,20 @@ export class RequestFormComponent implements OnInit {
       const messageData = {
         subject: requestDetails?.details?.message?.subject,
         messageType: 'TICKET',
-        text: message?.message,
+        text: 'Kuna mabadiliko, \n\n' + message?.message,
+        message: 'Kuna mabadiliko, \n\n' + message?.message,
       };
+
       const dataStorePayload =
         getDataStoreDetailsForFormRequests(assignmentDetails);
       const data = {
         ...requestDetails?.details,
-        payload: newPayload,
         message: messageData,
         ticketNumber: requestDetails?.details?.ticketNumber,
         ...dataStorePayload,
+        payload: newPayload,
       };
+
       // TODO: Handle error on update
 
       this.messageAndDataStoreService
@@ -153,8 +156,8 @@ export class RequestFormComponent implements OnInit {
         .subscribe((messageConversationResponse) => {
           if (messageConversationResponse && messageConversationResponse?.id) {
             this.dataStoreService
-              .updateKeyAndCreateMessage(requestDetails?.details?.id, data, {
-                text: 'Kuna mabadiliko, \n' + data?.message?.text,
+              .updateKeyAndCreateMessage(data?.id, data, {
+                text: 'Kuna mabadiliko, \n\n' + data?.message?.text,
                 id: messageConversationResponse?.id,
               })
               .subscribe((response) => {
