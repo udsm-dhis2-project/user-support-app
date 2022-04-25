@@ -3,9 +3,16 @@ import { CommonModule } from '@angular/common';
 import { UserAccountsRoutingModule } from './user-accounts-routing.module';
 import { userAccountsPages } from './pages';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { accountsComponents } from './components';
+import { accountsModals } from './modals';
 
 @NgModule({
-  declarations: [...userAccountsPages],
+  declarations: [
+    ...userAccountsPages,
+    ...accountsComponents,
+    ...accountsModals,
+  ],
   imports: [CommonModule, UserAccountsRoutingModule, SharedModule],
+  entryComponents: [...accountsModals],
 })
 export class UserAccountsModule {}

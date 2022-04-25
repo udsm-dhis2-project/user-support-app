@@ -1,0 +1,111 @@
+<div
+  class="users-list-container"
+  *ngIf="{ usersResponse: usersResponse$ | async } as params"
+>
+  <div class="w-100 mt-2 mb-2">
+    <mat-form-field class="w-50">
+      <mat-label>Search </mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput (keyup)="searchUser($event)" />
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="params?.usersResponse">
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width: 20px">SN</th>
+          <th>Names</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Last login</th>
+          <th>Disabled</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let user of params?.usersResponse?.users; let count = index"
+        >
+          <td>
+            {{ (currentPage - 1) * pageSize + count + 1 }}
+          </td>
+          <td>
+            {{ user?.name }}
+          </td>
+          <td>
+            {{ user?.userCredentials?.username }}
+          </td>
+          <td>
+            {{ user?.email }}
+          </td>
+          <td>
+            {{ user?.userCredentials?.lastLogin }}
+          </td>
+          <td>
+            {{ user?.userCredentials?.disabled ? 'Yes' : '' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-end mt-2">
+      <button
+        mat-stroked-button
+        [disabled]="params?.usersResponse?.pager?.page === 1"
+        (click)="getUsers($event, params?.usersResponse?.pager, 'prev')"
+      >
+        Previous
+      </button>
+      <button
+        class="ml-2"
+        mat-stroked-button
+        (click)="getUsers($event, params?.usersResponse?.pager, 'next')"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+
+  <mat-progress-bar
+    *ngIf="!params?.usersResponse"
+    mode="indeterminate"
+  ></mat-progress-bar>
+
+  <div mat-dialog-actions class="d-flex justify-content-end">
+    <button
+      mat-stroked-button
+      [matMenuTriggerFor]="menu"
+      style="
+        box-sizing: border-box;
+        font-family: Roboto, sans-serif;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        cursor: pointer;
+        text-decoration: none;
+        font-size: inherit;
+        font-weight: inherit;
+        vertical-align: bottom;
+        background-color: #276696;
+        color: #fff;
+        transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+        overflow: hidden;
+        text-align: center;
+        float: right;
+        text-align: right;
+        margin-top: 1rem;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        position: fixed;
+        z-index: 1005;
+        border-radius: 50%;
+      "
+    >
+      New
+    </button>
+
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="openUploadingPage($event)">
+        Bulk (Uploading)
+      </button>
+      <button mat-menu-item [routerLink]="'/user-accounts/new'">New</button>
+    </mat-menu>
+  </div>
+</div>

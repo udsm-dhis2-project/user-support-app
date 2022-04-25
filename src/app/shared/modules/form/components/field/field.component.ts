@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { Field } from '../../models/field.model';
+import { MetadataService } from '../../services/metadata-service.service';
 
 @Component({
   selector: 'app-field',
@@ -17,8 +18,9 @@ export class FieldComponent {
   @Input() fieldClass: string;
   @Input() shouldDisable: boolean;
   members$: Observable<any[]> = of([{ id: 'searching', display: 'Search' }]);
+  usernameExist$: Observable<boolean>;
 
-  constructor() {}
+  constructor(private metadataService: MetadataService) {}
 
   @Output() fieldUpdate: EventEmitter<FormGroup> =
     new EventEmitter<FormGroup>();
@@ -63,6 +65,20 @@ export class FieldComponent {
   getSelectedItemFromOption(event: Event, item, key): void {
     event.stopPropagation();
     const value = item?.isDrug ? item?.formattedKey : item?.uuid;
+    let objectToUpdate = {};
+    objectToUpdate[key] = value;
+    this.form.patchValue(objectToUpdate);
+    this.fieldUpdate.emit(this.form);
+  }
+
+  onCheckUsername(value: string, key: string): void {
+    this.usernameExist$ = this.metadataService.searchUserByUsername(value);
+    this.usernameExist$.subscribe((exists) => {
+      if (exists) {
+        this.form.controls.username.setErrors({ exists: exists });
+      }
+    });
+
     let objectToUpdate = {};
     objectToUpdate[key] = value;
     this.form.patchValue(objectToUpdate);

@@ -22,4 +22,24 @@ export class UsersDataService {
         catchError((error) => of(error))
       );
   }
+
+  getUsersList(pageSize: number, page: number, q?: string): Observable<any> {
+    return this.httpClient
+      .get(
+        `users.json?pageSize=${pageSize}&page=${page}${
+          q ? '&query=' + q : ''
+        }&fields=id,firstName,surname,name,email,userCredentials[username,lastlogin,disabled]&order=firstName~asc`
+      )
+      .pipe(
+        map((response) => {
+          return response;
+        })
+      );
+  }
+
+  getUserByUsername(username: string): Observable<boolean> {
+    return this.httpClient
+      .get(`users?filter=userCredentials.username:eq:${username}&fields=id`)
+      .pipe(map((response) => response?.users?.length > 0));
+  }
 }

@@ -62,15 +62,14 @@
                     routerLinkActive="active-menu-item"
                     [routerLink]="'user-accounts/request'"
                     >Account request</mat-list-item
-                  >
+                  > -->
                   <mat-list-item
                     role="listitem"
                     class="list-item"
-                    [disabled]="true"
                     routerLinkActive="active-menu-item"
-                    [routerLink]="'user-accounts/password-recovery'"
-                    >Password recovery</mat-list-item
-                  > -->
+                    [routerLink]="'user-accounts'"
+                    >User accounts</mat-list-item
+                  >
                 </mat-list>
               </div>
             </mat-drawer>
@@ -84,7 +83,7 @@
                     [routerLink]="'reporting-tools/request'"
                     >Form request</mat-list-item
                   >
-                  <!-- <mat-list-item
+                  <mat-list-item
                     role="listitem"
                     class="list-item"
                     routerLinkActive="active-menu-item"
@@ -97,9 +96,9 @@
                     routerLinkActive="active-menu-item"
                     class="list-item"
                     [disabled]="true"
-                    [routerLink]="'password-recovery'"
-                    >Password recovery</mat-list-item
-                  > -->
+                    [routerLink]="'user-accounts'"
+                    >User account</mat-list-item
+                  >
                 </mat-list>
                 <div class="contents-container">
                   <router-outlet></router-outlet>
