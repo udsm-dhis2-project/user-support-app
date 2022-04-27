@@ -35,4 +35,17 @@ export class ApproveFeedbackService {
       return of(null);
     }
   }
+
+  rejectDataSetAssignment(data: any): Observable<any> {
+    return zip(
+      this.httpClient.put(`dataStore/dhis2-user-support/${data?.id}`, data),
+      this.httpClient.post(
+        `messageConversations/${data?.messageConversation?.id}`,
+        data?.rejectionReasonMessage
+      )
+    ).pipe(
+      map((response) => response),
+      catchError((error) => error)
+    );
+  }
 }

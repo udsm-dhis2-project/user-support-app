@@ -31,13 +31,29 @@
       [innerHtml]="dialogData?.message?.message"
     ></div>
 
+    <div class="w-100 mt-2" *ngIf="dialogData?.actionType === 'REJECT'">
+      <mat-form-field class="w-100">
+        <mat-label>Reason for rejection</mat-label>
+        <textarea matInput [(ngModel)]="reasonForRejection" rows="3"></textarea>
+      </mat-form-field>
+    </div>
+    <p
+      class="text-warning mt-2"
+      *ngIf="reasonForRejection && reasonForRejection.length < 8"
+    >
+      Not a valid reason
+    </p>
     <div mat-dialog-actions class="d-flex justify-content-end">
       <button mat-button (click)="onClose($event)">
         {{ successfullyApproved ? 'Done' : 'Close' }}
       </button>
       <button
         mat-button
-        [disabled]="successfullyApproved"
+        [disabled]="
+          successfullyApproved ||
+          (dialogData?.actionType === 'REJECT' &&
+            (!reasonForRejection || reasonForRejection?.length < 8))
+        "
         class="ml-2 btn-success"
         (click)="onSave($event, dialogData, params?.messageConversation)"
       >
@@ -47,8 +63,18 @@
   </div>
 </div>
 
-<div class="w-100 success-message" *ngIf="savedData && !missingKey">
+<div
+  class="w-100 success-message"
+  *ngIf="savedData && !missingKey && dialogData?.actionType === 'APPROVE'"
+>
   <p>Successfully updated!</p>
+</div>
+
+<div
+  class="w-100 success-message"
+  *ngIf="savedData && !missingKey && dialogData?.actionType === 'REJECT'"
+>
+  <p>Successfully sent!</p>
 </div>
 
 <div *ngIf="missingKey">

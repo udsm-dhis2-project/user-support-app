@@ -43,7 +43,26 @@ export class FeedbacksListComponent implements OnInit {
     this.dialog
       .open(RespondFeedbackComponent, {
         width: '30%',
-        data: data,
+        data: { ...data, action: 'actionType' },
+      })
+      .afterClosed()
+      .subscribe((shouldReload) => {
+        if (shouldReload) {
+          this.allDataForUserSupport$ =
+            this.dataStoreService.getAllFromNameSpace(
+              'dataStore/dhis2-user-support',
+              this.configurations
+            );
+        }
+      });
+  }
+
+  onReject(event: Event, data: any): void {
+    event.stopPropagation();
+    this.dialog
+      .open(RespondFeedbackComponent, {
+        width: '30%',
+        data: { ...data, actionType: 'REJECT' },
       })
       .afterClosed()
       .subscribe((shouldReload) => {

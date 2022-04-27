@@ -76,9 +76,16 @@
                   <button
                     mat-stroked-button
                     (click)="onApprove($event, dataRow)"
-                    class="btn-success float-right mt-5"
+                    class="btn-success float-right mt-5 ml-2"
                   >
                     Approve
+                  </button>
+                  <button
+                    mat-stroked-button
+                    (click)="onReject($event, dataRow)"
+                    class="btn-danger float-right mt-5 ml-2"
+                  >
+                    Reject
                   </button>
                 </div>
               </div>

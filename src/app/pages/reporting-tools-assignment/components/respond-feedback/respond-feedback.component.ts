@@ -19,6 +19,7 @@ export class RespondFeedbackComponent implements OnInit {
   successfullyApproved: boolean = false;
   savedData: boolean = false;
   missingKey: boolean = false;
+  reasonForRejection: string = '';
   constructor(
     private dialogRef: MatDialogRef<RespondFeedbackComponent>,
     @Inject(MAT_DIALOG_DATA) data,
@@ -55,26 +56,33 @@ export class RespondFeedbackComponent implements OnInit {
       if (response) {
         this.savingData = true;
         this.savedData = false;
-        this.approveFeedbackService
-          .approveChanges({
-            ...data,
-            messageConversation,
-            approvalMessage: 'Ombi lako limeshughulikiwa\n\n Karibu!',
-          })
-          .subscribe((response) => {
-            if (response) {
-              this.successfullyApproved = true;
-              this.savingData = false;
-              this.savedData = true;
-              this.openSnackBar('Successfully updated', 'Close');
-              setTimeout(() => {
-                this.dialogRef.close(true);
-              }, 500);
-              setTimeout(() => {
-                this._snackBar.dismiss();
-              }, 2000);
-            }
-          });
+        data?.actionType === 'APPROVE'
+          ? this.approveFeedbackService.approveChanges({
+              ...data,
+              messageConversation,
+              approvalMessage: 'Ombi lako limeshughulikiwa\n\n Karibu!',
+            })
+          : this.approveFeedbackService
+              .rejectDataSetAssignment({
+                ...data,
+                status: 'REJECTED',
+                messageConversation,
+                rejectionReasonMessage: `Ombi LIMEKATALIWA \n\n ${this.reasonForRejection}\n\n Tafadhali rudia na ubadilishe sawa sawa na maelekezo`,
+              })
+              .subscribe((response) => {
+                if (response) {
+                  this.successfullyApproved = true;
+                  this.savingData = false;
+                  this.savedData = true;
+                  this.openSnackBar('Successfully sent', 'Close');
+                  setTimeout(() => {
+                    this.dialogRef.close(true);
+                  }, 500);
+                  setTimeout(() => {
+                    this._snackBar.dismiss();
+                  }, 2000);
+                }
+              });
       } else {
         this.missingKey = true;
         this.openSnackBar('Feedback already attended', 'Close');
