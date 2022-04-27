@@ -52,6 +52,7 @@
                 style="font-size: 0.8rem"
                 *ngIf="dataRow?.hasPendingRequest"
               >
+                <!-- {{ dataRow | json }} -->
                 <mat-chip-list>
                   <mat-chip>
                     {{ dataRow?.timeSinceResponseSent }}
@@ -84,9 +85,8 @@
                     </button>
                   </div>
                   <div class="w-50">
-                    <div class="w-100">
+                    <div class="w-100 d-flex justify-content-left">
                       <button
-                        class="ml-2"
                         style="color: red"
                         mat-stroked-button
                         (click)="onCancelAll($event, dataRow, dataRow, false)"
@@ -94,6 +94,11 @@
                       >
                         Cancel
                       </button>
+                    </div>
+                    <div class="w-100" *ngIf="dataRow?.hasPendingRequest">
+                      <app-rejected-form-requests-summary
+                        [keys]="dataRow?.keys"
+                      ></app-rejected-form-requests-summary>
                     </div>
                     <div
                       class="w-100 mt-2"

@@ -153,9 +153,11 @@ export class DataStoreDataService {
           timeSinceResponseSent: moment(
             Number(response?.ticketNumber?.replace('DS', ''))
           ).fromNow(),
-          shouldAlert: configurations?.minimumNormalMessageLength
-            ? response?.message?.message?.length >
-              configurations?.minimumNormalMessageLength
+          shouldAlert: configurations
+            ? configurations?.minimumNormalMessageLength
+              ? response?.message?.message?.length >
+                configurations?.minimumNormalMessageLength
+              : false
             : false,
           message: {
             ...response?.message,

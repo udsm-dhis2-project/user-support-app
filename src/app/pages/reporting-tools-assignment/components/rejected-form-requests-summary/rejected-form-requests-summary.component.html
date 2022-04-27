@@ -1,0 +1,29 @@
+<div *ngIf="{ rejectedFormRequests: rejectedFormRequests$ | async } as params">
+  <div
+    class="mt-2"
+    *ngIf="
+      params?.rejectedFormRequests && params?.rejectedFormRequests?.length > 0
+    "
+  >
+    <div
+      style="cursor: pointer"
+      *ngFor="let rejectedFormRequest of params?.rejectedFormRequests"
+    >
+      <span class="text-warning"> Request has been rejected </span>
+      <span
+        style="margin-left: 8px"
+        (click)="setCurrentFormRequest($event, rejectedFormRequest)"
+        >Why?</span
+      >
+    </div>
+    <div
+      class="rejection-reason"
+      *ngIf="currentRejectedFormRequest"
+      [innerHtml]="currentRejectedFormRequest?.rejectionReasonMessage"
+    ></div>
+  </div>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.rejectedFormRequests"
+  ></mat-progress-bar>
+</div>
