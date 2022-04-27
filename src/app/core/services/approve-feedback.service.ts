@@ -10,6 +10,7 @@ export class ApproveFeedbackService {
   constructor(private httpClient: NgxDhis2HttpClientService) {}
 
   approveChanges(data: any): Observable<any> {
+    console.log(data);
     if (data?.method === 'POST') {
       return zip(
         this.httpClient.post(data?.url, data?.payload),
