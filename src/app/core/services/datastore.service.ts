@@ -295,4 +295,13 @@ export class DataStoreDataService {
       );
     });
   }
+
+  createValidationRuleRequest(key: string, data: any): Observable<any> {
+    return this.httpClient
+      .post(`dataStore/dhis2-user-support/${key}`, data)
+      .pipe(
+        map((response) => response),
+        catchError((error) => of(error))
+      );
+  }
 }

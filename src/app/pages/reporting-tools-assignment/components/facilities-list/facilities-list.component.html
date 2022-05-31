@@ -16,7 +16,7 @@
         <tr>
           <th style="width: 15px">SN</th>
           <th>Facility</th>
-          <th style="width: 30px">Data sets</th>
+          <th style="width: 120px">Data sets</th>
           <th></th>
         </tr>
       </thead>
@@ -61,7 +61,7 @@
               </div>
               <div class="w-75">
                 <div class="w-100 d-flex justify-content-end">
-                  <div class="w-50">
+                  <div style="width: 35%">
                     <button
                       (click)="
                         openRequestFormModal(
@@ -84,7 +84,7 @@
                       {{ dataRow?.hasPendingRequest ? 'View' : 'Request form' }}
                     </button>
                   </div>
-                  <div class="w-50">
+                  <div style="width: 65%">
                     <div class="w-100 d-flex justify-content-left">
                       <button
                         style="color: red"
@@ -108,7 +108,10 @@
                     >
                       <div class="w-100">
                         <mat-form-field class="w-100">
-                          <mat-label>Reason for cancelling</mat-label>
+                          <mat-label
+                            >Provide reason for cancelling form
+                            request</mat-label
+                          >
                           <textarea
                             [(ngModel)]="reasonForCancellingRequest"
                             required

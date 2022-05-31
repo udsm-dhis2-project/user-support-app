@@ -10,9 +10,7 @@ export const routes: Routes = [
   {
     path: 'reports',
     loadChildren: () =>
-      import('./pages/reports/reports.module').then(
-        (m) => m.ReportsModule
-      ),
+      import('./pages/reports/reports.module').then((m) => m.ReportsModule),
   },
   {
     path: 'user-accounts',
@@ -27,6 +25,13 @@ export const routes: Routes = [
       import(
         './pages/reporting-tools-assignment/reporting-tools-assignment.module'
       ).then((m) => m.ReportingToolsAssignmentModule),
+  },
+  {
+    path: 'validation-rules-request',
+    loadChildren: () =>
+      import('./pages/validation-rules/validation-rules.module').then(
+        (m) => m.ValidationRulesRequestModule
+      ),
   },
 ];
 

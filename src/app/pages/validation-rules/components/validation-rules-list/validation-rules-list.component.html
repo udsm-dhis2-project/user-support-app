@@ -1,0 +1,66 @@
+<div style="z-index: 1">
+  <div class="d-flex justify-content-between">
+    <mat-form-field class="w-50">
+      <mat-label>Search</mat-label>
+      <mat-icon matPrefix>search</mat-icon
+      ><input
+        matInput
+        (keyup)="searchValidationRule($event)"
+        placeholder="Ex. validation"
+      />
+    </mat-form-field>
+  </div>
+  <div *ngIf="{ validationRules: validationRules$ | async } as params">
+    <table class="table" *ngIf="params?.validationRules">
+      <thead>
+        <tr>
+          <th style="width: 20px">SN</th>
+          <th>Validation rule</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let validationRule of params?.validationRules;
+            let count = index
+          "
+        >
+          <td>
+            {{ count + 1 }}
+          </td>
+          <td>
+            {{ validationRule?.name }}
+          </td>
+          <td>
+            <button
+              mat-icon-button
+              [matMenuTriggerFor]="menu"
+              aria-label="Options"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button (click)="onEdit($event, validationRule)" mat-menu-item>
+                <mat-icon>edit</mat-icon>
+                <span>Edit</span>
+              </button>
+              <button
+                disabled="disabled"
+                (click)="onDelete($event, validationRule)"
+                mat-menu-item
+              >
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <mat-progress-bar
+      *ngIf="!params?.validationRules"
+      mode="indeterminate"
+    ></mat-progress-bar>
+  </div>
+</div>

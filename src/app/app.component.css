@@ -65,6 +65,7 @@
 .drawer-contents-container {
   height: auto;
   margin-top: 5px;
+  background-color: #eeeeee61
 }
 
 @media screen and (max-width: 780px) {
