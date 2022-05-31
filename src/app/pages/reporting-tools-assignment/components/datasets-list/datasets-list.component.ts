@@ -63,12 +63,20 @@ export class DatasetsListComponent implements OnInit {
 
   onRequestDataSet(event: Event, dataSet: any): void {
     event.stopPropagation();
-    this.dialog.open(OuSelectionFormRequestModalComponent, {
-      width: '50%',
-      data: {
-        dataSet,
-        currentUser: this.currentUser,
-      },
-    });
+    this.dialog
+      .open(OuSelectionFormRequestModalComponent, {
+        width: '50%',
+        data: {
+          dataSet,
+          currentUser: this.currentUser,
+        },
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated({
+          page: this.page,
+          pageSize: this.pageSize,
+        });
+      });
   }
 }

@@ -7,7 +7,7 @@
   <app-selection-filter
     *ngIf="params?.dataSetDetails"
     [dataSetDetails]="params?.dataSetDetails"
-    (selectedOus)="onGetSelectedOus($event)"
+    (selectedOus)="onGetSelectedOus($event, params?.dataSetDetails)"
   ></app-selection-filter>
   <div class="w-100 d-flex justify-content-end mt-2">
     <button mat-button (click)="onClose($event)">Close</button>
