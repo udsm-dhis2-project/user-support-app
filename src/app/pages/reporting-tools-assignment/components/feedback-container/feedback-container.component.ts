@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { OrgUnitsProvisionalService } from 'src/app/core/services/organisationunits.service';
@@ -18,6 +19,8 @@ export class FeedbackContainerComponent implements OnInit {
   userSupportKeys$: Observable<string[]>;
   orgUnitLevels$: Observable<OrgUnitLevelsModel[]>;
   showRequest: boolean = false;
+
+  selectedTab = new FormControl(0);
   constructor(
     private dataStoreService: DataStoreDataService,
     private orgUnitsProvisionalService: OrgUnitsProvisionalService
@@ -42,13 +45,17 @@ export class FeedbackContainerComponent implements OnInit {
     };
     this.orgUnitLevels$ = this.orgUnitsProvisionalService.getOrgUnitLevels();
     this.userSupportKeys$ = this.dataStoreService.getDataStoreKeys();
-    this.isFeedbackRecepient =
-      (
-        this.currentUser?.userGroups.filter(
-          (userGroup) =>
-            userGroup?.id === this.systemConfigs?.feedbackRecipients?.id
-        ) || []
-      )?.length > 0;
+    // this.isFeedbackRecepient =
+    //   (
+    //     this.currentUser?.userGroups.filter(
+    //       (userGroup) =>
+    //         userGroup?.id === this.systemConfigs?.feedbackRecipients?.id
+    //     ) || []
+    //   )?.length > 0;
+  }
+
+  changeTab(val) {
+    this.selectedTab.setValue(val);
   }
 
   onDataStoreChange(event: boolean): void {

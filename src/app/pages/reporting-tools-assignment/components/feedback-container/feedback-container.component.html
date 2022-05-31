@@ -18,17 +18,36 @@
       {{ showRequest ? 'Feebacks' : 'Requests' }}
     </mat-slide-toggle>
   </div>
-  <app-facilities-list
+  <div
     *ngIf="
       !isFeedbackRecepient && params?.userSupportKeys && params?.orgUnitLevels
     "
-    [currentUser]="currentUser"
-    [configurations]="configurations"
-    [systemConfigs]="systemConfigs"
-    [orgUnitLevels]="params?.orgUnitLevels"
-    [userSupportKeys]="params?.userSupportKeys"
-    (dataStoreChanged)="onDataStoreChange($event)"
-  ></app-facilities-list>
+  >
+    <mat-tab-group
+      mat-align-tabs="start"
+      (selectedTabChange)="changeTab(selectedTab.value)"
+      [selectedIndex]="selectedTab.value"
+      (selectedIndexChange)="selectedTab.setValue($event)"
+    >
+      <mat-tab label="Facilities">
+        <div *ngIf="selectedTab.value === 0" class="mt-2">
+          <app-facilities-list
+            [currentUser]="currentUser"
+            [configurations]="configurations"
+            [systemConfigs]="systemConfigs"
+            [orgUnitLevels]="params?.orgUnitLevels"
+            [userSupportKeys]="params?.userSupportKeys"
+            (dataStoreChanged)="onDataStoreChange($event)"
+          ></app-facilities-list>
+        </div>
+      </mat-tab>
+      <mat-tab label="Datasets">
+        <div *ngIf="selectedTab.value === 1" class="mt-2">
+          <app-datasets-list></app-datasets-list>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
   <app-feedbacks-list
     *ngIf="isFeedbackRecepient && params?.userSupportKeys"
     [currentUser]="currentUser"
