@@ -1,3 +1,3 @@
-import { ValidationRulesRequestComponent } from './validation-rules-request/validation-rules-request.component';
+import { ValidationRulesHomeComponent } from './validation-rules-home/validation-rules-home.component';
 
-export const validationRulesPages: any[] = [ValidationRulesRequestComponent];
+export const validationRulesPages: any[] = [ValidationRulesHomeComponent];

@@ -1,0 +1,23 @@
+<div
+  *ngIf="{
+    currentUser: currentUser$ | async,
+    configurations: configurations$ | async,
+    systemConfigs: systemConfigs$ | async
+  } as params"
+>
+  <app-validation-rules-request
+    *ngIf="
+      params?.currentUser && params?.configurations && params?.systemConfigs
+    "
+    [currentUser]="params?.currentUser"
+    [configurations]="params?.configurations"
+    [systemConfigs]="params?.systemConfigs"
+  ></app-validation-rules-request>
+
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="
+      !params?.currentUser || !params?.configurations || !params?.systemConfigs
+    "
+  ></mat-progress-bar>
+</div>

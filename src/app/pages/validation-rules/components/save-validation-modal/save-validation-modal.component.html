@@ -7,22 +7,24 @@
   </div>
 </div>
 <ng-container *ngIf="!creating">
-  <h3 mat-dialog-title>Confirm saving validation rule</h3>
-  <mat-dialog-content
-    >Are you sure to save
-    <b>
-      {{ data?.name }}
-    </b>
-    <p class="text-success" *ngIf="created">Successfully created</p>
-  </mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button
-      mat-button
-      [disabled]="created"
-      (click)="onSave($event, validationRule)"
-    >
-      {{ !created ? 'Save' : 'Saved' }}
-    </button>
-  </mat-dialog-actions>
+  <ng-container *ngIf="currentUser$ | async as currentUser">
+    <h3 mat-dialog-title>Confirm saving validation rule</h3>
+    <mat-dialog-content
+      >Are you sure to save
+      <b>
+        {{ data?.name }}
+      </b>
+      <p class="text-success" *ngIf="created">Successfully sent request</p>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button
+        mat-button
+        [disabled]="created"
+        (click)="onSave($event, validationRule, currentUser)"
+      >
+        {{ !created ? 'Yes' : 'Sent' }}
+      </button>
+    </mat-dialog-actions>
+  </ng-container>
 </ng-container>

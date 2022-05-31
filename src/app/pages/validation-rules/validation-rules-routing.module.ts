@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ValidationRulesRequestComponent } from './pages/validation-rules-request/validation-rules-request.component';
+import { ValidationRulesHomeComponent } from './pages/validation-rules-home/validation-rules-home.component';
 const routes: Routes = [
   {
     path: '',
-    component: ValidationRulesRequestComponent,
+    component: ValidationRulesHomeComponent,
   },
 ];
 

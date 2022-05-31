@@ -313,6 +313,7 @@ export class FormatCustomFormComponent implements OnInit {
         expression: this.rightSideExpression,
         description: this.leftSideDescription,
       },
+      dataset: this.dataset,
     };
     this.dialog.open(SaveValidationModalComponent, {
       width: '40%',

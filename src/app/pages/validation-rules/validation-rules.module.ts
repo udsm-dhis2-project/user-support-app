@@ -9,9 +9,14 @@ import {
   validationRulesRequestComponents,
 } from './components';
 import { ValidationRulesRequestRoutingModule } from './validation-rules-routing.module';
+import { validationRulesContainers } from './containers';
 
 @NgModule({
-  declarations: [...validationRulesRequestComponents, ...validationRulesPages],
+  declarations: [
+    ...validationRulesRequestComponents,
+    ...validationRulesContainers,
+    ...validationRulesPages,
+  ],
   imports: [
     FormsModule,
     ReactiveFormsModule,

@@ -1,0 +1,11 @@
+<div>
+  <h3>Validation Rules Request</h3>
+  <app-format-custom-form
+    *ngIf="canRequest && !canApprove"
+  ></app-format-custom-form>
+  <app-requested-validation-rules
+    *ngIf="canApprove && !canRequest"
+  ></app-requested-validation-rules>
+
+  <div *ngIf="!canApprove && !canRequest"></div>
+</div>

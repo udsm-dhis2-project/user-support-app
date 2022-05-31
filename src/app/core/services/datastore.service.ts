@@ -18,7 +18,7 @@ import * as moment from 'moment';
 export class DataStoreDataService {
   constructor(private httpClient: NgxDhis2HttpClientService) {}
 
-  createNameSpaceIfMissing(): Observable<string[]> {
+  createNameSpaceIfMissing(): Observable<any> {
     const configurations = {
       defaultToRequest: true,
       messageKeys: {},
@@ -28,6 +28,20 @@ export class DataStoreDataService {
           name: '',
         },
       ],
+      validationRuleRequest: {
+        userGroupsToRequest: [
+          {
+            id: 'B6JNeAQ6akX',
+            name: '_DATASET_Superuser',
+          },
+        ],
+        userGroupsToApprove: [
+          {
+            id: 'wl5cDMuUhmF',
+            name: 'Administrators',
+          },
+        ],
+      },
     };
     return this.httpClient
       .post(`dataStore/dhis2-user-support/configurations`, configurations)
