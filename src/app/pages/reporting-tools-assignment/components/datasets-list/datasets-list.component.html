@@ -68,7 +68,7 @@
         class="pagination-buttons ml-2"
         [disabled]="params?.dataSetsDetails?.pager?.page == 1"
         (click)="
-          getFacilities($event, 'previous', params?.dataSetsDetails?.pager)
+          getDataSets($event, 'previous', params?.dataSetsDetails?.pager)
         "
       >
         <mat-icon>
