@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { DataSetsService } from 'src/app/core/services/dataset.service';
+import { OuSelectionFormRequestModalComponent } from '../ou-selection-form-request-modal/ou-selection-form-request-modal.component';
 
 @Component({
   selector: 'app-datasets-list',
@@ -13,7 +15,15 @@ export class DatasetsListComponent implements OnInit {
   page: number = 1;
   itemPerPage: number = 10;
   searchingText: string;
-  constructor(private dataSetsService: DataSetsService) {}
+
+  @Input() currentUser: any;
+  @Input() configurations: any;
+  @Input() systemConfigs: any;
+
+  constructor(
+    private dataSetsService: DataSetsService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated({
@@ -48,6 +58,17 @@ export class DatasetsListComponent implements OnInit {
     this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated({
       page: this.page,
       pageSize: this.pageSize,
+    });
+  }
+
+  onRequestDataSet(event: Event, dataSet: any): void {
+    event.stopPropagation();
+    this.dialog.open(OuSelectionFormRequestModalComponent, {
+      width: '50%',
+      data: {
+        dataSet,
+        currentUser: this.currentUser,
+      },
     });
   }
 }

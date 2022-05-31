@@ -1,8 +1,4 @@
 <div *ngIf="{ dataSetsDetails: dataSetsDetails$ | async } as params">
-  <mat-progress-bar
-    mode="indeterminate"
-    *ngIf="!params?.dataSetsDetails"
-  ></mat-progress-bar>
   <div class="w-100">
     <mat-form-field class="w-25">
       <mat-label>Search </mat-label>
@@ -17,6 +13,7 @@
           <th style="width: 20px">SN</th>
           <th>Dataset</th>
           <th>Reporting Facilities</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -36,6 +33,14 @@
           </td>
           <td>
             {{ dataSet?.organisationUnits }}
+          </td>
+          <td>
+            <button
+              mat-stroked-button
+              (click)="onRequestDataSet($event, dataSet)"
+            >
+              Request
+            </button>
           </td>
         </tr>
       </tbody>
@@ -92,4 +97,8 @@
       </button>
     </div>
   </div>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.dataSetsDetails"
+  ></mat-progress-bar>
 </div>

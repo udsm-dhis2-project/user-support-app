@@ -42,4 +42,15 @@ export class DataSetsService {
         catchError((error) => of(error))
       );
   }
+
+  getDataSetById(id: string): Observable<any> {
+    return this.httpClient
+      .get(`dataSets/${id}.json?fields=id,name,organisationUnits[id]`)
+      .pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((error) => of(error))
+      );
+  }
 }

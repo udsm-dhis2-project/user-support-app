@@ -43,7 +43,11 @@
       </mat-tab>
       <mat-tab label="Datasets">
         <div *ngIf="selectedTab.value === 1" class="mt-2">
-          <app-datasets-list></app-datasets-list>
+          <app-datasets-list
+            [currentUser]="currentUser"
+            [configurations]="configurations"
+            [systemConfigs]="systemConfigs"
+          ></app-datasets-list>
         </div>
       </mat-tab>
     </mat-tab-group>

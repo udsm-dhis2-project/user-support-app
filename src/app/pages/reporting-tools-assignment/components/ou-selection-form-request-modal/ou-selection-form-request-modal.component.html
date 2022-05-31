@@ -1,0 +1,22 @@
+<div *ngIf="{ dataSetDetails: dataSetDetails$ | async } as params">
+  <h4>Assign or Remove Facilities for {{ dialogData?.dataSet?.name }}</h4>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.dataSetDetails"
+  ></mat-progress-bar>
+  <app-selection-filter
+    *ngIf="params?.dataSetDetails"
+    [dataSetDetails]="params?.dataSetDetails"
+    (selectedOus)="onGetSelectedOus($event)"
+  ></app-selection-filter>
+  <div class="w-100 d-flex justify-content-end mt-2">
+    <button mat-button (click)="onClose($event)">Close</button>
+    <button
+      class="ml-2"
+      mat-stroked-button
+      (click)="saveRequest($event, selectedOrgUnitItems)"
+    >
+      Send
+    </button>
+  </div>
+</div>
