@@ -76,6 +76,7 @@ export class DatasetsListComponent implements OnInit {
         this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated({
           page: this.page,
           pageSize: this.pageSize,
+          searchingText: this.searchingText,
         });
       });
   }
