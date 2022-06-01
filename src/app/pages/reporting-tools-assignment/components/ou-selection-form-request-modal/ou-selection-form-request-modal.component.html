@@ -14,9 +14,15 @@
     <button
       class="ml-2"
       mat-stroked-button
-      (click)="saveRequest($event, selectedOrgUnitItems)"
+      (click)="
+        saveRequest($event, selectedOrgUnitItems, dialogData?.currentUser)
+      "
     >
       Send
     </button>
+  </div>
+
+  <div *ngIf="savedData">
+    <p class="success-message">Successfully sent form request</p>
   </div>
 </div>

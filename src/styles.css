@@ -23,3 +23,11 @@ body {
   background-color: #eee;
   cursor: not-allowed;
 }
+
+.custom-header-bg {
+  background-color: #F6F8FA !important;
+}
+
+.table-container {
+  border: solid 1px #F6F8FA;
+}

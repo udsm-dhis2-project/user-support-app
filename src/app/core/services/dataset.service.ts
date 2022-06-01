@@ -3,6 +3,8 @@ import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import * as moment from 'moment';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -38,7 +40,34 @@ export class DataSetsService {
         }`
       )
       .pipe(
-        map((response) => response),
+        map((response) => {
+          return {
+            ...response,
+            dataSets: response?.dataSets.map((dataSet) => {
+              const matchedKeys =
+                paginationDetails?.userSupportDataStoreKeys.filter(
+                  (key) => key.indexOf(dataSet?.id) > -1
+                ) || [];
+              return {
+                ...dataSet,
+                hasPendingRequest: matchedKeys?.length > 0,
+
+                keys: matchedKeys,
+                timeSinceResponseSent:
+                  matchedKeys.length > 0
+                    ? moment(
+                        Number(matchedKeys[0].split('_')[0].replace('DS', ''))
+                      ).fromNow()
+                    : '',
+                date:
+                  matchedKeys.length > 0
+                    ? Date.now() -
+                      Number(matchedKeys[0].split('_')[0].replace('DS', ''))
+                    : null,
+              };
+            }),
+          };
+        }),
         catchError((error) => of(error))
       );
   }

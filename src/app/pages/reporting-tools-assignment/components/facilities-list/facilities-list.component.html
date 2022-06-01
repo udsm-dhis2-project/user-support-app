@@ -10,13 +10,13 @@
     </mat-form-field>
   </div>
 
-  <div *ngIf="params?.reportingToolsResponse">
+  <div *ngIf="params?.reportingToolsResponse" class="table-container">
     <table class="table mat-elevation-z1" style="height: 100%; overflow: auto">
-      <thead>
+      <thead class="custom-header-bg">
         <tr>
           <th style="width: 15px">SN</th>
           <th style="width: 400px">Facility</th>
-          <th style="width: 120px">Assigned Datasets</th>
+          <th style="width: 170px">Assigned Datasets</th>
           <th></th>
         </tr>
       </thead>

@@ -1,7 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { DataSetsService } from 'src/app/core/services/dataset.service';
+import { DataStoreDataService } from 'src/app/core/services/datastore.service';
+import { MessagesDataService } from 'src/app/core/services/messages.service';
 import { OuSelectionFormRequestModalComponent } from '../ou-selection-form-request-modal/ou-selection-form-request-modal.component';
 
 @Component({
@@ -15,21 +18,34 @@ export class DatasetsListComponent implements OnInit {
   page: number = 1;
   itemPerPage: number = 10;
   searchingText: string;
+  currentDataSet: any;
+  showConfirmButtons: boolean = false;
+  updating: boolean = false;
+  reasonForCancellingRequest: string;
 
   @Input() currentUser: any;
   @Input() configurations: any;
   @Input() systemConfigs: any;
+  @Input() userSupportDataStoreKeys: any;
 
   constructor(
     private dataSetsService: DataSetsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private _snackBar: MatSnackBar,
+    private dataStoreService: DataStoreDataService,
+    private messageService: MessagesDataService
   ) {}
 
   ngOnInit(): void {
     this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated({
       page: this.page,
       pageSize: this.pageSize,
+      userSupportDataStoreKeys: this.userSupportDataStoreKeys,
     });
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
   }
 
   searchDataset(event: any): void {
@@ -39,6 +55,7 @@ export class DatasetsListComponent implements OnInit {
       page: this.page,
       pageSize: this.pageSize,
       searchingText: this.searchingText,
+      userSupportDataStoreKeys: this.userSupportDataStoreKeys,
     });
   }
 
@@ -49,6 +66,7 @@ export class DatasetsListComponent implements OnInit {
     this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated({
       page: this.page,
       pageSize: this.pageSize,
+      userSupportDataStoreKeys: this.userSupportDataStoreKeys,
     });
   }
 
@@ -58,6 +76,7 @@ export class DatasetsListComponent implements OnInit {
     this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated({
       page: this.page,
       pageSize: this.pageSize,
+      userSupportDataStoreKeys: this.userSupportDataStoreKeys,
     });
   }
 
@@ -69,6 +88,7 @@ export class DatasetsListComponent implements OnInit {
         data: {
           dataSet,
           currentUser: this.currentUser,
+          systemConfigs: this.systemConfigs,
         },
       })
       .afterClosed()
@@ -77,7 +97,47 @@ export class DatasetsListComponent implements OnInit {
           page: this.page,
           pageSize: this.pageSize,
           searchingText: this.searchingText,
+          userSupportDataStoreKeys: this.userSupportDataStoreKeys,
         });
       });
+  }
+
+  onCancelAll(event: Event, dataSetDetails: any, confirm: boolean): void {
+    event.stopPropagation();
+    this.currentDataSet = dataSetDetails;
+    if (confirm) {
+      this.showConfirmButtons = false;
+      this.updating = true;
+      this.messageService
+        .getMessagesMatchingTicketNumbers(dataSetDetails?.keys)
+        .subscribe((messageResponse) => {
+          if (messageResponse) {
+            this.dataStoreService
+              .deleteAllKeysAndUpdateMessage(
+                dataSetDetails?.keys,
+                messageResponse,
+                this.reasonForCancellingRequest
+              )
+              .subscribe((response) => {
+                if (response) {
+                  // TODO: Add support to handle errors
+                  this.reasonForCancellingRequest = null;
+                  this.updating = false;
+                  this.openSnackBar(
+                    'Successfully cancelled all requests',
+                    'Close'
+                  );
+
+                  // this.dataStoreChanged.emit(true);
+                  setTimeout(() => {
+                    this._snackBar.dismiss();
+                  }, 2000);
+                }
+              });
+          }
+        });
+    } else {
+      this.showConfirmButtons = true;
+    }
   }
 }
