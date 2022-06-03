@@ -12,6 +12,8 @@ import {
 } from 'src/app/shared/helpers/datastore.helper';
 import * as moment from 'moment';
 
+import { orderBy } from 'lodash';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -201,7 +203,10 @@ export class DataStoreDataService {
 
     return this.findAll(namespace, pager, configurations).pipe(
       map((response) => {
-        return response;
+        return {
+          ...response,
+          data: orderBy(response?.data, ['ticketNumber'], ['desc']),
+        };
       }),
       catchError((error) => of(error))
     );
