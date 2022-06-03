@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
@@ -27,6 +27,8 @@ export class DatasetsListComponent implements OnInit {
   @Input() configurations: any;
   @Input() systemConfigs: any;
   @Input() userSupportDataStoreKeys: any;
+
+  @Output() dataStoreChanged = new EventEmitter<boolean>();
 
   constructor(
     private dataSetsService: DataSetsService,
@@ -93,12 +95,13 @@ export class DatasetsListComponent implements OnInit {
       })
       .afterClosed()
       .subscribe((res) => {
-        this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated({
-          page: this.page,
-          pageSize: this.pageSize,
-          searchingText: this.searchingText,
-          userSupportDataStoreKeys: this.userSupportDataStoreKeys,
-        });
+        this.dataStoreChanged.emit(res);
+        // this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated({
+        //   page: this.page,
+        //   pageSize: this.pageSize,
+        //   searchingText: this.searchingText,
+        //   userSupportDataStoreKeys: this.userSupportDataStoreKeys,
+        // });
       });
   }
 

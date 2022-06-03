@@ -27,6 +27,7 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
   ouHasPendingRequest: boolean = false;
   savedData: boolean = false;
   dataStoreMessageDetails$: Observable<any>;
+  assignmentDetails: any;
   constructor(
     private dialogRef: MatDialogRef<OuSelectionFormRequestModalComponent>,
     @Inject(MAT_DIALOG_DATA) data,
@@ -69,6 +70,19 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
         (ou: any) =>
           (items?.filter((item) => item?.id == ou?.id) || [])?.length === 0
       ) || [];
+
+    const payload = {
+      additions: this.additions,
+      deletions: this.deletions,
+    };
+
+    const assignmentDetails = {
+      ...payload,
+      dataSet: this.dialogData?.dataSet,
+      ticketNumber: 'DS' + Date.now(),
+    };
+
+    this.assignmentDetails = assignmentDetails;
   }
 
   saveRequest(event: Event, ous: string[], currentUser: any): void {
@@ -83,6 +97,8 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
       dataSet: this.dialogData?.dataSet,
       ticketNumber: 'DS' + Date.now(),
     };
+
+    this.assignmentDetails = assignmentDetails;
 
     const message = constructMessageForDataSetAssignment(assignmentDetails);
     const messageData = {
@@ -123,7 +139,7 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
         this.savedData = true;
         this.openSnackBar('Successfully sent form request', 'Close');
         setTimeout(() => {
-          this.dialogRef.close();
+          this.dialogRef.close(true);
         }, 500);
         setTimeout(() => {
           this._snackBar.dismiss();
@@ -136,6 +152,6 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
 
   onClose(event: Event): void {
     event.stopPropagation();
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 }

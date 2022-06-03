@@ -48,6 +48,7 @@
             [configurations]="configurations"
             [systemConfigs]="systemConfigs"
             [userSupportDataStoreKeys]="params?.userSupportKeys"
+            (dataStoreChanged)="onDataStoreChange($event, 'dataset')"
           ></app-datasets-list>
         </div>
       </mat-tab>

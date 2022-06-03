@@ -24,7 +24,7 @@ export class FacilitiesListComponent implements OnInit {
   @Input() configurations: any;
   @Input() systemConfigs: SystemConfigsModel;
   @Input() orgUnitLevels: OrgUnitLevelsModel;
-  @Output() dataStoreChanged = new EventEmitter<true>();
+  @Output() dataStoreChanged = new EventEmitter<boolean>();
   searchingText: string;
   reportingToolsResponse$: Observable<ReportingToolsResponseModel>;
   pageCount: number = 10;

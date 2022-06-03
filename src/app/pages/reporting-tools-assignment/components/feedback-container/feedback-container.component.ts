@@ -58,8 +58,16 @@ export class FeedbackContainerComponent implements OnInit {
     this.selectedTab.setValue(val);
   }
 
-  onDataStoreChange(event: boolean): void {
-    this.userSupportKeys$ = this.dataStoreService.getDataStoreKeys();
+  onDataStoreChange(event: boolean, type: string): void {
+    if (event) {
+      this.userSupportKeys$ = this.dataStoreService.getDataStoreKeys();
+    } else {
+    }
+    if (!type) {
+      this.selectedTab.setValue(0);
+    } else {
+      this.selectedTab.setValue(1);
+    }
   }
 
   toggleSupport(event: Event): void {
