@@ -62,7 +62,7 @@ export class FeedbacksListComponent implements OnInit {
     this.dialog
       .open(RespondFeedbackComponent, {
         width: '30%',
-        data: { ...data, actionType: 'REJECT' },
+        data: { ...data, actionType: 'REJECTED' },
       })
       .afterClosed()
       .subscribe((shouldReload) => {

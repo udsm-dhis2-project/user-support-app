@@ -51,7 +51,6 @@ export class RespondFeedbackComponent implements OnInit {
     event.stopPropagation();
     this.missingKey = false;
     // TODO: Use configurations for handling response messages
-
     this.dataStoreService.getKeyData(data?.id).subscribe((response) => {
       if (response) {
         this.savingData = true;

@@ -1,21 +1,21 @@
-[![Build Status](https://travis-ci.org/hisptz/ngx-seed-app.svg?branch=master)](https://travis-ci.org/hisptz/ngx-seed-app)
-[![dependencies Status](https://david-dm.org/hisptz/ngx-seed-app/status.svg)](https://david-dm.org/hisptz/ngx-seed-app)
-[![devDependencies Status](https://david-dm.org/hisptz/ngx-seed-app/dev-status.svg)](https://david-dm.org/hisptz/ngx-seed-app?type=dev)
-[![Maintainability](https://api.codeclimate.com/v1/badges/dbe97dbdfbd55344c38f/maintainability)](https://codeclimate.com/github/hisptz/ngx-seed-app/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/dbe97dbdfbd55344c38f/test_coverage)](https://codeclimate.com/github/hisptz/ngx-seed-app/test_coverage)
-[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/) [![Greenkeeper badge](https://badges.greenkeeper.io/hisptz/ngx-seed-app.svg)](https://greenkeeper.io/)
+# DHIS2 - User Support App
 
-# DHIS2 based User Support App
+## Introduction
 
-User support app
+The level of effort being used in supporting data managers requests at sub-national levels for a country like Tanzania is huge and hence would require support team that attend users feedback to be large enough. Also when it comes to supporting Ministry of Health Programmes like RCH, HIV, MALARIA, eIDSR e.t.c, its a headache and may require each program to have an expert on DHIS2 but also given access to DHIS2 maintenance app, which is in-practical it some point.
+
+Form/Dataset assignment and un-assignment requests through built-in DHIS2 feedback messaging app has been a way so far used, but with User Support, large part of the load to work on a number of requests is moved down to sub-national level users. In the process, sub-national level user can request form/dataset and the central team at national level can just approve or reject it with few clicks.
+
+Validation rules have also been an issue since they are Ministry programme specific and would like specific programme lets say RCH to propose validation rules and central team just approve.
 
 ## Features
 
-Some advantages are
-
-1. Some form requests are confusing since the datasets name listed were sometimes confusing.
-2. One might forget to mention the hierarchy hence long process to get it on the feedback team side
-3. When one has a request to remove all datasets it was necessary to go to data entry app and see the datasets.
+1. Support to request form/dataset assignment or un-assignment for multiple forms.
+2. Support to request form/dataset assignment or un-assignment for multiple organisation units (Health facilities)
+3. Support to accommodate the request via feedback messages. Whet the request is sent (stored on datastore), it is also sent to feedaback recipient via messages. It is also true when the request is approved.
+4. Attended requests are deleted and the remained backup is the messages thread.
+5. Central team can reject request with a reason.
+6. Central team is alerted for requests that contains too much information (third eye may be required). A configuration for this is put on datastore.
 
 ## Prerequisites
 
@@ -28,7 +28,7 @@ Some advantages are
 Clone repository
 
 ```bash
- git clone git@github.com:udsm-dhis2-project/user-support-app.git
+ git clone git@github.com:udsm-dhis2-lab/user-support-app.git
 ```
 
 Navigate to application root folder
@@ -56,13 +56,13 @@ This command will require proxy-config.json file available in the root of your s
 ```json
 {
   "/api": {
-    "target": "https://play.dhis2.org/2.29/",
+    "target": "https://play.dhis2.org/2.36.11/",
     "secure": "false",
     "auth": "admin:district",
     "changeOrigin": "true"
   },
   "/": {
-    "target": "https://play.dhis2.org/2.29/",
+    "target": "https://play.dhis2.org/2.36.11/",
     "secure": "false",
     "auth": "admin:district",
     "changeOrigin": "true"

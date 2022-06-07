@@ -1,33 +1,44 @@
-<div *ngIf="{ dataSetDetails: dataSetDetails$ | async } as params">
-  <h4>Assign or Remove Facilities for {{ dialogData?.dataSet?.name }}</h4>
-  <mat-progress-bar
-    mode="indeterminate"
-    *ngIf="!params?.dataSetDetails"
-  ></mat-progress-bar>
-  <app-selection-filter
-    *ngIf="params?.dataSetDetails"
-    [dataSetDetails]="params?.dataSetDetails"
-    (selectedOus)="onGetSelectedOus($event, params?.dataSetDetails)"
-  ></app-selection-filter>
-  <div class="w-100 d-flex justify-content-end mt-2">
-    <button mat-button (click)="onClose($event)">Close</button>
-    <button
-      class="ml-2"
-      mat-stroked-button
-      [disabled]="
-        !assignmentDetails ||
-        (assignmentDetails?.deletions?.length === 0 &&
-          assignmentDetails?.additions?.length === 0)
-      "
-      (click)="
-        saveRequest($event, selectedOrgUnitItems, dialogData?.currentUser)
-      "
-    >
-      Send
-    </button>
+<div class="loading-overlay" *ngIf="savingData">
+  <div class="text-center">
+    <div>Saving ....</div>
+    <div class="mt-3 d-flex justify-content-center w-100">
+      <mat-spinner diameter="50" strokeWidth="2"></mat-spinner>
+    </div>
   </div>
+</div>
 
-  <div *ngIf="savedData">
-    <p class="success-message">Successfully sent form request</p>
+<div *ngIf="!savingData && !savedData">
+  <div *ngIf="{ dataSetDetails: dataSetDetails$ | async } as params">
+    <h4>Assign or Remove Facilities for {{ dialogData?.dataSet?.name }}</h4>
+    <mat-progress-bar
+      mode="indeterminate"
+      *ngIf="!params?.dataSetDetails"
+    ></mat-progress-bar>
+    <app-selection-filter
+      *ngIf="params?.dataSetDetails"
+      [dataSetDetails]="params?.dataSetDetails"
+      (selectedOus)="onGetSelectedOus($event, params?.dataSetDetails)"
+    ></app-selection-filter>
+    <div class="w-100 d-flex justify-content-end mt-2">
+      <button mat-button (click)="onClose($event)">Close</button>
+      <button
+        class="ml-2"
+        mat-stroked-button
+        [disabled]="
+          !assignmentDetails ||
+          (assignmentDetails?.deletions?.length === 0 &&
+            assignmentDetails?.additions?.length === 0)
+        "
+        (click)="
+          saveRequest($event, selectedOrgUnitItems, dialogData?.currentUser)
+        "
+      >
+        Send
+      </button>
+    </div>
+
+    <div *ngIf="savedData">
+      <p class="success-message">Successfully sent form request</p>
+    </div>
   </div>
 </div>

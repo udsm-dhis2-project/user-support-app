@@ -87,6 +87,7 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
 
   saveRequest(event: Event, ous: string[], currentUser: any): void {
     event.stopPropagation();
+    this.savingData = true;
     const payload = {
       additions: this.additions,
       deletions: this.deletions,
