@@ -13,9 +13,20 @@ Validation rules have also been an issue since they are Ministry programme speci
 1. Support to request form/dataset assignment or un-assignment for multiple forms.
 2. Support to request form/dataset assignment or un-assignment for multiple organisation units (Health facilities)
 3. Support to accommodate the request via feedback messages. Whet the request is sent (stored on datastore), it is also sent to feedaback recipient via messages. It is also true when the request is approved.
-4. Attended requests are deleted and the remained backup is the messages thread.
-5. Central team can reject request with a reason.
-6. Central team is alerted for requests that contains too much information (third eye may be required). A configuration for this is put on datastore.
+4. Feedback recipitient group and other users see different things, while the former see requests from user, the later see UI for sending requests.
+5. Attended requests are deleted and the remained backup is the messages thread.
+6. Central team can reject request with a reason.
+7. Support user to view rejected requests and reason provided.
+8. Central team is alerted for requests that contains too much information (third eye may be required). A configuration for this is put on datastore.
+9. User can edit a request, provided not approved.
+
+## Configurations
+
+A. Namespace
+The user support app, set up dhis2-user-support namespace upon installing. One can change some configurations through the configuration key.
+
+B. Feedback recipient group
+The group intended to attend the request is the feedback recipient group. To configure this Open DHIS2 System Settings app -> General -> Feedback Recipients, then choose your group.
 
 ## Prerequisites
 
