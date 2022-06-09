@@ -56,7 +56,6 @@ export function constructMessageForDataSetAssignment(assignmentDetails: any) {
       : '';
 
   message += assignmentDetails?.additions?.length > 0 ? '\n\n' : '';
-
   message +=
     assignmentDetails?.deletions?.length > 0
       ? `Naomba kuondolewa vituo vifuatavyo kwenye fomu ${assignmentDetails?.dataSet?.name} \n` +
@@ -146,7 +145,12 @@ export function getDataStoreDetailsForFormRequestsByDataSet(
             })
           : [],
     },
-    url: `dataSets/${assignmentDetails?.dataSet?.id}/organisationUnits.json`,
+    url: `dataSets/${
+      assignmentDetails?.dataSet?.id
+    }/organisationUnits.json?cache=${assignmentDetails?.ticketNumber.replace(
+      'DS',
+      ''
+    )}`,
   };
 }
 
@@ -248,6 +252,8 @@ export function getDataStoreDetailsForFormRequests(
             })
           : [],
     },
-    url: `organisationUnits/${assignmentDetails?.organisationUnit?.id}/dataSets.json`,
+    url: `organisationUnits/${
+      assignmentDetails?.organisationUnit?.id
+    }/dataSets.json?cache=${assignmentDetails?.ticketNumber.replace('DS', '')}`,
   };
 }

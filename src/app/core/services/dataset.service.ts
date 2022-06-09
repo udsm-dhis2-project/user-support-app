@@ -74,7 +74,7 @@ export class DataSetsService {
 
   getDataSetById(id: string): Observable<any> {
     return this.httpClient
-      .get(`dataSets/${id}.json?fields=id,name,organisationUnits[id]`)
+      .get(`dataSets/${id}.json?fields=id,name,organisationUnits[id,name]`)
       .pipe(
         map((response) => {
           return response;
