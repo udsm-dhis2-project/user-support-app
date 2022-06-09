@@ -90,6 +90,7 @@ export class DatasetsListComponent implements OnInit {
         data: {
           dataSet,
           currentUser: this.currentUser,
+          configurations: this.configurations,
           systemConfigs: this.systemConfigs,
         },
       })

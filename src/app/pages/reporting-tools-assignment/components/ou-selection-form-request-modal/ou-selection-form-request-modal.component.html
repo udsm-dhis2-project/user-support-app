@@ -8,15 +8,21 @@
 </div>
 
 <div *ngIf="!savingData && !savedData">
-  <div *ngIf="{ dataSetDetails: dataSetDetails$ | async } as params">
+  <div
+    *ngIf="{
+      dataSetDetails: dataSetDetails$ | async,
+      allDataForUserSupport: allDataForUserSupport$ | async
+    } as params"
+  >
     <h4>Assign or Remove Facilities for {{ dialogData?.dataSet?.name }}</h4>
     <mat-progress-bar
       mode="indeterminate"
-      *ngIf="!params?.dataSetDetails"
+      *ngIf="!params?.dataSetDetails || !params?.allDataForUserSupport"
     ></mat-progress-bar>
     <app-selection-filter
-      *ngIf="params?.dataSetDetails"
+      *ngIf="params?.dataSetDetails && params?.allDataForUserSupport"
       [dataSetDetails]="params?.dataSetDetails"
+      [allDataForUserSupport]="params?.allDataForUserSupport"
       (selectedOus)="onGetSelectedOus($event, params?.dataSetDetails)"
     ></app-selection-filter>
     <div class="w-100 d-flex justify-content-end mt-2">

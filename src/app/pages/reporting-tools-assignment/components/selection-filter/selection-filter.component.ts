@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { mergeOusAddedAndRemovedFromDataSet } from 'src/app/shared/helpers/merge-assigned-ous.helpers';
 
 @Component({
   selector: 'app-selection-filter',
@@ -7,6 +8,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class SelectionFilterComponent implements OnInit {
   @Input() dataSetDetails: any;
+  @Input() allDataForUserSupport: any[];
   /** For Org Unit Filter */
   orgUnitObject: any;
   orgUnitFilterConfig: any = {
@@ -23,7 +25,10 @@ export class SelectionFilterComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.selectedOrgUnitItems = this.dataSetDetails?.organisationUnits;
+    this.selectedOrgUnitItems = mergeOusAddedAndRemovedFromDataSet(
+      this.dataSetDetails?.organisationUnits,
+      this.allDataForUserSupport
+    );
     this.selectedOus.emit(this.selectedOrgUnitItems);
   }
 

@@ -28,6 +28,7 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
   savedData: boolean = false;
   dataStoreMessageDetails$: Observable<any>;
   assignmentDetails: any;
+  allDataForUserSupport$: Observable<any>;
   constructor(
     private dialogRef: MatDialogRef<OuSelectionFormRequestModalComponent>,
     @Inject(MAT_DIALOG_DATA) data,
@@ -42,6 +43,11 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
   ngOnInit(): void {
     this.dataSetDetails$ = this.dataSetsService.getDataSetById(
       this.dialogData?.dataSet?.id
+    );
+
+    this.allDataForUserSupport$ = this.dataStoreService.getAllFromNameSpace(
+      'dataStore/dhis2-user-support',
+      this.dialogData?.configurations
     );
   }
 
