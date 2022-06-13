@@ -30,8 +30,10 @@
       class="mt-2"
       [innerHtml]="dialogData?.message?.message"
     ></div>
-
-    <div class="w-100 mt-2" *ngIf="dialogData?.actionType === 'REJECTED'">
+    <div
+      class="w-100 mt-2"
+      *ngIf="dialogData?.actionType && dialogData?.actionType === 'REJECTED'"
+    >
       <mat-form-field class="w-100">
         <mat-label>Reason for rejection</mat-label>
         <textarea matInput [(ngModel)]="reasonForRejection" rows="3"></textarea>
