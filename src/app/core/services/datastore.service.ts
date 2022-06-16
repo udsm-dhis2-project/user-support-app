@@ -22,6 +22,7 @@ export class DataStoreDataService {
 
   createNameSpaceIfMissing(): Observable<any> {
     const configurations = {
+      datasetClosedDateAttribute: { id: 'wTO29uRscGn' },
       defaultToRequest: true,
       messageKeys: {},
       userGroupsToToggleFormRequests: [

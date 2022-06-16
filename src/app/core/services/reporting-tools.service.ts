@@ -96,7 +96,7 @@ export class ReportingToolsService {
                     dataSet?.attributeValues?.filter(
                       (attributeValue) =>
                         attributeValue?.attribute?.id ===
-                        datasetClosedDateAttribute
+                        datasetClosedDateAttribute?.id
                     ) || []
                   ).length === 0
               ) || []

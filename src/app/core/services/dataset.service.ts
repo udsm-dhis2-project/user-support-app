@@ -23,10 +23,13 @@ export class DataSetsService {
       .pipe(map((response) => response?.dataSets));
   }
 
-  getDatasetsPaginated(paginationDetails?: any): Observable<any> {
+  getDatasetsPaginated(
+    paginationDetails?: any,
+    dataSetClosedAttributeDetails?: { id?: string; name?: string }
+  ): Observable<any> {
     return this.httpClient
       .get(
-        `dataSets.json?fields=-id,name,organisationUnits~size${
+        `dataSets.json?fields=-id,name,attributeValues,organisationUnits~size${
           paginationDetails?.page ? '&page=' + paginationDetails?.page : ''
         }${
           paginationDetails?.pageSize
@@ -41,9 +44,23 @@ export class DataSetsService {
       )
       .pipe(
         map((response) => {
+          const filteredDataSets = !dataSetClosedAttributeDetails
+            ? response?.dataSets
+            : dataSetClosedAttributeDetails
+            ? response?.dataSets.filter(
+                (dataSet) =>
+                  (
+                    dataSet?.attributeValues?.filter(
+                      (attributeValue) =>
+                        attributeValue?.attribute?.id ===
+                        dataSetClosedAttributeDetails?.id
+                    ) || []
+                  ).length === 0
+              ) || []
+            : response?.dataSets;
           return {
             ...response,
-            dataSets: response?.dataSets.map((dataSet) => {
+            dataSets: filteredDataSets.map((dataSet) => {
               const matchedKeys =
                 paginationDetails?.userSupportDataStoreKeys.filter(
                   (key) => key.indexOf(dataSet?.id) > -1

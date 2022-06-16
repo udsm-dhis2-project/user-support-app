@@ -58,7 +58,7 @@ export class RequestFormModalComponent implements OnInit {
     this.allDataSets$ = this.reportingToolsService.getAllDataSets(
       this.dialogData?.configurations &&
         this.dialogData?.configurations?.datasetClosedDateAttribute?.id
-        ? this.dialogData?.configurations?.datasetClosedDateAttribute?.id
+        ? this.dialogData?.configurations?.datasetClosedDateAttribute
         : null
     );
   }

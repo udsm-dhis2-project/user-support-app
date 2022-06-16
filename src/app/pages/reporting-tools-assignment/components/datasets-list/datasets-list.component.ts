@@ -39,11 +39,14 @@ export class DatasetsListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated({
-      page: this.page,
-      pageSize: this.pageSize,
-      userSupportDataStoreKeys: this.userSupportDataStoreKeys,
-    });
+    this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated(
+      {
+        page: this.page,
+        pageSize: this.pageSize,
+        userSupportDataStoreKeys: this.userSupportDataStoreKeys,
+      },
+      this.configurations?.datasetClosedDateAttribute
+    );
   }
 
   openSnackBar(message: string, action: string) {
@@ -53,33 +56,42 @@ export class DatasetsListComponent implements OnInit {
   searchDataset(event: any): void {
     this.searchingText = event.target.value;
     this.page = 1;
-    this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated({
-      page: this.page,
-      pageSize: this.pageSize,
-      searchingText: this.searchingText,
-      userSupportDataStoreKeys: this.userSupportDataStoreKeys,
-    });
+    this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated(
+      {
+        page: this.page,
+        pageSize: this.pageSize,
+        searchingText: this.searchingText,
+        userSupportDataStoreKeys: this.userSupportDataStoreKeys,
+      },
+      this.configurations?.datasetClosedDateAttribute
+    );
   }
 
   getItemsPerPage(event: any, pager: any): void {
     this.pageSize = Number(event.target.value);
     this.page = 1;
     this.itemPerPage = this.pageSize;
-    this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated({
-      page: this.page,
-      pageSize: this.pageSize,
-      userSupportDataStoreKeys: this.userSupportDataStoreKeys,
-    });
+    this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated(
+      {
+        page: this.page,
+        pageSize: this.pageSize,
+        userSupportDataStoreKeys: this.userSupportDataStoreKeys,
+      },
+      this.configurations?.datasetClosedDateAttribute
+    );
   }
 
   getDataSets(event: Event, actionType, pager: any): void {
     event.stopPropagation();
     this.page = actionType === 'next' ? pager?.page + 1 : pager?.page - 1;
-    this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated({
-      page: this.page,
-      pageSize: this.pageSize,
-      userSupportDataStoreKeys: this.userSupportDataStoreKeys,
-    });
+    this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated(
+      {
+        page: this.page,
+        pageSize: this.pageSize,
+        userSupportDataStoreKeys: this.userSupportDataStoreKeys,
+      },
+      this.configurations?.datasetClosedDateAttribute
+    );
   }
 
   onRequestDataSet(event: Event, dataSet: any): void {
@@ -102,7 +114,8 @@ export class DatasetsListComponent implements OnInit {
         //   pageSize: this.pageSize,
         //   searchingText: this.searchingText,
         //   userSupportDataStoreKeys: this.userSupportDataStoreKeys,
-        // });
+        // },
+        // this.configurations?.datasetClosedDateAttribute);
       });
   }
 
