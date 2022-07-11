@@ -26,7 +26,7 @@ export class SelectionFilterComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedOrgUnitItems = mergeOusAddedAndRemovedFromDataSet(
-      this.dataSetDetails?.organisationUnits,
+      this.dataSetDetails,
       this.allDataForUserSupport
     );
     this.selectedOus.emit(this.selectedOrgUnitItems);

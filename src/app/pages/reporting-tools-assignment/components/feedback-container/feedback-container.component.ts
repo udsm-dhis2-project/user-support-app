@@ -45,13 +45,13 @@ export class FeedbackContainerComponent implements OnInit {
     };
     this.orgUnitLevels$ = this.orgUnitsProvisionalService.getOrgUnitLevels();
     this.userSupportKeys$ = this.dataStoreService.getDataStoreKeys();
-    this.isFeedbackRecepient =
-      (
-        this.currentUser?.userGroups.filter(
-          (userGroup) =>
-            userGroup?.id === this.systemConfigs?.feedbackRecipients?.id
-        ) || []
-      )?.length > 0;
+    // this.isFeedbackRecepient =
+    //   (
+    //     this.currentUser?.userGroups.filter(
+    //       (userGroup) =>
+    //         userGroup?.id === this.systemConfigs?.feedbackRecipients?.id
+    //     ) || []
+    //   )?.length > 0;
   }
 
   changeTab(val) {
