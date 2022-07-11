@@ -21,7 +21,8 @@
       <tbody>
         <ng-container
           *ngFor="
-            let dataRow of params?.allDataForUserSupport?.data;
+            let dataRow of params?.allDataForUserSupport?.data
+              | FilterFormRequests: 'status':'REJECTED';
             let count = index
           "
         >
@@ -34,6 +35,7 @@
             <tr>
               <td>{{ count + 1 }}</td>
               <td>
+                {{ dataRow?.status }}
                 {{ dataRow?.action }}
               </td>
               <td>
@@ -81,20 +83,22 @@
                       This is alerting request. Approve only when you have
                       confirmed
                     </p>
-                    <button
-                      mat-stroked-button
-                      (click)="onApprove($event, dataRow)"
-                      class="btn-success float-right mt-5 ml-2"
-                    >
-                      Approve
-                    </button>
-                    <button
-                      mat-stroked-button
-                      (click)="onReject($event, dataRow)"
-                      class="btn-danger float-right mt-5 ml-2"
-                    >
-                      Reject
-                    </button>
+                    <div class="d-flex justify-content-end">
+                      <button
+                        mat-stroked-button
+                        (click)="onApprove($event, dataRow)"
+                        class="btn-success mt-5 ml-2"
+                      >
+                        Approve
+                      </button>
+                      <button
+                        mat-stroked-button
+                        (click)="onReject($event, dataRow)"
+                        class="btn-danger mt-5 ml-2"
+                      >
+                        Reject
+                      </button>
+                    </div>
                   </div>
                 </div>
               </td>

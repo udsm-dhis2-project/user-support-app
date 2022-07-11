@@ -7,6 +7,7 @@ import { materialModules } from './materials.module';
 import { sharedComponents, sharedEntryComponents } from './components';
 import { FormModule } from './modules/form/form.module';
 import { SearchItemPipe } from './pipes/search-item.pipe';
+import { FilterFormRequestsPipe } from './pipes/filter-requests.pipe';
 
 @NgModule({
   imports: [
@@ -25,7 +26,13 @@ import { SearchItemPipe } from './pipes/search-item.pipe';
     NgxDhis2DataFilterModule,
     NgxDhis2PeriodFilterModule,
     SearchItemPipe,
+    FilterFormRequestsPipe,
   ],
-  declarations: [...sharedComponents, ...sharedEntryComponents, SearchItemPipe],
+  declarations: [
+    ...sharedComponents,
+    ...sharedEntryComponents,
+    SearchItemPipe,
+    FilterFormRequestsPipe,
+  ],
 })
 export class SharedModule {}

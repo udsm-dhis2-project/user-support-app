@@ -75,4 +75,23 @@ export class FeedbacksListComponent implements OnInit {
         }
       });
   }
+
+  onDelete(event: Event, data: any): void {
+    event.stopPropagation();
+    this.dialog
+      .open(RespondFeedbackComponent, {
+        width: '30%',
+        data: { ...data, actionType: 'REJECTED' },
+      })
+      .afterClosed()
+      .subscribe((shouldReload) => {
+        if (shouldReload) {
+          this.allDataForUserSupport$ =
+            this.dataStoreService.getAllFromNameSpace(
+              'dataStore/dhis2-user-support',
+              this.configurations
+            );
+        }
+      });
+  }
 }
