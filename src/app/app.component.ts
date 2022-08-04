@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MessagesModalComponent } from './shared/components/messages-modal/messages-modal.component';
 import { DataStoreDataService } from './core/services/datastore.service';
 import { loadSystemConfigurations } from './store/actions';
+import { getSystemConfigs } from './store/selectors/system-configurations.selectors';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,7 @@ import { loadSystemConfigurations } from './store/actions';
 })
 export class AppComponent implements OnInit {
   userSupportNameSpaceResponse$: Observable<any>;
+  systemSettings$: Observable<any>;
   constructor(
     private translate: TranslateService,
     private titleService: Title,
@@ -49,6 +51,7 @@ export class AppComponent implements OnInit {
     this.userSupportNameSpaceResponse$ =
       this.dataStoreService.createNameSpaceIfMissing();
     this.store.dispatch(loadSystemConfigurations());
+    this.systemSettings$ = this.store.select(getSystemConfigs);
   }
 
   public setTitle(newTitle: string) {
