@@ -1,0 +1,40 @@
+<div
+  class="statitics-container mt-4"
+  *ngIf="{ sqlViewResponse: sqlViewResponse$ | async } as params"
+>
+  <div *ngIf="params?.sqlViewResponse">
+    <!-- {{ params?.sqlViewResponse | json }} -->
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-6 col-sx-12">
+        <mat-card class="w-100">
+          <mat-card-title class="text-center custom-card-title"
+            >Duplicate facilities</mat-card-title
+          >
+          <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+          <mat-card-content>
+            <div class="h1 text-center">
+              <!-- {{ params?.sqlViewResponse?.listGrid?.rows.length }} -->
+              <app-sqlview-count-data
+                [data]="params?.sqlViewResponse?.listGrid"
+              ></app-sqlview-count-data>
+            </div>
+            <p class="text-center">Number of duplicate faclities</p>
+          </mat-card-content>
+          <mat-card-actions class="d-flex justify-content-end">
+            <button
+              mat-button
+              color="primary"
+              (click)="onView($event, params?.sqlViewResponse)"
+            >
+              View
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  <mat-progress-bar
+    mode="buffer"
+    *ngIf="!params?.sqlViewResponse"
+  ></mat-progress-bar>
+</div>

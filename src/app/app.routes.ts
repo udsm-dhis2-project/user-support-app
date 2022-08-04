@@ -33,6 +33,13 @@ export const routes: Routes = [
         (m) => m.ValidationRulesRequestModule
       ),
   },
+  {
+    path: 'statistics',
+    loadChildren: () =>
+      import('./pages/statistics/statistics.module').then(
+        (m) => m.StatisticsModule
+      ),
+  },
 ];
 
 @NgModule({

@@ -1,0 +1,44 @@
+<div class="sql-data-container">
+  <!-- {{ data | json }} -->
+  <table class="table">
+    <thead>
+      <tr>
+        <th>SN</th>
+        <th *ngFor="let header of data?.listGrid?.headers">
+          {{ header?.column }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let key of keys; let rowCount = index">
+        <!-- <ng-container
+          
+        >
+        </ng-container> -->
+        <tr
+          [ngClass]="{ 'striped-data-row': rowCount % 2 == 0 }"
+          *ngFor="
+            let duplicate of formattedSQLViewData['groupedRows'][key];
+            let count = index
+          "
+        >
+          <td
+            *ngIf="count == 0"
+            [attr.rowspan]="formattedSQLViewData['groupedRows'][key].length"
+          >
+            {{ rowCount + 1 }}
+            <!-- {{ formattedSQLViewData['groupedRows']['key']?.length }} -->
+          </td>
+          <td
+            *ngFor="
+              let header of formattedSQLViewData?.headers;
+              let headerIndex = index
+            "
+          >
+            {{ duplicate?.data[headerIndex] }}
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>
