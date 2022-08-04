@@ -2,6 +2,7 @@ import { createSelector } from '@ngrx/store';
 import { getRootState, State } from '../reducers';
 import { UserState } from '../states/user.state';
 import { User } from '@iapps/ngx-dhis2-http-client';
+import { keyBy } from 'lodash';
 
 export const getUserState = createSelector(
   getRootState,
@@ -10,7 +11,12 @@ export const getUserState = createSelector(
 
 export const getCurrentUser = createSelector(
   getUserState,
-  (state: UserState) => state.currentUser
+  (state: UserState) => {
+    return {
+      ...state.currentUser,
+      userGroupsKeyed: keyBy(state?.currentUser?.userGroups, 'id'),
+    };
+  }
 );
 
 export const getCurrentUserLoading = createSelector(

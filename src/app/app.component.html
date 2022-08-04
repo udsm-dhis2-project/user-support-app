@@ -4,7 +4,8 @@
     class="application-content"
     *ngIf="{
       currentUser: currentUser$ | async,
-      userSupportNameSpaceResponse: userSupportNameSpaceResponse$ | async
+      userSupportNameSpaceResponse: userSupportNameSpaceResponse$ | async,
+      systemSettings: systemSettings$ | async
     } as params"
   >
     <div class="container-fluid">
@@ -64,6 +65,11 @@
                     >Reports</mat-list-item
                   > -->
                   <mat-list-item
+                    *ngIf="
+                      params?.currentUser?.userGroupsKeyed[
+                        params?.systemSettings?.feedbackRecipients?.id
+                      ]
+                    "
                     role="listitem"
                     class="list-item"
                     routerLinkActive="active-menu-item"
@@ -89,6 +95,13 @@
                     routerLinkActive="active-menu-item"
                     [routerLink]="'reporting-tools/request'"
                     >Form request</mat-list-item
+                  >
+                  <mat-list-item
+                    role="listitem"
+                    class="list-item"
+                    routerLinkActive="active-menu-item"
+                    [routerLink]="'statistics'"
+                    >Statistics</mat-list-item
                   >
                   <!-- <mat-list-item
                     role="listitem"
