@@ -1,8 +1,13 @@
 .sql-data-container {
-  height: 60vh;
+  max-height: 70vh;
   overflow: auto;
 }
 
 .striped-data-row {
-  background-color: rgb(52, 203, 186);
+  background-color: #aeb1b129;
+}
+
+.custom-header {
+  background-color: #276696;
+  color: #fff;
 }
