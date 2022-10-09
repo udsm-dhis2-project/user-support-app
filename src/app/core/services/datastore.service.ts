@@ -45,6 +45,12 @@ export class DataStoreDataService {
           },
         ],
       },
+      referenceTitles: [
+        {
+          id: 'NO',
+          name: 'Nutrition Officer',
+        },
+      ],
       allowedUserRolesForRequest: [
         {
           id: 'ZI4hVQsL7Dq',

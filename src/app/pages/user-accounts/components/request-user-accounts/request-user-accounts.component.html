@@ -70,10 +70,9 @@
             <div>
               <div class="h5">Data entry</div>
               <ngx-dhis2-org-unit-filter
-                [orgUnitFilterConfig]="orgUnitFilterConfig"
-                [selectedOrgUnitItems]="selectedOrgUnitItems"
-                (orgUnitUpdate)="onOrgUnitUpdate($event, 'UPDATE')"
-                (orgUnitClose)="onOrgUnitUpdate($event, 'CLOSE')"
+                [orgUnitFilterConfig]="orgUnitFilterConfigForDataEntry"
+                [selectedOrgUnitItems]="selectedOrgUnitItemsForDataEntry"
+                (orgUnitUpdate)="onOrgUnitUpdate($event, 'ENTRY')"
               >
               </ngx-dhis2-org-unit-filter>
             </div>
@@ -82,10 +81,9 @@
             <div>
               <div class="h5">Report</div>
               <ngx-dhis2-org-unit-filter
-                [orgUnitFilterConfig]="orgUnitFilterConfig"
-                [selectedOrgUnitItems]="selectedOrgUnitItems"
-                (orgUnitUpdate)="onOrgUnitUpdate($event, 'UPDATE')"
-                (orgUnitClose)="onOrgUnitUpdate($event, 'CLOSE')"
+                [orgUnitFilterConfig]="orgUnitFilterConfigForReport"
+                [selectedOrgUnitItems]="selectedOrgUnitItemsForReport"
+                (orgUnitUpdate)="onOrgUnitUpdate($event, 'REPORT')"
               >
               </ngx-dhis2-org-unit-filter>
             </div>
@@ -104,18 +102,27 @@
       </div>
     </div>
     <p class="text-right" *ngIf="shouldConfirm">Please confirm</p>
-    <div class="row d-flex justify-content-end mt-2">
+    <div class="row d-flex justify-content-end mt-2" *ngIf="!readyToSave">
+      <!-- [disabled]="!isDemographicFormValid || !isAccessControlFormValid" -->
       <button mat-flat-button color="primary" (click)="onNext($event)">
         Next
       </button>
-    </div>
-    <div class="row d-flex justify-content-end mt-2">
-      <button mat-stroked-button (click)="onCancel($event)">Cancel</button>
       <button
         mat-flat-button
         color="primary"
+        class="ml-2"
+        (click)="onFinish($event)"
+      >
+        Finish request
+      </button>
+    </div>
+    <div class="row d-flex justify-content-end mt-2">
+      <button mat-stroked-button (click)="onClear($event)">Clear</button>
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="!readyToSave"
         (click)="onSave($event, shouldConfirm)"
-        [disabled]="!isDemographicFormValid || !isAccessControlFormValid"
         class="ml-2"
       >
         {{ shouldConfirm ? 'Confirm' : 'Send' }}
