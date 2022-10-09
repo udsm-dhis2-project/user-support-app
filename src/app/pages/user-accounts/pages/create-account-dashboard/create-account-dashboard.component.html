@@ -1,14 +1,21 @@
-<div class="row">
+<div class="row" *ngIf="{ configurations: configurations$ | async } as params">
   <div class="col-12 d-flex align-items-center mb-3">
     <button mat-flat-button routerLink="/user-accounts/list">
       <mat-icon>arrow_back</mat-icon>
       <span class="ml-2">BACK TO USERS LIST</span>
     </button>
-    <div class="ml-3 report-title">New user</div>
+    <div class="ml-3 report-title">New User Request</div>
   </div>
-  <div class="col-12">
-    <div class="new-user p-3">
-      <app-create-account></app-create-account>
+  <hr />
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.configurations"
+  ></mat-progress-bar>
+  <div class="col-12" *ngIf="params?.configurations">
+    <div class="new-user">
+      <app-create-account
+        [configurations]="params?.configurations"
+      ></app-create-account>
     </div>
   </div>
 </div>

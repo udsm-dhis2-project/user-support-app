@@ -1,0 +1,11 @@
+<div *ngIf="{ configurations: configurations$ | async } as params">
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.configurations"
+  ></mat-progress-bar>
+  <div *ngIf="params?.configurations">
+    <app-request-user-accounts
+      [configurations]="params?.configurations"
+    ></app-request-user-accounts>
+  </div>
+</div>

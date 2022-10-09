@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 
 @Component({
-  selector: 'app-create-account-dashboard',
-  templateUrl: './create-account-dashboard.component.html',
-  styleUrls: ['./create-account-dashboard.component.css'],
+  selector: 'app-user-accounts-request-dashboard',
+  templateUrl: './user-accounts-request-dashboard.component.html',
+  styleUrls: ['./user-accounts-request-dashboard.component.css'],
 })
-export class CreateAccountDashboardComponent implements OnInit {
+export class UserAccountsRequestDashboardComponent implements OnInit {
   configurations$: Observable<any>;
   constructor(private dataStoreDataService: DataStoreDataService) {}
 

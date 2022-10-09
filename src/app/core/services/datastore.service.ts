@@ -45,6 +45,50 @@ export class DataStoreDataService {
           },
         ],
       },
+      allowedUserRolesForRequest: [
+        {
+          id: 'ZI4hVQsL7Dq',
+          name: 'Data Entrant',
+          systemName: 'Data Manager',
+        },
+        {
+          id: 'wnEvOlOb9U9',
+          name: 'Program Manager (Can not enter data)',
+          systemName: 'Program Manager',
+          expectedUserGroups: [
+            {
+              id: 'zk2Zubvm2kP',
+              name: 'Data Manager',
+            },
+          ],
+        },
+        {
+          id: 'TFlh0xqlzAo',
+          name: 'IPC Data Manager',
+        },
+        {
+          id: 'o4FG5PxbDNR',
+          name: 'District HMIS Focal',
+        },
+      ],
+      allowedUserGroupsForRequest: [
+        {
+          id: 'zk2Zubvm2kP',
+          name: 'Data Entrant Group',
+          systemName: 'Data Manager',
+          associatedGroups: [
+            {
+              id: '',
+              name: '',
+            },
+          ],
+        },
+        {
+          id: 'us757WFyTYX',
+          name: 'Program Manager',
+          systemName: 'Program Manager Group',
+        },
+      ],
     };
     return this.httpClient
       .post(`dataStore/dhis2-user-support/configurations`, configurations)

@@ -102,10 +102,12 @@
     </button>
 
     <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="openUploadingPage($event)">
+      <!-- <button mat-menu-item (click)="openUploadingPage($event)">
         Bulk (Uploading)
+      </button> -->
+      <button mat-menu-item [routerLink]="'/user-accounts/request'">
+        Request
       </button>
-      <button mat-menu-item [routerLink]="'/user-accounts/new'">New</button>
     </mat-menu>
   </div>
 </div>
