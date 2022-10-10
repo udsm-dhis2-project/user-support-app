@@ -31,14 +31,4 @@ export class UsersDashboardComponent implements OnInit {
     this.configurations$ = this.dataStoreService.getUserSupportConfigurations();
     this.systemConfigs$ = this.store.select(getSystemConfigs);
   }
-
-  isFeedbackRecepient(currentUser, systemConfigs) {
-    return (
-      (
-        currentUser?.userGroups.filter(
-          (userGroup) => userGroup?.id === systemConfigs?.feedbackRecipients?.id
-        ) || []
-      )?.length > 0
-    );
-  }
 }

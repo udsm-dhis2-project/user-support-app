@@ -1,15 +1,17 @@
-<div class="d-block w-100" 
-*ngIf="{
+<div
+  class="d-block w-100"
+  *ngIf="{
     currentUser: currentUser$ | async,
     configurations: configurations$ | async,
     systemConfigs: systemConfigs$ | async
-  } as params">
-
-  <div class="w-100" *ngIf="!isFeedbackRecepient(params.currentUser, params.systemConfigs)">
-    <app-users-list></app-users-list>
-  </div>
-  <div class="w-100" *ngIf="isFeedbackRecepient(params.currentUser, params.systemConfigs)">
-    <app-user-account-requests-home></app-user-account-requests-home>
-  </div>
-
+  } as params"
+>
+  <app-user-account-request-container
+    *ngIf="
+      params?.currentUser && params?.systemConfigs && params?.configurations
+    "
+    [currentUser]="params?.currentUser"
+    [systemConfigs]="params?.systemConfigs"
+    [configurations]="params?.configurations"
+  ></app-user-account-request-container>
 </div>

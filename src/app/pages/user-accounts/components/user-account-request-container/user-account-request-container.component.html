@@ -1,0 +1,8 @@
+<div>
+  <div class="w-100" *ngIf="!isFeedbackRecepient">
+    <app-users-list></app-users-list>
+  </div>
+  <div class="w-100" *ngIf="isFeedbackRecepient">
+    <app-user-account-requests-home></app-user-account-requests-home>
+  </div>
+</div>
