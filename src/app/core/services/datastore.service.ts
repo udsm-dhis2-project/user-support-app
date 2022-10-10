@@ -269,7 +269,6 @@ export class DataStoreDataService {
   ): Observable<string[]> {
     return this.httpClient.get('dataStore/' + namespace).pipe(
       map((response) => {
-        console.log(response);
         return response.filter((key) => key?.indexOf(category) === 0);
       }),
       catchError((error: ErrorMessage) => {

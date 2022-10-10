@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
 import { Dropdown } from 'src/app/shared/modules/form/models/dropdown.model';
@@ -70,7 +71,8 @@ export class RequestUserAccountsComponent implements OnInit {
   constructor(
     private dataStoreService: DataStoreDataService,
     private messageAndDataStoreService: MessagesAndDatastoreService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -211,11 +213,13 @@ export class RequestUserAccountsComponent implements OnInit {
       const dataForMessageAndDataStore = {
         id: dataStoreKey,
         ticketNumber: 'UA' + Date.now().toString(),
-        action: `Respond to creation of ${this.formDataToStoreLocally?.length} accounts as requested by ${this.currentUser?.display}`,
+        action: `Respond to creation of ${this.formDataToStoreLocally?.length} accounts as requested by ${this.currentUser?.displayName}`,
         message: {
-          message: `The following accounts are requested accordingly: \n\n ${this.formDataToStoreLocally?.map(
-            (data) => {
+          message: `The following accounts were requested accordingly: \n\n ${this.formDataToStoreLocally
+            ?.map((data, index) => {
               return (
+                (index + 1).toString() +
+                '. ' +
                 'Names: <b>' +
                 data?.firstName +
                 ' ' +
@@ -224,16 +228,18 @@ export class RequestUserAccountsComponent implements OnInit {
                 data?.lastName +
                 ' </b>' +
                 ' Email: ' +
-                data?.email +
+                (data?.email ? data?.email : ' - ') +
                 ' Phone number :' +
                 data?.phoneNumber +
-                ' Access level: Entry side -> ' +
+                ' Entry access level ->  <b>' +
                 data?.entryOrgUnits?.map((ou) => ou?.name).join(', ') +
-                ' and Report side ->' +
-                data?.reportOrgUnits?.map((ou) => ou?.name).join(', ')
+                '</b>' +
+                ' and Report access level -> <b>' +
+                data?.reportOrgUnits?.map((ou) => ou?.name).join(', ') +
+                '</b>'
               );
-            }
-          )} `,
+            })
+            .join('\n')} `,
           subject: 'UA' + Date.now().toString() + '- MAOMBI YA ACCOUNT',
         },
         replyMessage: 'to be constructed',
@@ -271,8 +277,9 @@ export class RequestUserAccountsComponent implements OnInit {
         text: dataForMessageAndDataStore?.message?.message,
       };
 
-      console.log('messageData', messageData);
+      console.log('dataForMessageAndDataStore', dataForMessageAndDataStore);
 
+      // TODO: Add slogic to produce potential username
       this.messageAndDataStoreService
         .createMessageAndUpdateDataStore(messageData, {
           id: dataStoreKey,
@@ -294,11 +301,17 @@ export class RequestUserAccountsComponent implements OnInit {
           this.openSnackBar('Successfully sent form request', 'Close');
           setTimeout(() => {
             this._snackBar.dismiss();
+            this.router.navigate(['/user-accounts/list']);
           }, 2000);
         });
     } else {
       this.shouldConfirm = true;
     }
+  }
+
+  backtoRequest(event: Event): void {
+    event.stopPropagation();
+    this.readyToSave = false;
   }
 
   createDemographicFields(data?: any): void {
@@ -422,13 +435,13 @@ export class RequestUserAccountsComponent implements OnInit {
     this.formUpdateIsDone = true;
     this.selectedRoles = [
       {
-        id: this.formData?.userRole?.id,
+        id: this.formData?.userRole?.value,
       },
     ];
 
     this.selectedUserGroups = [
       {
-        id: this.formData?.userGroup?.id,
+        id: this.formData?.userGroup?.value,
       },
     ];
     this.isAccessControlFormValid = formvalue.isValid;

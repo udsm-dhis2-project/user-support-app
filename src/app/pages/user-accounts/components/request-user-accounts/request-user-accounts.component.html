@@ -53,8 +53,16 @@
     </button>
     <div class="h5 ml-2 mt-2">User Account Request</div>
   </div>
+  <div class="loading-overlay" *ngIf="saving">
+    <div class="text-center">
+      <div>Sending request...</div>
+      <div class="mt-3 d-flex justify-content-center w-100">
+        <mat-spinner diameter="50" strokeWidth="2"></mat-spinner>
+      </div>
+    </div>
+  </div>
   <div class="p-3" *ngIf="pageReady">
-    <div class="row">
+    <div class="row" *ngIf="!readyToSave">
       <div class="col-md-4 col-sx-12">
         <div>
           <div class="h5">Demographic</div>
@@ -102,19 +110,69 @@
         </div>
       </div>
     </div>
+    <div class="w-100" *ngIf="readyToSave">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>SN</th>
+            <th>First name</th>
+            <th>Middle name</th>
+            <th>Last name</th>
+            <th>Email</th>
+            <th>Phone number</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of formDataToStoreLocally; let count = index">
+            <td>
+              {{ count + 1 }}
+            </td>
+            <td>
+              {{ user?.firstName }}
+            </td>
+            <td>
+              {{ user?.middleName }}
+            </td>
+            <td>
+              {{ user?.lastName }}
+            </td>
+            <td>
+              {{ user?.email }}
+            </td>
+            <td>
+              {{ user?.phoneNumber }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <p class="text-right" *ngIf="shouldConfirm">Please confirm</p>
-    <div class="row d-flex justify-content-end mt-2" *ngIf="!readyToSave">
+    <div class="row d-flex justify-content-end mt-2">
       <!-- [disabled]="!isDemographicFormValid || !isAccessControlFormValid" -->
-      <button mat-flat-button color="primary" (click)="onNext($event)">
+      <button
+        *ngIf="!readyToSave"
+        mat-flat-button
+        color="primary"
+        (click)="onNext($event)"
+      >
         Next
       </button>
       <button
+        *ngIf="!readyToSave"
         mat-flat-button
         color="primary"
         class="ml-2"
         (click)="onFinish($event)"
       >
         Finish request
+      </button>
+      <button
+        *ngIf="readyToSave"
+        mat-flat-button
+        color="primary"
+        (click)="backtoRequest($event)"
+      >
+        Back to request
       </button>
     </div>
     <div class="row d-flex justify-content-end mt-2">
