@@ -218,7 +218,7 @@ export class DataStoreDataService {
         return {
           ...response,
           timeSinceResponseSent: moment(
-            Number(response?.ticketNumber?.replace('DS', ''))
+            Number(response?.ticketNumber?.replace('DS', '')?.replace('UA', ''))
           ).fromNow(),
           shouldAlert: configurations
             ? configurations?.minimumNormalMessageLength
@@ -263,8 +263,15 @@ export class DataStoreDataService {
     );
   }
 
-  findNamespaceKeys(namespace: string): Observable<string[]> {
+  findNamespaceKeys(
+    namespace: string,
+    category?: string
+  ): Observable<string[]> {
     return this.httpClient.get('dataStore/' + namespace).pipe(
+      map((response) => {
+        console.log(response);
+        return response.filter((key) => key?.indexOf(category) === 0);
+      }),
       catchError((error: ErrorMessage) => {
         if (error.status === 404) {
           return of([]);
@@ -280,7 +287,7 @@ export class DataStoreDataService {
     pager?: any,
     configurations?: any
   ): Observable<{ [namespace: string]: any }> {
-    return this.findNamespaceKeys(namespace).pipe(
+    return this.findNamespaceKeys(namespace, configurations?.category).pipe(
       switchMap((keys: string[]) => {
         return this.findByKeys(namespace, keys, pager, configurations).pipe(
           map((values) => values)
