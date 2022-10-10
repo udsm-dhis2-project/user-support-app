@@ -53,12 +53,13 @@
     </button>
     <div class="h5 ml-2 mt-2">User Account Request</div>
   </div>
-  <div class="p-3">
+  <div class="p-3" *ngIf="pageReady">
     <div class="row">
       <div class="col-md-4 col-sx-12">
         <div>
           <div class="h5">Demographic</div>
           <app-form
+            *ngIf="formFields"
             [fields]="formFields"
             (formUpdate)="onUpdateDemographicForm($event)"
           ></app-form>
