@@ -16,6 +16,8 @@
     </mat-tab-group>
   </div>
   <div class="w-100" *ngIf="isFeedbackRecepient">
-    <app-user-account-requests-home></app-user-account-requests-home>
+    <app-user-account-requests-home
+      [configurations]="configurations"
+    ></app-user-account-requests-home>
   </div>
 </div>

@@ -2,6 +2,10 @@
   class="requests-list-container"
   *ngIf="{ allDataForUserSupport: allDataForUserSupport$ | async } as params"
 >
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.allDataForUserSupport"
+  ></mat-progress-bar>
   <div class="p-2">
     <table class="table mat-elevation-z1 p-2">
       <thead class="custom-header-bg">
@@ -12,7 +16,7 @@
           <th style="width: 200px">Actions</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody *ngIf="params?.allDataForUserSupport">
         <ng-container
           *ngFor="
             let dataRow of params?.allDataForUserSupport?.data
