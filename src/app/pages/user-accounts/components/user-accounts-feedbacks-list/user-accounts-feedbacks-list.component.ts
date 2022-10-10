@@ -11,6 +11,7 @@ import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 export class UserAccountsFeedbacksListComponent implements OnInit {
   @Input() configurations: any;
   allDataForUserSupport$: Observable<any[]>;
+  moreOpenedDetails: any = {};
   constructor(
     private dataStoreService: DataStoreDataService,
     private dialog: MatDialog
@@ -21,5 +22,14 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
       'dataStore/dhis2-user-support',
       { ...this.configurations, category: 'UA' }
     );
+  }
+
+  toggleViewMore(event: Event, data: any) {
+    event.stopPropagation();
+    if (this.moreOpenedDetails[data?.id]) {
+      this.moreOpenedDetails[data?.id] = null;
+    } else {
+      this.moreOpenedDetails[data?.id] = data;
+    }
   }
 }
