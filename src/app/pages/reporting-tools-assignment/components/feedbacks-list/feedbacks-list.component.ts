@@ -25,7 +25,7 @@ export class FeedbacksListComponent implements OnInit {
   ngOnInit(): void {
     this.allDataForUserSupport$ = this.dataStoreService.getAllFromNameSpace(
       'dataStore/dhis2-user-support',
-      this.configurations
+      { ...this.configurations, category: 'DS' }
     );
   }
 

@@ -2,6 +2,40 @@
   class="requests-list-container"
   *ngIf="{ allDataForUserSupport: allDataForUserSupport$ | async } as params"
 >
+  <div class="p-2">
+    <table class="table mat-elevation-z1 p-2">
+      <thead class="custom-header-bg">
+        <tr>
+          <th style="width: 15px">SN</th>
+          <th>Request</th>
+          <th>Date</th>
+          <th style="width: 200px">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container
+          *ngFor="
+            let dataRow of params?.allDataForUserSupport?.data
+              | FilterFormRequests: 'status':'REJECTED';
+            let count = index
+          "
+        >
+          <tr>
+            <td>
+              {{ count + 1 }}
+            </td>
+            <td>
+              <div [innerHTML]="dataRow?.message?.message"></div>
+            </td>
+            <td>
+              {{ dataRow?.timeSinceResponseSent }}
+            </td>
+            <td></td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
   <div mat-dialog-actions class="d-flex justify-content-end">
     <button
       mat-stroked-button
