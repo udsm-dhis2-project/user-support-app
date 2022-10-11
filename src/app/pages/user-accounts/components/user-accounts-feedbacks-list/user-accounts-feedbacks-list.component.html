@@ -67,14 +67,14 @@
                 <div style="width: 15%">
                   <div class="d-flex justify-content-end">
                     <button
-                      [disabled]="true"
+                      (click)="onOpenApprovalModal($event, dataRow)"
                       mat-stroked-button
                       class="btn-success mt-5 ml-2"
                     >
                       Approve
                     </button>
                     <button
-                      [disabled]="true"
+                      (click)="onOpenRejectModal($event, dataRow)"
                       mat-stroked-button
                       class="btn-danger mt-5 ml-2"
                     >

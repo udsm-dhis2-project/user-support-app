@@ -25,9 +25,22 @@ body {
 }
 
 .custom-header-bg {
-  background-color: #F6F8FA !important;
+  background-color: #f6f8fa !important;
 }
 
 .table-container {
-  border: solid 1px #F6F8FA;
+  border: solid 1px #f6f8fa;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 100;
+  background: rgba($color: #ffffff, $alpha: 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

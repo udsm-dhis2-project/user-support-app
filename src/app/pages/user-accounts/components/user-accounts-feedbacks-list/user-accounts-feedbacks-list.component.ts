@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
+import { ApproveUserAccountsModalComponent } from '../../modals/approve-user-accounts-modal/approve-user-accounts-modal.component';
 
 @Component({
   selector: 'app-user-accounts-feedbacks-list',
@@ -31,5 +32,13 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
     } else {
       this.moreOpenedDetails[data?.id] = data;
     }
+  }
+
+  onOpenApprovalModal(event: Event, request): void {
+    event.stopPropagation();
+    this.dialog.open(ApproveUserAccountsModalComponent, {
+      width: '50%',
+      data: request,
+    });
   }
 }

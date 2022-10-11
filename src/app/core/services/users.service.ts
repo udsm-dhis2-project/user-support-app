@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
-import { Observable, of } from 'rxjs';
+import { Observable, of, zip } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { FeedbackRecepientModel } from 'src/app/shared/models/users.model';
 
@@ -41,5 +41,37 @@ export class UsersDataService {
     return this.httpClient
       .get(`users?filter=userCredentials.username:eq:${username}&fields=id`)
       .pipe(map((response) => response?.users?.length > 0));
+  }
+
+  approveChanges(data: any): Observable<any> {
+    if (data?.method === 'POST') {
+      return zip(
+        this.httpClient.post(data?.url, data?.userPayload),
+        this.httpClient.put(
+          `dataStore/dhis2-user-support/${data?.id}`,
+          data?.payload
+        ),
+        this.httpClient.post(
+          `messageConversations/${data?.messageConversation?.id}`,
+          data?.approvalMessage
+        ),
+        this.httpClient.post(
+          `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=PENDING`,
+          null
+        )
+      ).pipe(
+        map((response) => response),
+        catchError((error) => of(error))
+      );
+    } else if (data?.method === 'DELETE') {
+      return this.httpClient
+        .delete(`dataStore/dhis2-user-support/${data?.id}`)
+        .pipe(
+          map((response) => response),
+          catchError((error) => of(error))
+        );
+    } else {
+      return of(null);
+    }
   }
 }
