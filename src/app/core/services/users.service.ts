@@ -47,14 +47,14 @@ export class UsersDataService {
   approveChanges(data: any): Observable<any> {
     if (data?.method === 'POST') {
       return zip(
-        this.httpClient.post(data?.url, data?.userPayload),
+        this.httpClient.post('users', data?.userPayload),
         this.httpClient.put(
           `dataStore/dhis2-user-support/${data?.id}`,
           data?.payload
         ),
         this.httpClient.post(
           `messageConversations/${data?.messageConversation?.id}`,
-          data?.approvalMessage
+          data?.messageConversation?.approvalMessage
         ),
         this.httpClient.post(
           `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=PENDING`,
@@ -88,7 +88,7 @@ export class UsersDataService {
               return {
                 key: userNameData?.key,
                 username:
-                  response?.users?.length == 0 ? null : userNameData?.username,
+                  response?.users?.length > 0 ? null : userNameData?.username,
               };
             })
           );

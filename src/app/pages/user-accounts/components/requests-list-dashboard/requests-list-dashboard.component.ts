@@ -11,6 +11,8 @@ import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 export class RequestsListDashboardComponent implements OnInit {
   @Input() configurations: any;
   allDataForUserSupport$: Observable<any[]>;
+
+  viewMoreDetails: any = {};
   constructor(
     private dataStoreService: DataStoreDataService,
     private dialog: MatDialog
@@ -21,5 +23,14 @@ export class RequestsListDashboardComponent implements OnInit {
       'dataStore/dhis2-user-support',
       { ...this.configurations, category: 'UA' }
     );
+  }
+
+  onToggleDetails(event: Event, data: any) {
+    event.stopPropagation();
+    if (this.viewMoreDetails[data?.referenceId]) {
+      this.viewMoreDetails[data?.referenceId] = null;
+    } else {
+      this.viewMoreDetails[data?.referenceId] = data;
+    }
   }
 }

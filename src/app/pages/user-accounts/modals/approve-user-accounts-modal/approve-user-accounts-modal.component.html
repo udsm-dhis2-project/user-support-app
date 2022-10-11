@@ -26,28 +26,31 @@
         </tr>
       </thead>
       <tbody *ngIf="params?.dataStoreInformation">
-        <tr
+        <ng-container
           *ngFor="
             let user of params?.dataStoreInformation?.payload;
             let count = index
           "
         >
-          <td>
-            {{ count + 1 }}
-          </td>
-          <td>{{ user?.firstName }} {{ user?.surname }}</td>
-          <td>
-            {{ dialogData?.timeSinceResponseSent }}
-          </td>
-          <td>
-            <button
-              mat-flat-button
-              (click)="onApprove($event, user, params?.dataStoreInformation)"
-            >
-              Confirm
-            </button>
-          </td>
-        </tr>
+          <tr [ngClass]="{ 'created-user': user?.status == 'CREATED' }">
+            <td>
+              {{ count + 1 }}
+            </td>
+            <td>{{ user?.firstName }} {{ user?.surname }}</td>
+            <td>
+              {{ dialogData?.timeSinceResponseSent }}
+            </td>
+            <td>
+              <button
+                [disabled]="user?.status === 'CREATED'"
+                mat-flat-button
+                (click)="onApprove($event, user, params?.dataStoreInformation)"
+              >
+                Confirm
+              </button>
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
   </div>

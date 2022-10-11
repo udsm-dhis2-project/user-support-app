@@ -34,7 +34,62 @@
             <td>
               {{ dataRow?.timeSinceResponseSent }}
             </td>
-            <td></td>
+            <td>
+              <button
+                mat-flat-button
+                (click)="onToggleDetails($event, dataRow)"
+              >
+                View details
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="viewMoreDetails[dataRow?.referenceId]">
+            <td colspan="100%">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>SN</th>
+                    <th>Names</th>
+                    <th>Phone</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container
+                    *ngFor="let user of dataRow?.payload; let count = index"
+                  >
+                    <tr
+                      [ngClass]="{ 'created-user': user?.status == 'CREATED' }"
+                    >
+                      <td>
+                        {{ count + 1 }}
+                      </td>
+                      <td>
+                        {{ user?.firstName + ' ' + user?.surname }}
+                      </td>
+                      <td>
+                        {{ user?.phoneNumber }}
+                      </td>
+                      <td>
+                        {{
+                          user?.username
+                            ? user?.username
+                            : 'Waiting to be given'
+                        }}
+                      </td>
+                      <td>
+                        {{
+                          user?.password
+                            ? user?.password
+                            : 'Waiting to be given'
+                        }}
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </td>
           </tr>
         </ng-container>
       </tbody>

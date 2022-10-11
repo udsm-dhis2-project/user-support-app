@@ -2,3 +2,7 @@ button,
 button:hover {
   outline: none !important;
 }
+
+.created-user {
+  background-color: #3bb84738;
+}
