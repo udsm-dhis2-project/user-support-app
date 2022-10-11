@@ -18,77 +18,104 @@
       </thead>
       <tbody *ngIf="params?.allDataForUserSupport">
         <ng-container
-          *ngFor="
-            let dataRow of params?.allDataForUserSupport?.data
-              | FilterFormRequests: 'status':'REJECTED';
-            let count = index
+          *ngIf="
+            (
+              params?.allDataForUserSupport?.data
+              | FilterFormRequests: 'status':'REJECTED':currentUser?.id
+            )?.length > 0
           "
         >
-          <tr *ngIf="dataRow?.user?.id === currentUser?.id">
-            <td>
-              {{ count + 1 }}
-            </td>
-            <td>
-              <div [innerHTML]="dataRow?.message?.message"></div>
-            </td>
-            <td>
-              {{ dataRow?.timeSinceResponseSent }}
-            </td>
-            <td>
-              <button
-                mat-flat-button
-                (click)="onToggleDetails($event, dataRow)"
-              >
-                View details
-              </button>
-            </td>
-          </tr>
-          <tr *ngIf="viewMoreDetails[dataRow?.referenceId]">
-            <td colspan="100%">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>SN</th>
-                    <th>Names</th>
-                    <th>Phone</th>
-                    <th>Username</th>
-                    <th>Password</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <ng-container
-                    *ngFor="let user of dataRow?.payload; let count = index"
-                  >
-                    <tr
-                      [ngClass]="{ 'created-user': user?.status == 'CREATED' }"
-                    >
-                      <td>
-                        {{ count + 1 }}
-                      </td>
-                      <td>
-                        {{ user?.firstName + ' ' + user?.surname }}
-                      </td>
-                      <td>
-                        {{ user?.phoneNumber }}
-                      </td>
-                      <td>
-                        {{
-                          user?.username
-                            ? user?.username
-                            : 'Waiting to be given'
-                        }}
-                      </td>
-                      <td>
-                        {{
-                          user?.password
-                            ? user?.username
-                            : 'Waiting to be given'
-                        }}
-                      </td>
+          <ng-container
+            *ngFor="
+              let dataRow of params?.allDataForUserSupport?.data
+                | FilterFormRequests: 'status':'REJECTED':currentUser?.id;
+              let count = index
+            "
+          >
+            <tr>
+              <td>
+                {{ count + 1 }}
+              </td>
+              <td>
+                <div [innerHTML]="dataRow?.message?.message"></div>
+              </td>
+              <td>
+                {{ dataRow?.timeSinceResponseSent }}
+              </td>
+              <td>
+                <button
+                  mat-flat-button
+                  (click)="onToggleDetails($event, dataRow)"
+                >
+                  View details
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="viewMoreDetails[dataRow?.id]">
+              <td colspan="100%">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>SN</th>
+                      <th>Names</th>
+                      <th>Phone</th>
+                      <th>Username</th>
+                      <th>Password</th>
                     </tr>
-                  </ng-container>
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    <ng-container
+                      *ngFor="let user of dataRow?.payload; let count = index"
+                    >
+                      <tr
+                        [ngClass]="{
+                          'created-user': user?.status == 'CREATED'
+                        }"
+                      >
+                        <td>
+                          {{ count + 1 }}
+                        </td>
+                        <td>
+                          {{ user?.firstName + ' ' + user?.surname }}
+                        </td>
+                        <td>
+                          {{ user?.phoneNumber }}
+                        </td>
+                        <td>
+                          {{
+                            user?.username
+                              ? user?.username
+                              : 'Waiting to be given'
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            user?.password
+                              ? user?.username
+                              : 'Waiting to be given'
+                          }}
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+        <ng-container
+          *ngIf="
+            (
+              params?.allDataForUserSupport?.data
+              | FilterFormRequests: 'status':'REJECTED':currentUser?.id
+            )?.length == 0
+          "
+        >
+          <tr>
+            <td colspan="100%">
+              <div class="alert alert-warning" role="alert">
+                No request available
+              </div>
             </td>
           </tr>
         </ng-container>

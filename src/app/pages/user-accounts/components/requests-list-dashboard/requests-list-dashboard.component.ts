@@ -28,10 +28,10 @@ export class RequestsListDashboardComponent implements OnInit {
 
   onToggleDetails(event: Event, data: any) {
     event.stopPropagation();
-    if (this.viewMoreDetails[data?.referenceId]) {
-      this.viewMoreDetails[data?.referenceId] = null;
+    if (this.viewMoreDetails[data?.id]) {
+      this.viewMoreDetails[data?.id] = null;
     } else {
-      this.viewMoreDetails[data?.referenceId] = data;
+      this.viewMoreDetails[data?.id] = data;
     }
   }
 }
