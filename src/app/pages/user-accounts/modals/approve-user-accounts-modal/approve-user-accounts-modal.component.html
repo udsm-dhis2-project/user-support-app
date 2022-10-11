@@ -22,7 +22,7 @@
           <th>SN</th>
           <th>Names</th>
           <th>Time</th>
-          <th></th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody *ngIf="params?.dataStoreInformation">
@@ -41,11 +41,12 @@
           </td>
           <td>
             <button
-              mat-flat-button
+            mat-stroked-button
               (click)="onApprove($event, user, params?.dataStoreInformation)"
             >
               Confirm
             </button>
+            <button mat-stroked-button color="warn" class="ml-4">Reject</button>
           </td>
         </tr>
       </tbody>

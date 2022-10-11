@@ -19,7 +19,7 @@ export class ValidationRulesRequestComponent implements OnInit {
     console.log(this.systemConfigs);
     this.canApprove =
       (
-        this.currentUser?.userGroups.filter(
+        (this.currentUser?.userGroups || []).filter(
           (userGroup) =>
             this.configurations?.validationRuleRequest &&
             this.configurations?.validationRuleRequest?.userGroupsToApprove &&
@@ -34,7 +34,7 @@ export class ValidationRulesRequestComponent implements OnInit {
     if (!this.canApprove) {
       this.canRequest =
         (
-          this.currentUser?.userGroups.filter(
+          (this.currentUser?.userGroups || []).filter(
             (userGroup) =>
               this.configurations?.validationRuleRequest &&
               this.configurations?.validationRuleRequest?.userGroupsToRequest &&

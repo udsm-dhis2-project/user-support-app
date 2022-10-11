@@ -41,7 +41,7 @@
     </table>
   </div>
   <div mat-dialog-actions class="d-flex justify-content-end">
-    <button
+    <!-- <button
       mat-stroked-button
       [matMenuTriggerFor]="menu"
       style="
@@ -67,6 +67,13 @@
         z-index: 1005;
         border-radius: 50%;
       "
+    >
+      New
+    </button> -->
+
+    <button
+      [matMenuTriggerFor]="menu"
+      class="custom-mat-fab"
     >
       New
     </button>
