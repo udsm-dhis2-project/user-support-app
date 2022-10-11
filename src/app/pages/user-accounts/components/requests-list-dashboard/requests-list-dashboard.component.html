@@ -82,18 +82,10 @@
                           {{ user?.phoneNumber }}
                         </td>
                         <td>
-                          {{
-                            user?.username
-                              ? user?.username
-                              : 'Waiting to be given'
-                          }}
+                          {{ user?.username ? user?.username : '-' }}
                         </td>
                         <td>
-                          {{
-                            user?.password
-                              ? user?.username
-                              : 'Waiting to be given'
-                          }}
+                          {{ user?.password ? user?.username : '-' }}
                         </td>
                       </tr>
                     </ng-container>
@@ -153,12 +145,7 @@
       New
     </button> -->
 
-    <button
-      [matMenuTriggerFor]="menu"
-      class="custom-mat-fab"
-    >
-      New
-    </button>
+    <button [matMenuTriggerFor]="menu" class="custom-mat-fab">New</button>
 
     <mat-menu #menu="matMenu">
       <!-- <button mat-menu-item (click)="openUploadingPage($event)">

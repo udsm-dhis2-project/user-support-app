@@ -78,8 +78,8 @@ export class RequestUserAccountsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.currentUser);
     const storedUsersData = localStorage.getItem('usersToCreate');
-    console.log(storedUsersData);
     if (storedUsersData) {
       this.formDataToStoreLocally = JSON.parse(storedUsersData);
       this.selectedOrgUnitItemsForDataEntry =
@@ -266,8 +266,6 @@ export class RequestUserAccountsComponent implements OnInit {
             return data;
           }
         });
-    console.log(this.formData);
-    console.log(this.formDataToStoreLocally);
     this.formDataToStoreLocally = removeDuplicates(
       this.formDataToStoreLocally,
       'phoneNumber'
@@ -299,7 +297,8 @@ export class RequestUserAccountsComponent implements OnInit {
       this.readyToSave = false;
       // Clear local storage
       // Send data to datastore and messaging after confirm
-      const dataStoreKey = 'UA' + Date.now();
+      const dataStoreKey =
+        'UA' + Date.now() + '_' + this.currentUser?.organisationUnits[0]?.id;
       // Check potentialUserNames first
       const dataForMessageAndDataStore = {
         id: dataStoreKey,
@@ -368,8 +367,6 @@ export class RequestUserAccountsComponent implements OnInit {
         attachments: [],
         text: dataForMessageAndDataStore?.message?.message,
       };
-
-      console.log('dataForMessageAndDataStore', dataForMessageAndDataStore);
 
       this.messageAndDataStoreService
         .createMessageAndUpdateDataStore(messageData, {
@@ -462,15 +459,7 @@ export class RequestUserAccountsComponent implements OnInit {
           };
         }),
       }),
-      new TextArea({
-        id: 'titleDescription',
-        key: 'titleDescription',
-        label: 'Title description',
-        value: data ? data?.titleDescription : null,
-      }),
     ];
-
-    console.log(this.formFields);
     this.pageReady = true;
   }
 
@@ -512,7 +501,6 @@ export class RequestUserAccountsComponent implements OnInit {
       }),
     ];
     this.pageReady = true;
-    console.log(this.accessFormFields);
   }
 
   onUpdateDemographicForm(formvalue: FormValue): void {
