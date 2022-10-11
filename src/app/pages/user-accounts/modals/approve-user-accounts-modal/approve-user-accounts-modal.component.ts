@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { omit } from 'lodash';
+import { omit, flatten } from 'lodash';
 import { Observable } from 'rxjs';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
@@ -26,13 +26,12 @@ export class ApproveUserAccountsModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.dialogData);
     this.getRequestInformation();
   }
 
   getRequestInformation(): void {
     this.dataStoreInformation$ = this.dataStoreDataService.getKeyData(
-      this.dialogData?.id
+      this.dialogData?.request?.id
     );
   }
 
@@ -54,7 +53,9 @@ export class ApproveUserAccountsModalComponent implements OnInit {
       };
     });
     this.messageAndDataStoreService
-      .searchMessageConversationByTicketNumber(this.dialogData?.ticketNumber)
+      .searchMessageConversationByTicketNumber(
+        this.dialogData?.request?.ticketNumber
+      )
       .subscribe((response) => {
         if (response) {
           const messageConversation = response;
@@ -66,8 +67,6 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                 const selectedUsername = (response?.filter(
                   (data) => data?.username
                 ) || [])[0]?.username;
-                console.log(response);
-                console.log('selectedUsername', selectedUsername);
                 if (selectedUsername) {
                   const data = {
                     id: request?.id,
@@ -79,8 +78,43 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                           ...userToApprove?.userCredentials,
                           username: selectedUsername,
                         },
+                        userGroups: [
+                          ...userToApprove?.userGroups,
+                          ...flatten(
+                            (
+                              this.dialogData?.configurations?.allowedUserGroupsForRequest?.filter(
+                                (group) =>
+                                  userToApprove?.userGroups[0]?.id === group?.id
+                              ) || []
+                            )?.map((userGroup) => {
+                              return userGroup?.associatedGroups.map(
+                                (group) => {
+                                  return !group?.id
+                                    ? null
+                                    : {
+                                        id: group?.id,
+                                      };
+                                }
+                              );
+                            })
+                          ),
+                        ]?.filter((group) => group),
+                        dataViewOrganisationUnits:
+                          userToApprove?.dataViewOrganisationUnits?.map(
+                            (ou) => {
+                              return {
+                                id: ou?.id,
+                              };
+                            }
+                          ),
+                        organisationUnits:
+                          userToApprove?.organisationUnits?.map((ou) => {
+                            return {
+                              id: ou?.id,
+                            };
+                          }),
                       },
-                      'referenceId'
+                      ['referenceId', 'status', 'username', 'password']
                     ),
                     messageConversation: {
                       ...messageConversation,
@@ -91,7 +125,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                       }`,
                     },
                     payload: {
-                      ...this.dialogData,
+                      ...this.dialogData?.request,
                       payload: request?.payload?.map((user) => {
                         if (user?.referenceId === userToApprove?.referenceId) {
                           return {
@@ -106,15 +140,15 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                       }),
                     },
                   };
-                  console.log(data);
 
-                  // this.usersDataService
-                  //   .approveChanges(data)
-                  //   .subscribe((response) => {
-                  //     if (response) {
-                  //       this.saving = false;
-                  //     }
-                  //   });
+                  this.usersDataService
+                    .approveChanges(data)
+                    .subscribe((response) => {
+                      if (response) {
+                        this.getRequestInformation();
+                        this.saving = false;
+                      }
+                    });
                 } else {
                   this.saving = false;
                 }

@@ -38,7 +38,7 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
     event.stopPropagation();
     this.dialog.open(ApproveUserAccountsModalComponent, {
       width: '50%',
-      data: request,
+      data: { request, configurations: this.configurations },
     });
   }
 }
