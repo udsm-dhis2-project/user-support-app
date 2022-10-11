@@ -11,6 +11,8 @@ import { ApproveUserAccountsModalComponent } from '../../modals/approve-user-acc
 })
 export class UserAccountsFeedbacksListComponent implements OnInit {
   @Input() configurations: any;
+  @Input() currentUser: any;
+  @Input() isSecondTier: boolean;
   allDataForUserSupport$: Observable<any[]>;
   moreOpenedDetails: any = {};
   constructor(
@@ -25,7 +27,12 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
   getUserRequests(): void {
     this.allDataForUserSupport$ = this.dataStoreService.getAllFromNameSpace(
       'dataStore/dhis2-user-support',
-      { ...this.configurations, category: 'UA' }
+      {
+        ...this.configurations,
+        category: 'UA',
+        tier2: this.isSecondTier,
+        userId: this.currentUser?.id,
+      }
     );
   }
 

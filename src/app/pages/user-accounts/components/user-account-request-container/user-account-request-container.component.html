@@ -14,11 +14,21 @@
           <app-users-list></app-users-list>
         </ng-template>
       </mat-tab>
+      <mat-tab *ngIf="isSecondTier" label="Requests">
+        <ng-template matTabContent>
+          <app-user-account-requests-home
+            [configurations]="configurations"
+            [currentUser]="currentUser"
+            [isSecondTier]="isSecondTier"
+          ></app-user-account-requests-home>
+        </ng-template>
+      </mat-tab>
     </mat-tab-group>
   </div>
   <div class="w-100" *ngIf="isFeedbackRecepient">
     <app-user-account-requests-home
       [configurations]="configurations"
+      [currentUser]="currentUser"
     ></app-user-account-requests-home>
   </div>
 </div>

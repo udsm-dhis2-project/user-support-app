@@ -18,70 +18,94 @@
       </thead>
       <tbody *ngIf="params?.allDataForUserSupport">
         <ng-container
-          *ngFor="
-            let dataRow of params?.allDataForUserSupport?.data
-              | FilterFormRequests: 'status':'REJECTED';
-            let count = index
+          *ngIf="
+            (
+              params?.allDataForUserSupport?.data
+              | FilterFormRequests: 'status':'REJECTED'
+            )?.length > 0
+          "
+        >
+          <ng-container
+            *ngFor="
+              let dataRow of params?.allDataForUserSupport?.data
+                | FilterFormRequests: 'status':'REJECTED';
+              let count = index
+            "
+          >
+            <tr>
+              <td>
+                {{ count + 1 }}
+              </td>
+              <td>
+                <div [innerHTML]="dataRow?.action"></div>
+              </td>
+              <td>
+                {{ dataRow?.timeSinceResponseSent }}
+              </td>
+              <td>
+                <button
+                  class="details-toggle"
+                  mat-stroked-button
+                  (click)="toggleViewMore($event, dataRow)"
+                >
+                  {{ moreOpenedDetails[dataRow?.id] ? 'Back' : 'View Details' }}
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="moreOpenedDetails[dataRow?.id]">
+              <td></td>
+              <td colspan="100%">
+                <div class="w-100 d-flex justify-content-between">
+                  <div style="width: 85%" class="more-contents">
+                    <div
+                      class="h6"
+                      [ngClass]="{ 'text-danger': dataRow?.shouldAlert }"
+                    >
+                      <span>{{ dataRow?.message?.subject }}</span>
+                      <span class="ml-4" *ngIf="dataRow?.user">
+                        From {{ dataRow?.user?.displayName }}
+                        <span *ngIf="dataRow?.user?.phoneNumber">
+                          ({{ dataRow?.user?.phoneNumber }})
+                        </span>
+                      </span>
+                    </div>
+                    <div [innerHtml]="dataRow?.message?.message"></div>
+                  </div>
+                  <div style="width: 15%">
+                    <div class="d-flex justify-content-end">
+                      <button
+                        (click)="onOpenApprovalModal($event, dataRow)"
+                        mat-stroked-button
+                        class="btn-success mt-5 ml-2"
+                      >
+                        Approve
+                      </button>
+                      <button
+                        (click)="onOpenRejectModal($event, dataRow)"
+                        mat-stroked-button
+                        class="btn-danger mt-5 ml-2"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+        <ng-container
+          *ngIf="
+            (
+              params?.allDataForUserSupport?.data
+              | FilterFormRequests: 'status':'REJECTED'
+            )?.length == 0
           "
         >
           <tr>
-            <td>
-              {{ count + 1 }}
-            </td>
-            <td>
-              <div [innerHTML]="dataRow?.action"></div>
-            </td>
-            <td>
-              {{ dataRow?.timeSinceResponseSent }}
-            </td>
-            <td>
-              <button
-                class="details-toggle"
-                mat-stroked-button
-                (click)="toggleViewMore($event, dataRow)"
-              >
-                {{ moreOpenedDetails[dataRow?.id] ? 'Back' : 'View Details' }}
-              </button>
-            </td>
-          </tr>
-
-          <tr *ngIf="moreOpenedDetails[dataRow?.id]">
-            <td></td>
             <td colspan="100%">
-              <div class="w-100 d-flex justify-content-between">
-                <div style="width: 85%" class="more-contents">
-                  <div
-                    class="h6"
-                    [ngClass]="{ 'text-danger': dataRow?.shouldAlert }"
-                  >
-                    <span>{{ dataRow?.message?.subject }}</span>
-                    <span class="ml-4" *ngIf="dataRow?.user">
-                      From {{ dataRow?.user?.displayName }}
-                      <span *ngIf="dataRow?.user?.phoneNumber">
-                        ({{ dataRow?.user?.phoneNumber }})
-                      </span>
-                    </span>
-                  </div>
-                  <div [innerHtml]="dataRow?.message?.message"></div>
-                </div>
-                <div style="width: 15%">
-                  <div class="d-flex justify-content-end">
-                    <button
-                      (click)="onOpenApprovalModal($event, dataRow)"
-                      mat-stroked-button
-                      class="btn-success mt-5 ml-2"
-                    >
-                      Approve
-                    </button>
-                    <button
-                      (click)="onOpenRejectModal($event, dataRow)"
-                      mat-stroked-button
-                      class="btn-danger mt-5 ml-2"
-                    >
-                      Reject
-                    </button>
-                  </div>
-                </div>
+              <div class="alert alert-warning" role="alert">
+                No Request is available
               </div>
             </td>
           </tr>

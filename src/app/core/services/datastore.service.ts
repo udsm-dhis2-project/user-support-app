@@ -189,7 +189,12 @@ export class DataStoreDataService {
         }),
         () => {
           const response = {
-            data,
+            data: configurations?.tier2
+              ? data?.filter(
+                  (dataStoreData) =>
+                    dataStoreData?.user?.id === configurations?.userId
+                ) || []
+              : [],
             errors,
           };
           const newPager = pager
@@ -268,11 +273,22 @@ export class DataStoreDataService {
 
   findNamespaceKeys(
     namespace: string,
-    category?: string
+    category?: string,
+    userId?: string,
+    tier2?: boolean
   ): Observable<string[]> {
     return this.httpClient.get('dataStore/' + namespace).pipe(
       map((response) => {
-        return response.filter((key) => key?.indexOf(category) === 0);
+        let keysWithNoOu = [];
+        if (category === 'UA') {
+          keysWithNoOu =
+            response?.filter((key) => key?.indexOf('_') == -1) || [];
+        }
+        return category === 'UA' && keysWithNoOu?.length === 0 && tier2
+          ? response?.filter(
+              (key) => key?.indexOf(userId) > 0 && key?.indexOf(category) === 0
+            ) || []
+          : response.filter((key) => key?.indexOf(category) === 0);
       }),
       catchError((error: ErrorMessage) => {
         if (error.status === 404) {
@@ -289,7 +305,12 @@ export class DataStoreDataService {
     pager?: any,
     configurations?: any
   ): Observable<{ [namespace: string]: any }> {
-    return this.findNamespaceKeys(namespace, configurations?.category).pipe(
+    return this.findNamespaceKeys(
+      namespace,
+      configurations?.category,
+      configurations?.userId,
+      configurations?.tier2
+    ).pipe(
       switchMap((keys: string[]) => {
         return this.findByKeys(namespace, keys, pager, configurations).pipe(
           map((values) => values)

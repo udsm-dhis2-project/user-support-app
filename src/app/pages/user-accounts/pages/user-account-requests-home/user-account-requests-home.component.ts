@@ -7,6 +7,8 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class UserAccountRequestsHomeComponent implements OnInit {
   @Input() configurations: any;
+  @Input() currentUser: any;
+  @Input() isSecondTier: boolean;
   constructor() {}
 
   ngOnInit() {}

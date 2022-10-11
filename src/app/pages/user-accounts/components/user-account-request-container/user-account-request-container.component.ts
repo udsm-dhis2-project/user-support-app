@@ -13,7 +13,22 @@ export class UserAccountRequestContainerComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  get isFeedbackRecepient() {
+  get isSecondTier(): boolean {
+    return (
+      (
+        (this.currentUser?.userGroups || []).filter(
+          (userGroup) =>
+            (
+              this.configurations?.tier2?.filter(
+                (tier) => tier?.id === userGroup?.id
+              ) || []
+            )?.length > 0
+        ) || []
+      )?.length > 0
+    );
+  }
+
+  get isFeedbackRecepient(): boolean {
     return (
       (
         (this.currentUser?.userGroups || []).filter(
