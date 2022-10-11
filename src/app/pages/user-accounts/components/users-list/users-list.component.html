@@ -20,6 +20,7 @@
           <th>Email</th>
           <th>Last login</th>
           <th>Disabled</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -43,6 +44,46 @@
           </td>
           <td>
             {{ user?.userCredentials?.disabled ? 'Yes' : '' }}
+          </td>
+          <td>
+            <button
+            class="float-right"
+            mat-stroked-button
+            [matMenuTriggerFor]="menu"
+            (click)="$event.stopPropagation()"
+          >
+            <mat-icon>more_horiz</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button
+            mat-menu-item>
+            <div class="d-flex align-items-center">
+              <mat-icon inline>edit</mat-icon>
+              <span>Disable/Enable </span>
+            </div>
+          </button>
+            <button
+            mat-menu-item>
+            <div class="d-flex align-items-center">
+              <mat-icon inline>edit</mat-icon>
+              <span>Password Reset </span>
+            </div>
+          </button>
+            <button
+            mat-menu-item>
+            <div class="d-flex align-items-center">
+              <mat-icon inline>edit</mat-icon>
+              <span>Update Orgunit </span>
+            </div>
+          </button>
+            <button
+            mat-menu-item>
+            <div class="d-flex align-items-center">
+              <mat-icon inline>edit</mat-icon>
+              <span>Update Userrole </span>
+            </div>
+          </button>
+          </mat-menu>
           </td>
         </tr>
       </tbody>
