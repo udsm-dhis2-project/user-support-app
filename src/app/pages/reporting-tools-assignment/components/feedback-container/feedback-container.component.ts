@@ -32,7 +32,7 @@ export class FeedbackContainerComponent implements OnInit {
       showToggleFeedbackAndRequests: this.configurations
         ?.userGroupsToToggleFormRequests
         ? (
-            this.currentUser?.userGroups.filter(
+            (this.currentUser?.userGroups || []).filter(
               (userGroup) =>
                 (
                   this.configurations?.userGroupsToToggleFormRequests.filter(
@@ -47,7 +47,7 @@ export class FeedbackContainerComponent implements OnInit {
     this.userSupportKeys$ = this.dataStoreService.getDataStoreKeys();
     this.isFeedbackRecepient =
       (
-        this.currentUser?.userGroups.filter(
+        (this.currentUser?.userGroups || []).filter(
           (userGroup) =>
             userGroup?.id === this.systemConfigs?.feedbackRecipients?.id
         ) || []

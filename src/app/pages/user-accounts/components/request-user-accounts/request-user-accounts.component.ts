@@ -9,6 +9,7 @@ import { Field } from 'src/app/shared/modules/form/models/field.model';
 import { FormValue } from 'src/app/shared/modules/form/models/form-value.model';
 import { TextArea } from 'src/app/shared/modules/form/models/text-area.model';
 import { Textbox } from 'src/app/shared/modules/form/models/text-box.model';
+import { removeDuplicates } from '../../../../shared/helpers/util.helper';
 
 @Component({
   selector: 'app-request-user-accounts',
@@ -191,6 +192,70 @@ export class RequestUserAccountsComponent implements OnInit {
 
   onFinish(event: Event): void {
     event.stopPropagation();
+    // testing logic
+    this.formDataToStoreLocally = !this.formUpdateIsDone
+      ? this.formDataToStoreLocally
+      : !this.currentUserToCreateSelected
+      ? [
+          ...this.formDataToStoreLocally,
+          {
+            id: 'REF' + Date.now(),
+            firstName: this.formData?.firstName?.value,
+            middleName: this.formData?.middleName?.value,
+            lastName: this.formData?.lastName?.value,
+            phoneNumber: this.formData?.phoneNumber?.value,
+            email: this.formData?.email?.value,
+            title: this.formData?.title?.value,
+            titleDescription: this.formData?.titleDescription?.value,
+            entryOrgUnits: this.selectedOrgUnitItemsForDataEntry,
+            reportOrgUnits: this.selectedOrgUnitItemsForReport,
+            userGroups: this.selectedUserGroups,
+            userRoles: this.selectedRoles,
+          },
+        ]
+      : this.formDataToStoreLocally?.map((data) => {
+          if (data?.id === this.currentUserToCreateSelected) {
+            return {
+              id: this.currentUserToCreateSelected,
+              firstName: this.formData?.firstName?.value,
+              middleName: this.formData?.middleName?.value,
+              lastName: this.formData?.lastName?.value,
+              phoneNumber: this.formData?.phoneNumber?.value,
+              email: this.formData?.email?.value,
+              title: this.formData?.title?.value,
+              titleDescription: this.formData?.titleDescription?.value,
+              entryOrgUnits: this.formData?.entry?.value,
+              reportOrgUnits: this.formData?.report?.value,
+              userGroups: [
+                {
+                  id: this.formData?.userGroup?.value,
+                },
+              ],
+              userRoles: [
+                {
+                  id: this.formData?.userRole?.value,
+                },
+              ],
+            };
+          } else {
+            return data;
+          }
+        });
+    console.log(this.formData);
+    console.log(this.formDataToStoreLocally);
+    this.formDataToStoreLocally = removeDuplicates(
+      this.formDataToStoreLocally,
+      'phoneNumber'
+    );
+    this.currentUserToCreateSelected = null;
+    localStorage.setItem(
+      'usersToCreate',
+      JSON.stringify(this.formDataToStoreLocally)
+    );
+    this.createDemographicFields();
+    // testing logic
+    // jdksdjsk;
+
     this.readyToSave = true;
   }
 
