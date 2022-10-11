@@ -68,6 +68,7 @@ export class RequestUserAccountsComponent implements OnInit {
   readyToSave: boolean = false;
   pageReady: boolean = false;
   formUpdateIsDone: boolean = false;
+  prevIndex: number = 0;
 
   constructor(
     private dataStoreService: DataStoreDataService,
@@ -119,10 +120,31 @@ export class RequestUserAccountsComponent implements OnInit {
         ? this.formDataToStoreLocally[this.formDataToStoreLocally?.length - 1]
         : null
     );
+
+    if (this.formDataToStoreLocally?.length) {
+      this.prevIndex = this.formDataToStoreLocally?.length - 1;
+    }
   }
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
+  }
+
+  onPrev(event: Event): void {
+    event.stopPropagation();
+    if (this.prevIndex > 0) {
+      this.prevIndex = this.prevIndex - 1;
+      this.createDemographicFields(
+        this.formDataToStoreLocally?.length > 0
+          ? this.formDataToStoreLocally[this.prevIndex]
+          : null
+      );
+      this.createAccessControlFields(
+        this.formDataToStoreLocally?.length > 0
+          ? this.formDataToStoreLocally[this.prevIndex]
+          : null
+      );
+    }
   }
 
   onNext(event: Event): void {
@@ -187,6 +209,9 @@ export class RequestUserAccountsComponent implements OnInit {
       'usersToCreate',
       JSON.stringify(this.formDataToStoreLocally)
     );
+    if (this.formDataToStoreLocally?.length) {
+      this.prevIndex = this.formDataToStoreLocally?.length - 1;
+    }
     this.createDemographicFields();
   }
 
