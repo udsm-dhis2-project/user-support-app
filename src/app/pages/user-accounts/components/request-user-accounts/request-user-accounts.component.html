@@ -151,8 +151,18 @@
       <!-- [disabled]="!isDemographicFormValid || !isAccessControlFormValid" -->
       <button
         *ngIf="!readyToSave"
+        [disabled]="prevIndex === 0"
+        mat-stroked-button
+        color="primary"
+        (click)="onPrev($event)"
+      >
+        Previous
+      </button>
+      <button
+        *ngIf="!readyToSave"
         mat-flat-button
         color="primary"
+        class="ml-2"
         (click)="onNext($event)"
       >
         Next
