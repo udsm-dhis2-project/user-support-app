@@ -24,7 +24,7 @@
             let count = index
           "
         >
-          <tr>
+          <tr *ngIf="dataRow?.user?.id === currentUser?.id">
             <td>
               {{ count + 1 }}
             </td>
@@ -81,7 +81,7 @@
                       <td>
                         {{
                           user?.password
-                            ? user?.password
+                            ? user?.username
                             : 'Waiting to be given'
                         }}
                       </td>

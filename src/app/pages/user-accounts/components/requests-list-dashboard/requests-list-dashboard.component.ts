@@ -10,6 +10,7 @@ import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 })
 export class RequestsListDashboardComponent implements OnInit {
   @Input() configurations: any;
+  @Input() currentUser: any;
   allDataForUserSupport$: Observable<any[]>;
 
   viewMoreDetails: any = {};
