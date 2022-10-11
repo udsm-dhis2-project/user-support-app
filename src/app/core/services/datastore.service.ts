@@ -383,4 +383,11 @@ export class DataStoreDataService {
         catchError((error) => of(error))
       );
   }
+
+  deleteDataStoreKey(key: string): Observable<any> {
+    return this.httpClient.delete(`dataStore/dhis2-user-support/${key}`).pipe(
+      map((response) => response),
+      catchError((error) => of(error))
+    );
+  }
 }

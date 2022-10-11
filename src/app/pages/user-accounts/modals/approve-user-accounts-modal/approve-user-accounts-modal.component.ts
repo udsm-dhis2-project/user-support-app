@@ -44,6 +44,9 @@ export class ApproveUserAccountsModalComponent implements OnInit {
     event.stopPropagation();
     this.saving = true;
     // Create potential usernames
+    const countOfUsersRemainedToCreate = (
+      request?.payload?.filter((user) => user?.status !== 'CREATED') || []
+    )?.length;
     const potentialUserNames = [1, 2, 3].map((key) => {
       return {
         key,
@@ -145,8 +148,22 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                     .approveChanges(data)
                     .subscribe((response) => {
                       if (response) {
-                        this.getRequestInformation();
-                        this.saving = false;
+                        // If datastore key is complete please delete
+                        if (countOfUsersRemainedToCreate == 1) {
+                          // delete first
+                          this.dataStoreDataService
+                            .deleteDataStoreKey(request?.id)
+                            .subscribe((response) => {
+                              this.getRequestInformation();
+                              this.saving = false;
+                              setTimeout(() => {
+                                this.dialogRef.close(true);
+                              });
+                            });
+                        } else {
+                          this.getRequestInformation();
+                          this.saving = false;
+                        }
                       }
                     });
                 } else {

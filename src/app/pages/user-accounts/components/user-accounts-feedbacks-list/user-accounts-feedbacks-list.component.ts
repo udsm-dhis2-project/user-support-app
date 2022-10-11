@@ -19,6 +19,10 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.getUserRequests();
+  }
+
+  getUserRequests(): void {
     this.allDataForUserSupport$ = this.dataStoreService.getAllFromNameSpace(
       'dataStore/dhis2-user-support',
       { ...this.configurations, category: 'UA' }
@@ -36,9 +40,16 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
 
   onOpenApprovalModal(event: Event, request): void {
     event.stopPropagation();
-    this.dialog.open(ApproveUserAccountsModalComponent, {
-      width: '50%',
-      data: { request, configurations: this.configurations },
-    });
+    this.dialog
+      .open(ApproveUserAccountsModalComponent, {
+        width: '50%',
+        data: { request, configurations: this.configurations },
+      })
+      .afterClosed()
+      .subscribe((shouldReload) => {
+        if (shouldReload) {
+          this.getUserRequests();
+        }
+      });
   }
 }
