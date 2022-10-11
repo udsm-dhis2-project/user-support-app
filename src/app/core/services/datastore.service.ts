@@ -95,6 +95,9 @@ export class DataStoreDataService {
           systemName: 'Program Manager Group',
         },
       ],
+      usersSettings: {
+        defaultPassword: 'HMIS@2022',
+      },
     };
     return this.httpClient
       .post(`dataStore/dhis2-user-support/configurations`, configurations)

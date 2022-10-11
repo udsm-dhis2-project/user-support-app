@@ -1,3 +1,4 @@
+import { flatten } from 'lodash';
 import { Injectable } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Observable, of, zip } from 'rxjs';
@@ -73,5 +74,29 @@ export class UsersDataService {
     } else {
       return of(null);
     }
+  }
+
+  checkForUserNamesAvailability(potentialUserNames: any[]): Observable<any> {
+    return zip(
+      ...potentialUserNames.map((userNameData) => {
+        return this.httpClient
+          .get(
+            `users?filter=userCredentials.username:eq:${userNameData?.username}&fields=id`
+          )
+          .pipe(
+            map((response) => {
+              return {
+                key: userNameData?.key,
+                username:
+                  response?.users?.length == 0 ? null : userNameData?.username,
+              };
+            })
+          );
+      })
+    ).pipe(
+      map((response) => {
+        return flatten(response);
+      })
+    );
   }
 }

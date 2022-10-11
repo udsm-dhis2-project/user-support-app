@@ -210,6 +210,7 @@ export class RequestUserAccountsComponent implements OnInit {
       // Clear local storage
       // Send data to datastore and messaging after confirm
       const dataStoreKey = 'UA' + Date.now();
+      // Check potentialUserNames first
       const dataForMessageAndDataStore = {
         id: dataStoreKey,
         ticketNumber: 'UA' + Date.now().toString(),
@@ -243,23 +244,24 @@ export class RequestUserAccountsComponent implements OnInit {
           subject: 'UA' + Date.now().toString() + '- MAOMBI YA ACCOUNT',
         },
         replyMessage: 'to be constructed',
-        payload: this.formDataToStoreLocally?.map((data) => {
+        payload: this.formDataToStoreLocally?.map((data, index) => {
           return {
             userCredentials: {
               cogsDimensionConstraints: [],
               catDimensionConstraints: [],
               username: '',
-              password: '',
+              password: this.configurations?.usersSettings?.defaultPassword,
               userRoles: data?.userRoles,
             },
-            surname: data?.middleName + ' ' + data?.lastName,
-            firstName: data?.firstName,
+            surname: data?.lastName,
+            firstName: data?.firstName + ' ' + data?.middleName,
             email: data?.email,
             phoneNumber: data?.phoneNumber,
             organisationUnits: data?.entryOrgUnits,
             dataViewOrganisationUnits: data?.reportOrgUnits,
             userGroups: data?.userGroups,
             attributeValues: [],
+            referenceId: data?.phoneNumber.toString() + (index + 1),
           };
         }),
         url: 'users',
@@ -279,7 +281,6 @@ export class RequestUserAccountsComponent implements OnInit {
 
       console.log('dataForMessageAndDataStore', dataForMessageAndDataStore);
 
-      // TODO: Add slogic to produce potential username
       this.messageAndDataStoreService
         .createMessageAndUpdateDataStore(messageData, {
           id: dataStoreKey,
