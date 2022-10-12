@@ -188,6 +188,8 @@ export class DataStoreDataService {
           );
         }),
         () => {
+          console.log(data);
+          console.log(configurations);
           const response = {
             data: configurations?.tier2
               ? data?.filter(
@@ -224,17 +226,20 @@ export class DataStoreDataService {
   ): Observable<any> {
     return this.httpClient.get(`${'dataStore/' + namespace}/${key}`).pipe(
       map((response) => {
+        const isUA = key?.indexOf('UA') === 0;
         return {
           ...response,
           timeSinceResponseSent: moment(
             Number(response?.ticketNumber?.replace('DS', '')?.replace('UA', ''))
           ).fromNow(),
-          shouldAlert: configurations
-            ? configurations?.minimumNormalMessageLength
-              ? response?.message?.message?.length >
-                configurations?.minimumNormalMessageLength
+          shouldAlert: !isUA
+            ? configurations
+              ? configurations?.minimumNormalMessageLength
+                ? response?.message?.message?.length >
+                  configurations?.minimumNormalMessageLength
+                : false
               : false
-            : false,
+            : response?.payload?.length > 10,
           message: {
             ...response?.message,
             messageContentsLength: response?.message?.message?.length,

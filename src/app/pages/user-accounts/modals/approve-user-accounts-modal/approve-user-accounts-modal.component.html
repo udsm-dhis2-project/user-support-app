@@ -32,7 +32,12 @@
             let count = index
           "
         >
-          <tr [ngClass]="{ 'created-user': user?.status == 'CREATED' }">
+          <tr
+            [ngClass]="{
+              'created-user': user?.status == 'CREATED',
+              'approved-user': user?.status == 'APPROVED'
+            }"
+          >
             <td>
               {{ count + 1 }}
             </td>
@@ -42,9 +47,24 @@
             </td>
             <td>
               <button
-                [disabled]="user?.status === 'CREATED'"
+                *ngIf="isFeedbackRecepient"
+                [disabled]="
+                  user?.status === 'CREATED' || user?.status !== 'APPROVED'
+                "
                 mat-flat-button
                 (click)="onApprove($event, user, params?.dataStoreInformation)"
+              >
+                Confirm
+              </button>
+              <button
+                *ngIf="!isFeedbackRecepient"
+                [disabled]="
+                  user?.status === 'CREATED' || user?.status === 'APPROVED'
+                "
+                mat-flat-button
+                (click)="
+                  onTier2Approve($event, user, params?.dataStoreInformation)
+                "
               >
                 Confirm
               </button>

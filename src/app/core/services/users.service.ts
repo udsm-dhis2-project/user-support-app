@@ -47,7 +47,9 @@ export class UsersDataService {
   approveChanges(data: any): Observable<any> {
     if (data?.method === 'POST') {
       return zip(
-        this.httpClient.post('users', data?.userPayload),
+        data?.userPayload
+          ? this.httpClient.post('users', data?.userPayload)
+          : of(null),
         this.httpClient.put(
           `dataStore/dhis2-user-support/${data?.id}`,
           data?.payload

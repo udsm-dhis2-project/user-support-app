@@ -9,6 +9,7 @@ export class UserAccountRequestsHomeComponent implements OnInit {
   @Input() configurations: any;
   @Input() currentUser: any;
   @Input() isSecondTier: boolean;
+  @Input() isFeedbackRecepient: boolean;
   constructor() {}
 
   ngOnInit() {}

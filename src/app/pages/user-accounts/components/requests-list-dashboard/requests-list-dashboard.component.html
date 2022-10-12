@@ -61,6 +61,7 @@
                       <th>Phone</th>
                       <th>Username</th>
                       <th>Password</th>
+                      <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -69,7 +70,8 @@
                     >
                       <tr
                         [ngClass]="{
-                          'created-user': user?.status == 'CREATED'
+                          'created-user': user?.status == 'CREATED',
+                          'approved-user': user?.status == 'APPROVED'
                         }"
                       >
                         <td>
@@ -86,6 +88,9 @@
                         </td>
                         <td>
                           {{ user?.password ? user?.username : '-' }}
+                        </td>
+                        <td>
+                          {{ user?.status }}
                         </td>
                       </tr>
                     </ng-container>

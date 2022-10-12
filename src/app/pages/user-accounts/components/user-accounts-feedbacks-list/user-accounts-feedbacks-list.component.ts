@@ -13,6 +13,7 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
   @Input() configurations: any;
   @Input() currentUser: any;
   @Input() isSecondTier: boolean;
+  @Input() isFeedbackRecepient: boolean;
   allDataForUserSupport$: Observable<any[]>;
   moreOpenedDetails: any = {};
   constructor(
@@ -46,12 +47,16 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
     }
   }
 
-  onOpenApprovalModal(event: Event, request): void {
+  onOpenApprovalModal(event: Event, request, isFeedbackRecepient): void {
     event.stopPropagation();
     this.dialog
       .open(ApproveUserAccountsModalComponent, {
         width: '50%',
-        data: { request, configurations: this.configurations },
+        data: {
+          request,
+          configurations: this.configurations,
+          isFeedbackRecepient,
+        },
       })
       .afterClosed()
       .subscribe((shouldReload) => {

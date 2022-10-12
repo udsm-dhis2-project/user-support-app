@@ -40,6 +40,58 @@ export class ApproveUserAccountsModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  onTier2Approve(event: Event, userToApprove: any, request: any): void {
+    event.stopPropagation();
+    this.saving = true;
+
+    this.messageAndDataStoreService
+      .searchMessageConversationByTicketNumber(
+        this.dialogData?.request?.ticketNumber
+      )
+      .subscribe((response) => {
+        if (response) {
+          const messageConversation = response;
+          const data = {
+            id: request?.id,
+            method: 'POST',
+            userPayload: null,
+            messageConversation: {
+              ...messageConversation,
+              approvalMessage: `I do confirm account for ${
+                userToApprove?.firstName + ' ' + userToApprove?.surname
+              } whose phone number is ${
+                userToApprove?.phoneNumber
+              } should be created`,
+            },
+            payload: {
+              ...this.dialogData?.request,
+              payload: request?.payload?.map((user) => {
+                if (user?.referenceId === userToApprove?.referenceId) {
+                  return {
+                    ...user,
+                    status: 'APPROVED',
+                    password: userToApprove?.userCredentials?.password,
+                  };
+                } else {
+                  return user;
+                }
+              }),
+            },
+          };
+
+          this.usersDataService.approveChanges(data).subscribe((response) => {
+            if (response) {
+              this.getRequestInformation();
+              this.saving = false;
+              setTimeout(() => {
+                this.dialogRef.close(true);
+              });
+            }
+          });
+        }
+      });
+  }
+
   onApprove(event: Event, userToApprove: any, request: any): void {
     event.stopPropagation();
     this.saving = true;

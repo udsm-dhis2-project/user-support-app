@@ -6,6 +6,7 @@
           <app-requests-list-dashboard
             [configurations]="configurations"
             [currentUser]="currentUser"
+            [isSecondTier]="isSecondTier"
           ></app-requests-list-dashboard>
         </ng-template>
       </mat-tab>
@@ -29,6 +30,7 @@
     <app-user-account-requests-home
       [configurations]="configurations"
       [currentUser]="currentUser"
+      [isFeedbackRecepient]="isFeedbackRecepient"
     ></app-user-account-requests-home>
   </div>
 </div>

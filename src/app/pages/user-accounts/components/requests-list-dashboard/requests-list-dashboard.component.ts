@@ -11,6 +11,7 @@ import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 export class RequestsListDashboardComponent implements OnInit {
   @Input() configurations: any;
   @Input() currentUser: any;
+  @Input() isSecondTier: boolean;
   allDataForUserSupport$: Observable<any[]>;
 
   viewMoreDetails: any = {};
@@ -22,7 +23,13 @@ export class RequestsListDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.allDataForUserSupport$ = this.dataStoreService.getAllFromNameSpace(
       'dataStore/dhis2-user-support',
-      { ...this.configurations, category: 'UA' }
+      {
+        ...this.configurations,
+        category: 'UA',
+        tier2: this.isSecondTier,
+        userId: this.currentUser?.id,
+        organisationUnitId: this.currentUser?.organisationUnits[0]?.id,
+      }
     );
   }
 
