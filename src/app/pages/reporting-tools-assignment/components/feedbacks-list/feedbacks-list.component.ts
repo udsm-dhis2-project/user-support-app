@@ -23,6 +23,10 @@ export class FeedbacksListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.getFeedbacksList();
+  }
+
+  getFeedbacksList(): void {
     this.allDataForUserSupport$ = this.dataStoreService.getAllFromNameSpace(
       'dataStore/dhis2-user-support',
       { ...this.configurations, category: 'DS' }
@@ -48,11 +52,7 @@ export class FeedbacksListComponent implements OnInit {
       .afterClosed()
       .subscribe((shouldReload) => {
         if (shouldReload) {
-          this.allDataForUserSupport$ =
-            this.dataStoreService.getAllFromNameSpace(
-              'dataStore/dhis2-user-support',
-              this.configurations
-            );
+          this.getFeedbacksList();
         }
       });
   }
@@ -67,11 +67,7 @@ export class FeedbacksListComponent implements OnInit {
       .afterClosed()
       .subscribe((shouldReload) => {
         if (shouldReload) {
-          this.allDataForUserSupport$ =
-            this.dataStoreService.getAllFromNameSpace(
-              'dataStore/dhis2-user-support',
-              this.configurations
-            );
+          this.getFeedbacksList();
         }
       });
   }
@@ -86,11 +82,7 @@ export class FeedbacksListComponent implements OnInit {
       .afterClosed()
       .subscribe((shouldReload) => {
         if (shouldReload) {
-          this.allDataForUserSupport$ =
-            this.dataStoreService.getAllFromNameSpace(
-              'dataStore/dhis2-user-support',
-              this.configurations
-            );
+          this.getFeedbacksList();
         }
       });
   }
