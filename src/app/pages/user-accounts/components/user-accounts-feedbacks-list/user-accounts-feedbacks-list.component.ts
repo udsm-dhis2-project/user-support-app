@@ -32,6 +32,7 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
         category: 'UA',
         tier2: this.isSecondTier,
         userId: this.currentUser?.id,
+        organisationUnitId: this.currentUser?.organisationUnits[0]?.id,
       }
     );
   }

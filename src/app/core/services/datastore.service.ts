@@ -192,9 +192,10 @@ export class DataStoreDataService {
             data: configurations?.tier2
               ? data?.filter(
                   (dataStoreData) =>
-                    dataStoreData?.user?.id === configurations?.userId
+                    dataStoreData?.user?.organisationUnits[0]?.id ===
+                    configurations?.organisationUnitId
                 ) || []
-              : [],
+              : data,
             errors,
           };
           const newPager = pager
