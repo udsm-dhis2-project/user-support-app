@@ -57,6 +57,7 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
           request,
           configurations: this.configurations,
           isFeedbackRecepient,
+          isSecondTier: this.isSecondTier,
         },
       })
       .afterClosed()

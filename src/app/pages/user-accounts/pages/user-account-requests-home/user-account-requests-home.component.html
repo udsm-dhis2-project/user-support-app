@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="currentUser && currentUser?.organisationUnits?.length > 0">
   <app-user-accounts-feedbacks-list
     [configurations]="configurations"
     [currentUser]="currentUser"

@@ -4,6 +4,7 @@
       <mat-tab label="Pending requests">
         <ng-template matTabContent>
           <app-requests-list-dashboard
+            *ngIf="currentUser && currentUser?.organisationUnits?.length > 0"
             [configurations]="configurations"
             [currentUser]="currentUser"
             [isSecondTier]="isSecondTier"

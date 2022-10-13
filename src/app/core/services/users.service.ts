@@ -54,14 +54,18 @@ export class UsersDataService {
           `dataStore/dhis2-user-support/${data?.id}`,
           data?.payload
         ),
-        this.httpClient.post(
-          `messageConversations/${data?.messageConversation?.id}`,
-          data?.messageConversation?.approvalMessage
-        ),
-        this.httpClient.post(
-          `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=PENDING`,
-          null
-        )
+        data?.messageConversation
+          ? this.httpClient.post(
+              `messageConversations/${data?.messageConversation?.id}`,
+              data?.messageConversation?.approvalMessage
+            )
+          : of(null),
+        data?.messageConversation
+          ? this.httpClient.post(
+              `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=PENDING`,
+              null
+            )
+          : this.httpClient.post(`messageConversations`, data?.messageBody)
       ).pipe(
         map((response) => response),
         catchError((error) => of(error))

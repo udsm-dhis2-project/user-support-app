@@ -83,9 +83,49 @@ export class ApproveUserAccountsModalComponent implements OnInit {
             if (response) {
               this.getRequestInformation();
               this.saving = false;
-              setTimeout(() => {
-                this.dialogRef.close(true);
-              });
+            }
+          });
+        } else {
+          const messageBody = {
+            subject: request?.message?.subject,
+            users: [
+              {
+                id: request?.user?.id,
+                username: request?.user?.username,
+                type: 'user',
+              },
+            ],
+            userGroups: [],
+            organisationUnits: [],
+            text: `Approval for a request account message sent from you \n\n ${request?.message?.message}`,
+            attachments: [],
+          };
+
+          const data = {
+            id: request?.id,
+            method: 'POST',
+            userPayload: null,
+            messageBody: messageBody,
+            payload: {
+              ...this.dialogData?.request,
+              payload: request?.payload?.map((user) => {
+                if (user?.referenceId === userToApprove?.referenceId) {
+                  return {
+                    ...user,
+                    status: 'APPROVED',
+                    password: userToApprove?.userCredentials?.password,
+                  };
+                } else {
+                  return user;
+                }
+              }),
+            },
+          };
+
+          this.usersDataService.approveChanges(data).subscribe((response) => {
+            if (response) {
+              this.getRequestInformation();
+              this.saving = false;
             }
           });
         }
@@ -114,7 +154,6 @@ export class ApproveUserAccountsModalComponent implements OnInit {
       .subscribe((response) => {
         if (response) {
           const messageConversation = response;
-
           this.usersDataService
             .checkForUserNamesAvailability(potentialUserNames)
             .subscribe((response) => {
@@ -179,6 +218,126 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                         userToApprove?.userCredentials?.password
                       }`,
                     },
+                    payload: {
+                      ...this.dialogData?.request,
+                      payload: request?.payload?.map((user) => {
+                        if (user?.referenceId === userToApprove?.referenceId) {
+                          return {
+                            ...user,
+                            status: 'CREATED',
+                            username: selectedUsername,
+                            password: userToApprove?.userCredentials?.password,
+                          };
+                        } else {
+                          return user;
+                        }
+                      }),
+                    },
+                  };
+
+                  this.usersDataService
+                    .approveChanges(data)
+                    .subscribe((response) => {
+                      if (response) {
+                        // If datastore key is complete please delete
+                        if (countOfUsersRemainedToCreate == 1) {
+                          // delete first
+                          this.dataStoreDataService
+                            .deleteDataStoreKey(request?.id)
+                            .subscribe((response) => {
+                              this.getRequestInformation();
+                              this.saving = false;
+                              setTimeout(() => {
+                                this.dialogRef.close(true);
+                              });
+                            });
+                        } else {
+                          this.getRequestInformation();
+                          this.saving = false;
+                        }
+                      }
+                    });
+                } else {
+                  this.saving = false;
+                }
+              }
+            });
+        } else {
+          this.usersDataService
+            .checkForUserNamesAvailability(potentialUserNames)
+            .subscribe((response) => {
+              if (response) {
+                const selectedUsername = (response?.filter(
+                  (data) => data?.username
+                ) || [])[0]?.username;
+                if (selectedUsername) {
+                  const messageBody = {
+                    subject: request?.message?.subject,
+                    users: [
+                      {
+                        id: request?.user?.id,
+                        username: request?.user?.username,
+                        type: 'user',
+                      },
+                    ],
+                    userGroups: [],
+                    organisationUnits: [],
+                    text: `Account for ${
+                      userToApprove?.firstName + ' ' + userToApprove?.surname
+                    }  is: username=  ${selectedUsername} and password = ${
+                      userToApprove?.userCredentials?.password
+                    }`,
+                    attachments: [],
+                  };
+                  const data = {
+                    id: request?.id,
+                    method: 'POST',
+                    userPayload: omit(
+                      {
+                        ...userToApprove,
+                        userCredentials: {
+                          ...userToApprove?.userCredentials,
+                          username: selectedUsername,
+                        },
+                        userGroups: [
+                          ...userToApprove?.userGroups,
+                          ...flatten(
+                            (
+                              this.dialogData?.configurations?.allowedUserGroupsForRequest?.filter(
+                                (group) =>
+                                  userToApprove?.userGroups[0]?.id === group?.id
+                              ) || []
+                            )?.map((userGroup) => {
+                              return userGroup?.associatedGroups.map(
+                                (group) => {
+                                  return !group?.id
+                                    ? null
+                                    : {
+                                        id: group?.id,
+                                      };
+                                }
+                              );
+                            })
+                          ),
+                        ]?.filter((group) => group),
+                        dataViewOrganisationUnits:
+                          userToApprove?.dataViewOrganisationUnits?.map(
+                            (ou) => {
+                              return {
+                                id: ou?.id,
+                              };
+                            }
+                          ),
+                        organisationUnits:
+                          userToApprove?.organisationUnits?.map((ou) => {
+                            return {
+                              id: ou?.id,
+                            };
+                          }),
+                      },
+                      ['referenceId', 'status', 'username', 'password']
+                    ),
+                    messageBody,
                     payload: {
                       ...this.dialogData?.request,
                       payload: request?.payload?.map((user) => {

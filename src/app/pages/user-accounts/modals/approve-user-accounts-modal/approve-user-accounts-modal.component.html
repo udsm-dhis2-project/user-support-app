@@ -46,27 +46,32 @@
               {{ dialogData?.request?.timeSinceResponseSent }}
             </td>
             <td>
+              {{ isFeedbackRecepient }}
               <button
-                *ngIf="isFeedbackRecepient"
+                *ngIf="dialogData?.isFeedbackRecepient"
                 [disabled]="
                   user?.status === 'CREATED' || user?.status !== 'APPROVED'
                 "
-                mat-flat-button
+                mat-stroked-button
                 (click)="onApprove($event, user, params?.dataStoreInformation)"
               >
                 Confirm
               </button>
               <button
-                *ngIf="!isFeedbackRecepient"
+                class="ml-2"
                 [disabled]="
                   user?.status === 'CREATED' || user?.status === 'APPROVED'
                 "
-                mat-flat-button
+                mat-stroked-button
                 (click)="
                   onTier2Approve($event, user, params?.dataStoreInformation)
                 "
               >
-                Confirm
+                {{
+                  dialogData?.isFeedbackRecepient
+                    ? 'First confirmination'
+                    : 'Confirm'
+                }}
               </button>
             </td>
           </tr>

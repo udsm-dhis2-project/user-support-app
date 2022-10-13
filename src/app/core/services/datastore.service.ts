@@ -311,11 +311,13 @@ export class DataStoreDataService {
           keysWithNoOu =
             response?.filter((key) => key?.indexOf('_') == -1) || [];
         }
-        return category === 'UA' && keysWithNoOu?.length === 0 && tier2
-          ? response?.filter(
-              (key) => key?.indexOf(userId) > 0 && key?.indexOf(category) === 0
-            ) || []
-          : response.filter((key) => key?.indexOf(category) === 0) || [];
+        // TODO: The commented logic will be valid when all request have ou
+        // return category === 'UA' && keysWithNoOu?.length === 0 && tier2
+        //   ? response?.filter(
+        //       (key) => key?.indexOf(userId) > 0 && key?.indexOf(category) === 0
+        //     ) || []
+        //   : response.filter((key) => key?.indexOf(category) === 0) || [];
+        return response.filter((key) => key?.indexOf(category) === 0) || [];
       }),
       catchError((error: ErrorMessage) => {
         if (error.status === 404) {
