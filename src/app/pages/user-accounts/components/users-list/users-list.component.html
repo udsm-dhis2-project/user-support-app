@@ -56,28 +56,32 @@
           </button>
           <mat-menu #menu="matMenu">
             <button
-            mat-menu-item>
+            mat-menu-item
+            (click)="openUserActivateDialog()">
             <div class="d-flex align-items-center">
               <mat-icon inline>lock_open</mat-icon>
               <span>Disable/Enable </span>
             </div>
           </button>
             <button
-            mat-menu-item>
+            mat-menu-item
+            (click)="openUserPassResetDialog()">
             <div class="d-flex align-items-center">
               <mat-icon inline>lock_reset</mat-icon>
               <span>Password Reset </span>
             </div>
           </button>
             <button
-            mat-menu-item>
+            mat-menu-item
+            (click)="openUserOrgunitDialog()">
             <div class="d-flex align-items-center">
               <mat-icon inline>account_tree</mat-icon>
               <span>Update Orgunit </span>
             </div>
           </button>
             <button
-            mat-menu-item>
+            mat-menu-item
+            (click)="openUserRoleDialog()">
             <div class="d-flex align-items-center">
               <mat-icon inline>admin_panel_settings</mat-icon>
               <span>Update Userrole </span>
