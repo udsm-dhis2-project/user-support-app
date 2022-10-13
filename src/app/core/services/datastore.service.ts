@@ -188,16 +188,15 @@ export class DataStoreDataService {
           );
         }),
         () => {
-          console.log(data);
-          console.log(configurations);
           const response = {
-            data: configurations?.tier2
-              ? data?.filter(
-                  (dataStoreData) =>
-                    dataStoreData?.user?.organisationUnits[0]?.id ===
-                    configurations?.organisationUnitId
-                ) || []
-              : data,
+            data:
+              configurations?.tier2 && configurations?.category == 'UA'
+                ? data?.filter(
+                    (dataStoreData) =>
+                      dataStoreData?.user?.organisationUnits[0]?.id ===
+                      configurations?.organisationUnitId
+                  ) || []
+                : data,
             errors,
           };
           const newPager = pager
@@ -294,7 +293,7 @@ export class DataStoreDataService {
           ? response?.filter(
               (key) => key?.indexOf(userId) > 0 && key?.indexOf(category) === 0
             ) || []
-          : response.filter((key) => key?.indexOf(category) === 0);
+          : response.filter((key) => key?.indexOf(category) === 0) || [];
       }),
       catchError((error: ErrorMessage) => {
         if (error.status === 404) {

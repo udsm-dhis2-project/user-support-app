@@ -448,7 +448,7 @@ export class RequestUserAccountsComponent implements OnInit {
         id: 'title',
         key: 'title',
         label: 'Title',
-        required: true,
+        required: false,
         value: data ? data?.title : null,
         options: this.configurations?.referenceTitles?.map((title) => {
           return {
