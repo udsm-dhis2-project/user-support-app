@@ -7,6 +7,13 @@
     *ngIf="!params?.allDataForUserSupport"
   ></mat-progress-bar>
   <div class="p-2">
+    <div class="w-100 mt-2">
+      <mat-form-field class="w-50">
+        <mat-label>Search </mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput [(ngModel)]="searchingText" />
+      </mat-form-field>
+    </div>
     <table class="table mat-elevation-z1 p-2">
       <thead class="custom-header-bg">
         <tr>
@@ -21,14 +28,14 @@
           *ngIf="
             (
               params?.allDataForUserSupport?.data
-              | FilterFormRequests: 'status':'REJECTED'
+              | FilterFormRequests: 'status':'REJECTED':null:searchingText
             )?.length > 0
           "
         >
           <ng-container
             *ngFor="
               let dataRow of params?.allDataForUserSupport?.data
-                | FilterFormRequests: 'status':'REJECTED';
+                | FilterFormRequests: 'status':'REJECTED':null:searchingText;
               let count = index
             "
           >
@@ -104,7 +111,7 @@
           *ngIf="
             (
               params?.allDataForUserSupport?.data
-              | FilterFormRequests: 'status':'REJECTED'
+              | FilterFormRequests: 'status':'REJECTED':null:searchingText
             )?.length == 0
           "
         >

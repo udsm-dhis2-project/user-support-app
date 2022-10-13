@@ -196,7 +196,29 @@ export class DataStoreDataService {
                       dataStoreData?.user?.organisationUnits[0]?.id ===
                       configurations?.organisationUnitId
                   ) || []
-                : data,
+                : data?.map((dataItem) => {
+                    if (configurations?.category == 'UA') {
+                      return {
+                        ...dataItem,
+                        searchingText: dataItem?.payload
+                          ?.map(
+                            (user) =>
+                              user?.firstName +
+                              user?.surname +
+                              user?.phoneNumber +
+                              user?.email +
+                              user?.organisationUnits
+                                ?.map((ou) => ou?.name)
+                                .join('') +
+                              user?.user?.organisationUnits[0]?.name +
+                              user?.user?.displayName
+                          )
+                          .join(','),
+                      };
+                    } else {
+                      return dataItem;
+                    }
+                  }),
             errors,
           };
           const newPager = pager
@@ -415,5 +437,14 @@ export class DataStoreDataService {
       map((response) => response),
       catchError((error) => of(error))
     );
+  }
+
+  updateDataStoreKey(key: string, data: any): Observable<any> {
+    return this.httpClient
+      .put(`dataStore/dhis2-user-support/${key}`, data)
+      .pipe(
+        map((response) => response),
+        catchError((error) => of(error))
+      );
   }
 }

@@ -16,6 +16,7 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
   @Input() isFeedbackRecepient: boolean;
   allDataForUserSupport$: Observable<any[]>;
   moreOpenedDetails: any = {};
+  searchingText: string = '';
   constructor(
     private dataStoreService: DataStoreDataService,
     private dialog: MatDialog

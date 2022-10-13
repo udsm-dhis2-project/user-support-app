@@ -8,15 +8,26 @@ export class FilterFormRequestsPipe implements PipeTransform {
     values: any[],
     filteringKey: string,
     filteringValue: string,
-    userId?: string
+    userId?: string,
+    searchingText?: string
   ): any {
     if (!filteringKey || !filteringValue) {
       return values;
     }
     // First filter by use
-    const dataToFilter = !userId
-      ? values
-      : values?.filter((value) => value?.user?.id === userId) || [];
+    const dataToFilter =
+      !userId && !searchingText
+        ? values
+        : searchingText && !userId
+        ? (values || [])?.filter(
+            (item) =>
+              item?.searchingText
+                ?.toLowerCase()
+                ?.indexOf(searchingText?.toLowerCase()) > -1
+          )
+        : userId && !searchingText
+        ? values?.filter((value) => value?.user?.id === userId) || []
+        : values;
     return (
       (dataToFilter || [])?.filter(
         (value) => value[filteringKey] != filteringValue
