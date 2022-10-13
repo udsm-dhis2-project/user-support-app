@@ -20,6 +20,7 @@ export class RequestsListDashboardComponent implements OnInit {
   saving: boolean = false;
   itemsToConfirm: any = {};
   alertMessages: any = {};
+  searchingText: string;
   constructor(
     private dataStoreService: DataStoreDataService,
     private messageAndDataStoreService: MessagesAndDatastoreService,
