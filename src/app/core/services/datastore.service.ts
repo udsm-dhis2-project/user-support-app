@@ -416,4 +416,13 @@ export class DataStoreDataService {
       catchError((error) => of(error))
     );
   }
+
+  updateDataStoreKey(key: string, data: any): Observable<any> {
+    return this.httpClient
+      .put(`dataStore/dhis2-user-support/${key}`, data)
+      .pipe(
+        map((response) => response),
+        catchError((error) => of(error))
+      );
+  }
 }

@@ -2,6 +2,14 @@
   class="requests-list-container"
   *ngIf="{ allDataForUserSupport: allDataForUserSupport$ | async } as params"
 >
+  <div class="loading-overlay" *ngIf="saving">
+    <div class="text-center">
+      <div>Saving ....</div>
+      <div class="mt-3 d-flex justify-content-center w-100">
+        <mat-spinner diameter="50" strokeWidth="2"></mat-spinner>
+      </div>
+    </div>
+  </div>
   <mat-progress-bar
     mode="indeterminate"
     *ngIf="!params?.allDataForUserSupport"
@@ -13,7 +21,7 @@
           <th style="width: 15px">SN</th>
           <th>Request</th>
           <th>Date</th>
-          <th style="width: 200px">Actions</th>
+          <th style="width: 300px">Actions</th>
         </tr>
       </thead>
       <tbody *ngIf="params?.allDataForUserSupport">
@@ -42,12 +50,15 @@
               <td>
                 {{ dataRow?.timeSinceResponseSent }}
               </td>
-              <td>
+              <td class="d-flext justify-content-end">
                 <button
                   mat-flat-button
                   (click)="onToggleDetails($event, dataRow)"
                 >
                   View details
+                </button>
+                <button mat-button class="ml-2">
+                  <mat-icon title="Delete Request">delete</mat-icon>
                 </button>
               </td>
             </tr>
@@ -62,6 +73,7 @@
                       <th>Username</th>
                       <th>Password</th>
                       <th>Status</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -91,6 +103,33 @@
                         </td>
                         <td>
                           {{ user?.status }}
+                        </td>
+                        <td>
+                          <p class="w-100"></p>
+                          <button
+                            mat-stroked-button
+                            [disabled]="user?.status"
+                            (click)="
+                              onRemoveUser(
+                                $event,
+                                user,
+                                dataRow,
+                                itemsToConfirm[user?.referenceId] ===
+                                  user?.referenceId
+                                  ? true
+                                  : false
+                              )
+                            "
+                          >
+                            <mat-icon
+                              *ngIf="!itemsToConfirm[user?.referenceId]"
+                              title="Remove this user"
+                              >delete</mat-icon
+                            >
+                            <span *ngIf="itemsToConfirm[user?.referenceId]"
+                              >Confirm</span
+                            >
+                          </button>
                         </td>
                       </tr>
                     </ng-container>
