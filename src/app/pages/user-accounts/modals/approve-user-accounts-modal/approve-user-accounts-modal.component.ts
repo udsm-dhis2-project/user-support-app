@@ -70,7 +70,9 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                   return {
                     ...user,
                     status: 'APPROVED',
-                    password: userToApprove?.userCredentials?.password,
+                    password:
+                      this.dialogData?.configurations?.usersSettings
+                        ?.defaultPassword,
                   };
                 } else {
                   return user;
@@ -113,7 +115,9 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                   return {
                     ...user,
                     status: 'APPROVED',
-                    password: userToApprove?.userCredentials?.password,
+                    password:
+                      this.dialogData?.configurations?.usersSettings
+                        ?.defaultPassword,
                   };
                 } else {
                   return user;
@@ -170,7 +174,18 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                         ...userToApprove,
                         userCredentials: {
                           ...userToApprove?.userCredentials,
+                          password:
+                            this.dialogData?.configurations?.usersSettings
+                              ?.defaultPassword,
                           username: selectedUsername,
+                          userRoles:
+                            userToApprove?.userCredentials?.userRoles?.filter(
+                              (role) => role?.id != ''
+                            ) || [
+                              {
+                                id: 'ZI4hVQsL7Dq',
+                              },
+                            ],
                         },
                         userGroups: [
                           ...userToApprove?.userGroups,
@@ -192,7 +207,11 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                               );
                             })
                           ),
-                        ]?.filter((group) => group),
+                        ]?.filter((group) => group && group?.id != '') || [
+                          {
+                            id: 'zk2Zubvm2kP',
+                          },
+                        ],
                         dataViewOrganisationUnits:
                           userToApprove?.dataViewOrganisationUnits?.length > 0
                             ? userToApprove?.dataViewOrganisationUnits?.map(
@@ -219,7 +238,8 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                       approvalMessage: `Account for ${
                         userToApprove?.firstName + ' ' + userToApprove?.surname
                       }  is: username=  ${selectedUsername} and password = ${
-                        userToApprove?.userCredentials?.password
+                        this.dialogData?.configurations?.usersSettings
+                          ?.defaultPassword
                       }`,
                     },
                     payload: {
@@ -230,7 +250,9 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                             ...user,
                             status: 'CREATED',
                             username: selectedUsername,
-                            password: userToApprove?.userCredentials?.password,
+                            password:
+                              this.dialogData?.configurations?.usersSettings
+                                ?.defaultPassword,
                           };
                         } else {
                           return user;
@@ -289,7 +311,8 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                     text: `Account for ${
                       userToApprove?.firstName + ' ' + userToApprove?.surname
                     }  is: username=  ${selectedUsername} and password = ${
-                      userToApprove?.userCredentials?.password
+                      this.dialogData?.configurations?.usersSettings
+                        ?.defaultPassword
                     }`,
                     attachments: [],
                   };
@@ -301,7 +324,18 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                         ...userToApprove,
                         userCredentials: {
                           ...userToApprove?.userCredentials,
+                          password:
+                            this.dialogData?.configurations?.usersSettings
+                              ?.defaultPassword,
                           username: selectedUsername,
+                          userRoles:
+                            userToApprove?.userCredentials?.userRoles?.filter(
+                              (role) => role?.id != ''
+                            ) || [
+                              {
+                                id: 'ZI4hVQsL7Dq',
+                              },
+                            ],
                         },
                         userGroups: [
                           ...userToApprove?.userGroups,
@@ -309,21 +343,27 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                             (
                               this.dialogData?.configurations?.allowedUserGroupsForRequest?.filter(
                                 (group) =>
+                                  userToApprove?.userGroups[0] &&
                                   userToApprove?.userGroups[0]?.id === group?.id
                               ) || []
                             )?.map((userGroup) => {
-                              return userGroup?.associatedGroups.map(
-                                (group) => {
-                                  return !group?.id
-                                    ? null
-                                    : {
-                                        id: group?.id,
-                                      };
-                                }
-                              );
+                              return userGroup?.associatedGroups &&
+                                userGroup?.associatedGroups?.length > 0
+                                ? userGroup?.associatedGroups.map((group) => {
+                                    return !group?.id
+                                      ? null
+                                      : {
+                                          id: group?.id,
+                                        };
+                                  })
+                                : [];
                             })
                           ),
-                        ]?.filter((group) => group),
+                        ]?.filter((group) => group && group?.id != '') || [
+                          {
+                            id: 'zk2Zubvm2kP',
+                          },
+                        ],
                         dataViewOrganisationUnits:
                           userToApprove?.dataViewOrganisationUnits?.length > 0
                             ? userToApprove?.dataViewOrganisationUnits?.map(
