@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { UsersDataService } from 'src/app/core/services/users.service';
+import { UpdateUserActivationModalComponent } from '../../modals/update-user-activation-modal/update-user-activation-modal.component';
+import { UpdateUserOrgunitModalComponent } from '../../modals/update-user-orgunit-modal/update-user-orgunit-modal.component';
+import { UpdateUserPasswordModalComponent } from '../../modals/update-user-password-modal/update-user-password-modal.component';
+import { UpdateUserRoleModalComponent } from '../../modals/update-user-role-modal/update-user-role-modal.component';
 import { UploadUsersModalComponent } from '../../modals/upload-users-modal/upload-users-modal.component';
 
 @Component({
@@ -48,6 +52,30 @@ export class UsersListComponent implements OnInit {
   openUploadingPage(event: Event): void {
     event.stopPropagation();
     this.dialog.open(UploadUsersModalComponent, {
+      width: '50%',
+    });
+  }
+
+  openUserActivateDialog() {
+    this.dialog.open(UpdateUserActivationModalComponent, {
+      width: '50%',
+    });
+  }
+
+  openUserPassResetDialog() {
+    this.dialog.open(UpdateUserPasswordModalComponent, {
+      width: '50%',
+    });
+  }
+
+  openUserOrgunitDialog() {
+    this.dialog.open(UpdateUserOrgunitModalComponent, {
+      width: '50%',
+    });
+  }
+
+  openUserRoleDialog() {
+    this.dialog.open(UpdateUserRoleModalComponent, {
       width: '50%',
     });
   }
