@@ -29,7 +29,7 @@ function getDataStorePager(urlQuerySection: string): any {
 
   return {
     page: (pagerParams.page as number) || 1,
-    pageSize: (pagerParams.pageSize as number) || 50,
+    pageSize: (pagerParams.pageSize as number) || 400,
   };
 }
 

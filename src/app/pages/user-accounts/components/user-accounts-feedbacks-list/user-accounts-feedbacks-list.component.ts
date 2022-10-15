@@ -35,6 +35,7 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
         tier2: this.isSecondTier,
         userId: this.currentUser?.id,
         organisationUnitId: this.currentUser?.organisationUnits[0]?.id,
+        isFeedbackRecepient: this.isFeedbackRecepient,
       }
     );
   }

@@ -194,19 +194,23 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                           ),
                         ]?.filter((group) => group),
                         dataViewOrganisationUnits:
-                          userToApprove?.dataViewOrganisationUnits?.map(
-                            (ou) => {
-                              return {
-                                id: ou?.id,
-                              };
-                            }
-                          ),
+                          userToApprove?.dataViewOrganisationUnits?.length > 0
+                            ? userToApprove?.dataViewOrganisationUnits?.map(
+                                (ou) => {
+                                  return {
+                                    id: ou?.id,
+                                  };
+                                }
+                              )
+                            : [{ id: request?.user?.organisationUnits[0]?.id }],
                         organisationUnits:
-                          userToApprove?.organisationUnits?.map((ou) => {
-                            return {
-                              id: ou?.id,
-                            };
-                          }),
+                          userToApprove?.organisationUnits?.length > 0
+                            ? userToApprove?.organisationUnits?.map((ou) => {
+                                return {
+                                  id: ou?.id,
+                                };
+                              })
+                            : [{ id: request?.user?.organisationUnits[0]?.id }],
                       },
                       ['referenceId', 'status', 'username', 'password']
                     ),
@@ -321,19 +325,23 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                           ),
                         ]?.filter((group) => group),
                         dataViewOrganisationUnits:
-                          userToApprove?.dataViewOrganisationUnits?.map(
-                            (ou) => {
-                              return {
-                                id: ou?.id,
-                              };
-                            }
-                          ),
+                          userToApprove?.dataViewOrganisationUnits?.length > 0
+                            ? userToApprove?.dataViewOrganisationUnits?.map(
+                                (ou) => {
+                                  return {
+                                    id: ou?.id,
+                                  };
+                                }
+                              )
+                            : [{ id: request?.user?.organisationUnits[0]?.id }],
                         organisationUnits:
-                          userToApprove?.organisationUnits?.map((ou) => {
-                            return {
-                              id: ou?.id,
-                            };
-                          }),
+                          userToApprove?.organisationUnits?.length > 0
+                            ? userToApprove?.organisationUnits?.map((ou) => {
+                                return {
+                                  id: ou?.id,
+                                };
+                              })
+                            : [{ id: request?.user?.organisationUnits[0]?.id }],
                       },
                       ['referenceId', 'status', 'username', 'password']
                     ),

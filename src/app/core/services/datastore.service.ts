@@ -189,36 +189,33 @@ export class DataStoreDataService {
         }),
         () => {
           const response = {
-            data:
-              configurations?.tier2 && configurations?.category == 'UA'
-                ? data?.filter(
-                    (dataStoreData) =>
-                      dataStoreData?.user?.organisationUnits[0]?.id ===
-                      configurations?.organisationUnitId
-                  ) || []
-                : data?.map((dataItem) => {
-                    if (configurations?.category == 'UA') {
-                      return {
-                        ...dataItem,
-                        searchingText: dataItem?.payload
-                          ?.map(
-                            (user) =>
-                              user?.firstName +
-                              user?.surname +
-                              user?.phoneNumber +
-                              user?.email +
-                              user?.organisationUnits
-                                ?.map((ou) => ou?.name)
-                                .join('') +
-                              user?.user?.organisationUnits[0]?.name +
-                              user?.user?.displayName
-                          )
-                          .join(','),
-                      };
-                    } else {
-                      return dataItem;
-                    }
-                  }),
+            data: data?.map((dataItem) => {
+              if (configurations?.category == 'UA') {
+                return {
+                  ...dataItem,
+                  searchingText: dataItem?.payload
+                    ?.map((user) =>
+                      user?.firstName +
+                        user?.surname +
+                        user?.phoneNumber +
+                        user?.email +
+                        dataItem?.ticketNumber +
+                        user?.organisationUnits?.length >
+                      0
+                        ? user?.organisationUnits
+                            ?.map((ou) => ou?.name)
+                            .join('')
+                        : '' +
+                          dataItem?.user?.organisationUnits[0]?.name +
+                          dataItem?.user?.displayName +
+                          dataItem?.user?.email
+                    )
+                    .join(','),
+                };
+              } else {
+                return dataItem;
+              }
+            }),
             errors,
           };
           const newPager = pager
@@ -301,23 +298,22 @@ export class DataStoreDataService {
   findNamespaceKeys(
     namespace: string,
     category?: string,
-    userId?: string,
-    tier2?: boolean
+    organisationUnitId?: string,
+    tier2?: boolean,
+    isFeedbackRecepient?: boolean
   ): Observable<string[]> {
     return this.httpClient.get('dataStore/' + namespace).pipe(
       map((response) => {
-        let keysWithNoOu = [];
-        if (category === 'UA') {
-          keysWithNoOu =
-            response?.filter((key) => key?.indexOf('_') == -1) || [];
-        }
-        // TODO: The commented logic will be valid when all request have ou
-        // return category === 'UA' && keysWithNoOu?.length === 0 && tier2
-        //   ? response?.filter(
-        //       (key) => key?.indexOf(userId) > 0 && key?.indexOf(category) === 0
-        //     ) || []
-        //   : response.filter((key) => key?.indexOf(category) === 0) || [];
-        return response.filter((key) => key?.indexOf(category) === 0) || [];
+        return category == 'UA'
+          ? response?.filter((key) => {
+              if (
+                key?.indexOf(category) === 0 &&
+                (key?.indexOf(organisationUnitId) > 0 || isFeedbackRecepient)
+              ) {
+                return key;
+              }
+            }) || []
+          : response?.filter((key) => key?.indexOf(category) === 0) || [];
       }),
       catchError((error: ErrorMessage) => {
         if (error.status === 404) {
@@ -337,8 +333,9 @@ export class DataStoreDataService {
     return this.findNamespaceKeys(
       namespace,
       configurations?.category,
-      configurations?.userId,
-      configurations?.tier2
+      configurations?.organisationUnitId,
+      configurations?.tier2,
+      configurations?.isFeedbackRecepient
     ).pipe(
       switchMap((keys: string[]) => {
         return this.findByKeys(namespace, keys, pager, configurations).pipe(

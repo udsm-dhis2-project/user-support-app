@@ -29,7 +29,10 @@ export class FeedbacksListComponent implements OnInit {
   getFeedbacksList(): void {
     this.allDataForUserSupport$ = this.dataStoreService.getAllFromNameSpace(
       'dataStore/dhis2-user-support',
-      { ...this.configurations, category: 'DS' }
+      {
+        ...this.configurations,
+        category: 'DS',
+      }
     );
   }
 

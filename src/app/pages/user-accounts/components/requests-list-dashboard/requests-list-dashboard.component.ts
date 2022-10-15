@@ -14,6 +14,7 @@ export class RequestsListDashboardComponent implements OnInit {
   @Input() configurations: any;
   @Input() currentUser: any;
   @Input() isSecondTier: boolean;
+  @Input() isFeedbackRecepient: boolean;
   allDataForUserSupport$: Observable<any[]>;
 
   viewMoreDetails: any = {};
