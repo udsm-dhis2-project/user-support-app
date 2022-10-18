@@ -235,12 +235,35 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                     ),
                     messageConversation: {
                       ...messageConversation,
-                      approvalMessage: `Account for ${
-                        userToApprove?.firstName + ' ' + userToApprove?.surname
+                      approvalMessage: `The following are the accounts created \n\n 0. ${
+                        userToApprove?.firstName +
+                        ' ' +
+                        userToApprove?.surname +
+                        '  - ' +
+                        userToApprove?.phoneNumber
                       }  is: username=  ${selectedUsername} and password = ${
                         this.dialogData?.configurations?.usersSettings
                           ?.defaultPassword
-                      }`,
+                      }\n ${(
+                        request?.payload?.filter((user) => user?.username) || []
+                      )
+                        ?.map((userPayload, index) => {
+                          return (
+                            index +
+                            1 +
+                            '. ' +
+                            userPayload?.firstName +
+                            ' ' +
+                            userPayload?.surname +
+                            ' - ' +
+                            userPayload?.phoneNumber +
+                            ' is ' +
+                            userPayload?.username +
+                            ' and password is ' +
+                            userPayload?.password
+                          );
+                        })
+                        .join('\n')}`,
                     },
                     payload: {
                       ...this.dialogData?.request,
@@ -308,12 +331,35 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                     ],
                     userGroups: [],
                     organisationUnits: [],
-                    text: `Account for ${
-                      userToApprove?.firstName + ' ' + userToApprove?.surname
+                    text: `The following are the accounts created \n\n 0. ${
+                      userToApprove?.firstName +
+                      ' ' +
+                      userToApprove?.surname +
+                      '  - ' +
+                      userToApprove?.phoneNumber
                     }  is: username=  ${selectedUsername} and password = ${
                       this.dialogData?.configurations?.usersSettings
                         ?.defaultPassword
-                    }`,
+                    }\n ${(
+                      request?.payload?.filter((user) => user?.username) || []
+                    )
+                      ?.map((userPayload, index) => {
+                        return (
+                          index +
+                          1 +
+                          '. ' +
+                          userPayload?.firstName +
+                          ' ' +
+                          userPayload?.surname +
+                          ' - ' +
+                          userPayload?.phoneNumber +
+                          ' is ' +
+                          userPayload?.username +
+                          ' and password is ' +
+                          userPayload?.password
+                        );
+                      })
+                      .join('\n')}`,
                     attachments: [],
                   };
                   const data = {
