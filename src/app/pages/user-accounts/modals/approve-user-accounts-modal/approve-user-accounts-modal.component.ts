@@ -49,7 +49,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
         this.dialogData?.request?.ticketNumber
       )
       .subscribe((response) => {
-        if (response) {
+        if (response && response != 'none') {
           const messageConversation = response;
           const data = {
             id: request?.id,
@@ -156,7 +156,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
         this.dialogData?.request?.ticketNumber
       )
       .subscribe((response) => {
-        if (response) {
+        if (response && response != 'none') {
           const messageConversation = response;
           this.usersDataService
             .checkForUserNamesAvailability(potentialUserNames)

@@ -39,7 +39,7 @@ export class MessagesAndDatastoreService {
       )
       .pipe(
         map((response) => {
-          return response?.messageConversations[0];
+          return response?.messageConversations[0] || 'none';
         }),
         catchError((error) => of(error))
       );

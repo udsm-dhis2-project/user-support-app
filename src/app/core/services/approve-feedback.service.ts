@@ -10,19 +10,22 @@ export class ApproveFeedbackService {
   constructor(private httpClient: NgxDhis2HttpClientService) {}
 
   approveChanges(data: any): Observable<any> {
-    console.log(data);
     if (data?.method === 'POST') {
       return zip(
         this.httpClient.post(data?.url, data?.payload),
         this.httpClient.delete(`dataStore/dhis2-user-support/${data?.id}`),
-        this.httpClient.post(
-          `messageConversations/${data?.messageConversation?.id}`,
-          data?.approvalMessage
-        ),
-        this.httpClient.post(
-          `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
-          null
-        )
+        data?.messageConversation
+          ? this.httpClient.post(
+              `messageConversations/${data?.messageConversation?.id}`,
+              data?.approvalMessage
+            )
+          : this.httpClient.post(`messageConversations`, data?.messageBody),
+        data?.messageConversation
+          ? this.httpClient.post(
+              `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
+              null
+            )
+          : of(null)
       ).pipe(
         map((response) => response),
         catchError((error) => of(error))
@@ -40,10 +43,12 @@ export class ApproveFeedbackService {
   rejectDataSetAssignment(data: any): Observable<any> {
     return zip(
       this.httpClient.put(`dataStore/dhis2-user-support/${data?.id}`, data),
-      this.httpClient.post(
-        `messageConversations/${data?.messageConversation?.id}`,
-        data?.rejectionReasonMessage
-      )
+      data?.messageConversation
+        ? this.httpClient.post(
+            `messageConversations/${data?.messageConversation?.id}`,
+            data?.rejectionReasonMessage
+          )
+        : this.httpClient.post(`messageConversations`, data?.messageBody)
     ).pipe(
       map((response) => response),
       catchError((error) => error)

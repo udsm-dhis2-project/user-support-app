@@ -55,16 +55,44 @@ export class RespondFeedbackComponent implements OnInit {
       if (response) {
         this.savingData = true;
         this.savedData = false;
+        const messageBody =
+          messageConversation == 'none'
+            ? {
+                subject: data?.message?.subject,
+                users: [
+                  {
+                    id: data?.user?.id,
+                    username: data?.user?.username,
+                    type: 'user',
+                  },
+                ],
+                userGroups: [],
+                organisationUnits: [],
+                text:
+                  data?.actionType !== 'REJECTED'
+                    ? `Ombi lako \n${data?.message?.message} \n\n limeshughulikiwa\n\n Karibu!`
+                    : `Ombi lako \n${data?.message?.message}  \n\n LIMEKATALIWA \n\n Sababu: ${this.reasonForRejection}\n\n Tafadhali rudia na ubadilishe sawa sawa na maelekezo`,
+                attachments: [],
+              }
+            : null;
         (data?.actionType !== 'REJECTED'
           ? this.approveFeedbackService.approveChanges({
               ...data,
-              messageConversation,
+              messageConversation:
+                messageConversation && messageConversation != 'none'
+                  ? messageConversation
+                  : null,
+              messageBody,
               approvalMessage: 'Ombi lako limeshughulikiwa\n\n Karibu!',
             })
           : this.approveFeedbackService.rejectDataSetAssignment({
               ...data,
               status: 'REJECTED',
-              messageConversation,
+              messageConversation:
+                messageConversation && messageConversation != 'none'
+                  ? messageConversation
+                  : null,
+              messageBody,
               rejectionReasonMessage: `Ombi LIMEKATALIWA \n\n ${this.reasonForRejection}\n\n Tafadhali rudia na ubadilishe sawa sawa na maelekezo`,
             })
         ).subscribe((response) => {
