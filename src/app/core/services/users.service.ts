@@ -62,7 +62,7 @@ export class UsersDataService {
           : of(null),
         data?.messageConversation
           ? this.httpClient.post(
-              `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=PENDING`,
+              `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
               null
             )
           : this.httpClient.post(`messageConversations`, data?.messageBody)
