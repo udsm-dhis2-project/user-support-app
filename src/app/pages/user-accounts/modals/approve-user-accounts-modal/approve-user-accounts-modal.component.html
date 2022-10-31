@@ -41,22 +41,14 @@
             <td>
               {{ count + 1 }}
             </td>
-            <td>{{ user?.firstName }} {{ user?.surname }}</td>
+            <td>
+              {{ user?.firstName }} {{ user?.surname }}
+              <span *ngIf="user?.username">({{ user?.username }})</span>
+            </td>
             <td>
               {{ dialogData?.request?.timeSinceResponseSent }}
             </td>
             <td>
-              {{ isFeedbackRecepient }}
-              <button
-                *ngIf="dialogData?.isFeedbackRecepient"
-                [disabled]="
-                  user?.status === 'CREATED' || user?.status !== 'APPROVED'
-                "
-                mat-stroked-button
-                (click)="onApprove($event, user, params?.dataStoreInformation)"
-              >
-                Confirm
-              </button>
               <button
                 class="ml-2"
                 [disabled]="
@@ -72,6 +64,37 @@
                     ? 'First confirmination'
                     : 'Confirm'
                 }}
+              </button>
+            </td>
+          </tr>
+          <tr
+            *ngIf="user?.status == 'APPROVED'"
+            [ngClass]="{
+              'created-user': user?.status == 'CREATED',
+              'approved-user': user?.status == 'APPROVED'
+            }"
+          >
+            <td colspan="3">
+              <app-username-form-field
+                [user]="user"
+                [count]="count"
+                (usernameData)="onGetUsernameData($event)"
+                (usernameValid)="onGetUsernameValidity($event)"
+              ></app-username-form-field>
+            </td>
+            <td>
+              <button
+                *ngIf="dialogData?.isFeedbackRecepient"
+                [disabled]="
+                  user?.status === 'CREATED' ||
+                  user?.status !== 'APPROVED' ||
+                  !isCurrentUsernameValid ||
+                  !currentUsername
+                "
+                mat-stroked-button
+                (click)="onApprove($event, user, params?.dataStoreInformation)"
+              >
+                Confirm
               </button>
             </td>
           </tr>

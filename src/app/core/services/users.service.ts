@@ -82,6 +82,16 @@ export class UsersDataService {
     }
   }
 
+  verifyUsername(username: string): Observable<any> {
+    return this.httpClient
+      .get(`users?filter=userCredentials.username:eq:${username}&fields=id`)
+      .pipe(
+        map((response) => {
+          return response?.users;
+        })
+      );
+  }
+
   checkForUserNamesAvailability(potentialUserNames: any[]): Observable<any> {
     return zip(
       ...potentialUserNames.map((userNameData) => {

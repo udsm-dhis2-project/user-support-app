@@ -1,0 +1,17 @@
+<p>
+  Proposed username <b>{{ proposedUsername }}</b>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!proposedUsername"
+  ></mat-progress-bar>
+  <!-- (
+  <span class="mr-2" *ngFor="let usernameData of potentialUsernames">
+    {{ usernameData?.username }},
+  </span>
+  ) -->
+</p>
+
+<app-form
+  [fields]="[usernameField]"
+  (formUpdate)="onFormUpdate($event)"
+></app-form>
