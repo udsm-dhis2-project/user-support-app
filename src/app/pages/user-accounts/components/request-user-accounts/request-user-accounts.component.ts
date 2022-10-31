@@ -412,14 +412,14 @@ export class RequestUserAccountsComponent implements OnInit {
         value: data ? data?.firstName : null,
         options: [],
       }),
-      new Textbox({
-        id: 'middleName',
-        key: 'middleName',
-        label: 'Middlename',
-        value: data ? data?.middleName : null,
-        required: false,
-        options: [],
-      }),
+      // new Textbox({
+      //   id: 'middleName',
+      //   key: 'middleName',
+      //   label: 'Middlename',
+      //   value: data ? data?.middleName : null,
+      //   required: false,
+      //   options: [],
+      // }),
       new Textbox({
         id: 'lastName',
         key: 'lastName',
