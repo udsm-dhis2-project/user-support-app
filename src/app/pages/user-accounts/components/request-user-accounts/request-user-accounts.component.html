@@ -161,7 +161,11 @@
       <button
         *ngIf="!readyToSave"
         mat-flat-button
-        [disabled]="!isAccessControlFormValid"
+        [disabled]="
+          !isAccessControlFormValid ||
+          selectedOrgUnitItemsForDataEntry?.length == 0 ||
+          selectedOrgUnitItemsForReport?.length == 0
+        "
         color="primary"
         class="ml-2"
         (click)="onNext($event)"
@@ -171,7 +175,11 @@
       <button
         *ngIf="!readyToSave"
         mat-flat-button
-        [disabled]="!isAccessControlFormValid"
+        [disabled]="
+          !isAccessControlFormValid ||
+          selectedOrgUnitItemsForDataEntry?.length == 0 ||
+          selectedOrgUnitItemsForReport?.length == 0
+        "
         color="primary"
         class="ml-2"
         (click)="onFinish($event)"
