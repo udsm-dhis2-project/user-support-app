@@ -22,7 +22,6 @@ export class UsernameFormFieldComponent implements OnInit {
   constructor(private usersDataService: UsersDataService) {}
 
   ngOnInit(): void {
-    console.log('user', this.user);
     this.createUsernameField();
     this.potentialUsernames = [1, 2, 3].map((key) => {
       return {

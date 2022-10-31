@@ -78,7 +78,6 @@ export class RequestUserAccountsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.currentUser);
     const storedUsersData = localStorage.getItem('usersToCreate');
     if (storedUsersData) {
       this.formDataToStoreLocally = JSON.parse(storedUsersData);
@@ -103,11 +102,6 @@ export class RequestUserAccountsComponent implements OnInit {
         this.formDataToStoreLocally[
           this.formDataToStoreLocally?.length - 1
         ]?.userGroups;
-
-      console.log(
-        'currentUserToCreateSelected',
-        this.currentUserToCreateSelected
-      );
     }
 
     this.createDemographicFields(
@@ -153,6 +147,8 @@ export class RequestUserAccountsComponent implements OnInit {
     // Do not clear access control (only clear demographic)
 
     // Check if you are editing existing item
+    this.selectedOrgUnitItemsForDataEntry = [];
+    this.selectedOrgUnitItemsForReport = [];
     this.pageReady = false;
     this.formDataToStoreLocally = !this.formUpdateIsDone
       ? this.formDataToStoreLocally
@@ -202,8 +198,6 @@ export class RequestUserAccountsComponent implements OnInit {
             return data;
           }
         });
-    console.log(this.formData);
-    console.log(this.formDataToStoreLocally);
     this.currentUserToCreateSelected = null;
     localStorage.setItem(
       'usersToCreate',
