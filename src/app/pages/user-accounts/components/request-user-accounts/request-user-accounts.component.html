@@ -79,6 +79,7 @@
             <div>
               <div class="h5">Data entry</div>
               <ngx-dhis2-org-unit-filter
+                *ngIf="showOrgUnit"
                 [orgUnitFilterConfig]="orgUnitFilterConfigForDataEntry"
                 [selectedOrgUnitItems]="selectedOrgUnitItemsForDataEntry"
                 (orgUnitUpdate)="onOrgUnitUpdate($event, 'ENTRY')"
@@ -90,6 +91,7 @@
             <div>
               <div class="h5">Report</div>
               <ngx-dhis2-org-unit-filter
+                *ngIf="showOrgUnit"
                 [orgUnitFilterConfig]="orgUnitFilterConfigForReport"
                 [selectedOrgUnitItems]="selectedOrgUnitItemsForReport"
                 (orgUnitUpdate)="onOrgUnitUpdate($event, 'REPORT')"
@@ -149,7 +151,7 @@
     <p class="text-right" *ngIf="shouldConfirm">Please confirm</p>
     <div class="row d-flex justify-content-end mt-2">
       <!-- [disabled]="!isDemographicFormValid || !isAccessControlFormValid" -->
-      <button
+      <!-- <button
         *ngIf="!readyToSave"
         [disabled]="prevIndex === 0"
         mat-stroked-button
@@ -157,7 +159,7 @@
         (click)="onPrev($event)"
       >
         Previous
-      </button>
+      </button> -->
       <button
         *ngIf="!readyToSave"
         mat-flat-button
@@ -174,12 +176,8 @@
       </button>
       <button
         *ngIf="!readyToSave"
+        [disabled]="formDataToStoreLocally?.length === 0"
         mat-flat-button
-        [disabled]="
-          !isAccessControlFormValid ||
-          selectedOrgUnitItemsForDataEntry?.length == 0 ||
-          selectedOrgUnitItemsForReport?.length == 0
-        "
         color="primary"
         class="ml-2"
         (click)="onFinish($event)"

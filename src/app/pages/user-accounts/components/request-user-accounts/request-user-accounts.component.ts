@@ -69,6 +69,7 @@ export class RequestUserAccountsComponent implements OnInit {
   pageReady: boolean = false;
   formUpdateIsDone: boolean = false;
   prevIndex: number = 0;
+  showOrgUnit: boolean = true;
 
   constructor(
     private dataStoreService: DataStoreDataService,
@@ -81,6 +82,7 @@ export class RequestUserAccountsComponent implements OnInit {
     const storedUsersData = localStorage.getItem('usersToCreate');
     if (storedUsersData) {
       this.formDataToStoreLocally = JSON.parse(storedUsersData);
+      console.log('formDataToStoreLocally', this.formDataToStoreLocally);
       this.selectedOrgUnitItemsForDataEntry =
         this.formDataToStoreLocally[
           this.formDataToStoreLocally?.length - 1
@@ -147,8 +149,7 @@ export class RequestUserAccountsComponent implements OnInit {
     // Do not clear access control (only clear demographic)
 
     // Check if you are editing existing item
-    this.selectedOrgUnitItemsForDataEntry = [];
-    this.selectedOrgUnitItemsForReport = [];
+    this.showOrgUnit = false;
     this.pageReady = false;
     this.formDataToStoreLocally = !this.formUpdateIsDone
       ? this.formDataToStoreLocally
@@ -205,6 +206,12 @@ export class RequestUserAccountsComponent implements OnInit {
       this.prevIndex = this.formDataToStoreLocally?.length - 1;
     }
     this.createDemographicFields();
+
+    this.selectedOrgUnitItemsForDataEntry = [];
+    this.selectedOrgUnitItemsForReport = [];
+    setTimeout(() => {
+      this.showOrgUnit = true;
+    }, 100);
   }
 
   onFinish(event: Event): void {
@@ -432,21 +439,21 @@ export class RequestUserAccountsComponent implements OnInit {
         value: data ? data?.phoneNumber : null,
         required: true,
       }),
-      new Dropdown({
-        id: 'title',
-        key: 'title',
-        label: 'Title',
-        required: false,
-        value: data ? data?.title : null,
-        options: this.configurations?.referenceTitles?.map((title) => {
-          return {
-            id: title?.id,
-            key: title?.id,
-            label: title?.name,
-            name: title?.name,
-          };
-        }),
-      }),
+      // new Dropdown({
+      //   id: 'title',
+      //   key: 'title',
+      //   label: 'Title',
+      //   required: false,
+      //   value: data ? data?.title : null,
+      //   options: this.configurations?.referenceTitles?.map((title) => {
+      //     return {
+      //       id: title?.id,
+      //       key: title?.id,
+      //       label: title?.name,
+      //       name: title?.name,
+      //     };
+      //   }),
+      // }),
     ];
     this.pageReady = true;
   }
