@@ -27,8 +27,11 @@ export class UsernameFormFieldComponent implements OnInit {
       return {
         key,
         username: (
-          this.user?.firstName.substring(0, key) + this.user?.surname
-        ).toLowerCase(),
+          this.user?.firstName.trim().substring(0, key) +
+          this.user?.surname.trim()
+        )
+          .toLowerCase()
+          .trim(),
       };
     });
 

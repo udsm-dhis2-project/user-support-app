@@ -158,7 +158,6 @@ export class RequestUserAccountsComponent implements OnInit {
           {
             id: 'REF' + Date.now(),
             firstName: this.formData?.firstName?.value,
-            middleName: this.formData?.middleName?.value,
             lastName: this.formData?.lastName?.value,
             phoneNumber: this.formData?.phoneNumber?.value,
             email: this.formData?.email?.value,
@@ -175,7 +174,6 @@ export class RequestUserAccountsComponent implements OnInit {
             return {
               id: this.currentUserToCreateSelected,
               firstName: this.formData?.firstName?.value,
-              middleName: this.formData?.middleName?.value,
               lastName: this.formData?.lastName?.value,
               phoneNumber: this.formData?.phoneNumber?.value,
               email: this.formData?.email?.value,
@@ -220,7 +218,6 @@ export class RequestUserAccountsComponent implements OnInit {
           {
             id: 'REF' + Date.now(),
             firstName: this.formData?.firstName?.value,
-            middleName: this.formData?.middleName?.value,
             lastName: this.formData?.lastName?.value,
             phoneNumber: this.formData?.phoneNumber?.value,
             email: this.formData?.email?.value,
@@ -237,7 +234,6 @@ export class RequestUserAccountsComponent implements OnInit {
             return {
               id: this.currentUserToCreateSelected,
               firstName: this.formData?.firstName?.value,
-              middleName: this.formData?.middleName?.value,
               lastName: this.formData?.lastName?.value,
               phoneNumber: this.formData?.phoneNumber?.value,
               email: this.formData?.email?.value,
@@ -307,8 +303,6 @@ export class RequestUserAccountsComponent implements OnInit {
                 'Names: <b>' +
                 data?.firstName +
                 ' ' +
-                data?.middleName +
-                ' ' +
                 data?.lastName +
                 ' </b>' +
                 ' Email: ' +
@@ -337,7 +331,7 @@ export class RequestUserAccountsComponent implements OnInit {
               userRoles: data?.userRoles,
             },
             surname: data?.lastName,
-            firstName: data?.firstName + ' ' + data?.middleName,
+            firstName: data?.firstName,
             email: data?.email,
             phoneNumber: data?.phoneNumber,
             organisationUnits: data?.entryOrgUnits,

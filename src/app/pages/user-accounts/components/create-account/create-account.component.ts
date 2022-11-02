@@ -69,14 +69,6 @@ export class CreateAccountComponent implements OnInit {
         options: [],
       }),
       new Textbox({
-        id: 'middlename',
-        key: 'middlename',
-        label: 'Middlename',
-        type: 'text',
-        required: false,
-        options: [],
-      }),
-      new Textbox({
         id: 'lastname',
         key: 'lastname',
         label: 'Lastname',
