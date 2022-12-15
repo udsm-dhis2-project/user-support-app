@@ -57,7 +57,8 @@
         [disabled]="
           !assignmentDetails ||
           (assignmentDetails?.deletions?.length === 0 &&
-            assignmentDetails?.additions?.length === 0)
+            assignmentDetails?.additions?.length === 0 &&
+            assignmentDetails?.dataSetAttributesData?.length === 0)
         "
         color="primary"
         (click)="

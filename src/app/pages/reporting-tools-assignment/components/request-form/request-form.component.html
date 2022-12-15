@@ -43,6 +43,9 @@
                     (categoryOptionsUpdateInfo)="
                       onGetCategoryOptionsUpdateInfo($event, mergedDataSet)
                     "
+                    (categoriesHasAssignedOu)="
+                      getIfHasAssignedOuForCategories($event, mergedDataSet)
+                    "
                   ></app-dataset-categories>
                 </ng-container>
               </td>
@@ -51,22 +54,27 @@
                   class="actions-btn"
                   [ngClass]="{
                     'btn-success':
-                      !mergedDataSet?.assigned &&
-                      !mergedDataSet?.hasPendingRequest,
+                      (!mergedDataSet?.assigned &&
+                        !mergedDataSet?.hasPendingRequest) ||
+                      (mergedDataSet?.assigned &&
+                        mergedDataSet?.categoryOptions?.length > 0),
                     'btn-danger':
                       mergedDataSet?.assigned &&
+                      mergedDataSet?.categoryOptions?.length === 0 &&
                       !mergedDataSet?.hasPendingRequest
                   }"
                   [disabled]="
                     mergedDataSet?.hasPendingRequest ||
                     (!attributeBasedDataSetSelections[mergedDataSet?.id] &&
+                      !categoriesHasAssignedOu[mergedDataSet?.id] &&
                       mergedDataSet?.categoryOptions?.length > 0)
                   "
                   [ngStyle]="{
                     cursor:
                       mergedDataSet?.hasPendingRequest ||
                       (!attributeBasedDataSetSelections[mergedDataSet?.id] &&
-                        mergedDataSet?.categoryOptions?.length > 0)
+                        mergedDataSet?.categoryOptions?.length > 0 &&
+                        !categoriesHasAssignedOu[mergedDataSet?.id])
                         ? 'not-allowed'
                         : 'pointer'
                   }"
@@ -75,7 +83,13 @@
                       $event,
                       mergedDataSet,
                       mergedDataSets,
-                      mergedDataSet?.assigned ? 'Remove' : 'Assign'
+                      mergedDataSet?.assigned &&
+                        mergedDataSet?.categoryOptions?.length > 0
+                        ? 'Update'
+                        : mergedDataSet?.assigned &&
+                          mergedDataSet?.categoryOptions?.length === 0
+                        ? 'Remove'
+                        : 'Assign'
                     )
                   "
                   [title]="
@@ -86,7 +100,11 @@
                   "
                 >
                   {{
-                    mergedDataSet?.assigned && !mergedDataSet?.hasPendingRequest
+                    mergedDataSet?.assigned &&
+                    mergedDataSet?.categoryOptions?.length > 0
+                      ? 'Update'
+                      : mergedDataSet?.assigned &&
+                        !mergedDataSet?.hasPendingRequest
                       ? 'Remove'
                       : !mergedDataSet?.assigned &&
                         !mergedDataSet?.hasPendingRequest
@@ -95,6 +113,23 @@
                       ? 'Waiting assignment'
                       : 'Waiting un-assignment'
                   }}
+                </button>
+                <button
+                  *ngIf="
+                    mergedDataSet?.assigned &&
+                    mergedDataSet?.categoryOptions?.length > 0
+                  "
+                  class="actions-btn btn-danger ml-2"
+                  (click)="
+                    toggleAssignment(
+                      $event,
+                      mergedDataSet,
+                      mergedDataSets,
+                      mergedDataSet?.assigned ? 'Remove' : 'Assign'
+                    )
+                  "
+                >
+                  Remove
                 </button>
                 <a
                   *ngIf="mergedDataSet?.hasPendingRequest"

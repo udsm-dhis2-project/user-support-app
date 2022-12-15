@@ -32,6 +32,7 @@ export class RequestFormComponent implements OnInit {
   updatingRequest: boolean = false;
 
   attributeBasedDataSetSelections: any = {};
+  categoriesHasAssignedOu: any = {};
   constructor(
     private dataStoreService: DataStoreDataService,
     private messageAndDataStoreService: MessagesAndDatastoreService,
@@ -51,6 +52,13 @@ export class RequestFormComponent implements OnInit {
     this.assignedDataSets = this.mergedDataSets;
   }
 
+  getIfHasAssignedOuForCategories(
+    categoriesHasAssignedOu: boolean,
+    dataSet: any
+  ): void {
+    this.categoriesHasAssignedOu[dataSet?.id] = categoriesHasAssignedOu;
+  }
+
   toggleAssignment(
     event: Event,
     dataSetDetails: DataSets,
@@ -64,7 +72,8 @@ export class RequestFormComponent implements OnInit {
         assigned:
           dataSet?.id === dataSetDetails?.id && action === 'Remove'
             ? false
-            : dataSet?.id === dataSetDetails?.id && action === 'Assign'
+            : dataSet?.id === dataSetDetails?.id &&
+              (action === 'Assign' || action === 'Update')
             ? true
             : dataSet?.assigned,
       };
@@ -77,7 +86,9 @@ export class RequestFormComponent implements OnInit {
       ),
       additions: this.mergedDataSets.filter(
         (dataSet) =>
-          !keyedAssignedDatasets[dataSet?.id]?.assigned && dataSet?.assigned
+          (!keyedAssignedDatasets[dataSet?.id]?.assigned ||
+            (action === 'Update' && dataSet?.id === dataSetDetails?.id)) &&
+          dataSet?.assigned
       ),
       assigned: this.mergedDataSets.filter((dataSet) => dataSet?.assigned),
       dataSetAttributesData:

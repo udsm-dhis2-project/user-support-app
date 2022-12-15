@@ -15,12 +15,25 @@ export class DatasetCategoriesComponent implements OnInit {
   @Output() categoryOptionsUpdateInfo: EventEmitter<any> =
     new EventEmitter<any>();
   selections: any = {};
+  @Output() categoriesHasAssignedOu: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
   constructor(private reportingToolsService: ReportingToolsService) {}
 
   ngOnInit(): void {
     this.categoriesData$ = this.reportingToolsService.getCategoryOptionsDetails(
       this.categoryOptions
     );
+    this.categoriesData$.subscribe((response) => {
+      if (response) {
+        this.categoriesHasAssignedOu.emit(
+          (
+            Object.keys(response)?.filter(
+              (key) => key?.indexOf(this.organisationUnit?.id) > -1
+            ) || []
+          )?.length > 0
+        );
+      }
+    });
   }
 
   getSelectedOption(
