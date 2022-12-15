@@ -13,7 +13,19 @@ export function constructMessageForFacilityAssignment(assignmentDetails: any) {
         } \n` +
         assignmentDetails?.additions
           .map((addition, index) => {
-            return index + 1 + '. ' + addition?.name;
+            return (
+              index +
+              1 +
+              '. ' +
+              addition?.name +
+              (assignmentDetails?.dataSetAttributesData?.length > 0
+                ? ' (' +
+                  formulateFormAttributeMessage(
+                    assignmentDetails?.dataSetAttributesData
+                  ) +
+                  ')'
+                : '')
+            );
           })
           .join(',\n')
       : '';
@@ -33,7 +45,19 @@ export function constructMessageForFacilityAssignment(assignmentDetails: any) {
         } \n` +
         assignmentDetails?.deletions
           .map((deletion, index) => {
-            return index + 1 + '. ' + deletion?.name;
+            return (
+              index +
+              1 +
+              '. ' +
+              deletion?.name +
+              (assignmentDetails?.dataSetAttributesData?.length > 0
+                ? ' (' +
+                  formulateFormAttributeMessage(
+                    assignmentDetails?.dataSetAttributesData
+                  ) +
+                  ')'
+                : '')
+            );
           })
           .join(',\n')
       : '';
@@ -251,9 +275,38 @@ export function getDataStoreDetailsForFormRequests(
               };
             })
           : [],
+      dataSetAttributesData: assignmentDetails?.dataSetAttributesData,
     },
     url: `organisationUnits/${
       assignmentDetails?.organisationUnit?.id
     }/dataSets.json?cache=${assignmentDetails?.ticketNumber.replace('DS', '')}`,
   };
+}
+
+export function formulateFormAttributeMessage(
+  dataSetAttributesData: any[]
+): string {
+  const additions = dataSetAttributesData
+    ?.map((attributeDataInfo) => {
+      if (attributeDataInfo?.additions?.length > 0) {
+        return attributeDataInfo?.categoryOption;
+      }
+    })
+    ?.filter((addition) => addition);
+
+  const deletions = dataSetAttributesData
+    ?.map((attributeDataInfo) => {
+      if (attributeDataInfo?.deletions?.length > 0) {
+        return attributeDataInfo?.categoryOption;
+      }
+    })
+    ?.filter((deletion) => deletion);
+  return (
+    (additions?.length > 0
+      ? 'Add: ' + additions?.map((addition) => addition?.name).join(',')
+      : '') +
+    (deletions?.length > 0
+      ? ' Remove: ' + additions?.map((addition) => addition?.name).join(',')
+      : '')
+  );
 }

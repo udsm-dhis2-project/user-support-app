@@ -1,3 +1,4 @@
+import { DatasetCategoriesComponent } from './dataset-categories/dataset-categories.component';
 import { DatasetsListComponent } from './datasets-list/datasets-list.component';
 import { FacilitiesListComponent } from './facilities-list/facilities-list.component';
 import { FeedbackContainerComponent } from './feedback-container/feedback-container.component';
@@ -20,6 +21,7 @@ export const toolsComponents: any[] = [
   DatasetsListComponent,
   OuSelectionFormRequestModalComponent,
   SelectionFilterComponent,
+  DatasetCategoriesComponent,
 ];
 
 export const toolsEntryComponents: any[] = [

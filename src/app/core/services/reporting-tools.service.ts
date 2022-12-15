@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import * as moment from 'moment';
-import { Observable, of } from 'rxjs';
+import { Observable, of, zip } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { getDateDifferenceBetweenDates } from 'src/app/shared/helpers/date-formatting.helper';
 import {
   DataSets,
   ReportingToolsResponseModel,
 } from 'src/app/shared/models/reporting-tools.models';
 
+import { flatten, keyBy } from 'lodash';
 @Injectable({
   providedIn: 'root',
 })
@@ -86,23 +86,70 @@ export class ReportingToolsService {
     name?: string;
   }): Observable<DataSets[]> {
     return this.httpClient
-      .get(`dataSets.json?paging=false&fields=id,name,attributeValues`)
+      .get(
+        `dataSets.json?paging=false&fields=id,name,attributeValues,categoryCombo[id,name,categoryOptionCombos[id,name,categoryOptions[id,name]]]`
+      )
       .pipe(
         map((response) => {
-          return datasetClosedDateAttribute
-            ? response?.dataSets.filter(
-                (dataSet) =>
-                  (
-                    dataSet?.attributeValues?.filter(
-                      (attributeValue) =>
-                        attributeValue?.attribute?.id ===
-                        datasetClosedDateAttribute?.id
-                    ) || []
-                  ).length === 0
-              ) || []
-            : response?.dataSets;
+          return (
+            datasetClosedDateAttribute
+              ? response?.dataSets.filter(
+                  (dataSet) =>
+                    (
+                      dataSet?.attributeValues?.filter(
+                        (attributeValue) =>
+                          attributeValue?.attribute?.id ===
+                          datasetClosedDateAttribute?.id
+                      ) || []
+                    ).length === 0
+                ) || []
+              : response?.dataSets
+          )?.map((dataSet) => {
+            return {
+              ...dataSet,
+              categoryOptions: flatten(
+                (
+                  dataSet?.categoryCombo?.categoryOptionCombos?.filter(
+                    (option) => option?.name !== 'default'
+                  ) || []
+                )?.map(
+                  (categoryOptionCombo) => categoryOptionCombo?.categoryOptions
+                )
+              ),
+            };
+          });
         }),
         catchError((error) => of(error))
       );
+  }
+
+  getCategoryOptionsDetails(categoryOptions): Observable<any> {
+    return zip(
+      ...categoryOptions?.map((categoryOption) => {
+        return this.httpClient
+          .get(
+            `categoryOptions/${categoryOption?.id}.json?fields=id,name,organisationUnits[id]`
+          )
+          .pipe(
+            map((response) => {
+              return response?.organisationUnits?.map((ou) => {
+                return {
+                  ...ou,
+                  ou: ou?.id,
+                  ouCategoryOption: ou?.id + '_' + categoryOption?.id,
+                  categoryOption: {
+                    ...categoryOption,
+                    organisationUnits: response?.organisationUnits,
+                  },
+                };
+              });
+            })
+          );
+      })
+    ).pipe(
+      map((responses) => {
+        return keyBy(flatten(responses), 'ouCategoryOption');
+      })
+    );
   }
 }

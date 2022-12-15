@@ -54,14 +54,60 @@
       </mat-tab>
     </mat-tab-group>
   </div>
-  <app-feedbacks-list
-    *ngIf="isFeedbackRecepient && params?.userSupportKeys"
-    [currentUser]="currentUser"
-    [configurations]="configurations"
-    [systemConfigs]="systemConfigs"
-    [userSupportKeys]="params?.userSupportKeys"
-  >
-  </app-feedbacks-list>
+
+  <div *ngIf="isFeedbackRecepient && params?.userSupportKeys">
+    <mat-tab-group>
+      <mat-tab label="Feedbacks to attend">
+        <ng-template matTabContent>
+          <div class="p-3">
+            <app-feedbacks-list
+              [currentUser]="currentUser"
+              [configurations]="configurations"
+              [systemConfigs]="systemConfigs"
+              [userSupportKeys]="params?.userSupportKeys"
+            >
+            </app-feedbacks-list>
+          </div>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="Requesting">
+        <ng-template matTabContent>
+          <div class="p-3">
+            <mat-tab-group
+              mat-align-tabs="start"
+              (selectedTabChange)="changeTab(selectedTab.value)"
+              [selectedIndex]="selectedTab.value"
+              (selectedIndexChange)="selectedTab.setValue($event)"
+            >
+              <mat-tab label="Facilities">
+                <div *ngIf="selectedTab.value === 0" class="mt-2">
+                  <app-facilities-list
+                    [currentUser]="currentUser"
+                    [configurations]="configurations"
+                    [systemConfigs]="systemConfigs"
+                    [orgUnitLevels]="params?.orgUnitLevels"
+                    [userSupportKeys]="params?.userSupportKeys"
+                    (dataStoreChanged)="onDataStoreChange($event)"
+                  ></app-facilities-list>
+                </div>
+              </mat-tab>
+              <mat-tab label="Datasets">
+                <div *ngIf="selectedTab.value === 1" class="mt-2">
+                  <app-datasets-list
+                    [currentUser]="currentUser"
+                    [configurations]="configurations"
+                    [systemConfigs]="systemConfigs"
+                    [userSupportDataStoreKeys]="params?.userSupportKeys"
+                    (dataStoreChanged)="onDataStoreChange($event, 'dataset')"
+                  ></app-datasets-list>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 
   <mat-progress-bar
     mode="indeterminate"

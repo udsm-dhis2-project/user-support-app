@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Observable, of, zip } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
+import { omit, uniqBy } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,10 @@ export class ApproveFeedbackService {
   approveChanges(data: any): Observable<any> {
     if (data?.method === 'POST') {
       return zip(
-        this.httpClient.post(data?.url, data?.payload),
+        this.httpClient.post(
+          data?.url,
+          omit(data?.payload, 'dataSetAttributesData')
+        ),
         this.httpClient.delete(`dataStore/dhis2-user-support/${data?.id}`),
         data?.messageConversation
           ? this.httpClient.post(
@@ -20,6 +24,16 @@ export class ApproveFeedbackService {
               data?.approvalMessage
             )
           : this.httpClient.post(`messageConversations`, data?.messageBody),
+        data?.dataSetsCategoriesPayload?.length > 0
+          ? zip(
+              ...data?.dataSetsCategoriesPayload?.map((categoryPayload) => {
+                return this.httpClient.put(
+                  `categoryOptions/${categoryPayload?.id}?mergeMode=REPLACE`,
+                  categoryPayload
+                );
+              })
+            ).pipe(map((responses) => responses))
+          : of(null),
         data?.messageConversation
           ? this.httpClient.post(
               `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
@@ -31,10 +45,12 @@ export class ApproveFeedbackService {
         catchError((error) => of(error))
       );
     } else if (data?.method === 'PUT') {
-      return this.httpClient.put(data?.url, data?.payload).pipe(
-        map((response) => response),
-        catchError((error) => of(error))
-      );
+      return this.httpClient
+        .put(data?.url, omit(data?.payload, 'dataSetAttributesData'))
+        .pipe(
+          map((response) => response),
+          catchError((error) => of(error))
+        );
     } else {
       return of(null);
     }

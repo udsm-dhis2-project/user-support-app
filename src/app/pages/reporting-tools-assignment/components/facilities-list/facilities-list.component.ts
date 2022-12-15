@@ -109,7 +109,7 @@ export class FacilitiesListComponent implements OnInit {
     event.stopPropagation();
     this.dialog
       .open(RequestFormModalComponent, {
-        width: '50%',
+        width: '70%',
         data: {
           facility: dataRow,
           userSupportKeys,

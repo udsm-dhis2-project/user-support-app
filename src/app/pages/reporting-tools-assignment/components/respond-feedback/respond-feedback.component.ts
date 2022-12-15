@@ -1,10 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
+import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
+import { Observable, of, zip } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ApproveFeedbackService } from 'src/app/core/services/approve-feedback.service';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
+import { uniqBy } from 'lodash';
 
 @Component({
   selector: 'app-respond-feedback',
@@ -20,13 +23,15 @@ export class RespondFeedbackComponent implements OnInit {
   savedData: boolean = false;
   missingKey: boolean = false;
   reasonForRejection: string = '';
+  dataSetsCategoriesPayload$: Observable<any[]>;
   constructor(
     private dialogRef: MatDialogRef<RespondFeedbackComponent>,
     @Inject(MAT_DIALOG_DATA) data,
     private approveFeedbackService: ApproveFeedbackService,
     private messageAndDataStoreService: MessagesAndDatastoreService,
     private _snackBar: MatSnackBar,
-    private dataStoreService: DataStoreDataService
+    private dataStoreService: DataStoreDataService,
+    private httpClient: NgxDhis2HttpClientService
   ) {
     this.dialogData = data;
   }
@@ -40,6 +45,44 @@ export class RespondFeedbackComponent implements OnInit {
       this.messageAndDataStoreService.searchMessageConversationByTicketNumber(
         this.dialogData?.ticketNumber
       );
+    // console.log(this.dialogData);
+    if (this.dialogData?.payload?.dataSetAttributesData?.length > 0) {
+      this.dataSetsCategoriesPayload$ = zip(
+        ...this.dialogData?.payload?.dataSetAttributesData.map(
+          (dataSetAttribute) => {
+            return this.httpClient
+              .get(
+                `categoryOptions/${dataSetAttribute?.categoryOption?.id}.json?fields=id,name,attributeValues,organisationUnits`
+              )
+              .pipe(
+                map((response) => {
+                  return {
+                    ...response,
+                    organisationUnits: uniqBy(
+                      [
+                        ...(dataSetAttribute?.deletions?.length == 0
+                          ? response?.organisationUnits
+                          : response?.organisationUnits?.filter(
+                              (ou) =>
+                                (
+                                  (dataSetAttribute?.deletions || [])?.filter(
+                                    (deletion) => deletion?.id === ou?.id
+                                  ) || []
+                                )?.length > 0
+                            ) || []),
+                        ...dataSetAttribute?.additions,
+                      ],
+                      'id'
+                    ),
+                  };
+                })
+              );
+          }
+        )
+      ).pipe(map((responses) => responses));
+    } else {
+      this.dataSetsCategoriesPayload$ = of([]);
+    }
   }
 
   onClose(event: Event): void {
@@ -47,7 +90,12 @@ export class RespondFeedbackComponent implements OnInit {
     this.dialogRef.close(this.successfullyApproved);
   }
 
-  onSave(event: Event, data: any, messageConversation: any): void {
+  onSave(
+    event: Event,
+    data: any,
+    messageConversation: any,
+    dataSetsCategoriesPayload: any[]
+  ): void {
     event.stopPropagation();
     this.missingKey = false;
     // TODO: Use configurations for handling response messages
@@ -78,6 +126,7 @@ export class RespondFeedbackComponent implements OnInit {
         (data?.actionType !== 'REJECTED'
           ? this.approveFeedbackService.approveChanges({
               ...data,
+              dataSetsCategoriesPayload,
               messageConversation:
                 messageConversation && messageConversation != 'none'
                   ? messageConversation

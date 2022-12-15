@@ -1,0 +1,21 @@
+<ng-container *ngIf="{ categoriesData: categoriesData$ | async } as params">
+  <mat-progress-bar *ngIf="!params?.categoriesData"></mat-progress-bar>
+  <section *ngIf="params?.categoriesData">
+    <mat-checkbox
+      class="mr-2"
+      [checked]="
+        params?.categoriesData[organisationUnit?.id + '_' + option?.id]
+      "
+      (change)="
+        getSelectedOption(
+          $event.checked,
+          option,
+          params?.categoriesData[organisationUnit?.id + '_' + option?.id]
+        )
+      "
+      *ngFor="let option of categoryOptions"
+    >
+      {{ option?.name }}
+    </mat-checkbox>
+  </section>
+</ng-container>

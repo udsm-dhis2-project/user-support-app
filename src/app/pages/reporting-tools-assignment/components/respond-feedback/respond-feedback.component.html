@@ -8,10 +8,15 @@
 </div>
 
 <div class="approve-container" *ngIf="!savingData && !savedData && !missingKey">
-  <div *ngIf="{ messageConversation: messageConversation$ | async } as params">
+  <div
+    *ngIf="{
+      messageConversation: messageConversation$ | async,
+      dataSetsCategoriesPayload: dataSetsCategoriesPayload$ | async
+    } as params"
+  >
     <mat-progress-bar
       mode="indeterminate"
-      *ngIf="!params?.messageConversation"
+      *ngIf="!params?.messageConversation || !params?.dataSetsCategoriesPayload"
     ></mat-progress-bar>
     <div class="w-100" *ngIf="params?.messageConversation">
       <div class="w-100" *ngIf="dataRow?.user">
@@ -66,7 +71,14 @@
               (!reasonForRejection || reasonForRejection?.length < 8))
           "
           class="ml-2 btn-success"
-          (click)="onSave($event, dialogData, params?.messageConversation)"
+          (click)="
+            onSave(
+              $event,
+              dialogData,
+              params?.messageConversation,
+              params?.dataSetsCategoriesPayload
+            )
+          "
         >
           Confirm
         </button>

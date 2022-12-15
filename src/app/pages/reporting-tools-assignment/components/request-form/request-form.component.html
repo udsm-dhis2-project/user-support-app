@@ -6,107 +6,152 @@
       <input matInput [(ngModel)]="searchingText" />
     </mat-form-field>
   </div>
-  <div style="height: 400px; overflow: auto">
+  <div style="max-height: 400px; overflow: auto">
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th>SN</th>
-          <th>Dataset</th>
+          <th style="width: 30px">SN</th>
+          <th>Dataset/Form</th>
+          <th style="width: 120px">Sub-forms</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         <ng-container
-          *ngIf="(mergedDataSets | searchItem: searchingText).length > 0"
+          *ngIf="(mergedDataSets | searchItem : searchingText).length > 0"
         >
-          <tr
+          <ng-container
             *ngFor="
-              let mergedDataSet of mergedDataSets | searchItem: searchingText;
+              let mergedDataSet of mergedDataSets | searchItem : searchingText;
               let count = index
             "
           >
-            <td>
-              {{ count + 1 }}
-            </td>
-            <td [ngStyle]="{ color: mergedDataSet?.assigned ? '' : '#F00' }">
-              {{ mergedDataSet?.name }}
-            </td>
-            <td>
-              <button
-                class="actions-btn remove-btn"
-                [ngClass]="{
-                  'btn-success':
-                    !mergedDataSet?.assigned &&
-                    !mergedDataSet?.hasPendingRequest,
-                  'btn-danger':
-                    mergedDataSet?.assigned && !mergedDataSet?.hasPendingRequest
-                }"
-                [disabled]="mergedDataSet?.hasPendingRequest"
-                (click)="
-                  toggleAssignment(
-                    $event,
-                    mergedDataSet,
-                    mergedDataSets,
-                    mergedDataSet?.assigned ? 'Remove' : 'Assign'
-                  )
-                "
-              >
-                {{
-                  mergedDataSet?.assigned && !mergedDataSet?.hasPendingRequest
-                    ? 'Remove'
-                    : !mergedDataSet?.assigned &&
-                      !mergedDataSet?.hasPendingRequest
-                    ? 'Assign'
-                    : mergedDataSet?.forAddition
-                    ? 'Waiting assignment'
-                    : 'Waiting un-assignment'
-                }}
-              </button>
-              <a
-                *ngIf="mergedDataSet?.hasPendingRequest"
-                class="ml-2 cancel-request"
-                (click)="
-                  onCancelRequest($event, mergedDataSet, mergedDataSets, false)
-                "
-                >Cancel</a
-              >
-              <span
-                *ngIf="
-                  showConfirmingButtons &&
-                  mergedDataSet?.id === currentDataset?.id
-                "
-              >
-                <button
-                  mat-button
-                  (click)="onUnConfirm($event)"
-                  class="ml-2 btn-danger"
+            <tr>
+              <td>
+                {{ count + 1 }}
+              </td>
+              <td [ngStyle]="{ color: mergedDataSet?.assigned ? '' : '#F00' }">
+                {{ mergedDataSet?.name }}
+              </td>
+              <td>
+                <ng-container
+                  *ngIf="mergedDataSet?.categoryOptions?.length > 0"
                 >
-                  Cancel
-                </button>
+                  <app-dataset-categories
+                    [organisationUnit]="facility"
+                    [categoryOptions]="mergedDataSet?.categoryOptions"
+                    (categoryOptionsUpdateInfo)="
+                      onGetCategoryOptionsUpdateInfo($event, mergedDataSet)
+                    "
+                  ></app-dataset-categories>
+                </ng-container>
+              </td>
+              <td>
                 <button
-                  mat-button
-                  class="ml-2 btn-success"
+                  class="actions-btn"
+                  [ngClass]="{
+                    'btn-success':
+                      !mergedDataSet?.assigned &&
+                      !mergedDataSet?.hasPendingRequest,
+                    'btn-danger':
+                      mergedDataSet?.assigned &&
+                      !mergedDataSet?.hasPendingRequest
+                  }"
+                  [disabled]="
+                    mergedDataSet?.hasPendingRequest ||
+                    (!attributeBasedDataSetSelections[mergedDataSet?.id] &&
+                      mergedDataSet?.categoryOptions?.length > 0)
+                  "
+                  [ngStyle]="{
+                    cursor:
+                      mergedDataSet?.hasPendingRequest ||
+                      (!attributeBasedDataSetSelections[mergedDataSet?.id] &&
+                        mergedDataSet?.categoryOptions?.length > 0)
+                        ? 'not-allowed'
+                        : 'pointer'
+                  }"
                   (click)="
-                    onCancelRequest($event, mergedDataSet, mergedDataSets, true)
+                    toggleAssignment(
+                      $event,
+                      mergedDataSet,
+                      mergedDataSets,
+                      mergedDataSet?.assigned ? 'Remove' : 'Assign'
+                    )
+                  "
+                  [title]="
+                    !attributeBasedDataSetSelections[mergedDataSet?.id] &&
+                    mergedDataSet?.categoryOptions?.length > 0
+                      ? 'Please define Sub-forms'
+                      : ''
                   "
                 >
-                  Confirm
+                  {{
+                    mergedDataSet?.assigned && !mergedDataSet?.hasPendingRequest
+                      ? 'Remove'
+                      : !mergedDataSet?.assigned &&
+                        !mergedDataSet?.hasPendingRequest
+                      ? 'Assign'
+                      : mergedDataSet?.forAddition
+                      ? 'Waiting assignment'
+                      : 'Waiting un-assignment'
+                  }}
                 </button>
-              </span>
-              <div
-                class="w-100"
-                *ngIf="
-                  updatingRequest && mergedDataSet?.id === currentDataset?.id
-                "
-              >
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-              </div>
-            </td>
-          </tr>
+                <a
+                  *ngIf="mergedDataSet?.hasPendingRequest"
+                  class="ml-2 cancel-request"
+                  (click)="
+                    onCancelRequest(
+                      $event,
+                      mergedDataSet,
+                      mergedDataSets,
+                      false
+                    )
+                  "
+                  >Cancel</a
+                >
+                <span
+                  *ngIf="
+                    showConfirmingButtons &&
+                    mergedDataSet?.id === currentDataset?.id
+                  "
+                >
+                  <button
+                    mat-button
+                    (click)="onUnConfirm($event)"
+                    class="ml-2 btn-danger"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    mat-button
+                    class="ml-2 btn-success"
+                    (click)="
+                      onCancelRequest(
+                        $event,
+                        mergedDataSet,
+                        mergedDataSets,
+                        true
+                      )
+                    "
+                  >
+                    Confirm
+                  </button>
+                </span>
+                <div
+                  class="w-100"
+                  *ngIf="
+                    updatingRequest && mergedDataSet?.id === currentDataset?.id
+                  "
+                >
+                  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
         </ng-container>
 
         <ng-container
-          *ngIf="(mergedDataSets | searchItem: searchingText).length === 0"
+          *ngIf="(mergedDataSets | searchItem : searchingText).length === 0"
         >
           <tr>
             <td colspan="100%">

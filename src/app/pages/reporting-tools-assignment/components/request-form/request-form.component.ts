@@ -30,6 +30,8 @@ export class RequestFormComponent implements OnInit {
   showConfirmingButtons: boolean = false;
   currentDataset: DataSets;
   updatingRequest: boolean = false;
+
+  attributeBasedDataSetSelections: any = {};
   constructor(
     private dataStoreService: DataStoreDataService,
     private messageAndDataStoreService: MessagesAndDatastoreService,
@@ -78,6 +80,8 @@ export class RequestFormComponent implements OnInit {
           !keyedAssignedDatasets[dataSet?.id]?.assigned && dataSet?.assigned
       ),
       assigned: this.mergedDataSets.filter((dataSet) => dataSet?.assigned),
+      dataSetAttributesData:
+        this.attributeBasedDataSetSelections[dataSetDetails?.id],
     };
     this.assignmentDetails.emit(assignmentData);
   }
@@ -179,5 +183,21 @@ export class RequestFormComponent implements OnInit {
   onUnConfirm(event: Event): void {
     event.stopPropagation();
     this.showConfirmingButtons = false;
+  }
+
+  onGetCategoryOptionsUpdateInfo(selections: any, dataSet: any): void {
+    const validSelections =
+      Object.keys(selections)
+        ?.map((key) => {
+          if (
+            selections[key]?.additions?.length > 0 ||
+            selections[key]?.deletions?.length > 0
+          ) {
+            return { ...selections[key] };
+          }
+        })
+        ?.filter((selection) => selection) || [];
+    this.attributeBasedDataSetSelections[dataSet?.id] =
+      validSelections?.length > 0 ? validSelections : null;
   }
 }
