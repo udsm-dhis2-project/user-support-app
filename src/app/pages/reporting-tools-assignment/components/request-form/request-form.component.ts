@@ -24,6 +24,7 @@ export class RequestFormComponent implements OnInit {
   @Input() userSupportKeys: string[];
   @Input() facility: FacilityModel;
   @Input() dataStoreMessageDetails: any[];
+  @Input() dataSetAttributesData: any;
   mergedDataSets: DataSets[];
   @Output() assignmentDetails = new EventEmitter<any>();
   searchingText: string;

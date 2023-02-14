@@ -1,3 +1,14 @@
 <div class="data-modal-container">
-  <app-view-sql-view-data [data]="dialogData"></app-view-sql-view-data>
+  <div class="d-flex justify-content-end">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="downloadTableToExcel($event, 'list-of-items', 'data')"
+    >
+      Downloadto Excel
+    </button>
+  </div>
+  <div id="list-of-items" class="mt-2">
+    <app-view-sql-view-data [data]="dialogData"></app-view-sql-view-data>
+  </div>
 </div>

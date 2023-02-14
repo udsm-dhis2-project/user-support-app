@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ReportingToolsService } from 'src/app/core/services/reporting-tools.service';
-import { omit } from 'lodash';
+import { omit, keyBy, flatten } from 'lodash';
 
 @Component({
   selector: 'app-dataset-categories',
@@ -11,17 +11,20 @@ import { omit } from 'lodash';
 export class DatasetCategoriesComponent implements OnInit {
   @Input() organisationUnit: any;
   @Input() categoryOptions: any[];
+  @Input() dataSetAttributesData: any;
   categoriesData$: Observable<any>;
   @Output() categoryOptionsUpdateInfo: EventEmitter<any> =
     new EventEmitter<any>();
   selections: any = {};
+  dataSetAttributesDataSelections: any = {};
   @Output() categoriesHasAssignedOu: EventEmitter<boolean> =
     new EventEmitter<boolean>();
   constructor(private reportingToolsService: ReportingToolsService) {}
 
   ngOnInit(): void {
     this.categoriesData$ = this.reportingToolsService.getCategoryOptionsDetails(
-      this.categoryOptions
+      this.categoryOptions,
+      this.dataSetAttributesData
     );
     this.categoriesData$.subscribe((response) => {
       if (response) {

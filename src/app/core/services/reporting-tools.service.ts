@@ -123,7 +123,30 @@ export class ReportingToolsService {
       );
   }
 
-  getCategoryOptionsDetails(categoryOptions): Observable<any> {
+  getCategoryOptionsDetails(
+    categoryOptions: any,
+    dataSetAttributesData?: any
+  ): Observable<any> {
+    let dataSetAttributesDataSelections = {};
+    dataSetAttributesDataSelections =
+      dataSetAttributesData && dataSetAttributesData?.attributesData?.length > 0
+        ? {
+            ...dataSetAttributesDataSelections,
+            ...keyBy(
+              flatten(
+                dataSetAttributesData?.attributesData.map((attrData) =>
+                  attrData?.additions.map((addition) => {
+                    return {
+                      ...addition,
+                      key: addition?.id + '_' + attrData?.categoryOption?.id,
+                    };
+                  })
+                )
+              ),
+              'key'
+            ),
+          }
+        : null;
     return zip(
       ...categoryOptions?.map((categoryOption) => {
         return this.httpClient
@@ -148,7 +171,12 @@ export class ReportingToolsService {
       })
     ).pipe(
       map((responses) => {
-        return keyBy(flatten(responses), 'ouCategoryOption');
+        return dataSetAttributesDataSelections
+          ? {
+              ...dataSetAttributesDataSelections,
+              ...keyBy(flatten(responses), 'ouCategoryOption'),
+            }
+          : keyBy(flatten(responses), 'ouCategoryOption');
       })
     );
   }

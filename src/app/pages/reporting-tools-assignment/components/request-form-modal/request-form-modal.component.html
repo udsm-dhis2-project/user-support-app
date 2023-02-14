@@ -36,8 +36,11 @@
         [allDataSets]="params?.allDataSets"
         [userSupportKeys]="dialogData?.userSupportKeys"
         [dataStoreMessageDetails]="params?.dataStoreMessageDetails"
+        [dataSetAttributesData]="dataSetAttributesData"
         [facility]="dialogData?.facility"
-        (assignmentDetails)="onGetAssignmentDetails($event)"
+        (assignmentDetails)="
+          onGetAssignmentDetails($event, dialogData?.facility)
+        "
       ></app-request-form>
     </div>
     <mat-progress-bar

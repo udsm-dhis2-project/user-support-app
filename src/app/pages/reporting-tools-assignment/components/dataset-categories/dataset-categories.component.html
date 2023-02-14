@@ -1,7 +1,10 @@
 <ng-container *ngIf="{ categoriesData: categoriesData$ | async } as params">
   <mat-progress-bar *ngIf="!params?.categoriesData"></mat-progress-bar>
+  <!-- {{ organisationUnit?.id }} -->
+  <!-- {{ params?.categoriesData | json }} -->
   <section *ngIf="params?.categoriesData">
     <mat-checkbox
+      [id]="organisationUnit?.id + '_' + option?.id"
       class="mr-2"
       [checked]="
         params?.categoriesData[organisationUnit?.id + '_' + option?.id]

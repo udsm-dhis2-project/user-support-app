@@ -27,6 +27,7 @@ export class RequestFormModalComponent implements OnInit {
   dataStoreMessageDetails$: Observable<any>;
   ouHasPendingRequest: boolean = false;
   savedData: boolean = false;
+  dataSetAttributesData: any;
   constructor(
     private reportingToolsService: ReportingToolsService,
     private dialogRef: MatDialogRef<RequestFormModalComponent>,
@@ -129,7 +130,11 @@ export class RequestFormModalComponent implements OnInit {
       });
   }
 
-  onGetAssignmentDetails(assignmentDetails: any) {
+  onGetAssignmentDetails(assignmentDetails: any, organisationUnit: any): void {
     this.assignmentDetails = assignmentDetails;
+    this.dataSetAttributesData = {
+      attributesData: this.assignmentDetails?.dataSetAttributesData,
+      ou: organisationUnit,
+    };
   }
 }

@@ -11,6 +11,7 @@ import { DataModalComponent } from '../../components/data-modal/data-modal.compo
 })
 export class StatisticsHomeComponent implements OnInit {
   sqlViewResponse$: Observable<any>;
+  nmcpFacilitiesReportedViaOldForm$: Observable<any>;
   constructor(
     private sqlViewService: SqlViewsService,
     private dialog: MatDialog
@@ -21,6 +22,11 @@ export class StatisticsHomeComponent implements OnInit {
       id: 'Djy3poKG8Vd',
       pagination: { paging: false },
     });
+    this.nmcpFacilitiesReportedViaOldForm$ =
+      this.sqlViewService.getSqlViewByParameters({
+        id: 'Q9Rj5hAdqiv',
+        pagination: { paging: false },
+      });
   }
 
   onView(event: Event, data): void {

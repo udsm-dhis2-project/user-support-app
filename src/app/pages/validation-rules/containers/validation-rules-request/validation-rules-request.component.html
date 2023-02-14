@@ -7,5 +7,8 @@
     *ngIf="canApprove && !canRequest"
   ></app-requested-validation-rules>
 
-  <div *ngIf="!canApprove && !canRequest"></div>
+  <div>
+    <app-format-custom-form></app-format-custom-form>
+    <!-- <app-requested-validation-rules></app-requested-validation-rules> -->
+  </div>
 </div>
