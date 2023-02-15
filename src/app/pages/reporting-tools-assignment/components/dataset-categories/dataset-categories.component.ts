@@ -24,6 +24,7 @@ export class DatasetCategoriesComponent implements OnInit {
   ngOnInit(): void {
     this.categoriesData$ = this.reportingToolsService.getCategoryOptionsDetails(
       this.categoryOptions,
+      this.organisationUnit,
       this.dataSetAttributesData
     );
     this.categoriesData$.subscribe((response) => {
@@ -63,7 +64,7 @@ export class DatasetCategoriesComponent implements OnInit {
             ...(this.selections[option?.id]?.deletions || []),
             { id: this.organisationUnit?.id },
           ],
-          catetoryOption: option,
+          categoryOption: option,
         };
       }
     } else {

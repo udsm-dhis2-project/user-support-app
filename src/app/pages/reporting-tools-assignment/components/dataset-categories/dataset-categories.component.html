@@ -8,6 +8,8 @@
       class="mr-2"
       [checked]="
         params?.categoriesData[organisationUnit?.id + '_' + option?.id]
+          ? true
+          : false
       "
       (change)="
         getSelectedOption(

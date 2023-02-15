@@ -45,7 +45,6 @@ export class RespondFeedbackComponent implements OnInit {
       this.messageAndDataStoreService.searchMessageConversationByTicketNumber(
         this.dialogData?.ticketNumber
       );
-    // console.log(this.dialogData);
     if (this.dialogData?.payload?.dataSetAttributesData?.length > 0) {
       this.dataSetsCategoriesPayload$ = zip(
         ...this.dialogData?.payload?.dataSetAttributesData.map(
@@ -66,7 +65,7 @@ export class RespondFeedbackComponent implements OnInit {
                               (ou) =>
                                 (
                                   (dataSetAttribute?.deletions || [])?.filter(
-                                    (deletion) => deletion?.id === ou?.id
+                                    (deletion) => deletion?.id !== ou?.id
                                   ) || []
                                 )?.length > 0
                             ) || []),

@@ -125,9 +125,11 @@ export class ReportingToolsService {
 
   getCategoryOptionsDetails(
     categoryOptions: any,
+    organisationUnit: any,
     dataSetAttributesData?: any
   ): Observable<any> {
     let dataSetAttributesDataSelections = {};
+    let dataSetAttributesDataDeletions = {};
     dataSetAttributesDataSelections =
       dataSetAttributesData && dataSetAttributesData?.attributesData?.length > 0
         ? {
@@ -139,6 +141,26 @@ export class ReportingToolsService {
                     return {
                       ...addition,
                       key: addition?.id + '_' + attrData?.categoryOption?.id,
+                    };
+                  })
+                )
+              ),
+              'key'
+            ),
+          }
+        : null;
+
+    dataSetAttributesDataDeletions =
+      dataSetAttributesData && dataSetAttributesData?.attributesData?.length > 0
+        ? {
+            ...dataSetAttributesDataDeletions,
+            ...keyBy(
+              flatten(
+                dataSetAttributesData?.attributesData.map((attrData) =>
+                  attrData?.deletions.map((deletion) => {
+                    return {
+                      ...deletion,
+                      key: deletion?.id + '_' + attrData?.categoryOption?.id,
                     };
                   })
                 )
@@ -174,9 +196,29 @@ export class ReportingToolsService {
         return dataSetAttributesDataSelections
           ? {
               ...dataSetAttributesDataSelections,
-              ...keyBy(flatten(responses), 'ouCategoryOption'),
+              ...keyBy(
+                !dataSetAttributesDataDeletions
+                  ? flatten(responses)
+                  : flatten(responses)?.filter(
+                      (categoryOption: any) =>
+                        !dataSetAttributesDataDeletions[
+                          categoryOption?.ouCategoryOption
+                        ]
+                    ) || [],
+                'ouCategoryOption'
+              ),
             }
-          : keyBy(flatten(responses), 'ouCategoryOption');
+          : keyBy(
+              !dataSetAttributesDataDeletions
+                ? flatten(responses)
+                : flatten(responses)?.filter(
+                    (categoryOption: any) =>
+                      !dataSetAttributesDataDeletions[
+                        categoryOption?.ouCategoryOption
+                      ]
+                  ) || [],
+              'ouCategoryOption'
+            );
       })
     );
   }

@@ -306,7 +306,7 @@ export function formulateFormAttributeMessage(
       ? 'Add: ' + additions?.map((addition) => addition?.name).join(',')
       : '') +
     (deletions?.length > 0
-      ? ' Remove: ' + additions?.map((addition) => addition?.name).join(',')
+      ? ' Remove: ' + deletions?.map((deletion) => deletion?.name).join(',')
       : '')
   );
 }
