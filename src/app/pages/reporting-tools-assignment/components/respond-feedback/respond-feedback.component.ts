@@ -51,7 +51,7 @@ export class RespondFeedbackComponent implements OnInit {
           (dataSetAttribute) => {
             return this.httpClient
               .get(
-                `categoryOptions/${dataSetAttribute?.categoryOption?.id}.json?fields=id,name,attributeValues,organisationUnits`
+                `categoryOptions/${dataSetAttribute?.categoryOption?.id}.json?fields=id,name,sharing,attributeValues,organisationUnits`
               )
               .pipe(
                 map((response) => {

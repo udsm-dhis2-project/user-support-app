@@ -173,7 +173,7 @@ export class ReportingToolsService {
       ...categoryOptions?.map((categoryOption) => {
         return this.httpClient
           .get(
-            `categoryOptions/${categoryOption?.id}.json?fields=id,name,organisationUnits[id]`
+            `categoryOptions/${categoryOption?.id}.json?fields=id,name,sharing,organisationUnits[id]`
           )
           .pipe(
             map((response) => {
