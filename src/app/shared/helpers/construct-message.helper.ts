@@ -251,36 +251,41 @@ export function getDataStoreDetailsForFormRequests(
           : '')
       : '';
 
-  return {
-    action: action,
-    replyMessage: replyMessage,
-    ticketNumber: assignmentDetails?.ticketNumber,
-    method: 'POST',
-    payload: {
-      deletions:
-        assignmentDetails?.deletions?.length > 0
-          ? assignmentDetails?.deletions.map((deletion) => {
-              return {
-                id: deletion?.id,
-                name: deletion?.name,
-              };
-            })
-          : [],
-      additions:
-        assignmentDetails?.additions?.length > 0
-          ? assignmentDetails?.additions.map((addition) => {
-              return {
-                id: addition?.id,
-                name: addition?.name,
-              };
-            })
-          : [],
-      dataSetAttributesData: assignmentDetails?.dataSetAttributesData,
-    },
-    url: `organisationUnits/${
-      assignmentDetails?.organisationUnit?.id
-    }/dataSets.json?cache=${assignmentDetails?.ticketNumber.replace('DS', '')}`,
-  };
+  return action && action?.length > 5
+    ? {
+        action: action,
+        replyMessage: replyMessage,
+        ticketNumber: assignmentDetails?.ticketNumber,
+        method: 'POST',
+        payload: {
+          deletions:
+            assignmentDetails?.deletions?.length > 0
+              ? assignmentDetails?.deletions.map((deletion) => {
+                  return {
+                    id: deletion?.id,
+                    name: deletion?.name,
+                  };
+                })
+              : [],
+          additions:
+            assignmentDetails?.additions?.length > 0
+              ? assignmentDetails?.additions.map((addition) => {
+                  return {
+                    id: addition?.id,
+                    name: addition?.name,
+                  };
+                })
+              : [],
+          dataSetAttributesData: assignmentDetails?.dataSetAttributesData,
+        },
+        url: `organisationUnits/${
+          assignmentDetails?.organisationUnit?.id
+        }/dataSets.json?cache=${assignmentDetails?.ticketNumber.replace(
+          'DS',
+          ''
+        )}`,
+      }
+    : null;
 }
 
 export function formulateFormAttributeMessage(

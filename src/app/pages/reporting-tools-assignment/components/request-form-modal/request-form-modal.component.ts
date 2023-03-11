@@ -97,37 +97,46 @@ export class RequestFormModalComponent implements OnInit {
     };
     const dataStorePayload =
       getDataStoreDetailsForFormRequests(assignmentDetails);
-    const dataStoreKey = assignmentDetails?.ticketNumber + '_' + facility?.id;
-    this.messagesAndDatastoreService
-      .createMessageAndUpdateDataStore(messageData, {
-        id: dataStoreKey,
-        user: {
-          id: currentUser?.id,
-          displayName: currentUser?.displayName,
-          userName: currentUser?.userCredentials?.username,
-          jobTitle: currentUser?.jobTitle,
-          email: currentUser?.email,
-          organisationUnits: currentUser?.organisationUnits,
-          phoneNumber: currentUser?.phoneNumber,
-        },
-        message: message,
-        ...dataStorePayload,
-      })
-      .subscribe((response) => {
-        this.savingData = false;
-        this.ouHasPendingRequest = true;
-        this.savedData = true;
-        this.openSnackBar('Successfully sent form request', 'Close');
-        setTimeout(() => {
-          this.dialogRef.close();
-        }, 500);
-        setTimeout(() => {
-          this._snackBar.dismiss();
-        }, 2000);
-        this.dataStoreMessageDetails$ = this.dataStoreService.getDataViaKey([
-          dataStoreKey,
-        ]);
-      });
+    if (dataStorePayload) {
+      const dataStoreKey = assignmentDetails?.ticketNumber + '_' + facility?.id;
+      this.messagesAndDatastoreService
+        .createMessageAndUpdateDataStore(messageData, {
+          id: dataStoreKey,
+          user: {
+            id: currentUser?.id,
+            displayName: currentUser?.displayName,
+            userName: currentUser?.userCredentials?.username,
+            jobTitle: currentUser?.jobTitle,
+            email: currentUser?.email,
+            organisationUnits: currentUser?.organisationUnits,
+            phoneNumber: currentUser?.phoneNumber,
+          },
+          message: message,
+          ...dataStorePayload,
+        })
+        .subscribe((response) => {
+          this.savingData = false;
+          this.ouHasPendingRequest = true;
+          this.savedData = true;
+          this.openSnackBar('Successfully sent form request', 'Close');
+          setTimeout(() => {
+            this.dialogRef.close();
+          }, 500);
+          setTimeout(() => {
+            this._snackBar.dismiss();
+          }, 2000);
+          this.dataStoreMessageDetails$ = this.dataStoreService.getDataViaKey([
+            dataStoreKey,
+          ]);
+        });
+    } else {
+      this.savingData = false;
+      this.savedData = false;
+      this.openSnackBar('The request miss important information', 'Close');
+      setTimeout(() => {
+        this._snackBar.dismiss();
+      }, 2000);
+    }
   }
 
   onGetAssignmentDetails(assignmentDetails: any, organisationUnit: any): void {
