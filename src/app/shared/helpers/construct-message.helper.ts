@@ -13,15 +13,20 @@ export function constructMessageForFacilityAssignment(assignmentDetails: any) {
         } \n` +
         assignmentDetails?.additions
           .map((addition, index) => {
+            const dataSetAttributesDataInfo =
+              assignmentDetails?.dataSetAttributesData?.filter(
+                (attrInfo) => attrInfo?.dataSet?.id === addition?.id
+              ) || [];
             return (
               index +
               1 +
               '. ' +
               addition?.name +
-              (assignmentDetails?.dataSetAttributesData?.length > 0
+              (dataSetAttributesDataInfo?.length > 0
                 ? ' (' +
                   formulateFormAttributeMessage(
-                    assignmentDetails?.dataSetAttributesData
+                    dataSetAttributesDataInfo,
+                    addition
                   ) +
                   ')'
                 : '')
@@ -45,15 +50,20 @@ export function constructMessageForFacilityAssignment(assignmentDetails: any) {
         } \n` +
         assignmentDetails?.deletions
           .map((deletion, index) => {
+            const dataSetAttributesDataInfo =
+              assignmentDetails?.dataSetAttributesData?.filter(
+                (attrInfo) => attrInfo?.dataSet?.id === deletion?.id
+              ) || [];
             return (
               index +
               1 +
               '. ' +
               deletion?.name +
-              (assignmentDetails?.dataSetAttributesData?.length > 0
+              (dataSetAttributesDataInfo?.length > 0
                 ? ' (' +
                   formulateFormAttributeMessage(
-                    assignmentDetails?.dataSetAttributesData
+                    dataSetAttributesDataInfo,
+                    deletion
                   ) +
                   ')'
                 : '')
@@ -289,29 +299,38 @@ export function getDataStoreDetailsForFormRequests(
 }
 
 export function formulateFormAttributeMessage(
-  dataSetAttributesData: any[]
+  dataSetAttributesDataInfo: any[],
+  dataSet: any
 ): string {
-  const additions = dataSetAttributesData
-    ?.map((attributeDataInfo) => {
-      if (attributeDataInfo?.additions?.length > 0) {
-        return attributeDataInfo?.categoryOption;
-      }
-    })
-    ?.filter((addition) => addition);
+  const dataSetAttributesData =
+    dataSetAttributesDataInfo?.filter(
+      (attrInfo) => attrInfo?.dataSet?.id === dataSet?.id
+    ) || [];
+  if (dataSetAttributesData?.length > 0) {
+    const additions = dataSetAttributesData
+      ?.map((attributeDataInfo) => {
+        if (attributeDataInfo?.additions?.length > 0) {
+          return attributeDataInfo?.categoryOption;
+        }
+      })
+      ?.filter((addition) => addition);
 
-  const deletions = dataSetAttributesData
-    ?.map((attributeDataInfo) => {
-      if (attributeDataInfo?.deletions?.length > 0) {
-        return attributeDataInfo?.categoryOption;
-      }
-    })
-    ?.filter((deletion) => deletion);
-  return (
-    (additions?.length > 0
-      ? 'Add: ' + additions?.map((addition) => addition?.name).join(',')
-      : '') +
-    (deletions?.length > 0
-      ? ' Remove: ' + deletions?.map((deletion) => deletion?.name).join(',')
-      : '')
-  );
+    const deletions = dataSetAttributesData
+      ?.map((attributeDataInfo) => {
+        if (attributeDataInfo?.deletions?.length > 0) {
+          return attributeDataInfo?.categoryOption;
+        }
+      })
+      ?.filter((deletion) => deletion);
+    return (
+      (additions?.length > 0
+        ? 'Add: ' + additions?.map((addition) => addition?.name).join(',')
+        : '') +
+      (deletions?.length > 0
+        ? ' Remove: ' + deletions?.map((deletion) => deletion?.name).join(',')
+        : '')
+    );
+  } else {
+    return null;
+  }
 }

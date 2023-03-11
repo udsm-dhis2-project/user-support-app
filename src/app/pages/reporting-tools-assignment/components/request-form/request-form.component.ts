@@ -155,38 +155,49 @@ export class RequestFormComponent implements OnInit {
 
       const dataStorePayload =
         getDataStoreDetailsForFormRequests(assignmentDetails);
-      const data = {
-        ...requestDetails?.details,
-        message: messageData,
-        ticketNumber: requestDetails?.details?.ticketNumber,
-        ...dataStorePayload,
-        payload: newPayload,
-      };
+      if (dataStorePayload) {
+        const data = {
+          ...requestDetails?.details,
+          message: messageData,
+          ticketNumber: requestDetails?.details?.ticketNumber,
+          ...dataStorePayload,
+          payload: newPayload,
+        };
 
-      // TODO: Handle error on update
+        // TODO: Handle error on update
 
-      this.messageAndDataStoreService
-        .searchMessageConversationByTicketNumber(
-          requestDetails?.details?.ticketNumber
-        )
-        .subscribe((messageConversationResponse) => {
-          if (messageConversationResponse && messageConversationResponse?.id) {
-            this.dataStoreService
-              .updateKeyAndCreateMessage(data?.id, data, {
-                text: 'Kuna mabadiliko, \n\n' + data?.message?.text,
-                id: messageConversationResponse?.id,
-              })
-              .subscribe((response) => {
-                if (response) {
-                  this.updatingRequest = false;
-                  this.openSnackBar('Successfully updated request', 'Close');
-                  setTimeout(() => {
-                    this._snackBar.dismiss();
-                  }, 2000);
-                }
-              });
-          }
-        });
+        this.messageAndDataStoreService
+          .searchMessageConversationByTicketNumber(
+            requestDetails?.details?.ticketNumber
+          )
+          .subscribe((messageConversationResponse) => {
+            if (
+              messageConversationResponse &&
+              messageConversationResponse?.id
+            ) {
+              this.dataStoreService
+                .updateKeyAndCreateMessage(data?.id, data, {
+                  text: 'Kuna mabadiliko, \n\n' + data?.message?.text,
+                  id: messageConversationResponse?.id,
+                })
+                .subscribe((response) => {
+                  if (response) {
+                    this.updatingRequest = false;
+                    this.openSnackBar('Successfully updated request', 'Close');
+                    setTimeout(() => {
+                      this._snackBar.dismiss();
+                    }, 2000);
+                  }
+                });
+            }
+          });
+      } else {
+        this.updatingRequest = false;
+        this.openSnackBar('The request miss important information', 'Close');
+        setTimeout(() => {
+          this._snackBar.dismiss();
+        }, 2000);
+      }
     } else {
       this.showConfirmingButtons = true;
     }
@@ -205,7 +216,7 @@ export class RequestFormComponent implements OnInit {
             selections[key]?.additions?.length > 0 ||
             selections[key]?.deletions?.length > 0
           ) {
-            return { ...selections[key] };
+            return { ...selections[key], dataSet };
           }
         })
         ?.filter((selection) => selection) || [];
