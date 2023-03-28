@@ -21,6 +21,23 @@ export class SqlViewsService {
       .get(`sqlViews/${parameters?.id}/data?${params}`)
       .pipe(
         map((response) => {
+          return { ...response, sqlView: { id: parameters?.id } };
+        }),
+        catchError((error) => of(error))
+      );
+  }
+
+  mergeOus(
+    id: string,
+    sourceUid: string,
+    destinationUid: string
+  ): Observable<any> {
+    return this.httpClient
+      .get(
+        `sqlViews/${id}/data?var=sourceUid:${sourceUid}&var=destinationId:${destinationUid}`
+      )
+      .pipe(
+        map((response) => {
           return response;
         }),
         catchError((error) => of(error))

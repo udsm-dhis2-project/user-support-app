@@ -1,14 +1,57 @@
 <div class="data-modal-container">
-  <div class="d-flex justify-content-end">
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="downloadTableToExcel($event, 'list-of-items', 'data')"
-    >
-      Download to Excel
-    </button>
+  <div class="loading-overlay" *ngIf="saving">
+    <div class="text-center">
+      <div>Saving ....</div>
+      <div class="mt-3 d-flex justify-content-center w-100">
+        <mat-spinner diameter="50" strokeWidth="2"></mat-spinner>
+      </div>
+    </div>
   </div>
-  <div id="list-of-items" class="mt-2">
-    <app-view-sql-view-data [data]="dialogData"></app-view-sql-view-data>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>SN</th>
+        <th>Code</th>
+        <th>Region</th>
+        <th>Council</th>
+        <th>Facility</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let duplicate of data; let count = index">
+        <td>
+          {{ count + 1 }}
+        </td>
+        <td>
+          {{ duplicate?.data[1] }}
+        </td>
+        <td>
+          {{ duplicate?.data[4] }}
+        </td>
+        <td>
+          {{ duplicate?.data[3] }}
+        </td>
+        <td>
+          {{ duplicate?.data[2] }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="w-100 mt-2 d-flex justify-contend-between">
+    <div class="w-50 d-flex justify-content-left">
+      <mat-form-field class="w-100">
+        <mat-label>Select source</mat-label>
+        <mat-select (selectionChange)="onSelectionChange($event)">
+          <mat-option [value]="duplicate?.data" *ngFor="let duplicate of data">
+            {{ duplicate?.data[2] }} - {{ duplicate?.data[1] }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="w-50">
+      <button class="ml-2" mat-stroked-button (click)="onMerge($event, data)">
+        Merge
+      </button>
+    </div>
   </div>
 </div>

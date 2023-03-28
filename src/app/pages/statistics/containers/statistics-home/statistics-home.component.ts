@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { SqlViewsService } from 'src/app/core/services/sql-views.service';
-import { DataModalComponent } from '../../components/data-modal/data-modal.component';
 
 @Component({
   selector: 'app-statistics-home',
@@ -14,7 +13,7 @@ export class StatisticsHomeComponent implements OnInit {
   nmcpFacilitiesReportedViaOldForm$: Observable<any>;
   constructor(
     private sqlViewService: SqlViewsService,
-    private dialog: MatDialog
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -31,9 +30,11 @@ export class StatisticsHomeComponent implements OnInit {
 
   onView(event: Event, data): void {
     event.stopPropagation();
-    this.dialog.open(DataModalComponent, {
-      width: '70%',
-      data,
-    });
+    console.log(data);
+    this.router.navigate([`statistics/view/${data?.sqlView?.id}`]);
+    // this.dialog.open(DataModalComponent, {
+    //   width: '70%',
+    //   data,
+    // });
   }
 }

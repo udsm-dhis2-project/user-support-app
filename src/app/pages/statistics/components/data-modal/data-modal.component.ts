@@ -1,5 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
+import { SqlViewsService } from 'src/app/core/services/sql-views.service';
 
 @Component({
   selector: 'app-data-modal',
@@ -7,47 +9,46 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./data-modal.component.css'],
 })
 export class DataModalComponent implements OnInit {
-  dialogData: any;
+  sourceOu: any;
+  otherOus: any[];
+  saving: boolean = false;
+  errors: any[];
   constructor(
     private dialogRef: MatDialogRef<DataModalComponent>,
-    @Inject(MAT_DIALOG_DATA) data
-  ) {
-    this.dialogData = data;
-  }
+    @Inject(MAT_DIALOG_DATA) public data,
+    private sqlViewService: SqlViewsService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.data);
+  }
 
   onClose(): void {
     this.dialogRef.close();
   }
 
-  downloadTableToExcel(event: Event, id: string, fileName: string): void {
+  onMerge(event: Event, data: any): void {
     event.stopPropagation();
-    const htmlTable = document.getElementById(id).outerHTML;
-    if (htmlTable) {
-      const uri = 'data:application/vnd.ms-excel;base64,',
-        template =
-          '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:' +
-          'office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook>' +
-          '<x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/>' +
-          '</x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->' +
-          '</head><body><table border="1">{table}</table><br /><table border="1">{table}</table></body></html>',
-        base64 = (s) => window.btoa(unescape(encodeURIComponent(s))),
-        format = (s, c) => s.replace(/{(\w+)}/g, (m, p) => c[p]);
+    this.saving = true;
+    this.sqlViewService
+      .mergeOus('kXINRTVFEaW', this.sourceOu[0], this.otherOus[0]?.data[0])
+      .subscribe((response) => {
+        if (response && !response?.error) {
+          this.saving = false;
+        } else {
+          this.saving = false;
+          console.log(response);
+        }
+      });
+  }
 
-      const ctx = { worksheet: 'List', filename: fileName };
-      let str =
-        '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office' +
-        ':excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook>' +
-        '<x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/>' +
-        '</x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>';
-      ctx['div'] = htmlTable;
-
-      str += '{div}</body></html>';
-      const link = document.createElement('a');
-      link.download = fileName + '.xls';
-      link.href = uri + base64(format(str, ctx));
-      link.click();
-    }
+  onSelectionChange(selectionChange: MatSelectChange): void {
+    console.log(selectionChange);
+    this.sourceOu = selectionChange?.value;
+    this.otherOus =
+      this.data?.filter(
+        (duplicate) => duplicate?.data[0] !== this.sourceOu[0]
+      ) || [];
+    console.log(this.otherOus[0]?.data);
   }
 }

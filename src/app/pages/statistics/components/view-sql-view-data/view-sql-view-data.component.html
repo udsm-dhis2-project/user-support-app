@@ -7,6 +7,7 @@
         <th *ngFor="let header of data?.listGrid?.headers">
           {{ header?.column }}
         </th>
+        <td></td>
       </tr>
     </thead>
     <tbody>
@@ -36,6 +37,19 @@
             "
           >
             {{ duplicate?.data[headerIndex] }}
+          </td>
+          <td
+            *ngIf="count == 0"
+            [attr.rowspan]="formattedSQLViewData['groupedRows'][key].length"
+          >
+            <button
+              mat-stroked-button
+              (click)="
+                onViewData($event, formattedSQLViewData['groupedRows'][key])
+              "
+            >
+              View
+            </button>
           </td>
         </tr>
       </ng-container>

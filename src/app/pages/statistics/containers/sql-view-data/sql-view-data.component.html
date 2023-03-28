@@ -1,0 +1,42 @@
+<div
+  class="data-container"
+  *ngIf="{ sqlViewResponse: sqlViewResponse$ | async } as params"
+>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.sqlViewResponse"
+  ></mat-progress-bar>
+  <div class="w-100" *ngIf="params?.sqlViewResponse">
+    <div class="row">
+      <div class="col-md-6 col-sm-12 col-sx-12">
+        <div class="d-flex justify-content-left">
+          <button
+            class="float-left"
+            mat-stroked-button
+            (click)="onGetBackToList($event)"
+            matTooltip="Go to stats summary"
+          >
+            <mat-icon>arrow_back</mat-icon>
+            Back to Stats Summary
+          </button>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12 col-sm-12">
+        <div class="d-flex justify-content-end">
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="downloadTableToExcel($event, 'list-of-items', 'data')"
+          >
+            Download to Excel
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="list-of-items" class="mt-2">
+      <app-view-sql-view-data
+        [data]="params?.sqlViewResponse"
+      ></app-view-sql-view-data>
+    </div>
+  </div>
+</div>
