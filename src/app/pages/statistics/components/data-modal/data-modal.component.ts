@@ -9,7 +9,7 @@ import { SqlViewsService } from 'src/app/core/services/sql-views.service';
   styleUrls: ['./data-modal.component.css'],
 })
 export class DataModalComponent implements OnInit {
-  sourceOu: any;
+  destinationOu: any;
   otherOus: any[];
   saving: boolean = false;
   errors: any[];
@@ -31,7 +31,7 @@ export class DataModalComponent implements OnInit {
     event.stopPropagation();
     this.saving = true;
     this.sqlViewService
-      .mergeOus('kXINRTVFEaW', this.sourceOu[0], this.otherOus[0]?.data[0])
+      .mergeOus('kXINRTVFEaW', this.otherOus[0]?.data[0], this.destinationOu[0])
       .subscribe((response) => {
         if (response && !response?.error) {
           this.saving = false;
@@ -44,10 +44,10 @@ export class DataModalComponent implements OnInit {
 
   onSelectionChange(selectionChange: MatSelectChange): void {
     console.log(selectionChange);
-    this.sourceOu = selectionChange?.value;
+    this.destinationOu = selectionChange?.value;
     this.otherOus =
       this.data?.filter(
-        (duplicate) => duplicate?.data[0] !== this.sourceOu[0]
+        (duplicate) => duplicate?.data[0] !== this.destinationOu[0]
       ) || [];
     console.log(this.otherOus[0]?.data);
   }
