@@ -13,6 +13,7 @@ import {
 } from 'src/app/shared/models/reporting-tools.models';
 import { SystemConfigsModel } from 'src/app/shared/models/system-configurations.model';
 import { RequestFormModalComponent } from '../request-form-modal/request-form-modal.component';
+import { MatSelectChange } from '@angular/material/select';
 @Component({
   selector: 'app-facilities-list',
   templateUrl: './facilities-list.component.html',
@@ -73,6 +74,25 @@ export class FacilitiesListComponent implements OnInit {
         1,
         this.pageCount,
         this.searchingText,
+        this.userSupportKeys
+      );
+  }
+
+  onLevelChange(event: MatSelectChange): void {
+    this.lowestLevel = event?.value?.level;
+    let currentPage;
+    currentPage = localStorage.getItem('currentFacilityListPage');
+    if (Number(currentPage)) {
+      currentPage = 1;
+    }
+    localStorage.setItem('currentFacilityListPage', '1');
+    this.reportingToolsResponse$ =
+      this.reportingToolsService.getFacilitiesWithNumberOfDataSets(
+        this.currentUser?.organisationUnits[0]?.id,
+        this.lowestLevel,
+        Number(currentPage),
+        this.pageCount,
+        null,
         this.userSupportKeys
       );
   }
