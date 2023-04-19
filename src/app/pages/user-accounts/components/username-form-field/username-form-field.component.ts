@@ -67,43 +67,27 @@ export class UsernameFormFieldComponent implements OnInit {
     if (this.hasEmptySpace) {
       this.usernameValid.emit(false);
       this.validityCheckMessage.emit('Username should not have empty space');
-    } else {
-      this.validityCheckMessage.emit(null);
-    }
-
-    if (username?.length < 5) {
+    } else if (!this.hasEmptySpace && username?.length < 5) {
       this.usernameValid.emit(false);
       this.validityCheckMessage.emit(
         'Username should not have less than 5 characters'
       );
     } else {
-      this.validityCheckMessage.emit(null);
-    }
-    this.usersDataService.verifyUsername(username).subscribe((response) => {
-      if (response?.length > 0) {
-        this.usernameExist = true;
-        this.usernameValid.emit(false);
-        if (username?.length < 5) {
+      this.usersDataService.verifyUsername(username).subscribe((response) => {
+        if (response?.length > 0) {
+          this.usernameExist = true;
           this.usernameValid.emit(false);
-          this.validityCheckMessage.emit(
-            'Username should not have less than 5 characters'
-          );
+          this.validityCheckMessage.emit('Username ' + username + ' exists');
+          this.usernameData.emit(username);
+        } else if (response?.length === 0) {
+          this.usernameExist = false;
+          this.usernameValid.emit(true);
+          this.validityCheckMessage.emit(null);
+          this.usernameData.emit(username);
         } else {
-          this.validityCheckMessage.emit('Username exists');
-        }
-      } else if (username?.length >= 5) {
-        this.usernameExist = false;
-        this.usernameValid.emit(true);
-        this.validityCheckMessage.emit(null);
-      } else {
-        if (username?.length < 5) {
           this.usernameValid.emit(false);
-          this.validityCheckMessage.emit(
-            'Username should not have less than 5 characters'
-          );
         }
-      }
-    });
-    this.usernameData.emit(username);
+      });
+    }
   }
 }
