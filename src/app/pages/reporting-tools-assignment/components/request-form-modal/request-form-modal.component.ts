@@ -28,6 +28,7 @@ export class RequestFormModalComponent implements OnInit {
   ouHasPendingRequest: boolean = false;
   savedData: boolean = false;
   dataSetAttributesData: any;
+  keywordsKeys: any;
   constructor(
     private reportingToolsService: ReportingToolsService,
     private dialogRef: MatDialogRef<RequestFormModalComponent>,
@@ -37,6 +38,7 @@ export class RequestFormModalComponent implements OnInit {
     private _snackBar: MatSnackBar
   ) {
     this.dialogData = data;
+    this.keywordsKeys = data?.configurations?.keywordsKeys;
   }
 
   openSnackBar(message: string, action: string) {
@@ -85,7 +87,10 @@ export class RequestFormModalComponent implements OnInit {
       organisationUnit: facility,
       ticketNumber: 'DS' + Date.now(),
     };
-    const message = constructMessageForFacilityAssignment(assignmentDetails);
+    const message = constructMessageForFacilityAssignment(
+      assignmentDetails,
+      this.keywordsKeys
+    );
     const messageData = {
       subject: message?.subject,
       messageType: 'TICKET',

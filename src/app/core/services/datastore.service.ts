@@ -24,7 +24,17 @@ export class DataStoreDataService {
     const configurations = {
       datasetClosedDateAttribute: { id: 'wTO29uRscGn' },
       defaultToRequest: true,
-      messageKeys: {},
+      messageKeys: {
+        addMessageFormRequest: 'Naomba kuongezewa fomu zifuatazo kwenye kituo',
+        removeMessageFormRequest:
+          'Naomba kuondolewa fomu zifuatazo kwenye kituo',
+        formRequestMessageHeaderKey: 'MAOMBI YA FOMU',
+        addMessageFacilitiesFormRequestKey:
+          'Naomba kuongezewa vituo vifuatavyo kwenye fomu',
+        removeMessageFacilitiesFormRequestKey:
+          'Naomba kuondolewa vituo vifuatavyo kwenye fomu',
+        messageChangePrefixKey: 'Kuna mabadiliko',
+      },
       userGroupsToToggleFormRequests: [
         {
           id: '',

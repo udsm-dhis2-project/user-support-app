@@ -1,8 +1,14 @@
-export function constructMessageForFacilityAssignment(assignmentDetails: any) {
+export function constructMessageForFacilityAssignment(
+  assignmentDetails: any,
+  keywordsKeys: any
+) {
   let message = '';
   message +=
     assignmentDetails?.additions?.length > 0
-      ? `Naomba kuongezewa fomu zifuatazo kwenye kituo: ${
+      ? (keywordsKeys && keywordsKeys['addMessageFormRequest']
+          ? keywordsKeys['addMessageFormRequest']
+          : `Naomba kuongezewa fomu zifuatazo kwenye kituo`) +
+        `: ${
           assignmentDetails?.organisationUnit?.name +
           ' - ' +
           assignmentDetails?.organisationUnit?.parent?.name +
@@ -39,49 +45,62 @@ export function constructMessageForFacilityAssignment(assignmentDetails: any) {
 
   message +=
     assignmentDetails?.deletions?.length > 0
-      ? `Naomba kuondolewa fomu zifuatazo kwenye kituo: ${
-          assignmentDetails?.organisationUnit?.name +
-          ' - ' +
-          assignmentDetails?.organisationUnit?.parent?.name +
-          (assignmentDetails?.organisationUnit?.parent?.parent &&
-          assignmentDetails?.organisationUnit?.parent?.parent?.name
-            ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
-            : '')
-        } \n` +
-        assignmentDetails?.deletions
-          .map((deletion, index) => {
-            const dataSetAttributesDataInfo =
-              assignmentDetails?.dataSetAttributesData?.filter(
-                (attrInfo) => attrInfo?.dataSet?.id === deletion?.id
-              ) || [];
-            return (
-              index +
-              1 +
-              '. ' +
-              deletion?.name +
-              (dataSetAttributesDataInfo?.length > 0
-                ? ' (' +
-                  formulateFormAttributeMessage(
-                    dataSetAttributesDataInfo,
-                    deletion
-                  ) +
-                  ')'
-                : '')
-            );
-          })
-          .join(',\n')
+      ? keywordsKeys && keywordsKeys['removeMessageFormRequest']
+        ? keywordsKeys['removeMessageFormRequest']
+        : `Naomba kuondolewa fomu zifuatazo kwenye kituo: ${
+            assignmentDetails?.organisationUnit?.name +
+            ' - ' +
+            assignmentDetails?.organisationUnit?.parent?.name +
+            (assignmentDetails?.organisationUnit?.parent?.parent &&
+            assignmentDetails?.organisationUnit?.parent?.parent?.name
+              ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
+              : '')
+          } \n` +
+          assignmentDetails?.deletions
+            .map((deletion, index) => {
+              const dataSetAttributesDataInfo =
+                assignmentDetails?.dataSetAttributesData?.filter(
+                  (attrInfo) => attrInfo?.dataSet?.id === deletion?.id
+                ) || [];
+              return (
+                index +
+                1 +
+                '. ' +
+                deletion?.name +
+                (dataSetAttributesDataInfo?.length > 0
+                  ? ' (' +
+                    formulateFormAttributeMessage(
+                      dataSetAttributesDataInfo,
+                      deletion
+                    ) +
+                    ')'
+                  : '')
+              );
+            })
+            .join(',\n')
       : '';
   return {
-    subject: assignmentDetails?.ticketNumber + ' - MAOMBI YA FOMU',
+    subject:
+      assignmentDetails?.ticketNumber +
+      ' - ' +
+      (keywordsKeys && keywordsKeys['messageRequestHeader']
+        ? keywordsKeys['formRequestMessageHeaderKey']
+        : 'MAOMBI YA FOMU'),
     message,
   };
 }
 
-export function constructMessageForDataSetAssignment(assignmentDetails: any) {
+export function constructMessageForDataSetAssignment(
+  assignmentDetails: any,
+  keywordsKeys: any
+) {
   let message = '';
   message +=
     assignmentDetails?.additions?.length > 0
-      ? `Naomba kuongezewa vituo vifuatavyo kwenye fomu ${assignmentDetails?.dataSet?.name}:- \n` +
+      ? (keywordsKeys && keywordsKeys['addMessageFacilitiesFormRequestKey']
+          ? keywordsKeys['addMessageFacilitiesFormRequestKey']
+          : `Naomba kuongezewa vituo vifuatavyo kwenye fomu `) +
+        `${assignmentDetails?.dataSet?.name}:- \n` +
         assignmentDetails?.additions
           .map((addition, index) => {
             return index + 1 + '. ' + addition?.name;
@@ -92,7 +111,10 @@ export function constructMessageForDataSetAssignment(assignmentDetails: any) {
   message += assignmentDetails?.additions?.length > 0 ? '\n\n' : '';
   message +=
     assignmentDetails?.deletions?.length > 0
-      ? `Naomba kuondolewa vituo vifuatavyo kwenye fomu ${assignmentDetails?.dataSet?.name} \n` +
+      ? (keywordsKeys && keywordsKeys['removeMessageFacilitiesFormRequestKey']
+          ? keywordsKeys['removeMessageFacilitiesFormRequestKey']
+          : `Naomba kuondolewa vituo vifuatavyo kwenye fomu `) +
+        `${assignmentDetails?.dataSet?.name} \n` +
         assignmentDetails?.deletions
           .map((deletion, index) => {
             return index + 1 + '. ' + deletion?.name;
@@ -100,7 +122,12 @@ export function constructMessageForDataSetAssignment(assignmentDetails: any) {
           .join(',\n')
       : '';
   return {
-    subject: assignmentDetails?.ticketNumber + ' - MAOMBI YA FOMU',
+    subject:
+      assignmentDetails?.ticketNumber +
+      ' - ' +
+      (keywordsKeys && keywordsKeys['messageRequestHeader']
+        ? keywordsKeys['formRequestMessageHeaderKey']
+        : 'MAOMBI YA FOMU'),
     message,
   };
 }

@@ -29,6 +29,7 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
   dataStoreMessageDetails$: Observable<any>;
   assignmentDetails: any;
   allDataForUserSupport$: Observable<any>;
+  keywordsKeys: any;
   constructor(
     private dialogRef: MatDialogRef<OuSelectionFormRequestModalComponent>,
     @Inject(MAT_DIALOG_DATA) data,
@@ -38,6 +39,7 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
     private dataStoreService: DataStoreDataService
   ) {
     this.dialogData = data;
+    this.keywordsKeys = data?.configurations?.keywordsKeys;
   }
 
   ngOnInit(): void {
@@ -107,7 +109,10 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
 
     this.assignmentDetails = assignmentDetails;
 
-    const message = constructMessageForDataSetAssignment(assignmentDetails);
+    const message = constructMessageForDataSetAssignment(
+      assignmentDetails,
+      this.keywordsKeys
+    );
     const messageData = {
       subject: message?.subject,
       messageType: 'TICKET',

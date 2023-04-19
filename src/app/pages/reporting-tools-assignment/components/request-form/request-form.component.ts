@@ -25,6 +25,7 @@ export class RequestFormComponent implements OnInit {
   @Input() facility: FacilityModel;
   @Input() dataStoreMessageDetails: any[];
   @Input() dataSetAttributesData: any;
+  @Input() keywordsKeys: any;
   mergedDataSets: DataSets[];
   @Output() assignmentDetails = new EventEmitter<any>();
   searchingText: string;
@@ -145,12 +146,25 @@ export class RequestFormComponent implements OnInit {
         organisationUnit: this.facility,
         ticketNumber: requestDetails?.details?.ticketNumber,
       };
-      const message = constructMessageForFacilityAssignment(assignmentDetails);
+      const message = constructMessageForFacilityAssignment(
+        assignmentDetails,
+        this.keywordsKeys
+      );
       const messageData = {
         subject: requestDetails?.details?.message?.subject,
         messageType: 'TICKET',
-        text: 'Kuna mabadiliko, \n\n' + message?.message,
-        message: 'Kuna mabadiliko, \n\n' + message?.message,
+        text:
+          (this.keywordsKeys && this.keywordsKeys['messageChangePrefixKey']
+            ? this.keywordsKeys['messageChangePrefixKey']
+            : 'Kuna mabadiliko') +
+          ', \n\n' +
+          message?.message,
+        message:
+          (this.keywordsKeys && this.keywordsKeys['messageChangePrefixKey']
+            ? this.keywordsKeys['messageChangePrefixKey']
+            : 'Kuna mabadiliko') +
+          ', \n\n' +
+          message?.message,
       };
 
       const dataStorePayload =
@@ -177,7 +191,13 @@ export class RequestFormComponent implements OnInit {
             ) {
               this.dataStoreService
                 .updateKeyAndCreateMessage(data?.id, data, {
-                  text: 'Kuna mabadiliko, \n\n' + data?.message?.text,
+                  text:
+                    (this.keywordsKeys &&
+                    this.keywordsKeys['messageChangePrefixKey']
+                      ? this.keywordsKeys['messageChangePrefixKey']
+                      : 'Kuna mabadiliko') +
+                    ', \n\n' +
+                    data?.message?.text,
                   id: messageConversationResponse?.id,
                 })
                 .subscribe((response) => {
