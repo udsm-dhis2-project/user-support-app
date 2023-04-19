@@ -17,6 +17,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
   saving: boolean = false;
   isCurrentUsernameValid: boolean = false;
   currentUsername: string;
+  validityCheckMessage: string;
   constructor(
     private dialogRef: MatDialogRef<ApproveUserAccountsModalComponent>,
     @Inject(MAT_DIALOG_DATA) data,
@@ -458,5 +459,9 @@ export class ApproveUserAccountsModalComponent implements OnInit {
   }
   onGetUsernameValidity(isValid: boolean): void {
     this.isCurrentUsernameValid = isValid;
+  }
+
+  onGetvalidityCheckMessage(message: string): void {
+    this.validityCheckMessage = message;
   }
 }

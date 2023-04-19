@@ -15,10 +15,13 @@ export class UsernameFormFieldComponent implements OnInit {
   usernameField: any;
   @Output() usernameData: EventEmitter<any> = new EventEmitter<any>();
   @Output() usernameValid: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() validityCheckMessage: EventEmitter<string> =
+    new EventEmitter<string>();
   key: string;
   potentialUsernames: any[];
   proposedUsername: string;
   usernameExist: boolean = false;
+  hasEmptySpace: boolean = false;
   constructor(private usersDataService: UsersDataService) {}
 
   ngOnInit(): void {
@@ -60,12 +63,45 @@ export class UsernameFormFieldComponent implements OnInit {
 
   onFormUpdate(formValue: FormValue): void {
     const username = formValue.getValues()[this.key]?.value;
+    this.hasEmptySpace = username?.indexOf(' ') > -1;
+    if (this.hasEmptySpace) {
+      this.usernameValid.emit(false);
+      this.validityCheckMessage.emit('Username should not have empty space');
+    } else {
+      this.validityCheckMessage.emit(null);
+    }
+
+    if (username?.length < 5) {
+      this.usernameValid.emit(false);
+      this.validityCheckMessage.emit(
+        'Username should not have less than 5 characters'
+      );
+    } else {
+      this.validityCheckMessage.emit(null);
+    }
     this.usersDataService.verifyUsername(username).subscribe((response) => {
       if (response?.length > 0) {
         this.usernameExist = true;
-      } else {
+        this.usernameValid.emit(false);
+        if (username?.length < 5) {
+          this.usernameValid.emit(false);
+          this.validityCheckMessage.emit(
+            'Username should not have less than 5 characters'
+          );
+        } else {
+          this.validityCheckMessage.emit('Username exists');
+        }
+      } else if (username?.length >= 5) {
         this.usernameExist = false;
         this.usernameValid.emit(true);
+        this.validityCheckMessage.emit(null);
+      } else {
+        if (username?.length < 5) {
+          this.usernameValid.emit(false);
+          this.validityCheckMessage.emit(
+            'Username should not have less than 5 characters'
+          );
+        }
       }
     });
     this.usernameData.emit(username);

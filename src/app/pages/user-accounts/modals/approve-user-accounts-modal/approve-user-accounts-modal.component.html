@@ -78,6 +78,7 @@
               <app-username-form-field
                 [user]="user"
                 [count]="count"
+                (validityCheckMessage)="onGetvalidityCheckMessage($event)"
                 (usernameData)="onGetUsernameData($event)"
                 (usernameValid)="onGetUsernameValidity($event)"
               ></app-username-form-field>
@@ -96,6 +97,9 @@
               >
                 Confirm
               </button>
+              <div class="text-danger mt-2">
+                {{ validityCheckMessage }}
+              </div>
             </td>
           </tr>
         </ng-container>
