@@ -118,7 +118,7 @@
           <tr>
             <th>SN</th>
             <th>First name</th>
-            <th>Middle name</th>
+            <!-- <th>Middle name</th> -->
             <th>Last name</th>
             <th>Email</th>
             <th>Phone number</th>
@@ -132,9 +132,9 @@
             <td>
               {{ user?.firstName }}
             </td>
-            <td>
+            <!-- <td>
               {{ user?.middleName }}
-            </td>
+            </td> -->
             <td>
               {{ user?.lastName }}
             </td>
@@ -176,7 +176,9 @@
       </button>
       <button
         *ngIf="!readyToSave"
-        [disabled]="formDataToStoreLocally?.length === 0"
+        [disabled]="
+          formDataToStoreLocally?.length === 0 || formData['firstName']
+        "
         mat-flat-button
         color="primary"
         class="ml-2"

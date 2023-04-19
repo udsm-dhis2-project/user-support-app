@@ -82,7 +82,6 @@ export class RequestUserAccountsComponent implements OnInit {
     const storedUsersData = localStorage.getItem('usersToCreate');
     if (storedUsersData) {
       this.formDataToStoreLocally = JSON.parse(storedUsersData);
-      console.log('formDataToStoreLocally', this.formDataToStoreLocally);
       this.selectedOrgUnitItemsForDataEntry =
         this.formDataToStoreLocally[
           this.formDataToStoreLocally?.length - 1
@@ -212,57 +211,12 @@ export class RequestUserAccountsComponent implements OnInit {
     setTimeout(() => {
       this.showOrgUnit = true;
     }, 100);
+    this.formData = null;
   }
 
   onFinish(event: Event): void {
     event.stopPropagation();
     // testing logic
-    this.formDataToStoreLocally = !this.formUpdateIsDone
-      ? this.formDataToStoreLocally
-      : !this.currentUserToCreateSelected
-      ? [
-          ...this.formDataToStoreLocally,
-          {
-            id: 'REF' + Date.now(),
-            firstName: this.formData?.firstName?.value.trim(),
-            lastName: this.formData?.lastName?.value.trim(),
-            phoneNumber: this.formData?.phoneNumber?.value.trim(),
-            email: this.formData?.email?.value.trim(),
-            title: this.formData?.title?.value,
-            titleDescription: this.formData?.titleDescription?.value,
-            entryOrgUnits: this.selectedOrgUnitItemsForDataEntry,
-            reportOrgUnits: this.selectedOrgUnitItemsForReport,
-            userGroups: this.selectedUserGroups,
-            userRoles: this.selectedRoles,
-          },
-        ]
-      : this.formDataToStoreLocally?.map((data) => {
-          if (data?.id === this.currentUserToCreateSelected) {
-            return {
-              id: this.currentUserToCreateSelected,
-              firstName: this.formData?.firstName?.value.trim(),
-              lastName: this.formData?.lastName?.value.trim(),
-              phoneNumber: this.formData?.phoneNumber?.value.trim(),
-              email: this.formData?.email?.value,
-              title: this.formData?.title?.value,
-              titleDescription: this.formData?.titleDescription?.value,
-              entryOrgUnits: this.formData?.entry?.value,
-              reportOrgUnits: this.formData?.report?.value,
-              userGroups: [
-                {
-                  id: this.formData?.userGroup?.value,
-                },
-              ],
-              userRoles: [
-                {
-                  id: this.formData?.userRole?.value,
-                },
-              ],
-            };
-          } else {
-            return data;
-          }
-        });
     this.formDataToStoreLocally = removeDuplicates(
       this.formDataToStoreLocally,
       'phoneNumber'
