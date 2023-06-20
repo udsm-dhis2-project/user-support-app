@@ -3,7 +3,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { DataSetsService } from 'src/app/core/services/dataset.service';
 
-import { difference } from 'lodash';
 import {
   constructMessageForDataSetAssignment,
   getDataStoreDetailsForFormRequestsByDataSet,
@@ -125,8 +124,10 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
       text: message?.message,
     };
 
-    const dataStorePayload =
-      getDataStoreDetailsForFormRequestsByDataSet(assignmentDetails);
+    const dataStorePayload = getDataStoreDetailsForFormRequestsByDataSet(
+      assignmentDetails,
+      this.keywordsKeys
+    );
     const dataStoreKey =
       assignmentDetails?.ticketNumber + '_' + assignmentDetails?.dataSet?.id;
 

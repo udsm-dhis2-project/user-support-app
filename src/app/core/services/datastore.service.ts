@@ -24,16 +24,27 @@ export class DataStoreDataService {
     const configurations = {
       datasetClosedDateAttribute: { id: 'wTO29uRscGn' },
       defaultToRequest: true,
-      messageKeys: {
-        addMessageFormRequest: 'Naomba kuongezewa fomu zifuatazo kwenye kituo',
+      keywordsKeys: {
+        addMessageFormRequest: 'Please add the following datasets on org unit',
         removeMessageFormRequest:
-          'Naomba kuondolewa fomu zifuatazo kwenye kituo',
-        formRequestMessageHeaderKey: 'MAOMBI YA FOMU',
+          'Please remove the following datasets on the org unit',
+        formRequestMessageHeaderKey: 'FORM REQUEST',
         addMessageFacilitiesFormRequestKey:
-          'Naomba kuongezewa vituo vifuatavyo kwenye fomu',
+          'Please add the following org units on dataset',
         removeMessageFacilitiesFormRequestKey:
-          'Naomba kuondolewa vituo vifuatavyo kwenye fomu',
-        messageChangePrefixKey: 'Kuna mabadiliko',
+          'Please un-assign the following org units on a dataset',
+        messageChangePrefixKey: 'There are changes',
+        Remove: 'Remove',
+        Assign: 'Assign',
+        Removed: 'Removed',
+        Assigned: 'Assigned',
+        and: 'and',
+        'organisationunits from': 'organisationunits from',
+        'organisationunits to': 'organisationunits to',
+        'organisationunits from the form': 'organisationunits from the form',
+        'organisationunits to the form': 'organisationunits to the form',
+        'datasets from': 'datasets from',
+        'datasets to': 'datasets to',
       },
       userGroupsToToggleFormRequests: [
         {
@@ -46,12 +57,6 @@ export class DataStoreDataService {
           {
             id: 'B6JNeAQ6akX',
             name: '_DATASET_Superuser',
-          },
-        ],
-        userGroupsToApprove: [
-          {
-            id: 'wl5cDMuUhmF',
-            name: 'Administrators',
           },
         ],
       },
@@ -78,31 +83,18 @@ export class DataStoreDataService {
             },
           ],
         },
-        {
-          id: 'TFlh0xqlzAo',
-          name: 'IPC Data Manager',
-        },
-        {
-          id: 'o4FG5PxbDNR',
-          name: 'District HMIS Focal',
-        },
       ],
       allowedUserGroupsForRequest: [
-        {
-          id: 'zk2Zubvm2kP',
-          name: 'Data Entrant Group',
-          systemName: 'Data Manager',
-          associatedGroups: [
-            {
-              id: '',
-              name: '',
-            },
-          ],
-        },
         {
           id: 'us757WFyTYX',
           name: 'Program Manager',
           systemName: 'Program Manager Group',
+          associatedGroups: [
+            {
+              id: 'zk2Zubvm2kP',
+              name: 'Data Entrant Group',
+            },
+          ],
         },
       ],
       usersSettings: {

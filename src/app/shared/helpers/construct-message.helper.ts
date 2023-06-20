@@ -7,7 +7,7 @@ export function constructMessageForFacilityAssignment(
     assignmentDetails?.additions?.length > 0
       ? (keywordsKeys && keywordsKeys['addMessageFormRequest']
           ? keywordsKeys['addMessageFormRequest']
-          : `Naomba kuongezewa fomu zifuatazo kwenye kituo`) +
+          : `Please add the following dataset on the org unit`) +
         `: ${
           assignmentDetails?.organisationUnit?.name +
           ' - ' +
@@ -32,7 +32,8 @@ export function constructMessageForFacilityAssignment(
                 ? ' (' +
                   formulateFormAttributeMessage(
                     dataSetAttributesDataInfo,
-                    addition
+                    addition,
+                    keywordsKeys
                   ) +
                   ')'
                 : '')
@@ -45,39 +46,41 @@ export function constructMessageForFacilityAssignment(
 
   message +=
     assignmentDetails?.deletions?.length > 0
-      ? keywordsKeys && keywordsKeys['removeMessageFormRequest']
-        ? keywordsKeys['removeMessageFormRequest']
-        : `Naomba kuondolewa fomu zifuatazo kwenye kituo: ${
-            assignmentDetails?.organisationUnit?.name +
-            ' - ' +
-            assignmentDetails?.organisationUnit?.parent?.name +
-            (assignmentDetails?.organisationUnit?.parent?.parent &&
-            assignmentDetails?.organisationUnit?.parent?.parent?.name
-              ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
-              : '')
-          } \n` +
-          assignmentDetails?.deletions
-            .map((deletion, index) => {
-              const dataSetAttributesDataInfo =
-                assignmentDetails?.dataSetAttributesData?.filter(
-                  (attrInfo) => attrInfo?.dataSet?.id === deletion?.id
-                ) || [];
-              return (
-                index +
-                1 +
-                '. ' +
-                deletion?.name +
-                (dataSetAttributesDataInfo?.length > 0
-                  ? ' (' +
-                    formulateFormAttributeMessage(
-                      dataSetAttributesDataInfo,
-                      deletion
-                    ) +
-                    ')'
-                  : '')
-              );
-            })
-            .join(',\n')
+      ? (keywordsKeys && keywordsKeys['removeMessageFormRequest']
+          ? keywordsKeys['removeMessageFormRequest']
+          : `Naomba kuondolewa fomu zifuatazo kwenye kituo`) +
+        `: ${
+          assignmentDetails?.organisationUnit?.name +
+          ' - ' +
+          assignmentDetails?.organisationUnit?.parent?.name +
+          (assignmentDetails?.organisationUnit?.parent?.parent &&
+          assignmentDetails?.organisationUnit?.parent?.parent?.name
+            ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
+            : '')
+        } \n` +
+        assignmentDetails?.deletions
+          .map((deletion, index) => {
+            const dataSetAttributesDataInfo =
+              assignmentDetails?.dataSetAttributesData?.filter(
+                (attrInfo) => attrInfo?.dataSet?.id === deletion?.id
+              ) || [];
+            return (
+              index +
+              1 +
+              '. ' +
+              deletion?.name +
+              (dataSetAttributesDataInfo?.length > 0
+                ? ' (' +
+                  formulateFormAttributeMessage(
+                    dataSetAttributesDataInfo,
+                    deletion,
+                    keywordsKeys
+                  ) +
+                  ')'
+                : '')
+            );
+          })
+          .join(',\n')
       : '';
   return {
     subject:
@@ -133,51 +136,79 @@ export function constructMessageForDataSetAssignment(
 }
 
 export function getDataStoreDetailsForFormRequestsByDataSet(
-  assignmentDetails: any
+  assignmentDetails: any,
+  keywordsKeys: any
 ): any {
   let action = '';
   action +=
     assignmentDetails?.deletions?.length > 0
-      ? 'Remove ' +
+      ? (keywordsKeys && keywordsKeys['Remove']
+          ? keywordsKeys['Remove']
+          : 'Remove') +
+        ' ' +
         assignmentDetails?.deletions?.length +
-        ' organisationunits from ' +
+        (keywordsKeys && keywordsKeys['organisationunits from']
+          ? ' ' + keywordsKeys['organisationunits from'] + ' '
+          : ' organisationunits from ') +
         assignmentDetails?.dataSet?.name
       : '';
 
   action +=
     assignmentDetails?.deletions?.length > 0 &&
     assignmentDetails?.additions?.length > 0
-      ? ' and '
+      ? ' ' +
+        (keywordsKeys && keywordsKeys['and'] ? keywordsKeys['and'] : 'and') +
+        ' '
       : '';
 
   action +=
     assignmentDetails?.additions?.length > 0
-      ? 'Assign ' +
+      ? (keywordsKeys && keywordsKeys['Assign']
+          ? keywordsKeys['Assign']
+          : 'Assign') +
+        ' ' +
         assignmentDetails?.additions?.length +
-        ' organisationunits to ' +
+        (keywordsKeys && keywordsKeys['organisationunits to']
+          ? ' ' + keywordsKeys['organisationunits to']
+          : 'organisationunits to') +
+        ' ' +
         assignmentDetails?.dataSet?.name
       : '';
 
   let replyMessage = '';
   replyMessage +=
     assignmentDetails?.deletions?.length > 0
-      ? 'Removed ' +
+      ? (keywordsKeys && keywordsKeys['Removed']
+          ? keywordsKeys['Removed']
+          : 'Removed') +
+        ' ' +
         assignmentDetails?.deletions?.length +
-        ' organisationunits from the form ' +
+        (keywordsKeys && keywordsKeys['organisationunits from the form']
+          ? ' ' + keywordsKeys['organisationunits from the form']
+          : ' organisationunits from the form') +
+        ' ' +
         assignmentDetails?.dataSet?.name
       : '';
 
   replyMessage +=
     assignmentDetails?.deletions?.length > 0 &&
     assignmentDetails?.additions?.length > 0
-      ? ' and '
+      ? (keywordsKeys && keywordsKeys['and']
+          ? ' ' + keywordsKeys['and']
+          : ' and') + ' '
       : '';
 
   replyMessage +=
     assignmentDetails?.additions?.length > 0
-      ? 'Assigned ' +
+      ? (keywordsKeys && keywordsKeys['Assigned']
+          ? keywordsKeys['Assigned']
+          : 'Assigned') +
+        ' ' +
         assignmentDetails?.additions?.length +
-        ' organisationunits to the form ' +
+        (keywordsKeys && keywordsKeys['organisationunits to the form']
+          ? ' ' + keywordsKeys['organisationunits to the form']
+          : ' organisationunits to the form') +
+        ' ' +
         assignmentDetails?.dataSet?.name
       : '';
 
@@ -216,14 +247,21 @@ export function getDataStoreDetailsForFormRequestsByDataSet(
 }
 
 export function getDataStoreDetailsForFormRequests(
-  assignmentDetails: any
+  assignmentDetails: any,
+  keywordsKeys
 ): any {
   let action = '';
   action +=
     assignmentDetails?.deletions?.length > 0
-      ? 'Remove ' +
+      ? (keywordsKeys && keywordsKeys['Remove']
+          ? keywordsKeys['Remove']
+          : 'Remove') +
+        ' ' +
         assignmentDetails?.deletions?.length +
-        ' datasets from ' +
+        (keywordsKeys && keywordsKeys['datasets from']
+          ? keywordsKeys['datasets from']
+          : ' datasets from') +
+        '  ' +
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
         assignmentDetails?.organisationUnit?.parent?.name +
@@ -236,14 +274,23 @@ export function getDataStoreDetailsForFormRequests(
   action +=
     assignmentDetails?.deletions?.length > 0 &&
     assignmentDetails?.additions?.length > 0
-      ? ' and '
+      ? ' ' +
+        (keywordsKeys && keywordsKeys['and'] ? keywordsKeys['and'] : 'and') +
+        ' '
       : '';
 
   action +=
     assignmentDetails?.additions?.length > 0
-      ? 'Assign ' +
+      ? (keywordsKeys && keywordsKeys['Assign']
+          ? keywordsKeys['Assign']
+          : 'Assign') +
+        ' ' +
         assignmentDetails?.additions?.length +
-        ' datasets to ' +
+        ' ' +
+        (keywordsKeys && keywordsKeys['datasets to']
+          ? keywordsKeys['datasets to']
+          : 'datasets to') +
+        ' ' +
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
         assignmentDetails?.organisationUnit?.parent?.name +
@@ -256,9 +303,16 @@ export function getDataStoreDetailsForFormRequests(
   let replyMessage = '';
   replyMessage +=
     assignmentDetails?.deletions?.length > 0
-      ? 'Removed ' +
+      ? (keywordsKeys && keywordsKeys['Removed']
+          ? keywordsKeys['Removed']
+          : 'Removed') +
+        ' ' +
         assignmentDetails?.deletions?.length +
-        ' datasets from ' +
+        ' ' +
+        (keywordsKeys && keywordsKeys['datasets from']
+          ? keywordsKeys['datasets from']
+          : 'datasets from') +
+        ' ' +
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
         assignmentDetails?.organisationUnit?.parent?.name +
@@ -271,14 +325,23 @@ export function getDataStoreDetailsForFormRequests(
   replyMessage +=
     assignmentDetails?.deletions?.length > 0 &&
     assignmentDetails?.additions?.length > 0
-      ? ' and '
+      ? ' ' +
+        (keywordsKeys && keywordsKeys['and'] ? keywordsKeys['and'] : 'and') +
+        ' '
       : '';
 
   replyMessage +=
     assignmentDetails?.additions?.length > 0
-      ? 'Assigned ' +
+      ? (keywordsKeys && keywordsKeys['Assigned']
+          ? keywordsKeys['Assigned']
+          : 'Assigned') +
+        ' ' +
         assignmentDetails?.additions?.length +
-        ' datasets to ' +
+        ' ' +
+        (keywordsKeys && keywordsKeys['datasets to']
+          ? keywordsKeys['datasets to']
+          : 'datasets to') +
+        ' ' +
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
         assignmentDetails?.organisationUnit?.parent?.name +
@@ -327,7 +390,8 @@ export function getDataStoreDetailsForFormRequests(
 
 export function formulateFormAttributeMessage(
   dataSetAttributesDataInfo: any[],
-  dataSet: any
+  dataSet: any,
+  keywordsKeys: any
 ): string {
   const dataSetAttributesData =
     dataSetAttributesDataInfo?.filter(
@@ -351,10 +415,17 @@ export function formulateFormAttributeMessage(
       ?.filter((deletion) => deletion);
     return (
       (additions?.length > 0
-        ? 'Add: ' + additions?.map((addition) => addition?.name).join(',')
+        ? (keywordsKeys && keywordsKeys['Add'] ? keywordsKeys['Add'] : 'Add') +
+          ': ' +
+          additions?.map((addition) => addition?.name).join(',')
         : '') +
       (deletions?.length > 0
-        ? ' Remove: ' + deletions?.map((deletion) => deletion?.name).join(',')
+        ? ' ' +
+          (keywordsKeys && keywordsKeys['Remove']
+            ? keywordsKeys['Remove']
+            : 'Remove') +
+          ': ' +
+          deletions?.map((deletion) => deletion?.name).join(',')
         : '')
     );
   } else {

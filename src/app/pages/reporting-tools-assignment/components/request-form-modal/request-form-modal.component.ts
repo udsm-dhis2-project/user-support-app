@@ -100,8 +100,10 @@ export class RequestFormModalComponent implements OnInit {
       attachments: [],
       text: message?.message,
     };
-    const dataStorePayload =
-      getDataStoreDetailsForFormRequests(assignmentDetails);
+    const dataStorePayload = getDataStoreDetailsForFormRequests(
+      assignmentDetails,
+      this.keywordsKeys
+    );
     if (dataStorePayload) {
       const dataStoreKey = assignmentDetails?.ticketNumber + '_' + facility?.id;
       this.messagesAndDatastoreService

@@ -167,8 +167,10 @@ export class RequestFormComponent implements OnInit {
           message?.message,
       };
 
-      const dataStorePayload =
-        getDataStoreDetailsForFormRequests(assignmentDetails);
+      const dataStorePayload = getDataStoreDetailsForFormRequests(
+        assignmentDetails,
+        this.keywordsKeys
+      );
       if (dataStorePayload) {
         const data = {
           ...requestDetails?.details,
