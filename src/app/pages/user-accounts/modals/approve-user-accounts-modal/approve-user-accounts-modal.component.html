@@ -14,9 +14,14 @@
     mode="indeterminate"
     *ngIf="!params?.dataStoreInformation"
   ></mat-progress-bar>
-  <div class="h4">Accounts to approve</div>
-  <div style="max-height: 50vh; overflow: auto">
-    <table class="table table-bordered">
+  <div class="h4">Account approval</div>
+  <div style="max-height: 50vh; overflow: auto" class="mt-2">
+    <table
+      class="table table-bordered"
+      *ngIf="
+        params?.dataStoreInformation && !params?.dataStoreInformation?.type
+      "
+    >
       <thead>
         <tr>
           <th>SN</th>
@@ -105,8 +110,22 @@
         </ng-container>
       </tbody>
     </table>
+    <div
+      *ngIf="params?.dataStoreInformation && params?.dataStoreInformation?.type"
+    >
+      <div [innerHTML]="params?.dataStoreInformation?.message?.message"></div>
+    </div>
   </div>
   <div class="w-100 d-flex justify-content-end mt-2">
     <button mat-stroked-button (click)="onClose($event)">Cancel</button>
+    <button
+      *ngIf="params?.dataStoreInformation && params?.dataStoreInformation?.type"
+      class="ml-2"
+      mat-flat-button
+      color="primary"
+      (click)="onUpdateUser($event, params?.dataStoreInformation)"
+    >
+      Confirm
+    </button>
   </div>
 </div>

@@ -24,83 +24,108 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let user of params?.usersResponse?.users; let count = index"
-        >
-          <td>
-            {{ (currentPage - 1) * pageSize + count + 1 }}
-          </td>
-          <td>
-            {{ user?.name }}
-          </td>
-          <td>
-            {{ user?.userCredentials?.username }}
-          </td>
-          <td>
-            {{ user?.email }}
-          </td>
-          <td>
-            {{ user?.userCredentials?.lastLogin }}
-          </td>
-          <td>
-            {{ user?.userCredentials?.disabled ? 'Yes' : '' }}
-          </td>
-          <td>
-            <button
-              class="float-right"
-              mat-icon-button
-              [matMenuTriggerFor]="menu"
-              (click)="$event.stopPropagation()"
-            >
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
+        <ng-container *ngIf="!params?.usersResponse?.message">
+          <tr
+            *ngFor="let user of params?.usersResponse?.users; let count = index"
+          >
+            <td>
+              {{ (currentPage - 1) * pageSize + count + 1 }}
+            </td>
+            <td>
+              {{ user?.name }}
+            </td>
+            <td>
+              {{ user?.userCredentials?.username }}
+            </td>
+            <td>
+              {{ user?.email }}
+            </td>
+            <td>
+              {{ user?.userCredentials?.lastLogin }}
+            </td>
+            <td>
+              <mat-icon *ngIf="user?.userCredentials?.disabled">done</mat-icon>
+            </td>
+            <td>
               <button
-                mat-menu-item
-                [disabled]="true"
-                (click)="openUserActivateDialog()"
+                class="float-right"
+                mat-icon-button
+                [matMenuTriggerFor]="menu"
+                (click)="$event.stopPropagation()"
               >
-                <div class="d-flex align-items-center">
-                  <mat-icon inline>lock_open</mat-icon>
-                  <span>Disable/Enable </span>
-                </div>
+                <mat-icon>more_vert</mat-icon>
               </button>
-              <button
-                mat-menu-item
-                [disabled]="true"
-                (click)="openUserPassResetDialog()"
-              >
-                <div class="d-flex align-items-center">
-                  <mat-icon inline>lock_reset</mat-icon>
-                  <span>Password Reset </span>
-                </div>
-              </button>
-              <button
-                mat-menu-item
-                [disabled]="true"
-                (click)="openUserOrgunitDialog()"
-              >
-                <div class="d-flex align-items-center">
-                  <mat-icon inline>account_tree</mat-icon>
-                  <span>Update Orgunit </span>
-                </div>
-              </button>
-              <button
-                mat-menu-item
-                [disabled]="true"
-                (click)="openUserRoleDialog()"
-              >
-                <div class="d-flex align-items-center">
-                  <mat-icon inline>admin_panel_settings</mat-icon>
-                  <span>Update Userrole </span>
-                </div>
-              </button>
-            </mat-menu>
-          </td>
-        </tr>
+              <mat-menu #menu="matMenu">
+                <button
+                  [disabled]="!user?.userCredentials?.disabled"
+                  mat-menu-item
+                  (click)="openUserActivateDialog($event, user)"
+                >
+                  <div class="d-flex align-items-center">
+                    <mat-icon inline>lock</mat-icon>
+                    <span>Enable (Activate) </span>
+                  </div>
+                </button>
+                <button
+                  [disabled]="user?.userCredentials?.disabled"
+                  mat-menu-item
+                  (click)="openUserActivateDialog($event, user)"
+                >
+                  <div class="d-flex align-items-center">
+                    <mat-icon inline>lock_open</mat-icon>
+                    <span>Disable (De-activate) </span>
+                  </div>
+                </button>
+                <button
+                  mat-menu-item
+                  [disabled]="true"
+                  (click)="openUserPassResetDialog()"
+                >
+                  <div class="d-flex align-items-center">
+                    <mat-icon inline>lock_reset</mat-icon>
+                    <span>Password Reset </span>
+                  </div>
+                </button>
+                <button
+                  mat-menu-item
+                  [disabled]="true"
+                  (click)="openUserOrgunitDialog()"
+                >
+                  <div class="d-flex align-items-center">
+                    <mat-icon inline>account_tree</mat-icon>
+                    <span>Update Orgunit </span>
+                  </div>
+                </button>
+                <button
+                  mat-menu-item
+                  [disabled]="true"
+                  (click)="openUserRoleDialog()"
+                >
+                  <div class="d-flex align-items-center">
+                    <mat-icon inline>admin_panel_settings</mat-icon>
+                    <span>Update Userrole </span>
+                  </div>
+                </button>
+              </mat-menu>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="params?.usersResponse?.message">
+          <tr>
+            <td colspan="100%">
+              <div class="alert alert-danger" role="alert">
+                <b>{{ params?.usersResponse?.statusText }}: </b>
+                {{ params?.usersResponse?.message }}
+              </div>
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
-    <div class="d-flex justify-content-end mt-2">
+    <div
+      class="d-flex justify-content-end mt-2"
+      *ngIf="!params?.usersResponse?.message"
+    >
       <button
         mat-stroked-button
         [disabled]="params?.usersResponse?.pager?.page === 1"

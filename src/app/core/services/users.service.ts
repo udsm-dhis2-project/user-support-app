@@ -4,12 +4,16 @@ import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Observable, of, zip } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { FeedbackRecepientModel } from 'src/app/shared/models/users.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersDataService {
-  constructor(private httpClient: NgxDhis2HttpClientService) {}
+  constructor(
+    private httpClient: NgxDhis2HttpClientService,
+    private httpClientService: HttpClient
+  ) {}
 
   getUsersByUserGroup(
     userGroupId: string
@@ -34,7 +38,8 @@ export class UsersDataService {
       .pipe(
         map((response) => {
           return response;
-        })
+        }),
+        catchError((error) => of(error))
       );
   }
 
@@ -77,6 +82,31 @@ export class UsersDataService {
           map((response) => response),
           catchError((error) => of(error))
         );
+    } else if (data?.method === 'PATCH') {
+      return zip(
+        data?.payload
+          ? this.httpClientService.patch(
+              `../../../api/${data?.url}`,
+              data?.payload
+            )
+          : of(null),
+        this.httpClient.delete(`dataStore/dhis2-user-support/${data?.id}`),
+        data?.messageConversation
+          ? this.httpClient.post(
+              `messageConversations/${data?.messageConversation?.id}`,
+              data?.messageConversation?.approvalMessage
+            )
+          : of(null),
+        data?.messageConversation
+          ? this.httpClient.post(
+              `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
+              null
+            )
+          : this.httpClient.post(`messageConversations`, data?.messageBody)
+      ).pipe(
+        map((response) => response),
+        catchError((error) => of(error))
+      );
     } else {
       return of(null);
     }

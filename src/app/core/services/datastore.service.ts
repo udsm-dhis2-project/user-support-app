@@ -195,24 +195,26 @@ export class DataStoreDataService {
               if (configurations?.category == 'UA') {
                 return {
                   ...dataItem,
-                  searchingText: dataItem?.payload
-                    ?.map((user) =>
-                      user?.firstName +
-                        user?.surname +
-                        user?.phoneNumber +
-                        user?.email +
-                        dataItem?.ticketNumber +
-                        user?.organisationUnits?.length >
-                      0
-                        ? user?.organisationUnits
-                            ?.map((ou) => ou?.name)
-                            .join('')
-                        : '' +
-                          dataItem?.user?.organisationUnits[0]?.name +
-                          dataItem?.user?.displayName +
-                          dataItem?.user?.email
-                    )
-                    .join(','),
+                  searchingText: !dataItem?.payload?.userCredentials
+                    ? dataItem?.payload?.userCredentials
+                        ?.map((user) =>
+                          user?.firstName +
+                            user?.surname +
+                            user?.phoneNumber +
+                            user?.email +
+                            dataItem?.ticketNumber +
+                            user?.organisationUnits?.length >
+                          0
+                            ? user?.organisationUnits
+                                ?.map((ou) => ou?.name)
+                                .join('')
+                            : '' +
+                              dataItem?.user?.organisationUnits[0]?.name +
+                              dataItem?.user?.displayName +
+                              dataItem?.user?.email
+                        )
+                        .join(',')
+                    : '',
                 };
               } else {
                 return dataItem;

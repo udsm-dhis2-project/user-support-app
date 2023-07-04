@@ -14,6 +14,7 @@
     mode="indeterminate"
     *ngIf="!params?.allDataForUserSupport"
   ></mat-progress-bar>
+  <!-- {{ params?.allDataForUserSupport?.data | json }} -->
   <div class="w-100 p-3" style="overflow: auto">
     <table class="table">
       <thead class="custom-header-bg">
@@ -52,6 +53,7 @@
               </td>
               <td class="d-flext justify-content-end">
                 <button
+                  *ngIf="!dataRow?.type"
                   mat-flat-button
                   (click)="onToggleDetails($event, dataRow)"
                 >

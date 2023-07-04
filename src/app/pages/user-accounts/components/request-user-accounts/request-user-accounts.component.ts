@@ -245,7 +245,7 @@ export class RequestUserAccountsComponent implements OnInit {
 
   onSave(event: Event): void {
     event.stopPropagation();
-    console.log('formDataToStoreLocally', this.formDataToStoreLocally);
+    // console.log('formDataToStoreLocally', this.formDataToStoreLocally);
     this.dialog
       .open(ConfirmSendingAccountsRequestComponent, {
         minWidth: '30%',
@@ -352,7 +352,7 @@ export class RequestUserAccountsComponent implements OnInit {
             .subscribe((response) => {
               window.localStorage.removeItem('usersToCreate');
               this.saving = false;
-              this.openSnackBar('Successfully sent form request', 'Close');
+              this.openSnackBar('Successfully sent the request', 'Close');
               setTimeout(() => {
                 this._snackBar.dismiss();
                 this.router.navigate(['/user-accounts/list']);

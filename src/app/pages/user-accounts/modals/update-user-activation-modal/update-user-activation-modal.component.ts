@@ -13,4 +13,9 @@ export class UpdateUserActivationModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {}
+
+  onConfirm(event: Event): void {
+    event.stopPropagation();
+    this.matDialogRef.close(true);
+  }
 }

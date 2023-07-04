@@ -29,6 +29,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('DATA', this.dialogData);
     this.getRequestInformation();
   }
 
@@ -135,6 +136,42 @@ export class ApproveUserAccountsModalComponent implements OnInit {
               this.saving = false;
             }
           });
+        }
+      });
+  }
+
+  onUpdateUser(event: Event, request: any): void {
+    event.stopPropagation();
+    // console.log(request);
+    this.saving = true;
+
+    this.messageAndDataStoreService
+      .searchMessageConversationByTicketNumber(request?.ticketNumber)
+      .subscribe((response) => {
+        if (response && response != 'none') {
+          const messageConversation = response;
+          const data = {
+            id: request?.id,
+            method: request?.method,
+            url: request?.url,
+            messageConversation: {
+              ...messageConversation,
+              approvalMessage: request?.replyMessage,
+            },
+            payload: request?.payload,
+          };
+          // console.log('data', data);
+          this.usersDataService.approveChanges(data).subscribe((response) => {
+            if (response) {
+              this.getRequestInformation();
+              this.saving = false;
+              setTimeout(() => {
+                this.dialogRef.close(true);
+              });
+            }
+          });
+        } else {
+          // Logic to first create approval message
         }
       });
   }

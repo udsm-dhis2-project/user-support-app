@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { UsersDataService } from 'src/app/core/services/users.service';
@@ -7,6 +7,8 @@ import { UpdateUserOrgunitModalComponent } from '../../modals/update-user-orguni
 import { UpdateUserPasswordModalComponent } from '../../modals/update-user-password-modal/update-user-password-modal.component';
 import { UpdateUserRoleModalComponent } from '../../modals/update-user-role-modal/update-user-role-modal.component';
 import { UploadUsersModalComponent } from '../../modals/upload-users-modal/upload-users-modal.component';
+import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-users-list',
@@ -18,9 +20,14 @@ export class UsersListComponent implements OnInit {
   pageSize: number = 10;
   currentPage: number = 1;
   searchingText: string;
+  @Input() currentUser: any;
+  @Input() systemConfigs: any;
+  saving: boolean = false;
   constructor(
     private usersDataService: UsersDataService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private messageAndDataStoreService: MessagesAndDatastoreService,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -28,6 +35,10 @@ export class UsersListComponent implements OnInit {
       this.pageSize,
       this.currentPage
     );
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
   }
 
   getUsers(event: Event, pager: any, action: string): void {
@@ -52,19 +63,107 @@ export class UsersListComponent implements OnInit {
   openUploadingPage(event: Event): void {
     event.stopPropagation();
     this.dialog.open(UploadUsersModalComponent, {
-      width: '50%',
+      minWidth: '30%',
     });
   }
 
-  openUserActivateDialog() {
-    this.dialog.open(UpdateUserActivationModalComponent, {
-      width: '50%',
-    });
+  openUserActivateDialog(event: Event, user: any): void {
+    this.dialog
+      .open(UpdateUserActivationModalComponent, {
+        minWidth: '30%',
+        data: {
+          user,
+          header: 'Confirming',
+          message: `Do you want to ${
+            user?.userCredentials?.disabled ? ' activate ' : ' deactivate'
+          } ${user?.name} (${user?.userCredentials?.username})`,
+        },
+      })
+      .afterClosed()
+      .subscribe((update?: boolean) => {
+        if (update) {
+          this.saving = true;
+          // Clear local storage
+          // Send data to datastore and messaging after confirm
+          const dataStoreKey =
+            'UA' +
+            Date.now() +
+            '_' +
+            this.currentUser?.organisationUnits[0]?.id;
+          // Check potentialUserNames first
+          const dataForMessageAndDataStore = {
+            id: dataStoreKey,
+            ticketNumber: 'UA' + Date.now().toString(),
+            action: `Respond to ${
+              user?.userCredentials?.disabled ? 'activation ' : 'deactivation '
+            } of ${user?.name} account requested by ${
+              this.currentUser?.displayName
+            }`,
+            message: {
+              message: `The following account was requested for ${
+                user?.userCredentials?.disabled ? ' activation' : 'deactivation'
+              }: \n\n  Username: ${user?.userCredentials?.username} \n Names: ${
+                user?.name
+              } \n Email: ${user?.email ? user?.email : ''}`,
+              subject: 'UA' + Date.now().toString() + '- MAOMBI YA ACCOUNT',
+            },
+            replyMessage: `Account ${user?.userCredentials?.username} for ${
+              user?.name
+            } bas been ${
+              user?.userCredentials?.disabled ? 'activated' : 'de-activated'
+            }`,
+            payload: {
+              userCredentials: {
+                disabled: user?.userCredentials?.disabled ? false : true,
+              },
+            },
+            url: 'users/' + user?.id,
+            type: user?.userCredentials?.disabled ? 'activate' : 'deactivate',
+            method: 'PATCH',
+            user: this.currentUser,
+          };
+
+          const messageData = {
+            subject: dataForMessageAndDataStore?.message?.subject,
+            messageType: 'TICKET',
+            users: [],
+            userGroups: [{ id: this.systemConfigs?.feedbackRecipients?.id }],
+            organisationUnits: [],
+            attachments: [],
+            text: dataForMessageAndDataStore?.message?.message,
+          };
+
+          this.messageAndDataStoreService
+            .createMessageAndUpdateDataStore(messageData, {
+              id: dataStoreKey,
+              user: {
+                id: this.currentUser?.id,
+                displayName: this.currentUser?.displayName,
+                userName: this.currentUser?.userCredentials?.username,
+                jobTitle: this.currentUser?.jobTitle,
+                email: this.currentUser?.email,
+                organisationUnits: this.currentUser?.organisationUnits,
+                phoneNumber: this.currentUser?.phoneNumber,
+              },
+              message: dataForMessageAndDataStore?.message,
+              ...dataForMessageAndDataStore,
+            })
+            .subscribe((response) => {
+              window.localStorage.removeItem('usersToCreate');
+              this.saving = false;
+              this.openSnackBar('Successfully sent the request', 'Close');
+              setTimeout(() => {
+                this._snackBar.dismiss();
+                // this.router.navigate(['/user-accounts/list']);
+              }, 2000);
+            });
+        }
+      });
   }
 
   openUserPassResetDialog() {
     this.dialog.open(UpdateUserPasswordModalComponent, {
-      width: '50%',
+      minWidth: '50%',
     });
   }
 
