@@ -14,8 +14,8 @@
     mode="indeterminate"
     *ngIf="!params?.allDataForUserSupport"
   ></mat-progress-bar>
-  <div class="p-2">
-    <table class="table mat-elevation-z1 p-2">
+  <div class="w-100 p-3" style="overflow: auto">
+    <table class="table">
       <thead class="custom-header-bg">
         <tr>
           <th style="width: 15px">SN</th>
@@ -29,14 +29,14 @@
           *ngIf="
             (
               params?.allDataForUserSupport?.data
-              | FilterFormRequests: 'status':'REJECTED':currentUser?.id
+              | FilterFormRequests : 'status' : 'REJECTED' : currentUser?.id
             )?.length > 0
           "
         >
           <ng-container
             *ngFor="
               let dataRow of params?.allDataForUserSupport?.data
-                | FilterFormRequests: 'status':'REJECTED':currentUser?.id;
+                | FilterFormRequests : 'status' : 'REJECTED' : currentUser?.id;
               let count = index
             "
           >
@@ -143,7 +143,7 @@
           *ngIf="
             (
               params?.allDataForUserSupport?.data
-              | FilterFormRequests: 'status':'REJECTED':currentUser?.id
+              | FilterFormRequests : 'status' : 'REJECTED' : currentUser?.id
             )?.length == 0
           "
         >

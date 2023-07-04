@@ -1,0 +1,18 @@
+<h2 mat-dialog-title color="primary">{{ data?.header }}</h2>
+<mat-dialog-content class="mat-typography">
+  <p>
+    {{ data?.message }}
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button
+    mat-flat-button
+    class="ml-2"
+    color="primary"
+    [mat-dialog-close]="true"
+    (click)="onConfirm($event)"
+  >
+    Confirm
+  </button>
+</mat-dialog-actions>

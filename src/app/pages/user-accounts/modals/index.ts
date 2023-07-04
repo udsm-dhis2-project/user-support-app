@@ -1,4 +1,5 @@
 import { ApproveUserAccountsModalComponent } from './approve-user-accounts-modal/approve-user-accounts-modal.component';
+import { ConfirmSendingAccountsRequestComponent } from './confirm-sending-accounts-request/confirm-sending-accounts-request.component';
 import { UpdateUserActivationModalComponent } from './update-user-activation-modal/update-user-activation-modal.component';
 import { UpdateUserOrgunitModalComponent } from './update-user-orgunit-modal/update-user-orgunit-modal.component';
 import { UpdateUserPasswordModalComponent } from './update-user-password-modal/update-user-password-modal.component';
@@ -12,4 +13,5 @@ export const accountsModals: any[] = [
   UpdateUserPasswordModalComponent,
   UpdateUserActivationModalComponent,
   UpdateUserRoleModalComponent,
+  ConfirmSendingAccountsRequestComponent,
 ];

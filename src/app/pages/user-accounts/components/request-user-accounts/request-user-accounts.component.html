@@ -176,9 +176,7 @@
       </button>
       <button
         *ngIf="!readyToSave"
-        [disabled]="
-          formDataToStoreLocally?.length === 0 || formData['firstName']
-        "
+        [disabled]="formDataToStoreLocally?.length === 0 || formData?.firstName"
         mat-flat-button
         color="primary"
         class="ml-2"
@@ -201,10 +199,10 @@
         mat-flat-button
         color="primary"
         [disabled]="!readyToSave"
-        (click)="onSave($event, shouldConfirm)"
+        (click)="onSave($event)"
         class="ml-2"
       >
-        {{ shouldConfirm ? 'Confirm' : 'Send' }}
+        Send
       </button>
     </div>
   </div>

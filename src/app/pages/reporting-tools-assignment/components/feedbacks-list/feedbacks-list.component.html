@@ -3,6 +3,8 @@
 >
   <div class="h5 feedback-header">User feedback</div>
   <div
+    class="w-100"
+    style="overflow: auto"
     *ngIf="
       params?.allDataForUserSupport &&
       params?.allDataForUserSupport?.data?.length > 0
@@ -21,7 +23,7 @@
         <ng-container
           *ngFor="
             let dataRow of params?.allDataForUserSupport?.data
-              | FilterFormRequests: 'status':'REJECTED';
+              | FilterFormRequests : 'status' : 'REJECTED';
             let count = index
           "
         >

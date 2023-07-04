@@ -10,6 +10,8 @@ import { FormValue } from 'src/app/shared/modules/form/models/form-value.model';
 import { TextArea } from 'src/app/shared/modules/form/models/text-area.model';
 import { Textbox } from 'src/app/shared/modules/form/models/text-box.model';
 import { removeDuplicates } from '../../../../shared/helpers/util.helper';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmSendingAccountsRequestComponent } from '../../modals/confirm-sending-accounts-request/confirm-sending-accounts-request.component';
 
 @Component({
   selector: 'app-request-user-accounts',
@@ -75,7 +77,8 @@ export class RequestUserAccountsComponent implements OnInit {
     private dataStoreService: DataStoreDataService,
     private messageAndDataStoreService: MessagesAndDatastoreService,
     private _snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -240,110 +243,123 @@ export class RequestUserAccountsComponent implements OnInit {
     this.createAccessControlFields();
   }
 
-  onSave(event: Event, confirmed?: boolean): void {
+  onSave(event: Event): void {
     event.stopPropagation();
-    if (confirmed) {
-      this.saving = true;
-      this.shouldConfirm = false;
-      this.readyToSave = false;
-      // Clear local storage
-      // Send data to datastore and messaging after confirm
-      const dataStoreKey =
-        'UA' + Date.now() + '_' + this.currentUser?.organisationUnits[0]?.id;
-      // Check potentialUserNames first
-      const dataForMessageAndDataStore = {
-        id: dataStoreKey,
-        ticketNumber: 'UA' + Date.now().toString(),
-        action: `Respond to creation of ${this.formDataToStoreLocally?.length} accounts as requested by ${this.currentUser?.displayName}`,
-        message: {
-          message: `The following accounts were requested accordingly: \n\n ${this.formDataToStoreLocally
-            ?.map((data, index) => {
-              return (
-                (index + 1).toString() +
-                '. ' +
-                'Names: <b>' +
-                data?.firstName +
-                ' ' +
-                data?.lastName +
-                ' </b>' +
-                ' Email: ' +
-                (data?.email ? data?.email : ' - ') +
-                ' Phone number :' +
-                data?.phoneNumber +
-                ' Entry access level ->  <b>' +
-                data?.entryOrgUnits?.map((ou) => ou?.name).join(', ') +
-                '</b>' +
-                ' and Report access level -> <b>' +
-                data?.reportOrgUnits?.map((ou) => ou?.name).join(', ') +
-                '</b>'
-              );
-            })
-            .join('\n')} `,
-          subject: 'UA' + Date.now().toString() + '- MAOMBI YA ACCOUNT',
+    console.log('formDataToStoreLocally', this.formDataToStoreLocally);
+    this.dialog
+      .open(ConfirmSendingAccountsRequestComponent, {
+        minWidth: '30%',
+        data: {
+          header: 'Confirming',
+          message: 'You are about to send accounts creation request',
         },
-        replyMessage: 'to be constructed',
-        payload: this.formDataToStoreLocally?.map((data, index) => {
-          return {
-            userCredentials: {
-              cogsDimensionConstraints: [],
-              catDimensionConstraints: [],
-              username: '',
-              password: this.configurations?.usersSettings?.defaultPassword,
-              userRoles: data?.userRoles,
+      })
+      .afterClosed()
+      .subscribe((confirmed?: boolean) => {
+        if (confirmed) {
+          this.saving = true;
+          this.shouldConfirm = false;
+          this.readyToSave = false;
+          // Clear local storage
+          // Send data to datastore and messaging after confirm
+          const dataStoreKey =
+            'UA' +
+            Date.now() +
+            '_' +
+            this.currentUser?.organisationUnits[0]?.id;
+          // Check potentialUserNames first
+          const dataForMessageAndDataStore = {
+            id: dataStoreKey,
+            ticketNumber: 'UA' + Date.now().toString(),
+            action: `Respond to creation of ${this.formDataToStoreLocally?.length} accounts as requested by ${this.currentUser?.displayName}`,
+            message: {
+              message: `The following accounts were requested accordingly: \n\n ${this.formDataToStoreLocally
+                ?.map((data, index) => {
+                  return (
+                    (index + 1).toString() +
+                    '. ' +
+                    'Names: <b>' +
+                    data?.firstName +
+                    ' ' +
+                    data?.lastName +
+                    ' </b>' +
+                    ' Email: ' +
+                    (data?.email ? data?.email : ' - ') +
+                    ' Phone number :' +
+                    data?.phoneNumber +
+                    ' Entry access level ->  <b>' +
+                    data?.entryOrgUnits?.map((ou) => ou?.name).join(', ') +
+                    '</b>' +
+                    ' and Report access level -> <b>' +
+                    data?.reportOrgUnits?.map((ou) => ou?.name).join(', ') +
+                    '</b>'
+                  );
+                })
+                .join('\n')} `,
+              subject: 'UA' + Date.now().toString() + '- MAOMBI YA ACCOUNT',
             },
-            surname: data?.lastName.trim(),
-            firstName: data?.firstName.trim(),
-            email: data?.email.trim(),
-            phoneNumber: data?.phoneNumber.trim(),
-            organisationUnits: data?.entryOrgUnits,
-            dataViewOrganisationUnits: data?.reportOrgUnits,
-            userGroups: data?.userGroups,
-            attributeValues: [],
-            referenceId: data?.phoneNumber.toString() + (index + 1),
+            replyMessage: 'to be constructed',
+            payload: this.formDataToStoreLocally?.map((data, index) => {
+              return {
+                userCredentials: {
+                  cogsDimensionConstraints: [],
+                  catDimensionConstraints: [],
+                  username: '',
+                  password: this.configurations?.usersSettings?.defaultPassword,
+                  userRoles: data?.userRoles,
+                },
+                surname: data?.lastName.trim(),
+                firstName: data?.firstName.trim(),
+                email: data?.email.trim(),
+                phoneNumber: data?.phoneNumber.trim(),
+                organisationUnits: data?.entryOrgUnits,
+                dataViewOrganisationUnits: data?.reportOrgUnits,
+                userGroups: data?.userGroups,
+                attributeValues: [],
+                referenceId: data?.phoneNumber.toString() + (index + 1),
+              };
+            }),
+            url: 'users',
+            method: 'POST',
+            user: this.currentUser,
           };
-        }),
-        url: 'users',
-        method: 'POST',
-        user: this.currentUser,
-      };
 
-      const messageData = {
-        subject: dataForMessageAndDataStore?.message?.subject,
-        messageType: 'TICKET',
-        users: [],
-        userGroups: [{ id: this.systemConfigs?.feedbackRecipients?.id }],
-        organisationUnits: [],
-        attachments: [],
-        text: dataForMessageAndDataStore?.message?.message,
-      };
+          const messageData = {
+            subject: dataForMessageAndDataStore?.message?.subject,
+            messageType: 'TICKET',
+            users: [],
+            userGroups: [{ id: this.systemConfigs?.feedbackRecipients?.id }],
+            organisationUnits: [],
+            attachments: [],
+            text: dataForMessageAndDataStore?.message?.message,
+          };
 
-      this.messageAndDataStoreService
-        .createMessageAndUpdateDataStore(messageData, {
-          id: dataStoreKey,
-          user: {
-            id: this.currentUser?.id,
-            displayName: this.currentUser?.displayName,
-            userName: this.currentUser?.userCredentials?.username,
-            jobTitle: this.currentUser?.jobTitle,
-            email: this.currentUser?.email,
-            organisationUnits: this.currentUser?.organisationUnits,
-            phoneNumber: this.currentUser?.phoneNumber,
-          },
-          message: dataForMessageAndDataStore?.message,
-          ...dataForMessageAndDataStore,
-        })
-        .subscribe((response) => {
-          window.localStorage.removeItem('usersToCreate');
-          this.saving = false;
-          this.openSnackBar('Successfully sent form request', 'Close');
-          setTimeout(() => {
-            this._snackBar.dismiss();
-            this.router.navigate(['/user-accounts/list']);
-          }, 2000);
-        });
-    } else {
-      this.shouldConfirm = true;
-    }
+          this.messageAndDataStoreService
+            .createMessageAndUpdateDataStore(messageData, {
+              id: dataStoreKey,
+              user: {
+                id: this.currentUser?.id,
+                displayName: this.currentUser?.displayName,
+                userName: this.currentUser?.userCredentials?.username,
+                jobTitle: this.currentUser?.jobTitle,
+                email: this.currentUser?.email,
+                organisationUnits: this.currentUser?.organisationUnits,
+                phoneNumber: this.currentUser?.phoneNumber,
+              },
+              message: dataForMessageAndDataStore?.message,
+              ...dataForMessageAndDataStore,
+            })
+            .subscribe((response) => {
+              window.localStorage.removeItem('usersToCreate');
+              this.saving = false;
+              this.openSnackBar('Successfully sent form request', 'Close');
+              setTimeout(() => {
+                this._snackBar.dismiss();
+                this.router.navigate(['/user-accounts/list']);
+              }, 2000);
+            });
+        }
+      });
   }
 
   backtoRequest(event: Event): void {
