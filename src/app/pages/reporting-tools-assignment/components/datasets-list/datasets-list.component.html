@@ -59,7 +59,10 @@
                       }"
                       class="action-btns"
                       [title]="
-                        dataSet?.hasPendingRequest ? 'Waiting for response' : ''
+                        (dataSet?.hasPendingRequest
+                          ? 'Waiting for response'
+                          : ''
+                        ) | translate
                       "
                     >
                       {{

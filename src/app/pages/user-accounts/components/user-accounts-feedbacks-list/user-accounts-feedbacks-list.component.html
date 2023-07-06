@@ -65,7 +65,8 @@
                     (click)="toggleViewMore($event, dataRow)"
                   >
                     {{
-                      moreOpenedDetails[dataRow?.id] ? 'Back' : 'View Details'
+                      (moreOpenedDetails[dataRow?.id] ? 'Back' : 'View Details')
+                        | translate
                     }}
                   </button>
                 </td>

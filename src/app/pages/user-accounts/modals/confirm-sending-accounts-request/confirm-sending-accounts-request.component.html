@@ -1,11 +1,13 @@
-<h2 mat-dialog-title color="primary">{{ data?.header }}</h2>
+<h2 mat-dialog-title color="primary">{{ data?.header | translate }}</h2>
 <mat-dialog-content class="mat-typography">
   <p>
-    {{ data?.message }}
+    {{ data?.message | translate }}
   </p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button mat-stroked-button mat-dialog-close>
+    {{ 'Cancel' | translate }}
+  </button>
   <button
     mat-flat-button
     class="ml-2"
@@ -13,6 +15,6 @@
     [mat-dialog-close]="true"
     (click)="onConfirm($event)"
   >
-    Confirm
+    {{ 'Confirm' | translate }}
   </button>
 </mat-dialog-actions>

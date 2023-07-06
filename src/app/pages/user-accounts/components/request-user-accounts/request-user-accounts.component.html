@@ -43,7 +43,7 @@
 </div> -->
 
 <div class="new-user-request-container">
-  <div class="d-flex justify-contend-left">
+  <!-- <div class="d-flex justify-contend-left">
     <button
       mat-icon-button
       [routerLink]="'/user-accounts/list'"
@@ -52,7 +52,18 @@
       <mat-icon>arrow_back</mat-icon>
     </button>
     <div class="h5 ml-2 mt-2">{{ 'User Account Request' | translate }}</div>
+  </div> -->
+
+  <div class="col-12 d-flex align-items-center mb-3">
+    <button mat-flat-button color="primary" routerLink="/user-accounts/list">
+      <mat-icon>arrow_back</mat-icon>
+      <span class="ml-2">{{ 'Back to Request List' | translate }}</span>
+    </button>
+    <div class="ml-3 h5 report-title">
+      {{ 'User Account Request' | translate }}
+    </div>
   </div>
+
   <div class="loading-overlay" *ngIf="saving">
     <div class="text-center">
       <div>{{ 'Sending request' | translate }}...</div>
