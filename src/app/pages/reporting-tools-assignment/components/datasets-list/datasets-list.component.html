@@ -10,9 +10,9 @@
     <table class="table mat-elevation-z1">
       <thead class="custom-header-bg">
         <tr>
-          <th style="width: 20px">SN</th>
-          <th>Dataset</th>
-          <th>Reporting Facilities</th>
+          <th style="width: 20px">{{ 'SN' | translate }}</th>
+          <th>{{ 'Dataset' | translate }}</th>
+          <th>{{ 'Reporting Facilities' | translate }}</th>
           <th></th>
         </tr>
       </thead>
@@ -62,7 +62,10 @@
                         dataSet?.hasPendingRequest ? 'Waiting for response' : ''
                       "
                     >
-                      {{ dataSet?.hasPendingRequest ? 'View' : 'Request' }}
+                      {{
+                        (dataSet?.hasPendingRequest ? 'View' : 'Request')
+                          | translate
+                      }}
                     </button>
                   </div>
                   <div style="width: 60%">
@@ -73,7 +76,7 @@
                         (click)="onCancelAll($event, dataSet, false)"
                         *ngIf="dataSet?.hasPendingRequest"
                       >
-                        Cancel
+                        {{ 'Cancel' | translate }}
                       </button>
                     </div>
                     <!-- <div class="w-100" *ngIf="dataRow?.hasPendingRequest">
@@ -89,15 +92,17 @@
                     >
                       <div class="w-100">
                         <mat-form-field class="w-100">
-                          <mat-label
-                            >Provide reason for cancelling form
-                            request</mat-label
-                          >
+                          <mat-label>{{
+                            'Provide reason for cancelling form request'
+                              | translate
+                          }}</mat-label>
                           <textarea
                             [(ngModel)]="reasonForCancellingRequest"
                             required
                             matInput
-                            placeholder="E.g Nilituma kimakosa"
+                            placeholder="{{ 'E.g' | translate }} {{
+                              'Nilituma kimakosa' | translate
+                            }}"
                           ></textarea>
                         </mat-form-field>
                       </div>
@@ -107,7 +112,7 @@
                           (click)="onUnConfirm($event)"
                           class="ml-2 btn-danger"
                         >
-                          Cancel
+                          {{ 'Cancel' | translate }}
                         </button>
                         <button
                           mat-button
@@ -115,7 +120,7 @@
                           class="ml-2 btn-success"
                           (click)="onCancelAll($event, dataRow, dataRow, true)"
                         >
-                          Confirm
+                          {{ 'Confirm' | translate }}
                         </button>
                       </div>
                     </div>
@@ -137,11 +142,12 @@
     <div class="pagination d-flex justify-content-end">
       <div style="width: 150" class="mt-2">
         <span>
-          <span>{{ params?.dataSetsDetails?.pager?.pageSize }}</span> of
+          <span>{{ params?.dataSetsDetails?.pager?.pageSize }}</span>
+          {{ 'of' | translate }}
           <span>
             {{ params?.dataSetsDetails?.pager?.total }}
           </span>
-          datasets
+          {{ 'datasets' | translate }}
         </span>
       </div>
       <select
@@ -157,7 +163,7 @@
       </select>
       <button
         mat-button
-        title="Previous"
+        title="{{ 'Previous' | translate }}"
         class="pagination-buttons ml-2"
         [disabled]="params?.dataSetsDetails?.pager?.page == 1"
         (click)="
@@ -172,7 +178,7 @@
       </button>
       <button
         mat-button
-        title="Next"
+        title="{{ 'Next' | translate }}"
         [disabled]="params?.dataSetsDetails?.pager?.total / pageSize < page"
         class="pagination-buttons ml-2"
         (click)="getDataSets($event, 'next', params?.dataSetsDetails?.pager)"

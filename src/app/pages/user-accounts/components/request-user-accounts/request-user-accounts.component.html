@@ -51,11 +51,11 @@
     >
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <div class="h5 ml-2 mt-2">User Account Request</div>
+    <div class="h5 ml-2 mt-2">{{ 'User Account Request' | translate }}</div>
   </div>
   <div class="loading-overlay" *ngIf="saving">
     <div class="text-center">
-      <div>Sending request...</div>
+      <div>{{ 'Sending request' | translate }}...</div>
       <div class="mt-3 d-flex justify-content-center w-100">
         <mat-spinner diameter="50" strokeWidth="2"></mat-spinner>
       </div>
@@ -65,7 +65,7 @@
     <div class="row" *ngIf="!readyToSave">
       <div class="col-md-4 col-sx-12">
         <div>
-          <div class="h5">Demographic</div>
+          <div class="h5">{{ 'Demographic' | translate }}</div>
           <app-form
             *ngIf="formFields"
             [fields]="formFields"
@@ -77,7 +77,7 @@
         <div class="row">
           <div class="col-md-6 col-sx-12">
             <div>
-              <div class="h5">Data entry</div>
+              <div class="h5">{{ 'Data entry' | translate }}</div>
               <ngx-dhis2-org-unit-filter
                 *ngIf="showOrgUnit"
                 [orgUnitFilterConfig]="orgUnitFilterConfigForDataEntry"
@@ -89,7 +89,7 @@
           </div>
           <div class="col-md-6 col-sx-12">
             <div>
-              <div class="h5">Report</div>
+              <div class="h5">{{ 'Report' | translate }}</div>
               <ngx-dhis2-org-unit-filter
                 *ngIf="showOrgUnit"
                 [orgUnitFilterConfig]="orgUnitFilterConfigForReport"
@@ -102,7 +102,7 @@
         </div>
         <div class="row">
           <div class="col-12 mt-4">
-            <div class="h5">Access</div>
+            <div class="h5">{{ 'Access' | translate }}</div>
             <app-form
               [fields]="accessFormFields"
               [isFormHorizontal]="true"
@@ -116,12 +116,12 @@
       <table class="table">
         <thead>
           <tr>
-            <th>SN</th>
-            <th>First name</th>
+            <th>{{ 'SN' | translate }}</th>
+            <th>{{ 'First name' | translate }}</th>
             <!-- <th>Middle name</th> -->
-            <th>Last name</th>
-            <th>Email</th>
-            <th>Phone number</th>
+            <th>{{ 'Last name' | translate }}</th>
+            <th>{{ 'Email' | translate }}</th>
+            <th>{{ 'Phone number' | translate }}</th>
           </tr>
         </thead>
         <tbody>
@@ -148,7 +148,9 @@
         </tbody>
       </table>
     </div>
-    <p class="text-right" *ngIf="shouldConfirm">Please confirm</p>
+    <p class="text-right" *ngIf="shouldConfirm">
+      {{ 'Please confirm' | translate }}
+    </p>
     <div class="row d-flex justify-content-end mt-2">
       <!-- [disabled]="!isDemographicFormValid || !isAccessControlFormValid" -->
       <!-- <button
@@ -172,7 +174,7 @@
         class="ml-2"
         (click)="onNext($event)"
       >
-        Next
+        {{ 'Next' | translate }}
       </button>
       <button
         *ngIf="!readyToSave"
@@ -182,7 +184,7 @@
         class="ml-2"
         (click)="onFinish($event)"
       >
-        Finish request
+        {{ 'Finish request' | translate }}
       </button>
       <button
         *ngIf="readyToSave"
@@ -190,11 +192,13 @@
         color="primary"
         (click)="backtoRequest($event)"
       >
-        Back to request
+        {{ 'Back to request' | translate }}
       </button>
     </div>
     <div class="row d-flex justify-content-end mt-2">
-      <button mat-stroked-button (click)="onClear($event)">Clear</button>
+      <button mat-stroked-button (click)="onClear($event)">
+        {{ 'Clear' | translate }}
+      </button>
       <button
         mat-flat-button
         color="primary"
@@ -202,7 +206,7 @@
         (click)="onSave($event)"
         class="ml-2"
       >
-        Send
+        {{ 'Send' | translate }}
       </button>
     </div>
   </div>

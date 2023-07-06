@@ -57,11 +57,11 @@
         class="text-warning mt-2"
         *ngIf="reasonForRejection && reasonForRejection.length < 8"
       >
-        Not a valid reason
+        {{ 'Not a valid reason' | translate }}
       </p>
       <div mat-dialog-actions class="d-flex justify-content-end">
         <button mat-button (click)="onClose($event)">
-          {{ successfullyApproved ? 'Done' : 'Close' }}
+          {{ (successfullyApproved ? 'Done' : 'Close') | translate }}
         </button>
         <button
           mat-button
@@ -80,7 +80,7 @@
             )
           "
         >
-          Confirm
+          {{ 'Confirm' | translate }}
         </button>
       </div>
     </div>
@@ -91,16 +91,16 @@
   class="w-100 success-message"
   *ngIf="savedData && !missingKey && dialogData?.actionType === 'APPROVE'"
 >
-  <p>Successfully updated!</p>
+  <p>{{ 'Successfully updated' | translate }}!</p>
 </div>
 
 <div
   class="w-100 success-message"
   *ngIf="savedData && !missingKey && dialogData?.actionType === 'REJECTED'"
 >
-  <p>Successfully sent!</p>
+  <p>{{ 'Successfully sent' | translate }}!</p>
 </div>
 
 <div *ngIf="missingKey">
-  <p>Already attended!</p>
+  <p>{{ 'Already attended' | translate }}!</p>
 </div>

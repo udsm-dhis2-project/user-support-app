@@ -20,6 +20,8 @@ import { getSystemConfigs } from './store/selectors/system-configurations.select
 export class AppComponent implements OnInit {
   userSupportNameSpaceResponse$: Observable<any>;
   systemSettings$: Observable<any>;
+  ready: boolean = false;
+
   constructor(
     private translate: TranslateService,
     private titleService: Title,
@@ -43,9 +45,19 @@ export class AppComponent implements OnInit {
     }
   }
 
+  onChangeLanguage(event: Event): void {
+    const locale = (event?.target as HTMLInputElement)?.value;
+    this.ready = false;
+    setTimeout(() => {
+      this.translate.use(locale);
+      this.ready = true;
+    }, 50);
+  }
+
   currentUser$: Observable<any>;
 
   ngOnInit(): void {
+    this.ready = true;
     this.currentUser$ = this.store.select(getCurrentUser);
     // Check if the key dhis2-user-support exists on datastore, otherwise create withd default configurations
     this.userSupportNameSpaceResponse$ =

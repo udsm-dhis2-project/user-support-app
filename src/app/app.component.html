@@ -10,18 +10,21 @@
   >
     <div class="container-fluid">
       <div class="row">
-        <!-- <div
-          style="height: 10px; z-index: 1000; background-color: #fff"
-          class="w-100 d-flex align-items-center mb-2"
-        ></div> -->
-        <div class="w-100">
+        <div class="col-12 d-flex justify-content-end">
+          <select (change)="onChangeLanguage($event)">
+            <option value="en">En</option>
+            <option value="fr">France</option>
+            <option value="rw">Rwanda</option>
+          </select>
+        </div>
+        <div class="w-100" *ngIf="ready">
           <mat-drawer-container class="user-accounts-container w-100">
             <mat-drawer mode="side" class="side-navigation-menu" opened>
               <div class="menu-list-item">
                 <mat-list role="list" class="meu-list">
                   <!-- TODO: Add loader before display found user display name -->
                   <mat-list-item role="listitem" class="welcome-user-item"
-                    >Welcome
+                    >{{ 'Welcome' | translate }}
                     <b class="ml-1 current-user-name">{{
                       params?.currentUser?.displayName
                     }}</b></mat-list-item
@@ -47,7 +50,7 @@
                     class="list-item"
                     routerLinkActive="active-menu-item"
                     [routerLink]="'reporting-tools/request'"
-                    >Form request</mat-list-item
+                    >{{ 'Form request' | translate }}</mat-list-item
                   >
                   <!-- <mat-list-item
                     role="listitem"
@@ -69,9 +72,9 @@
                     class="list-item"
                     routerLinkActive="active-menu-item"
                     [routerLink]="'user-accounts'"
-                    >User accounts</mat-list-item
+                    >{{ 'User accounts' | translate }}</mat-list-item
                   >
-                  <mat-list-item
+                  <!-- <mat-list-item
                     *ngIf="
                       params?.currentUser?.userGroupsKeyed[
                         params?.systemSettings?.feedbackRecipients?.id
@@ -81,8 +84,8 @@
                     class="list-item"
                     routerLinkActive="active-menu-item"
                     [routerLink]="'statistics'"
-                    >Statistics</mat-list-item
-                  >
+                    >{{ 'Statistics' | translate }}</mat-list-item
+                  > -->
                 </mat-list>
               </div>
             </mat-drawer>
@@ -94,15 +97,15 @@
                     class="list-item"
                     routerLinkActive="active-menu-item"
                     [routerLink]="'reporting-tools/request'"
-                    >Form request</mat-list-item
+                    >{{ 'Form request' | translate }}</mat-list-item
                   >
-                  <mat-list-item
+                  <!-- <mat-list-item
                     role="listitem"
                     class="list-item"
                     routerLinkActive="active-menu-item"
                     [routerLink]="'statistics'"
-                    >Statistics</mat-list-item
-                  >
+                    >{{ 'Statistics' | translate }}</mat-list-item
+                  > -->
                   <!-- <mat-list-item
                     role="listitem"
                     class="list-item"
@@ -117,7 +120,7 @@
                     class="list-item"
                     [disabled]="true"
                     [routerLink]="'user-accounts'"
-                    >User account</mat-list-item
+                    >{{ 'User account' | translate }}</mat-list-item
                   >
                 </mat-list>
                 <div class="contents-container">

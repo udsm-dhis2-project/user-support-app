@@ -8,6 +8,7 @@ import { sharedComponents, sharedEntryComponents } from './components';
 import { FormModule } from './modules/form/form.module';
 import { SearchItemPipe } from './pipes/search-item.pipe';
 import { FilterFormRequestsPipe } from './pipes/filter-requests.pipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { FilterFormRequestsPipe } from './pipes/filter-requests.pipe';
     NgxDhis2OrgUnitFilterModule,
     NgxDhis2DataFilterModule,
     NgxDhis2PeriodFilterModule,
+    TranslateModule,
   ],
   exports: [
     CommonModule,
@@ -27,6 +29,7 @@ import { FilterFormRequestsPipe } from './pipes/filter-requests.pipe';
     NgxDhis2PeriodFilterModule,
     SearchItemPipe,
     FilterFormRequestsPipe,
+    TranslateModule,
   ],
   declarations: [
     ...sharedComponents,

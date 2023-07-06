@@ -1,7 +1,7 @@
 <div>
   <div class="w-100" *ngIf="isFeedbackRecepient">
     <mat-tab-group>
-      <mat-tab label="Requests">
+      <mat-tab label="{{ 'Requests' | translate }}">
         <ng-template matTabContent>
           <app-user-account-requests-home
             [configurations]="configurations"
@@ -10,11 +10,11 @@
           ></app-user-account-requests-home>
         </ng-template>
       </mat-tab>
-      <mat-tab label="Requesting">
+      <mat-tab label="{{ 'Requesting' | translate }}">
         <ng-template matTabContent>
           <div class="w-100">
             <mat-tab-group>
-              <mat-tab label="Pending requests">
+              <mat-tab label="{{ 'Pending requests' | translate }}">
                 <ng-template matTabContent>
                   <app-requests-list-dashboard
                     *ngIf="
@@ -26,7 +26,7 @@
                   ></app-requests-list-dashboard>
                 </ng-template>
               </mat-tab>
-              <mat-tab label="Users">
+              <mat-tab label="{{ 'Users' | translate }}">
                 <ng-template matTabContent>
                   <app-users-list
                     [systemConfigs]="systemConfigs"
@@ -34,7 +34,10 @@
                   ></app-users-list>
                 </ng-template>
               </mat-tab>
-              <mat-tab *ngIf="isSecondTier" label="Requests">
+              <mat-tab
+                *ngIf="isSecondTier"
+                label="{{ 'Requests' | translate }}"
+              >
                 <ng-template matTabContent>
                   <app-user-account-requests-home
                     [configurations]="configurations"
@@ -51,7 +54,7 @@
   </div>
   <div class="w-100" *ngIf="!isFeedbackRecepient">
     <mat-tab-group>
-      <mat-tab label="Pending requests">
+      <mat-tab label="{{ 'Pending requests' | translate }}">
         <ng-template matTabContent>
           <app-requests-list-dashboard
             *ngIf="currentUser && currentUser?.organisationUnits?.length > 0"
@@ -61,7 +64,7 @@
           ></app-requests-list-dashboard>
         </ng-template>
       </mat-tab>
-      <mat-tab label="Users">
+      <mat-tab label="{{ 'Users' | translate }}">
         <ng-template matTabContent>
           <app-users-list
             [systemConfigs]="systemConfigs"
@@ -69,7 +72,7 @@
           ></app-users-list>
         </ng-template>
       </mat-tab>
-      <mat-tab *ngIf="isSecondTier" label="Requests">
+      <mat-tab *ngIf="isSecondTier" label="{{ 'Requests' | translate }}">
         <ng-template matTabContent>
           <app-user-account-requests-home
             [configurations]="configurations"

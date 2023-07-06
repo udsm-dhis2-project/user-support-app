@@ -9,11 +9,13 @@
       style="cursor: pointer"
       *ngFor="let rejectedFormRequest of params?.rejectedFormRequests"
     >
-      <span class="text-warning"> Request has been rejected </span>
+      <span class="text-warning">
+        {{ 'Request has been rejected' | translate }}
+      </span>
       <span
         style="margin-left: 8px"
         (click)="setCurrentFormRequest($event, rejectedFormRequest)"
-        >Why?</span
+        >{{ 'Why' | translate }}?</span
       >
     </div>
     <div

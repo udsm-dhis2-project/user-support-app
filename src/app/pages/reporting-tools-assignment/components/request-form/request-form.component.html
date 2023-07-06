@@ -1,7 +1,7 @@
 <div class="merged-datasets-container">
   <div class="w-100 mt-2">
     <mat-form-field class="w-50">
-      <mat-label>Search </mat-label>
+      <mat-label>{{ 'Search' | translate }} </mat-label>
       <mat-icon matPrefix>search</mat-icon>
       <input matInput [(ngModel)]="searchingText" />
     </mat-form-field>
@@ -10,9 +10,9 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th style="width: 30px">SN</th>
-          <th>Dataset/Form</th>
-          <th style="width: 120px">Category</th>
+          <th style="width: 30px">{{ 'SN' | translate }}</th>
+          <th>{{ 'Dataset' | translate }}/{{ 'Form' | translate }}</th>
+          <th style="width: 120px">{{ 'Category' | translate }}</th>
           <th></th>
         </tr>
       </thead>
@@ -101,7 +101,7 @@
                   "
                 >
                   {{
-                    mergedDataSet?.assigned &&
+                    (mergedDataSet?.assigned &&
                     mergedDataSet?.categoryOptions?.length > 0
                       ? 'Update'
                       : mergedDataSet?.assigned &&
@@ -113,6 +113,7 @@
                       : mergedDataSet?.forAddition
                       ? 'Waiting assignment'
                       : 'Waiting un-assignment'
+                    ) | translate
                   }}
                 </button>
                 <button
@@ -130,7 +131,7 @@
                     )
                   "
                 >
-                  Remove
+                  {{ 'Remove' | translate }}
                 </button>
                 <a
                   *ngIf="mergedDataSet?.hasPendingRequest"
@@ -143,7 +144,7 @@
                       false
                     )
                   "
-                  >Cancel</a
+                  >{{ 'Cancel' | translate }}</a
                 >
                 <span
                   *ngIf="
@@ -156,7 +157,7 @@
                     (click)="onUnConfirm($event)"
                     class="ml-2 btn-danger"
                   >
-                    Cancel
+                    {{ 'Cancel' | translate }}
                   </button>
                   <button
                     mat-button
@@ -170,7 +171,7 @@
                       )
                     "
                   >
-                    Confirm
+                    {{ 'Confirm' | translate }}
                   </button>
                 </span>
                 <div
@@ -192,7 +193,7 @@
           <tr>
             <td colspan="100%">
               <div class="alert alert-warning" role="alert">
-                No item Matching the search
+                {{ 'No item Matching the search' | translate }}
               </div>
             </td>
           </tr>

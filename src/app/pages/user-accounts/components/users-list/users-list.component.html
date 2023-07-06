@@ -4,7 +4,7 @@
 >
   <div class="w-100 mt-2 mb-2">
     <mat-form-field class="w-50">
-      <mat-label>Search </mat-label>
+      <mat-label>{{ 'Search' | translate }} </mat-label>
       <mat-icon matPrefix>search</mat-icon>
       <input matInput (keyup)="searchUser($event)" />
     </mat-form-field>
@@ -14,13 +14,13 @@
     <table class="table">
       <thead>
         <tr>
-          <th style="width: 20px">SN</th>
-          <th>Names</th>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Last login</th>
-          <th>Disabled</th>
-          <th>Action</th>
+          <th style="width: 20px">{{ 'SN' | translate }}</th>
+          <th>{{ 'Names' | translate }}</th>
+          <th>{{ 'Username' | translate }}</th>
+          <th>{{ 'Email' | translate }}</th>
+          <th>{{ 'Last login' | translate }}</th>
+          <th>{{ 'Disabled' | translate }}</th>
+          <th>{{ 'Action' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -63,7 +63,9 @@
                 >
                   <div class="d-flex align-items-center">
                     <mat-icon inline>lock</mat-icon>
-                    <span>Enable (Activate) </span>
+                    <span
+                      >{{ 'Enable' | translate }} ({{ 'Activate' | translate }})
+                    </span>
                   </div>
                 </button>
                 <button
@@ -73,7 +75,11 @@
                 >
                   <div class="d-flex align-items-center">
                     <mat-icon inline>lock_open</mat-icon>
-                    <span>Disable (De-activate) </span>
+                    <span
+                      >{{ 'Disable' | translate }} ({{
+                        'De-activate' | translate
+                      }})
+                    </span>
                   </div>
                 </button>
                 <button
@@ -83,7 +89,7 @@
                 >
                   <div class="d-flex align-items-center">
                     <mat-icon inline>lock_reset</mat-icon>
-                    <span>Password Reset </span>
+                    <span>{{ 'Password Reset ' | translate }}</span>
                   </div>
                 </button>
                 <button
@@ -93,7 +99,7 @@
                 >
                   <div class="d-flex align-items-center">
                     <mat-icon inline>account_tree</mat-icon>
-                    <span>Update Orgunit </span>
+                    <span>{{ 'Update Orgunit' | translate }} </span>
                   </div>
                 </button>
                 <button
@@ -103,7 +109,7 @@
                 >
                   <div class="d-flex align-items-center">
                     <mat-icon inline>admin_panel_settings</mat-icon>
-                    <span>Update Userrole </span>
+                    <span>{{ 'Update User Role' | translate }} </span>
                   </div>
                 </button>
               </mat-menu>
@@ -131,14 +137,14 @@
         [disabled]="params?.usersResponse?.pager?.page === 1"
         (click)="getUsers($event, params?.usersResponse?.pager, 'prev')"
       >
-        Previous
+        {{ 'Previous' | translate }}
       </button>
       <button
         class="ml-2"
         mat-stroked-button
         (click)="getUsers($event, params?.usersResponse?.pager, 'next')"
       >
-        Next
+        {{ 'Next' | translate }}
       </button>
     </div>
   </div>
@@ -176,7 +182,7 @@
         border-radius: 50%;
       "
     >
-      New
+      {{ 'New' | translate }}
     </button>
 
     <mat-menu #menu="matMenu">
@@ -184,7 +190,7 @@
         Bulk (Uploading)
       </button> -->
       <button mat-menu-item [routerLink]="'/user-accounts/request'">
-        Request
+        {{ 'Request' | translate }}
       </button>
     </mat-menu>
   </div>

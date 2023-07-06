@@ -1,7 +1,7 @@
 <div
   *ngIf="{ allDataForUserSupport: allDataForUserSupport$ | async } as params"
 >
-  <div class="h5 feedback-header">User feedback</div>
+  <div class="h5 feedback-header">{{ 'User feedback' | translate }}</div>
   <div
     class="w-100"
     style="overflow: auto"
@@ -13,10 +13,10 @@
     <table class="table mat-elevation-z1 p-2">
       <thead class="custom-header-bg">
         <tr>
-          <th style="width: 15px">SN</th>
-          <th>Request</th>
-          <th>Date</th>
-          <th style="width: 200px">Actions</th>
+          <th style="width: 15px">{{ 'SN' | translate }}</th>
+          <th>{{ 'Request' | translate }}</th>
+          <th>{{ 'Date' | translate }}</th>
+          <th style="width: 200px">{{ 'Actions' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -50,7 +50,8 @@
                     (click)="toggleViewMore($event, dataRow)"
                   >
                     {{
-                      moreOpenedDetails[dataRow?.id] ? 'Back' : 'View Details'
+                      (moreOpenedDetails[dataRow?.id] ? 'Back' : 'View Details')
+                        | translate
                     }}
                   </button>
                 </div>
@@ -67,7 +68,8 @@
                     >
                       <span>{{ dataRow?.message?.subject }}</span>
                       <span class="ml-4" *ngIf="dataRow?.user">
-                        From {{ dataRow?.user?.displayName }}
+                        {{ 'From' | translate }}
+                        {{ dataRow?.user?.displayName }}
                         <span *ngIf="dataRow?.user?.phoneNumber">
                           ({{ dataRow?.user?.phoneNumber }})
                         </span>
@@ -81,8 +83,10 @@
                       class="text-center"
                       [ngClass]="{ 'text-danger': dataRow?.shouldAlert }"
                     >
-                      This is alerting request. Approve only when you have
-                      confirmed
+                      {{
+                        'This is alerting request. Approve only when you have confirmed'
+                          | translate
+                      }}
                     </p>
                     <div class="d-flex justify-content-end">
                       <button
@@ -90,14 +94,14 @@
                         (click)="onApprove($event, dataRow)"
                         class="btn-success mt-5 ml-2"
                       >
-                        Approve
+                        {{ 'Approve' | translate }}
                       </button>
                       <button
                         mat-stroked-button
                         (click)="onReject($event, dataRow)"
                         class="btn-danger mt-5 ml-2"
                       >
-                        Reject
+                        {{ 'Reject' | translate }}
                       </button>
                     </div>
                   </div>
@@ -118,7 +122,7 @@
   >
     <div style="border: solid 1px #eee; height: 20%"></div>
     <div class="alert alert-warning mt-2" role="alert">
-      No any feedback to attend
+      {{ 'No any feedback to attend' | translate }}
     </div>
   </div>
   <mat-progress-bar
