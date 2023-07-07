@@ -83,14 +83,11 @@ export class UsersListComponent implements OnInit {
       .subscribe((update?: boolean) => {
         if (update) {
           this.saving = true;
-          // Clear local storage
-          // Send data to datastore and messaging after confirm
           const dataStoreKey =
             'UA' +
             Date.now() +
             '_' +
             this.currentUser?.organisationUnits[0]?.id;
-          // Check potentialUserNames first
           const dataForMessageAndDataStore = {
             id: dataStoreKey,
             ticketNumber: 'UA' + Date.now().toString(),
@@ -109,7 +106,7 @@ export class UsersListComponent implements OnInit {
             },
             replyMessage: `Account ${user?.userCredentials?.username} for ${
               user?.name
-            } bas been ${
+            } has been ${
               user?.userCredentials?.disabled ? 'activated' : 'de-activated'
             }`,
             payload: {
@@ -149,7 +146,6 @@ export class UsersListComponent implements OnInit {
               ...dataForMessageAndDataStore,
             })
             .subscribe((response) => {
-              window.localStorage.removeItem('usersToCreate');
               this.saving = false;
               this.openSnackBar('Successfully sent the request', 'Close');
               setTimeout(() => {
@@ -161,10 +157,87 @@ export class UsersListComponent implements OnInit {
       });
   }
 
-  openUserPassResetDialog() {
-    this.dialog.open(UpdateUserPasswordModalComponent, {
-      minWidth: '50%',
-    });
+  openUserPassResetDialog(user: any) {
+    this.dialog
+      .open(UpdateUserPasswordModalComponent, {
+        minWidth: '50%',
+        data: {
+          user,
+        },
+      })
+      .afterClosed()
+      .subscribe((password: string) => {
+        if (password) {
+          const payload = {
+            ...user,
+            userCredentials: {
+              ...user?.userCredentials,
+              disabled: false,
+              password: password,
+            },
+          };
+
+          this.saving = true;
+          const dataStoreKey =
+            'UA' +
+            Date.now() +
+            '_' +
+            this.currentUser?.organisationUnits[0]?.id;
+          const dataForMessageAndDataStore = {
+            id: dataStoreKey,
+            ticketNumber: 'UA' + Date.now().toString(),
+            action: `Respond to password reset request for user ${user?.name} as requested by ${this.currentUser?.displayName}`,
+            message: {
+              message: `The following account was requested for password reset: \n\n  Username: ${
+                user?.userCredentials?.username
+              } \n Names: ${user?.name} \n Email: ${
+                user?.email ? user?.email : ''
+              }`,
+              subject: 'UA' + Date.now().toString() + '- PASSWORD RESET',
+            },
+            replyMessage: `Password for ${user?.userCredentials?.username} (${user?.name}) has been updated successfully. \n\n The password is ${password}`,
+            payload: payload,
+            url: 'users/' + user?.id,
+            type: 'password',
+            method: 'PUT',
+            user: this.currentUser,
+          };
+
+          const messageData = {
+            subject: dataForMessageAndDataStore?.message?.subject,
+            messageType: 'TICKET',
+            users: [],
+            userGroups: [{ id: this.systemConfigs?.feedbackRecipients?.id }],
+            organisationUnits: [],
+            attachments: [],
+            text: dataForMessageAndDataStore?.message?.message,
+          };
+
+          this.messageAndDataStoreService
+            .createMessageAndUpdateDataStore(messageData, {
+              id: dataStoreKey,
+              user: {
+                id: this.currentUser?.id,
+                displayName: this.currentUser?.displayName,
+                userName: this.currentUser?.userCredentials?.username,
+                jobTitle: this.currentUser?.jobTitle,
+                email: this.currentUser?.email,
+                organisationUnits: this.currentUser?.organisationUnits,
+                phoneNumber: this.currentUser?.phoneNumber,
+              },
+              message: dataForMessageAndDataStore?.message,
+              ...dataForMessageAndDataStore,
+            })
+            .subscribe((response) => {
+              this.saving = false;
+              this.openSnackBar('Successfully sent the request', 'Close');
+              setTimeout(() => {
+                this._snackBar.dismiss();
+                // this.router.navigate(['/user-accounts/list']);
+              }, 2000);
+            });
+        }
+      });
   }
 
   openUserOrgunitDialog() {
