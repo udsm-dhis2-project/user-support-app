@@ -107,6 +107,28 @@ export class UsersDataService {
         map((response) => response),
         catchError((error) => of(error))
       );
+    } else if (data?.method === 'PUT') {
+      return zip(
+        data?.payload
+          ? this.httpClient.put(`${data?.url}`, data?.payload)
+          : of(null),
+        this.httpClient.delete(`dataStore/dhis2-user-support/${data?.id}`),
+        data?.messageConversation
+          ? this.httpClient.post(
+              `messageConversations/${data?.messageConversation?.id}`,
+              data?.messageConversation?.approvalMessage
+            )
+          : of(null),
+        data?.messageConversation
+          ? this.httpClient.post(
+              `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
+              null
+            )
+          : this.httpClient.post(`messageConversations`, data?.messageBody)
+      ).pipe(
+        map((response) => response),
+        catchError((error) => of(error))
+      );
     } else {
       return of(null);
     }
