@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
   userSupportNameSpaceResponse$: Observable<any>;
   systemSettings$: Observable<any>;
   ready: boolean = false;
+  configurations$: Observable<any>;
 
   constructor(
     private translate: TranslateService,
@@ -62,6 +63,17 @@ export class AppComponent implements OnInit {
     // Check if the key dhis2-user-support exists on datastore, otherwise create withd default configurations
     this.userSupportNameSpaceResponse$ =
       this.dataStoreService.createNameSpaceIfMissing();
+    this.userSupportNameSpaceResponse$.subscribe((response) => {
+      if (response) {
+        this.configurations$ =
+          this.dataStoreService.getUserSupportConfigurations();
+        this.configurations$.subscribe((response) => {
+          if (response) {
+            this.translate.use(response?.defaultLocale);
+          }
+        });
+      }
+    });
     this.store.dispatch(loadSystemConfigurations());
     this.systemSettings$ = this.store.select(getSystemConfigs);
   }

@@ -24,6 +24,7 @@ export class DataStoreDataService {
     const configurations = {
       datasetClosedDateAttribute: { id: 'wTO29uRscGn' },
       defaultToRequest: true,
+      defaultLocale: 'en',
       keywordsKeys: {
         addMessageFormRequest: 'Please add the following datasets on org unit',
         removeMessageFormRequest:
