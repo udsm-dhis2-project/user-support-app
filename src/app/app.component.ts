@@ -70,6 +70,15 @@ export class AppComponent implements OnInit {
         this.configurations$.subscribe((response) => {
           if (response) {
             this.translate.use(response?.defaultLocale);
+            document
+              .getElementById('locale-selection')
+              .setAttribute('value', response?.defaultLocale);
+
+            const opt: any = document.querySelector(
+              `#locale-selection option[value="${response?.defaultLocale}"]`
+            );
+            opt.selected = true;
+            opt.defaultSelected = true;
           }
         });
       }

@@ -65,7 +65,7 @@
 .drawer-contents-container {
   height: auto;
   margin-top: 5px;
-  background-color: transparent
+  background-color: transparent;
 }
 
 @media screen and (max-width: 780px) {
@@ -113,4 +113,9 @@
 
 .current-user-name {
   color: #276696;
+}
+
+#locale-selection {
+  border-radius: 4px;
+  border: solid 1px #838383;
 }

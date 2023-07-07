@@ -11,8 +11,9 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12 d-flex justify-content-end">
-          <select (change)="onChangeLanguage($event)">
-            <option value="en">En</option>
+          <select id="locale-selection" (change)="onChangeLanguage($event)">
+            <option value="sw">Swahili</option>
+            <option value="en">English</option>
             <option value="fr">France</option>
             <option value="rw">Rwanda</option>
           </select>
