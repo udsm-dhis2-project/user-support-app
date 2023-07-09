@@ -17,7 +17,9 @@ export class UserEffects implements OnInitEffects {
       ofType(loadCurrentUser),
       switchMap(() =>
         this.httpClient
-          .get('me?fields=*,organisationUnits[id,name],userGroups[id,name]')
+          .get(
+            'me?fields=*,authorities,organisationUnits[id,name],userGroups[id,name]'
+          )
           .pipe(
             map((currentUser: User) => addCurrentUser({ currentUser })),
             catchError((error: any) => of(loadCurrentUserFail({ error })))

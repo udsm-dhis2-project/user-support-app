@@ -17,6 +17,9 @@ import { DataSetsService } from 'src/app/core/services/dataset.service';
   styleUrls: ['./format-custom-form.component.css'],
 })
 export class FormatCustomFormComponent implements OnInit {
+  @Input() currentUser: any;
+  @Input() configurations: any;
+  @Input() systemConfigs: any;
   dataSets$: Observable<any[]>;
   validationRuleId: string;
   searchString: string = '';
@@ -90,6 +93,7 @@ export class FormatCustomFormComponent implements OnInit {
   expressionDescriptionLeft$: Observable<any>;
   curretOperatorId: string;
   selectedTab = new FormControl(0);
+  currentuser$: Observable<any>;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -160,13 +164,17 @@ export class FormatCustomFormComponent implements OnInit {
                 : self.isRightSideSet
                 ? '#3667f2'
                 : '';
-
+            console.log(
+              "event.target.id.split('-').join('.').replace('.val', '') ",
+              event.target.id.split('-').join('.').replace('.val', '')
+            );
             if (self.isLeftSideSet) {
               self.leftSideExpression =
                 (self.leftSideExpression ? self.leftSideExpression : '') +
                 '#{' +
                 event.target.id.split('-').join('.').replace('.val', '') +
                 '}';
+              console.log(self.leftSideExpression);
               self.expressionDescriptionLeft$ =
                 self.metadataExpressionDescriptionService.getMetadataExpressionDescription(
                   self.leftSideExpression
@@ -294,7 +302,11 @@ export class FormatCustomFormComponent implements OnInit {
     this.periodType = null;
   }
 
-  onRequestValidationRule(event: Event): void {
+  onRequestValidationRule(
+    event: Event,
+    expressionDescriptionLeft: any,
+    expressionDescriptionRight: any
+  ): void {
     event.stopPropagation();
     const data = {
       id: this.validationRuleId,
@@ -316,8 +328,14 @@ export class FormatCustomFormComponent implements OnInit {
       dataset: this.dataset,
     };
     this.dialog.open(SaveValidationModalComponent, {
-      width: '40%',
-      data,
+      minWidth: '30%',
+      data: {
+        ...data,
+        expressionDescriptionLeft,
+        expressionDescriptionRight,
+        currentUser: this.currentUser,
+        systemConfigs: this.systemConfigs,
+      },
     });
   }
 
@@ -436,5 +454,9 @@ export class FormatCustomFormComponent implements OnInit {
         } catch (e) {}
       }
     });
+  }
+
+  getSkipRuleOnFormValidation(change): void {
+    console.log(change);
   }
 }

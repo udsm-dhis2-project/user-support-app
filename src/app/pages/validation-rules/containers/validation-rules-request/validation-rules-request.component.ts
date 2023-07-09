@@ -15,37 +15,11 @@ export class ValidationRulesRequestComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.currentUser);
-    console.log(this.configurations);
-    console.log(this.systemConfigs);
+    // console.log(this.configurations);
+    // console.log(this.systemConfigs);
     this.canApprove =
-      (
-        (this.currentUser?.userGroups || []).filter(
-          (userGroup) =>
-            this.configurations?.validationRuleRequest &&
-            this.configurations?.validationRuleRequest?.userGroupsToApprove &&
-            (
-              this.configurations?.validationRuleRequest?.userGroupsToApprove?.filter(
-                (userGroupToApprove) => userGroupToApprove?.id === userGroup?.id
-              ) || []
-            )?.length > 0
-        ) || []
-      )?.length > 0;
-
-    if (!this.canApprove) {
-      this.canRequest =
-        (
-          (this.currentUser?.userGroups || []).filter(
-            (userGroup) =>
-              this.configurations?.validationRuleRequest &&
-              this.configurations?.validationRuleRequest?.userGroupsToRequest &&
-              (
-                this.configurations?.validationRuleRequest?.userGroupsToRequest?.filter(
-                  (userGroupToRequest) =>
-                    userGroupToRequest?.id === userGroup?.id
-                ) || []
-              )?.length > 0
-          ) || []
-        )?.length > 0;
-    }
+      this.currentUser?.keyedAuthorities['VALIDATION_RULE_APPROVE'];
+    this.canRequest =
+      this.currentUser?.keyedAuthorities['VALIDATION_RULE_REQUEST'];
   }
 }

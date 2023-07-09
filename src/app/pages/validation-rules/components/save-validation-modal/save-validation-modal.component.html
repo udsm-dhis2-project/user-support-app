@@ -19,9 +19,10 @@
     <mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
       <button
-        mat-button
+        color="primary"
+        mat-flat-button
         [disabled]="created"
-        (click)="onSave($event, validationRule, currentUser)"
+        (click)="onSave($event, validationRule)"
       >
         {{ !created ? 'Yes' : 'Sent' }}
       </button>

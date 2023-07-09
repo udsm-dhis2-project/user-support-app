@@ -14,6 +14,15 @@ export const getCurrentUser = createSelector(
   (state: UserState) => {
     return {
       ...state.currentUser,
+      keyedAuthorities: keyBy(
+        state.currentUser?.authorities?.map((authority) => {
+          return {
+            key: authority,
+            value: authority,
+          };
+        }),
+        'key'
+      ),
       userGroupsKeyed: keyBy(state?.currentUser?.userGroups, 'id'),
     };
   }

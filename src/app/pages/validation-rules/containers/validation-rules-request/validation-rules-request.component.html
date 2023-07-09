@@ -1,14 +1,37 @@
-<div>
-  <h3>Validation Rules Request</h3>
-  <app-format-custom-form
-    *ngIf="canRequest && !canApprove"
-  ></app-format-custom-form>
-  <app-requested-validation-rules
-    *ngIf="canApprove && !canRequest"
-  ></app-requested-validation-rules>
-
-  <div>
-    <app-format-custom-form></app-format-custom-form>
-    <!-- <app-requested-validation-rules></app-requested-validation-rules> -->
+<div class="w-100">
+  <div class="w-100" *ngIf="canApprove && canRequest">
+    <mat-tab-group>
+      <mat-tab label="{{ 'Requests' | translate }}">
+        <ng-template matTabContent>
+          <app-requested-validation-rules></app-requested-validation-rules>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="{{ 'Requesting' | translate }}">
+        <ng-template matTabContent>
+          <app-format-custom-form
+            [systemConfigs]="systemConfigs"
+            [configurations]="configurations"
+            [currentUser]="currentUser"
+          ></app-format-custom-form>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+  <div class="w-100" *ngIf="!canRequest && canApprove">
+    <app-requested-validation-rules></app-requested-validation-rules>
+  </div>
+  <div class="w-100" *ngIf="canRequest && !canApprove">
+    <app-format-custom-form
+      [systemConfigs]="systemConfigs"
+      [configurations]="configurations"
+      [currentUser]="currentUser"
+    ></app-format-custom-form>
+  </div>
+  <div
+    class="alert alert-warning"
+    role="alert"
+    *ngIf="!canRequest && !canApprove"
+  >
+    You do not access to request or approve validation rules
   </div>
 </div>
