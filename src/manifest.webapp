@@ -21,5 +21,10 @@
       "href": "../../../"
     }
   },
-  "authorities": ["MY_APP_ADD_NEW", "MY_APP_UPDATE", "MY_APP_DELETE"]
+  "authorities": [
+    "MY_APP_ADD_NEW",
+    "MY_APP_UPDATE",
+    "MY_APP_DELETE",
+    "VALIDATION_RULE_REQUEST"
+  ]
 }
