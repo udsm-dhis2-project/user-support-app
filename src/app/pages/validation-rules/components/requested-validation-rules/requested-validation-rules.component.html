@@ -1,1 +1,74 @@
-<p>requested-validation-rules works!</p>
+<div
+  class="w-100"
+  *ngIf="{
+    validationRulesRequests: validationRulesRequests$ | async
+  } as params"
+>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.validationRulesRequests"
+  ></mat-progress-bar>
+  <div class="w-100">
+    <!-- {{ params?.validationRulesRequests | json }} -->
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width: 40px">SN</th>
+          <th>Request</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="params?.validationRulesRequests?.data?.length > 0">
+          <ng-container
+            *ngFor="
+              let validationRuleRequest of params?.validationRulesRequests
+                ?.data;
+              let count = index
+            "
+          >
+            <tr>
+              <td>{{ count + 1 }}</td>
+              <td>{{ validationRuleRequest?.action }}</td>
+              <td>
+                <button
+                  mat-button
+                  (click)="onViewDetails($event, validationRuleRequest)"
+                >
+                  {{ 'View details' | translate }}
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="detailedRequests[validationRuleRequest?.id]">
+              <td colspan="2">
+                <div
+                  [innerHTML]="
+                    validationRuleRequest?.message?.htmlMessage
+                      ? validationRuleRequest?.message?.htmlMessage
+                      : validationRuleRequest?.message?.message
+                  "
+                ></div>
+              </td>
+              <td>
+                <button mat-flat-button color="primary" [disabled]="true">
+                  Approve
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+        <ng-container
+          *ngIf="params?.validationRulesRequests?.data?.length === 0"
+        >
+          <tr>
+            <td colspan="100%">
+              <div class="alert alert-info" role="alert">
+                {{ 'There is no validation rule request' | translate }}
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
