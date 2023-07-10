@@ -63,9 +63,25 @@ export class SaveValidationModalComponent implements OnInit {
     const dataForMessageAndDataStore = {
       id: dataStoreKey,
       ticketNumber: 'VR' + Date.now().toString(),
-      action: `Respond to creation of validation rule ${validationRule?.name} as requested by ${this.data?.currentUser?.displayName}`,
+      action: `Respond to ${
+        validationRule?.id ? 'Updates on' : 'creation of '
+      } validation rule ${validationRule?.name} as requested by ${
+        this.data?.currentUser?.displayName
+      }`,
       message: {
-        message: `User ${this.data?.currentUser?.displayName} has requested validation rule: ${validationRule?.name}. \n\nThe details of the rule are: \n\n Name: ${validationRule?.name} \n Shortname: ${validationRule?.shortName} \n Importance: ${validationRule?.importance}\n Left side: ${validationRule?.leftSide?.description} [ ${this.data?.expressionDescriptionLeft} ]  \n Operator:${validationRule?.operator}   \n Right side: ${validationRule?.rightSide?.description} [ ${this.data?.expressionDescriptionRight} ]`,
+        message: `User ${this.data?.currentUser?.displayName} has requested  ${
+          validationRule?.id ? 'Updates ' : 'creation '
+        } of validation rule: ${
+          validationRule?.name
+        }. \n\nThe details of the rule are: \n\n Name: ${
+          validationRule?.name
+        } \n Shortname: ${validationRule?.shortName} \n Importance: ${
+          validationRule?.importance
+        }\n Left side: ${validationRule?.leftSide?.description} [ ${
+          this.data?.expressionDescriptionLeft
+        } ]  \n Operator:${validationRule?.operator}   \n Right side: ${
+          validationRule?.rightSide?.description
+        } [ ${this.data?.expressionDescriptionRight} ]`,
         htmlMessage: `User ${this.data?.currentUser?.displayName} has requested validation rule: ${validationRule?.name}. <br /><br /> The details of the rule are: <br /><br /> Name: ${validationRule?.name}   <br /> Shortname: ${validationRule?.shortName} <br /> Importance: ${validationRule?.importance}<br /> Left side: ${validationRule?.leftSide?.description} [${this.data?.expressionDescriptionLeft} ] <br /> Operator:${validationRule?.operator}  <br /> Right side: ${validationRule?.rightSide?.description} [ ${this.data?.expressionDescriptionRight} ]`,
         subject: 'VR' + Date.now().toString() + ' - VALIDATION RULE REQUEST',
       },
