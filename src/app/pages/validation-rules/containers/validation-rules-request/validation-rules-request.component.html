@@ -8,11 +8,13 @@
       </mat-tab>
       <mat-tab label="{{ 'Requesting' | translate }}">
         <ng-template matTabContent>
-          <app-format-custom-form
-            [systemConfigs]="systemConfigs"
-            [configurations]="configurations"
-            [currentUser]="currentUser"
-          ></app-format-custom-form>
+          <div class="p-3">
+            <app-format-custom-form
+              [systemConfigs]="systemConfigs"
+              [configurations]="configurations"
+              [currentUser]="currentUser"
+            ></app-format-custom-form>
+          </div>
         </ng-template>
       </mat-tab>
     </mat-tab-group>

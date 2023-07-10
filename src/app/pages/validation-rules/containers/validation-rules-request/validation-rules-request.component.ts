@@ -1,11 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 
 @Component({
   selector: 'app-validation-rules-request',
   templateUrl: './validation-rules-request.component.html',
   styleUrls: ['./validation-rules-request.component.css'],
 })
-export class ValidationRulesRequestComponent implements OnInit {
+export class ValidationRulesRequestComponent implements OnInit, OnChanges {
   @Input() currentUser: any;
   @Input() configurations: any;
   @Input() systemConfigs: any;
@@ -13,10 +19,8 @@ export class ValidationRulesRequestComponent implements OnInit {
   canApprove: boolean = false;
   constructor() {}
 
-  ngOnInit(): void {
-    console.log(this.currentUser);
-    // console.log(this.configurations);
-    // console.log(this.systemConfigs);
+  ngOnInit(): void {}
+  ngOnChanges(changes: SimpleChanges): void {
     this.canApprove =
       this.currentUser?.keyedAuthorities['VALIDATION_RULE_APPROVE'];
     this.canRequest =
