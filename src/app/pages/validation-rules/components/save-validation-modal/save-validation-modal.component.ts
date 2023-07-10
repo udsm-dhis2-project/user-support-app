@@ -71,8 +71,10 @@ export class SaveValidationModalComponent implements OnInit {
       },
       replyMessage: `Validation rule ${validationRule?.name} has been approved successfully. You can now to proceed to use the rule`,
       payload: validationRule,
-      url: 'validationRules',
-      method: 'POST',
+      url: validationRule?.id
+        ? `validationRules/${validationRule?.id}`
+        : 'validationRules',
+      method: validationRule?.id ? 'PUT' : 'POST',
       user: this.data?.currentUser,
     };
 
