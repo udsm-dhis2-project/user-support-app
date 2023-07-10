@@ -62,7 +62,7 @@ export class SaveValidationModalComponent implements OnInit {
     // Check potentialUserNames first
     const dataForMessageAndDataStore = {
       id: dataStoreKey,
-      ticketNumber: 'UA' + Date.now().toString(),
+      ticketNumber: 'VR' + Date.now().toString(),
       action: `Respond to creation of validation rule ${validationRule?.name} as requested by ${this.data?.currentUser?.displayName}`,
       message: {
         message: `User ${this.data?.currentUser?.displayName} has requested validation rule: ${validationRule?.name}. \n\nThe details of the rule are: \n\n Name: ${validationRule?.name} \n Shortname: ${validationRule?.shortName} \n Importance: ${validationRule?.importance}\n Left side: ${validationRule?.leftSide?.description} [ ${this.data?.expressionDescriptionLeft} ]  \n Operator:${validationRule?.operator}   \n Right side: ${validationRule?.rightSide?.description} [ ${this.data?.expressionDescriptionRight} ]`,
