@@ -18,7 +18,7 @@ export class UserEffects implements OnInitEffects {
       switchMap(() =>
         this.httpClient
           .get(
-            'me?fields=*,authorities,organisationUnits[id,name],userGroups[id,name]'
+            'me?fields=*,authorities,dataViewOrganisationUnits[id,name,level],organisationUnits[id,name,level],userGroups[id,name]'
           )
           .pipe(
             map((currentUser: User) => addCurrentUser({ currentUser })),

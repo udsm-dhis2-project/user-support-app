@@ -11,9 +11,13 @@ import { OrgUnitLevelsModel } from 'src/app/shared/models/organisation-units.mod
 export class OrgUnitsProvisionalService {
   constructor(private httpClient: NgxDhis2HttpClientService) {}
 
-  getOrgUnitLevels(): Observable<OrgUnitLevelsModel[]> {
+  getOrgUnitLevels(hightestLevel?: number): Observable<OrgUnitLevelsModel[]> {
     return this.httpClient
-      .get(`organisationUnitLevels.json?fields=id,name,level`)
+      .get(
+        `organisationUnitLevels.json?fields=id,name,level${
+          hightestLevel ? '&filter=level:gt:' + (hightestLevel - 1) : ''
+        }`
+      )
       .pipe(
         map((response: any) => {
           return orderBy(response?.organisationUnitLevels, ['level'], ['desc']);

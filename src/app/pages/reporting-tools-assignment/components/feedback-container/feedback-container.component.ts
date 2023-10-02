@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { duduceTheHighetLevelFromOus } from 'src/app/core/helpers/organisation-units.helpers';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { OrgUnitsProvisionalService } from 'src/app/core/services/organisationunits.service';
 import { OrgUnitLevelsModel } from 'src/app/shared/models/organisation-units.model';
@@ -27,7 +28,10 @@ export class FeedbackContainerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.currentUser);
+    // console.log(this.currentUser);
+    const hightestLevel = duduceTheHighetLevelFromOus(
+      this.currentUser?.organisationUnits
+    );
     this.configurations = {
       ...this.configurations,
       showToggleFeedbackAndRequests: this.configurations
@@ -44,7 +48,8 @@ export class FeedbackContainerComponent implements OnInit {
           )?.length
         : false,
     };
-    this.orgUnitLevels$ = this.orgUnitsProvisionalService.getOrgUnitLevels();
+    this.orgUnitLevels$ =
+      this.orgUnitsProvisionalService.getOrgUnitLevels(hightestLevel);
     this.userSupportKeys$ = this.dataStoreService.getDataStoreKeys();
     this.isFeedbackRecepient =
       (
