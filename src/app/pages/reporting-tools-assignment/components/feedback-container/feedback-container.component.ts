@@ -27,6 +27,7 @@ export class FeedbackContainerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.currentUser);
     this.configurations = {
       ...this.configurations,
       showToggleFeedbackAndRequests: this.configurations
