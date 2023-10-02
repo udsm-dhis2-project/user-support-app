@@ -7,13 +7,13 @@
     </mat-form-field>
   </div>
   <div *ngIf="params?.dataSetsDetails" class="table-container">
-    <table class="table mat-elevation-z1">
+    <table class="table table-striped table-bordered mat-elevation-z1">
       <thead class="custom-header-bg">
         <tr>
           <th style="width: 20px">{{ 'SN' | translate }}</th>
           <th>{{ 'Dataset' | translate }}</th>
           <th>{{ 'Reporting Facilities' | translate }}</th>
-          <th></th>
+          <th>{{ 'Actions' | translate }}</th>
         </tr>
       </thead>
       <tbody>
