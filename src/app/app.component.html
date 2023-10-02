@@ -10,14 +10,6 @@
   >
     <div class="container-fluid">
       <div class="row">
-        <div class="col-12 d-flex justify-content-end">
-          <select id="locale-selection" (change)="onChangeLanguage($event)">
-            <option value="sw">Swahili</option>
-            <option value="en">English</option>
-            <option value="fr">France</option>
-            <option value="rw">Rwanda</option>
-          </select>
-        </div>
         <div class="w-100" *ngIf="ready">
           <mat-drawer-container class="user-accounts-container w-100">
             <mat-drawer mode="side" class="side-navigation-menu" opened>
@@ -93,6 +85,17 @@
             </mat-drawer>
             <mat-drawer-content>
               <div class="drawer-contents-container p-2 ml-2">
+                <div class="w-100 d-flex justify-content-end">
+                  <select
+                    id="locale-selection"
+                    (change)="onChangeLanguage($event)"
+                  >
+                    <option value="sw">Swahili</option>
+                    <option value="en">English</option>
+                    <option value="fr">France</option>
+                    <option value="rw">Rwanda</option>
+                  </select>
+                </div>
                 <mat-list role="list" class="top-menu">
                   <mat-list-item
                     role="listitem"
