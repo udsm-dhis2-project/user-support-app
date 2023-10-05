@@ -18,10 +18,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class UsersListComponent implements OnInit {
   usersResponse$: Observable<any>;
   pageSize: number = 10;
-  currentPage: number = 1;
+  page: number = 1;
+  pageIndex: number = 0;
   searchingText: string;
   @Input() currentUser: any;
   @Input() systemConfigs: any;
+  pageSizeOptions: number[] = [5, 10, 20, 25, 50, 100, 200];
   saving: boolean = false;
   constructor(
     private usersDataService: UsersDataService,
@@ -31,9 +33,15 @@ export class UsersListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadUsersList();
+  }
+
+  loadUsersList(): void {
     this.usersResponse$ = this.usersDataService.getUsersList(
       this.pageSize,
-      this.currentPage
+      this.page,
+      this.searchingText,
+      this.currentUser?.organisationUnits[0]?.id
     );
   }
 
@@ -41,23 +49,17 @@ export class UsersListComponent implements OnInit {
     this._snackBar.open(message, action);
   }
 
-  getUsers(event: Event, pager: any, action: string): void {
-    event.stopPropagation();
-    this.currentPage = action === 'next' ? pager?.page + 1 : pager?.page - 1;
-    this.usersResponse$ = this.usersDataService.getUsersList(
-      this.pageSize,
-      this.currentPage
-    );
+  getUsers(event: any, pager: any): void {
+    this.pageIndex = event.pageIndex;
+    this.page = event.pageIndex + 1;
+    this.pageSize = Number(event?.pageSize);
+    this.loadUsersList();
   }
 
   searchUser(event: any): void {
     this.searchingText = event.target.value;
-    this.currentPage = 1;
-    this.usersResponse$ = this.usersDataService.getUsersList(
-      this.pageSize,
-      this.currentPage,
-      this.searchingText
-    );
+    this.page = 1;
+    this.loadUsersList();
   }
 
   openUploadingPage(event: Event): void {

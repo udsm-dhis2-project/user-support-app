@@ -33,3 +33,10 @@ function formatRows(rows: any[], headers: any[]) {
 }
 
 function formatSQLViewData(headers, rows) {}
+
+export function conversion() {
+  return {
+    month: '',
+    days: '',
+  };
+}

@@ -28,12 +28,21 @@ export class UsersDataService {
       );
   }
 
-  getUsersList(pageSize: number, page: number, q?: string): Observable<any> {
+  getUsersList(
+    pageSize: number,
+    page: number,
+    q?: string,
+    pathSection?: string
+  ): Observable<any> {
     return this.httpClient
       .get(
         `users.json?pageSize=${pageSize}&page=${page}${
           q ? '&query=' + q : ''
-        }&fields=id,firstName,surname,name,email,userCredentials[username,lastlogin,disabled]&order=firstName~asc`
+        }&fields=id,firstName,organisationUnits[id,level,name,code,path],surname,name,email,userCredentials[username,lastlogin,disabled]&order=firstName~asc${
+          pathSection
+            ? '&filter=organisationUnits.path:ilike:' + pathSection
+            : ''
+        }`
       )
       .pipe(
         map((response) => {

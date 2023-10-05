@@ -7,7 +7,11 @@
     field?.category === 'username'
   "
 >
-  <mat-form-field [ngSwitch]="field?.controlType" class="w-100 no-padding">
+  <mat-form-field
+    [ngSwitch]="field?.controlType"
+    appearance="outline"
+    class="w-100"
+  >
     <mat-label [attr.for]="field?.key">{{ field?.label }}</mat-label>
 
     <!-- textbox Username -->
@@ -36,7 +40,11 @@
     field?.category !== 'username'
   "
 >
-  <mat-form-field [ngSwitch]="field?.controlType" class="w-100 no-padding">
+  <mat-form-field
+    [ngSwitch]="field?.controlType"
+    appearance="outline"
+    class="w-100"
+  >
     <mat-label [attr.for]="field?.key">{{ field?.label }}</mat-label>
 
     <!-- textbox -->
@@ -108,7 +116,7 @@
     field?.controlType === 'dropdown'
   "
 >
-  <mat-form-field class="w-100">
+  <mat-form-field class="w-100" appearance="outline">
     <mat-label>{{ field?.label }}</mat-label>
     <input
       type="text"
@@ -163,6 +171,7 @@
     [hidden]="field?.hidden"
     [ngSwitch]="field?.controlType"
     class="w-100"
+    appearance="outline"
   >
     <mat-label [attr.for]="field?.key">{{ field?.label }}</mat-label>
     <input
