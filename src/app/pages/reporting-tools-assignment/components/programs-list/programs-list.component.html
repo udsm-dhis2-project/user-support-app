@@ -1,0 +1,126 @@
+<div *ngIf="{ programsDetails: programsDetails$ | async } as params">
+  <div class="w-100">
+    <mat-form-field class="w-25">
+      <mat-label>Search </mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput (keyup)="searchProgram($event)" />
+    </mat-form-field>
+  </div>
+  <div *ngIf="params?.programsDetails" class="table-container">
+    <table class="table table-striped table-bordered mat-elevation-z1">
+      <thead class="custom-header-bg">
+        <tr>
+          <th style="width: 20px">{{ 'SN' | translate }}</th>
+          <th>{{ 'Dataset' | translate }}</th>
+          <th>{{ 'Reporting Facilities' | translate }}</th>
+          <th>{{ 'Actions' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let program of params?.programsDetails?.programs;
+            let count = index
+          "
+        >
+          <td>
+            {{
+              count + 1 + (params?.programsDetails?.pager?.page - 1) * pageSize
+            }}
+          </td>
+          <td>
+            {{ program?.name }}
+          </td>
+          <td>
+            {{ program?.organisationUnits }}
+          </td>
+          <td>
+            <div class="d-flex justify-content-end">
+              <div
+                style="font-size: 0.8rem; width: 35%"
+                *ngIf="program?.hasPendingRequest"
+              >
+                <!-- {{ dataRow | json }} -->
+                <mat-chip-list>
+                  <mat-chip>
+                    {{ program?.timeSinceResponseSent }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+
+              <div style="width: 65%">
+                <div class="w-100 d-flex justify-content-end">
+                  <div style="width: 40%">
+                    <button
+                      mat-stroked-button
+                      [ngClass]="{
+                        'disabled-button': dataSet?.hasPendingRequest
+                      }"
+                      class="action-btns"
+                    >
+                      Request
+                    </button>
+                  </div>
+                  <div style="width: 60%">
+                    <div class="w-100 d-flex justify-content-end">
+                      <button style="color: red" mat-stroked-button>
+                        {{ 'Cancel' | translate }}
+                      </button>
+                    </div>
+                    <!-- <div class="w-100" *ngIf="dataRow?.hasPendingRequest">
+                        <app-rejected-form-requests-summary
+                          [keys]="dataRow?.keys"
+                        ></app-rejected-form-requests-summary>
+                      </div> -->
+                    <div
+                      class="w-100 mt-2"
+                      *ngIf="
+                        showConfirmButtons && dataRow?.id === currentOrgUnit?.id
+                      "
+                    >
+                      <div class="w-100"></div>
+                      <div class="w-100">
+                        <button mat-button class="ml-2 btn-danger">
+                          {{ 'Cancel' | translate }}
+                        </button>
+                        <button
+                          mat-button
+                          [disabled]="!reasonForCancellingRequest"
+                          class="ml-2 btn-success"
+                        >
+                          {{ 'Confirm' | translate }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="w-100"
+                  *ngIf="updating && dataRow?.id === currentOrgUnit?.id"
+                >
+                  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="pagination d-flex justify-content-end">
+      <mat-paginator
+        [length]="params?.programsDetails?.pager?.total"
+        aria-label="Select page"
+        [pageSize]="pageSize"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="getProgramsList($event)"
+      >
+      </mat-paginator>
+    </div>
+  </div>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.programsDetails"
+  ></mat-progress-bar>
+</div>

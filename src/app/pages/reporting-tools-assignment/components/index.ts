@@ -4,6 +4,7 @@ import { FacilitiesListComponent } from './facilities-list/facilities-list.compo
 import { FeedbackContainerComponent } from './feedback-container/feedback-container.component';
 import { FeedbacksListComponent } from './feedbacks-list/feedbacks-list.component';
 import { OuSelectionFormRequestModalComponent } from './ou-selection-form-request-modal/ou-selection-form-request-modal.component';
+import { ProgramsListComponent } from './programs-list/programs-list.component';
 import { RejectedFormRequestsSummaryComponent } from './rejected-form-requests-summary/rejected-form-requests-summary.component';
 import { RequestFormModalComponent } from './request-form-modal/request-form-modal.component';
 import { RequestFormComponent } from './request-form/request-form.component';
@@ -22,6 +23,7 @@ export const toolsComponents: any[] = [
   OuSelectionFormRequestModalComponent,
   SelectionFilterComponent,
   DatasetCategoriesComponent,
+  ProgramsListComponent,
 ];
 
 export const toolsEntryComponents: any[] = [

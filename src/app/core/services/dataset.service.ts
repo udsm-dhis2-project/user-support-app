@@ -20,7 +20,10 @@ export class DataSetsService {
             : ''
         }`
       )
-      .pipe(map((response) => response?.dataSets));
+      .pipe(
+        map((response) => response?.dataSets),
+        catchError((error: any) => of(error))
+      );
   }
 
   getDatasetsPaginated(
