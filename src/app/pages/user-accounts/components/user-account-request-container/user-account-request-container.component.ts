@@ -35,7 +35,9 @@ export class UserAccountRequestContainerComponent implements OnInit {
           (userGroup) =>
             userGroup?.id === this.systemConfigs?.feedbackRecipients?.id
         ) || []
-      )?.length > 0
+      )?.length > 0 ||
+      this.currentUser?.keyedAuthorities['US_USER_ACCOUNT_REQUESTS_VIEW'] ||
+      this.currentUser?.keyedAuthorities['US_USER_ACCOUNT_APPROVE']
     );
   }
 }

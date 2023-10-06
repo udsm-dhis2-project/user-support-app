@@ -160,7 +160,14 @@
       </tbody>
     </table>
   </div>
-  <div mat-dialog-actions class="d-flex justify-content-end">
+  <div
+    mat-dialog-actions
+    class="d-flex justify-content-end"
+    *ngIf="
+      currentUser?.keyedAuthorities['ALL'] ||
+      currentUser?.keyedAuthorities['US_USER_ACCOUNT_REQUEST']
+    "
+  >
     <!-- <button
       mat-stroked-button
       [matMenuTriggerFor]="menu"

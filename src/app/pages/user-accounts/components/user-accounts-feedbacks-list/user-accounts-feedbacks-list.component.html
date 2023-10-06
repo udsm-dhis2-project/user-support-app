@@ -93,6 +93,12 @@
                     <div style="width: 15%">
                       <div class="d-flex justify-content-end">
                         <button
+                          *ngIf="
+                            currentUser?.keyedAuthorities['ALL'] ||
+                            currentUser?.keyedAuthorities[
+                              'US_USER_ACCOUNT_APPROVE'
+                            ]
+                          "
                           (click)="
                             onOpenApprovalModal(
                               $event,

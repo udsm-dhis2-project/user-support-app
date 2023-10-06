@@ -59,7 +59,7 @@ export class FeedbackContainerComponent implements OnInit {
         ) || []
       )?.length > 0 ||
       this.currentUser?.keyedAuthorities['US_FORM_REQUESTS_VIEW'] ||
-      this.currentUser?.keyedAuthorities['US_USER_ACCOUNT_REQUESTS_VIEW'];
+      this.currentUser?.keyedAuthorities['US_FORM_APPROVE'];
   }
 
   changeTab(val) {

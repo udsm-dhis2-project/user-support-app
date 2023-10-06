@@ -57,6 +57,10 @@
               </button>
               <mat-menu #menu="matMenu">
                 <button
+                  *ngIf="
+                    currentUser?.keyedAuthorities['ALL'] ||
+                    currentUser?.keyedAuthorities['US_ACTIVATE_ACCOUNT']
+                  "
                   [disabled]="!user?.userCredentials?.disabled"
                   mat-menu-item
                   (click)="openUserActivateDialog($event, user)"
@@ -69,6 +73,10 @@
                   </div>
                 </button>
                 <button
+                  *ngIf="
+                    currentUser?.keyedAuthorities['ALL'] ||
+                    currentUser?.keyedAuthorities['US_DEACTIVATE_ACCOUNT']
+                  "
                   [disabled]="user?.userCredentials?.disabled"
                   mat-menu-item
                   (click)="openUserActivateDialog($event, user)"
@@ -82,13 +90,21 @@
                     </span>
                   </div>
                 </button>
-                <button mat-menu-item (click)="openUserPassResetDialog(user)">
+                <button
+                  mat-menu-item
+                  (click)="openUserPassResetDialog(user)"
+                  *ngIf="
+                    currentUser?.keyedAuthorities['ALL'] ||
+                    currentUser?.keyedAuthorities['US_PASSWORD_CHANGE']
+                  "
+                >
                   <div class="d-flex align-items-center">
                     <mat-icon inline>lock_reset</mat-icon>
                     <span>{{ 'Password Reset' | translate }}</span>
                   </div>
                 </button>
                 <button
+                  *ngIf="currentUser?.keyedAuthorities['ALL']"
                   mat-menu-item
                   [disabled]="true"
                   (click)="openUserOrgunitDialog()"
@@ -99,6 +115,7 @@
                   </div>
                 </button>
                 <button
+                  *ngIf="currentUser?.keyedAuthorities['ALL']"
                   mat-menu-item
                   [disabled]="true"
                   (click)="openUserRoleDialog()"
@@ -170,7 +187,14 @@
     mode="indeterminate"
   ></mat-progress-bar>
 
-  <div mat-dialog-actions class="d-flex justify-content-end">
+  <div
+    mat-dialog-actions
+    class="d-flex justify-content-end"
+    *ngIf="
+      currentUser?.keyedAuthorities['ALL'] ||
+      currentUser?.keyedAuthorities['US_USER_ACCOUNT_REQUEST']
+    "
+  >
     <button [matMenuTriggerFor]="menu" class="custom-mat-fab">
       {{ 'New' | translate }}
     </button>
