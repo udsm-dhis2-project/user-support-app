@@ -51,7 +51,15 @@
                 ></div>
               </td>
               <td>
-                <button mat-flat-button color="primary" [disabled]="true">
+                <button
+                  mat-flat-button
+                  color="primary"
+                  [disabled]="true"
+                  *ngIf="
+                    currentUser?.keyedAuthorities['ALL'] ||
+                    currentUser?.keyedAuthorities['US_VALIDATION_RULE_APPROVE']
+                  "
+                >
                   {{ 'Approve' | translate }}
                 </button>
               </td>

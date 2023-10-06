@@ -10,6 +10,7 @@ import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 })
 export class RequestedValidationRulesComponent implements OnInit {
   @Input() configurations: any;
+  @Input() currentUser: any;
   validationRulesRequests$: Observable<any[]>;
   detailedRequests: any = {};
   constructor(
