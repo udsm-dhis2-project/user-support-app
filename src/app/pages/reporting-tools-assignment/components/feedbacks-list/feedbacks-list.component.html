@@ -93,6 +93,10 @@
                     </p>
                     <div class="d-flex justify-content-end">
                       <button
+                        *ngIf="
+                          currentUser?.keyedAuthorities['US_FORM_APPROVE'] ||
+                          currentUser?.keyedAuthorities['ALL']
+                        "
                         mat-stroked-button
                         (click)="onApprove($event, dataRow)"
                         class="btn-success mt-5 ml-2"
@@ -100,6 +104,10 @@
                         {{ 'Approve' | translate }}
                       </button>
                       <button
+                        *ngIf="
+                          currentUser?.keyedAuthorities['US_FORM_APPROVE'] ||
+                          currentUser?.keyedAuthorities['ALL']
+                        "
                         mat-stroked-button
                         (click)="onReject($event, dataRow)"
                         class="btn-danger mt-5 ml-2"

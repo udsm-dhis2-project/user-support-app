@@ -29,8 +29,14 @@
       [selectedIndex]="selectedTab.value"
       (selectedIndexChange)="selectedTab.setValue($event)"
     >
-      <mat-tab label="{{ 'Organisation units' | translate }}">
-        <div *ngIf="selectedTab.value === 0" class="mt-2">
+      <mat-tab
+        label="{{ 'Organisation units' | translate }}"
+        *ngIf="
+          currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
+          currentUser?.keyedAuthorities['ALL']
+        "
+      >
+        <div class="mt-2 p-3">
           <app-facilities-list
             [currentUser]="currentUser"
             [configurations]="configurations"
@@ -41,8 +47,14 @@
           ></app-facilities-list>
         </div>
       </mat-tab>
-      <mat-tab label="{{ 'Datasets' | translate }}">
-        <div *ngIf="selectedTab.value === 1" class="mt-2">
+      <mat-tab
+        label="{{ 'Datasets' | translate }}"
+        *ngIf="
+          currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
+          currentUser?.keyedAuthorities['ALL']
+        "
+      >
+        <div class="mt-2">
           <app-datasets-list
             [currentUser]="currentUser"
             [configurations]="configurations"
@@ -52,8 +64,14 @@
           ></app-datasets-list>
         </div>
       </mat-tab>
-      <mat-tab label="{{ 'Programs' | translate }}">
-        <div *ngIf="selectedTab.value === 2" class="mt-2">
+      <mat-tab
+        label="{{ 'Programs' | translate }}"
+        *ngIf="
+          currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
+          currentUser?.keyedAuthorities['ALL']
+        "
+      >
+        <div class="mt-2">
           <app-programs-list
             [currentUser]="currentUser"
             [configurations]="configurations"
@@ -68,7 +86,14 @@
 
   <div *ngIf="isFeedbackRecepient && params?.userSupportKeys">
     <mat-tab-group>
-      <mat-tab label="{{ 'Feedbacks to attend' | translate }}">
+      <mat-tab
+        label="{{ 'Feedbacks' | translate }}"
+        *ngIf="
+          currentUser?.keyedAuthorities['US_FORM_REQUESTS_VIEW'] ||
+          currentUser?.keyedAuthorities['US_FORM_APPROVE'] ||
+          currentUser?.keyedAuthorities['ALL']
+        "
+      >
         <ng-template matTabContent>
           <div class="p-3">
             <app-feedbacks-list
@@ -90,8 +115,14 @@
               [selectedIndex]="selectedTab.value"
               (selectedIndexChange)="selectedTab.setValue($event)"
             >
-              <mat-tab label="{{ 'Organisation units' | translate }}">
-                <div *ngIf="selectedTab.value === 0" class="mt-2">
+              <mat-tab
+                label="{{ 'Organisation units' | translate }}"
+                *ngIf="
+                  currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
+                  currentUser?.keyedAuthorities['ALL']
+                "
+              >
+                <div class="mt-2 p-3">
                   <app-facilities-list
                     [currentUser]="currentUser"
                     [configurations]="configurations"
@@ -102,8 +133,14 @@
                   ></app-facilities-list>
                 </div>
               </mat-tab>
-              <mat-tab label="{{ 'Datasets' | translate }}">
-                <div *ngIf="selectedTab.value === 1" class="mt-2">
+              <mat-tab
+                label="{{ 'Datasets' | translate }}"
+                *ngIf="
+                  currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
+                  currentUser?.keyedAuthorities['ALL']
+                "
+              >
+                <div class="mt-2">
                   <app-datasets-list
                     [currentUser]="currentUser"
                     [configurations]="configurations"
@@ -113,8 +150,14 @@
                   ></app-datasets-list>
                 </div>
               </mat-tab>
-              <mat-tab label="{{ 'Programs' | translate }}">
-                <div *ngIf="selectedTab.value === 2" class="mt-2">
+              <mat-tab
+                label="{{ 'Programs' | translate }}"
+                *ngIf="
+                  currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
+                  currentUser?.keyedAuthorities['ALL']
+                "
+              >
+                <div class="mt-2">
                   <app-programs-list
                     [currentUser]="currentUser"
                     [configurations]="configurations"

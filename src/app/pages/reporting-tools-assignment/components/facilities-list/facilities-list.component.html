@@ -31,7 +31,9 @@
         <tr>
           <th style="width: 15px">{{ 'SN' | translate }}</th>
           <th>{{ 'Organisation unit' | translate }}</th>
-          <th style="width: 170px">{{ 'Assigned Datasets' | translate }}</th>
+          <th style="width: 170px">
+            {{ 'Assigned Datasets' | translate }} & {{ 'Programs' | translate }}
+          </th>
           <th>{{ 'Actions' | translate }}</th>
         </tr>
       </thead>
@@ -59,14 +61,13 @@
             {{ dataRow?.parent ? dataRow?.parent?.name + ', ' : '' }}
             {{ dataRow?.name }}
           </td>
-          <td>{{ dataRow?.dataSets }}</td>
+          <td>{{ dataRow?.dataSets + dataRow?.programs }}</td>
           <td>
             <div class="d-flex justify-content-end">
               <div
                 style="font-size: 0.8rem; width: 35%"
                 *ngIf="dataRow?.hasPendingRequest"
               >
-                <!-- {{ dataRow | json }} -->
                 <mat-chip-list>
                   <mat-chip>
                     {{ dataRow?.timeSinceResponseSent }}

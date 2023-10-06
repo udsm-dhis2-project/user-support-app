@@ -27,7 +27,7 @@ export class ReportingToolsService {
       .get(
         `organisationUnits.json?${page ? 'page=' + page + '&' : ''}${
           pageCount ? 'pageSize=' + pageCount + '&' : ''
-        }filter=level:eq:${level}&fields=id,name,dataSets~size,closedDate,parent[id,name,level,parent[id,name,level]]${
+        }filter=level:eq:${level}&fields=id,name,dataSets~size,programs~size,closedDate,parent[id,name,level,parent[id,name,level]]${
           searchingText ? '&filter=name:ilike:' + searchingText : ''
         }&filter=path:ilike:${ouId}`
       )

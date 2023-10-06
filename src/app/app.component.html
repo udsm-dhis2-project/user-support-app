@@ -22,28 +22,25 @@
                       params?.currentUser?.displayName
                     }}</b></mat-list-item
                   >
-
-                  <!-- <mat-list-item
-                    role="listitem"
-                    class="new-message-button mt-5 mb-3"
-                    (click)="newMessageModal($event, params?.currentUser)"
-                  >
-                    <span>
-                      <img
-                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAYklEQVQ4jWNkwAH8qrb+h7E3tXkz4lLHhEuCgYGBwdbWGp80YQOIAcPAABbk0MYFcKnZ1ObNyMLAgD+0cckdPnwU4gJkDjbNuOQIAr+qrf+7t3/4T8iLAx8Lg9wAsmOAFAAA9JUex0MV7osAAAAASUVORK5CYII="
-                      />
-                    </span>
-                    <span style="margin-left: 5px">
-                      Write Message
-                    </span></mat-list-item
-                  > -->
-
                   <mat-list-item
                     role="listitem"
                     class="list-item"
+                    *ngIf="
+                      params?.currentUser &&
+                      (params?.currentUser?.keyedAuthorities['ALL'] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_FORM_REQUEST'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_FORM_APPROVE'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_FORM_REQUESTS_VIEW'
+                        ])
+                    "
                     routerLinkActive="active-menu-item"
                     [routerLink]="'reporting-tools/request'"
-                    >{{ 'Form request' | translate }}</mat-list-item
+                    >{{ 'Form requests' | translate }}</mat-list-item
                   >
 
                   <!-- <mat-list-item
@@ -56,12 +53,42 @@
                   <mat-list-item
                     role="listitem"
                     class="list-item"
+                    *ngIf="
+                      params?.currentUser &&
+                      (params?.currentUser?.keyedAuthorities['ALL'] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_USER_ACCOUNT_REQUEST'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_USER_ACCOUNT_APPROVE'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_PASSWORD_CHANGE'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_ACTIVATE_ACCOUNT'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_DEACTIVATE_ACCOUNT'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities['F_USER_VIEW'])
+                    "
                     routerLinkActive="active-menu-item"
                     [routerLink]="'user-accounts'"
                     >{{ 'User accounts' | translate }}</mat-list-item
                   >
 
                   <mat-list-item
+                    *ngIf="
+                      params?.currentUser &&
+                      (params?.currentUser?.keyedAuthorities['ALL'] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_VALIDATION_RULE_REQUEST'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_VALIDATION_RULE_APPROVE'
+                        ])
+                    "
                     role="listitem"
                     class="list-item"
                     routerLinkActive="active-menu-item"
@@ -101,8 +128,21 @@
                     role="listitem"
                     class="list-item"
                     routerLinkActive="active-menu-item"
+                    *ngIf="
+                      params?.currentUser &&
+                      (params?.currentUser?.keyedAuthorities['ALL'] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_FORM_REQUEST'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_FORM_APPROVE'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_FORM_REQUESTS_VIEW'
+                        ])
+                    "
                     [routerLink]="'reporting-tools/request'"
-                    >{{ 'Form request' | translate }}</mat-list-item
+                    >{{ 'Form requests' | translate }}</mat-list-item
                   >
                   <!-- <mat-list-item
                     role="listitem"
@@ -124,10 +164,40 @@
                     routerLinkActive="active-menu-item"
                     class="list-item"
                     [disabled]="true"
+                    *ngIf="
+                      params?.currentUser &&
+                      (params?.currentUser?.keyedAuthorities['ALL'] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_USER_ACCOUNT_REQUEST'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_USER_ACCOUNT_APPROVE'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_PASSWORD_CHANGE'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_ACTIVATE_ACCOUNT'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_DEACTIVATE_ACCOUNT'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities['F_USER_VIEW'])
+                    "
                     [routerLink]="'user-accounts'"
                     >{{ 'User account' | translate }}</mat-list-item
                   >
                   <mat-list-item
+                    *ngIf="
+                      params?.currentUser &&
+                      (params?.currentUser?.keyedAuthorities['ALL'] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_VALIDATION_RULE_REQUEST'
+                        ] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_VALIDATION_RULE_APPROVE'
+                        ])
+                    "
                     role="listitem"
                     class="list-item"
                     routerLinkActive="active-menu-item"
