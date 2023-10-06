@@ -81,6 +81,36 @@ export class ReportingToolsService {
       );
   }
 
+  getAssignedProgramsAndDataSets(ouId: string): Observable<DataSets[]> {
+    return zip(
+      this.httpClient
+        .get(
+          `organisationUnits/${ouId}.json?fields=programs[id,name],attributeValues`
+        )
+        .pipe(
+          map((response) => {
+            return response?.programs;
+          }),
+          catchError((error) => of(error))
+        ),
+      this.httpClient
+        .get(
+          `organisationUnits/${ouId}.json?fields=dataSets[id,name],attributeValues`
+        )
+        .pipe(
+          map((response) => {
+            return response?.dataSets;
+          }),
+          catchError((error) => of(error))
+        )
+    ).pipe(
+      map((responses: any[]) => {
+        return flatten(responses);
+      }),
+      catchError((error) => of(error))
+    );
+  }
+
   getAllDataSets(datasetClosedDateAttribute: {
     id: string;
     name?: string;
@@ -107,6 +137,7 @@ export class ReportingToolsService {
           )?.map((dataSet) => {
             return {
               ...dataSet,
+              type: 'dataset',
               categoryOptions: flatten(
                 (
                   dataSet?.categoryCombo?.categoryOptionCombos?.filter(

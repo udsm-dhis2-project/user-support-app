@@ -4,10 +4,11 @@ export function constructMessageForFacilityAssignment(
 ) {
   let message = '';
   message +=
-    assignmentDetails?.additions?.length > 0
+    assignmentDetails?.additions?.length > 0 ||
+    assignmentDetails?.programs?.additions?.length > 0
       ? (keywordsKeys && keywordsKeys['addMessageFormRequest']
           ? keywordsKeys['addMessageFormRequest']
-          : `Please add the following dataset on the org unit`) +
+          : `Please add the following dataset/program on the org unit`) +
         `: ${
           assignmentDetails?.organisationUnit?.name +
           ' - ' +
@@ -17,7 +18,10 @@ export function constructMessageForFacilityAssignment(
             ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
             : '')
         } \n` +
-        assignmentDetails?.additions
+        [
+          ...assignmentDetails?.additions,
+          ...assignmentDetails?.programs?.additions,
+        ]
           .map((addition, index) => {
             const dataSetAttributesDataInfo =
               assignmentDetails?.dataSetAttributesData?.filter(
@@ -27,6 +31,8 @@ export function constructMessageForFacilityAssignment(
               index +
               1 +
               '. ' +
+              addition?.type?.toUpperCase() +
+              ': ' +
               addition?.name +
               (dataSetAttributesDataInfo?.length > 0
                 ? ' (' +
@@ -42,10 +48,15 @@ export function constructMessageForFacilityAssignment(
           .join(',\n')
       : '';
 
-  message += assignmentDetails?.additions?.length > 0 ? '\n\n' : '';
+  message +=
+    assignmentDetails?.additions?.length > 0 ||
+    assignmentDetails?.programs?.additions?.length > 0
+      ? '\n\n'
+      : '';
 
   message +=
-    assignmentDetails?.deletions?.length > 0
+    assignmentDetails?.deletions?.length > 0 ||
+    assignmentDetails?.programs?.deletions?.length > 0
       ? (keywordsKeys && keywordsKeys['removeMessageFormRequest']
           ? keywordsKeys['removeMessageFormRequest']
           : `Naomba kuondolewa fomu zifuatazo kwenye kituo`) +
@@ -58,7 +69,10 @@ export function constructMessageForFacilityAssignment(
             ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
             : '')
         } \n` +
-        assignmentDetails?.deletions
+        [
+          ...assignmentDetails?.deletions,
+          ...assignmentDetails?.programs?.deletions,
+        ]
           .map((deletion, index) => {
             const dataSetAttributesDataInfo =
               assignmentDetails?.dataSetAttributesData?.filter(
@@ -68,6 +82,8 @@ export function constructMessageForFacilityAssignment(
               index +
               1 +
               '. ' +
+              deletion?.type?.toUpperCase() +
+              ': ' +
               deletion?.name +
               (dataSetAttributesDataInfo?.length > 0
                 ? ' (' +
@@ -141,7 +157,8 @@ export function getDataStoreDetailsForFormRequestsByDataSet(
 ): any {
   let action = '';
   action +=
-    assignmentDetails?.deletions?.length > 0
+    assignmentDetails?.deletions?.length > 0 ||
+    assignmentDetails?.programs?.deletions?.length > 0
       ? (keywordsKeys && keywordsKeys['Remove']
           ? keywordsKeys['Remove']
           : 'Remove') +
@@ -154,20 +171,24 @@ export function getDataStoreDetailsForFormRequestsByDataSet(
       : '';
 
   action +=
-    assignmentDetails?.deletions?.length > 0 &&
-    assignmentDetails?.additions?.length > 0
+    (assignmentDetails?.deletions?.length > 0 &&
+      assignmentDetails?.additions?.length > 0) ||
+    (assignmentDetails?.programs?.deletions?.length > 0 &&
+      assignmentDetails?.programs?.additions?.length > 0)
       ? ' ' +
         (keywordsKeys && keywordsKeys['and'] ? keywordsKeys['and'] : 'and') +
         ' '
       : '';
 
   action +=
-    assignmentDetails?.additions?.length > 0
+    assignmentDetails?.additions?.length > 0 ||
+    assignmentDetails?.programs?.additions?.length > 0
       ? (keywordsKeys && keywordsKeys['Assign']
           ? keywordsKeys['Assign']
           : 'Assign') +
         ' ' +
-        assignmentDetails?.additions?.length +
+        (assignmentDetails?.additions?.length +
+          assignmentDetails?.programs?.additions?.length) +
         (keywordsKeys && keywordsKeys['organisationunits to']
           ? ' ' + keywordsKeys['organisationunits to']
           : 'organisationunits to') +
@@ -177,12 +198,14 @@ export function getDataStoreDetailsForFormRequestsByDataSet(
 
   let replyMessage = '';
   replyMessage +=
-    assignmentDetails?.deletions?.length > 0
+    assignmentDetails?.deletions?.length > 0 ||
+    assignmentDetails?.programs?.deletions?.length > 0
       ? (keywordsKeys && keywordsKeys['Removed']
           ? keywordsKeys['Removed']
           : 'Removed') +
         ' ' +
-        assignmentDetails?.deletions?.length +
+        (assignmentDetails?.deletions?.length +
+          assignmentDetails?.programs?.deletions?.length) +
         (keywordsKeys && keywordsKeys['organisationunits from the form']
           ? ' ' + keywordsKeys['organisationunits from the form']
           : ' organisationunits from the form') +
@@ -191,20 +214,24 @@ export function getDataStoreDetailsForFormRequestsByDataSet(
       : '';
 
   replyMessage +=
-    assignmentDetails?.deletions?.length > 0 &&
-    assignmentDetails?.additions?.length > 0
+    (assignmentDetails?.deletions?.length > 0 &&
+      assignmentDetails?.additions?.length > 0) ||
+    (assignmentDetails?.programs?.deletions?.length > 0 &&
+      assignmentDetails?.programs?.additions?.length > 0)
       ? (keywordsKeys && keywordsKeys['and']
           ? ' ' + keywordsKeys['and']
           : ' and') + ' '
       : '';
 
   replyMessage +=
-    assignmentDetails?.additions?.length > 0
+    assignmentDetails?.additions?.length > 0 ||
+    assignmentDetails?.programs?.additions?.length > 0
       ? (keywordsKeys && keywordsKeys['Assigned']
           ? keywordsKeys['Assigned']
           : 'Assigned') +
         ' ' +
-        assignmentDetails?.additions?.length +
+        (assignmentDetails?.additions?.length +
+          assignmentDetails?.programs?.additions?.length) +
         (keywordsKeys && keywordsKeys['organisationunits to the form']
           ? ' ' + keywordsKeys['organisationunits to the form']
           : ' organisationunits to the form') +
@@ -237,6 +264,32 @@ export function getDataStoreDetailsForFormRequestsByDataSet(
             })
           : [],
     },
+    programsPayload: {
+      deletions:
+        assignmentDetails?.programs?.deletions?.length > 0
+          ? assignmentDetails?.deletions.map((deletion) => {
+              return {
+                id: deletion?.id,
+                name: deletion?.name,
+              };
+            })
+          : [],
+      additions:
+        assignmentDetails?.programs?.additions?.length > 0
+          ? assignmentDetails?.additions.map((addition) => {
+              return {
+                id: addition?.id,
+                name: addition?.name,
+              };
+            })
+          : [],
+    },
+    programsUrl: `programs/${
+      assignmentDetails?.program?.id
+    }/organisationUnits.json?cache=${assignmentDetails?.ticketNumber.replace(
+      'DS',
+      ''
+    )}`,
     url: `dataSets/${
       assignmentDetails?.dataSet?.id
     }/organisationUnits.json?cache=${assignmentDetails?.ticketNumber.replace(
@@ -250,17 +303,20 @@ export function getDataStoreDetailsForFormRequests(
   assignmentDetails: any,
   keywordsKeys
 ): any {
+  console.log('keywordsKeys', keywordsKeys);
   let action = '';
   action +=
-    assignmentDetails?.deletions?.length > 0
+    assignmentDetails?.deletions?.length > 0 ||
+    assignmentDetails?.programs?.deletions?.length > 0
       ? (keywordsKeys && keywordsKeys['Remove']
           ? keywordsKeys['Remove']
           : 'Remove') +
         ' ' +
-        assignmentDetails?.deletions?.length +
+        (assignmentDetails?.deletions?.length +
+          assignmentDetails?.programs?.deletions?.length) +
         (keywordsKeys && keywordsKeys['datasets from']
           ? keywordsKeys['datasets from']
-          : ' datasets from') +
+          : ' datasets/programs from') +
         '  ' +
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
@@ -272,24 +328,28 @@ export function getDataStoreDetailsForFormRequests(
       : '';
 
   action +=
-    assignmentDetails?.deletions?.length > 0 &&
-    assignmentDetails?.additions?.length > 0
+    (assignmentDetails?.deletions?.length > 0 ||
+      assignmentDetails?.programs?.deletions?.length > 0) &&
+    (assignmentDetails?.additions?.length > 0 ||
+      assignmentDetails?.programs?.additions?.length > 0)
       ? ' ' +
         (keywordsKeys && keywordsKeys['and'] ? keywordsKeys['and'] : 'and') +
         ' '
       : '';
 
   action +=
-    assignmentDetails?.additions?.length > 0
+    assignmentDetails?.additions?.length > 0 ||
+    assignmentDetails?.programs?.additions?.length > 0
       ? (keywordsKeys && keywordsKeys['Assign']
           ? keywordsKeys['Assign']
           : 'Assign') +
         ' ' +
-        assignmentDetails?.additions?.length +
+        (assignmentDetails?.additions?.length +
+          assignmentDetails?.programs?.additions?.length) +
         ' ' +
         (keywordsKeys && keywordsKeys['datasets to']
           ? keywordsKeys['datasets to']
-          : 'datasets to') +
+          : 'datasets/programs to') +
         ' ' +
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
@@ -302,16 +362,18 @@ export function getDataStoreDetailsForFormRequests(
 
   let replyMessage = '';
   replyMessage +=
-    assignmentDetails?.deletions?.length > 0
+    assignmentDetails?.deletions?.length > 0 ||
+    assignmentDetails?.programs?.deletions?.length > 0
       ? (keywordsKeys && keywordsKeys['Removed']
           ? keywordsKeys['Removed']
           : 'Removed') +
         ' ' +
-        assignmentDetails?.deletions?.length +
+        (assignmentDetails?.deletions?.length +
+          assignmentDetails?.programs?.deletions?.length) +
         ' ' +
         (keywordsKeys && keywordsKeys['datasets from']
           ? keywordsKeys['datasets from']
-          : 'datasets from') +
+          : 'datasets/programs from') +
         ' ' +
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
@@ -323,24 +385,28 @@ export function getDataStoreDetailsForFormRequests(
       : '';
 
   replyMessage +=
-    assignmentDetails?.deletions?.length > 0 &&
-    assignmentDetails?.additions?.length > 0
+    (assignmentDetails?.programs?.deletions?.length > 0 ||
+      assignmentDetails?.programs?.deletions?.length > 0) &&
+    (assignmentDetails?.additions?.length > 0 ||
+      assignmentDetails?.programs?.additions?.length > 0)
       ? ' ' +
         (keywordsKeys && keywordsKeys['and'] ? keywordsKeys['and'] : 'and') +
         ' '
       : '';
 
   replyMessage +=
-    assignmentDetails?.additions?.length > 0
+    assignmentDetails?.additions?.length > 0 ||
+    assignmentDetails?.programs?.additions?.length > 0
       ? (keywordsKeys && keywordsKeys['Assigned']
           ? keywordsKeys['Assigned']
           : 'Assigned') +
         ' ' +
-        assignmentDetails?.additions?.length +
+        (assignmentDetails?.additions?.length +
+          assignmentDetails?.programs?.additions?.length) +
         ' ' +
         (keywordsKeys && keywordsKeys['datasets to']
           ? keywordsKeys['datasets to']
-          : 'datasets to') +
+          : 'datasets/programs to') +
         ' ' +
         assignmentDetails?.organisationUnit?.name +
         ' - ' +
@@ -350,7 +416,6 @@ export function getDataStoreDetailsForFormRequests(
           ? ', ' + assignmentDetails?.organisationUnit?.parent?.parent?.name
           : '')
       : '';
-
   return action && action?.length > 5
     ? {
         action: action,
@@ -378,6 +443,32 @@ export function getDataStoreDetailsForFormRequests(
               : [],
           dataSetAttributesData: assignmentDetails?.dataSetAttributesData,
         },
+        programsPayload: {
+          deletions:
+            assignmentDetails?.programs?.deletions?.length > 0
+              ? assignmentDetails?.programs?.deletions.map((deletion) => {
+                  return {
+                    id: deletion?.id,
+                    name: deletion?.name,
+                  };
+                })
+              : [],
+          additions:
+            assignmentDetails?.programs?.additions?.length > 0
+              ? assignmentDetails?.programs?.additions.map((addition) => {
+                  return {
+                    id: addition?.id,
+                    name: addition?.name,
+                  };
+                })
+              : [],
+        },
+        programUrl: `organisationUnits/${
+          assignmentDetails?.organisationUnit?.id
+        }/programs.json?cache=${assignmentDetails?.ticketNumber.replace(
+          'DS',
+          ''
+        )}`,
         url: `organisationUnits/${
           assignmentDetails?.organisationUnit?.id
         }/dataSets.json?cache=${assignmentDetails?.ticketNumber.replace(

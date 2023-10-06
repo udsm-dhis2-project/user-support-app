@@ -30,4 +30,20 @@ export class ProgramsService {
         catchError((error: any) => of(error))
       );
   }
+
+  getAllPrograms(): Observable<any[]> {
+    return this.httpClient
+      .get(`programs.json?paging=false&fields=id,name,attributeValues`)
+      .pipe(
+        map((response) =>
+          response?.programs?.map((program: any) => {
+            return {
+              ...program,
+              type: 'program',
+            };
+          })
+        ),
+        catchError((error: any) => of(error))
+      );
+  }
 }

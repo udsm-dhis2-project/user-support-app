@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, zip } from 'rxjs';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
 import { ReportingToolsService } from 'src/app/core/services/reporting-tools.service';
@@ -8,9 +8,11 @@ import {
   constructMessageForFacilityAssignment,
   getDataStoreDetailsForFormRequests,
 } from 'src/app/shared/helpers/construct-message.helper';
-import { DataSets } from 'src/app/shared/models/reporting-tools.models';
 import { SystemConfigsModel } from 'src/app/shared/models/system-configurations.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ProgramsService } from 'src/app/core/services/programs.service';
+import { map } from 'rxjs/operators';
+import { flatten, orderBy } from 'lodash';
 
 @Component({
   selector: 'app-request-form-modal',
@@ -19,8 +21,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class RequestFormModalComponent implements OnInit {
   dialogData: any;
-  assignedDataSets$: Observable<DataSets[]>;
-  allDataSets$: Observable<DataSets[]>;
+  assignedReportingTools$: Observable<any[]>;
+  reportingTools$: Observable<any[]>;
   assignmentDetails: any;
   savingData: boolean = false;
   uids$: Observable<string[]>;
@@ -35,7 +37,8 @@ export class RequestFormModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) data,
     private messagesAndDatastoreService: MessagesAndDatastoreService,
     private dataStoreService: DataStoreDataService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private programsService: ProgramsService
   ) {
     this.dialogData = data;
     this.keywordsKeys = data?.configurations?.keywordsKeys;
@@ -55,14 +58,22 @@ export class RequestFormModalComponent implements OnInit {
       this.dataStoreMessageDetails$ =
         this.dataStoreService.getDataViaKey(matchedKeys);
     }
-    this.assignedDataSets$ = this.reportingToolsService.getAssignedDataSets(
-      this.dialogData?.facility?.id
-    );
-    this.allDataSets$ = this.reportingToolsService.getAllDataSets(
-      this.dialogData?.configurations &&
-        this.dialogData?.configurations?.datasetClosedDateAttribute?.id
-        ? this.dialogData?.configurations?.datasetClosedDateAttribute
-        : null
+    this.assignedReportingTools$ =
+      this.reportingToolsService.getAssignedProgramsAndDataSets(
+        this.dialogData?.facility?.id
+      );
+    this.reportingTools$ = zip(
+      this.reportingToolsService.getAllDataSets(
+        this.dialogData?.configurations &&
+          this.dialogData?.configurations?.datasetClosedDateAttribute?.id
+          ? this.dialogData?.configurations?.datasetClosedDateAttribute
+          : null
+      ),
+      this.programsService.getAllPrograms()
+    ).pipe(
+      map((responses: any[]) => {
+        return orderBy(flatten(responses), ['name'], ['asc']);
+      })
     );
   }
 

@@ -11,8 +11,8 @@
   <div
     class="request-container"
     *ngIf="{
-      assignedDataSets: assignedDataSets$ | async,
-      allDataSets: allDataSets$ | async,
+      assignedReportingTools: assignedReportingTools$ | async,
+      reportingTools: reportingTools$ | async,
       dataStoreMessageDetails: dataStoreMessageDetails$ | async
     } as params"
   >
@@ -22,18 +22,18 @@
     <div
       class="contents"
       *ngIf="
-        (params?.assignedDataSets &&
-          params?.allDataSets &&
+        (params?.assignedReportingTools &&
+          params?.reportingTools &&
           ouHasPendingRequest &&
           params?.dataStoreMessageDetails) ||
         (!ouHasPendingRequest &&
-          params?.assignedDataSets &&
-          params?.allDataSets)
+          params?.assignedReportingTools &&
+          params?.reportingTools)
       "
     >
       <app-request-form
-        [assignedDataSets]="params?.assignedDataSets"
-        [allDataSets]="params?.allDataSets"
+        [assignedReportingTools]="params?.assignedReportingTools"
+        [reportingTools]="params?.reportingTools"
         [userSupportKeys]="dialogData?.userSupportKeys"
         [dataStoreMessageDetails]="params?.dataStoreMessageDetails"
         [dataSetAttributesData]="dataSetAttributesData"
@@ -47,8 +47,8 @@
     <mat-progress-bar
       mode="indeterminate"
       *ngIf="
-        !params?.assignedDataSets ||
-        !params?.allDataSets ||
+        !params?.assignedReportingTools ||
+        !params?.reportingTools ||
         (!params?.dataStoreMessageDetails && ouHasPendingRequest)
       "
     ></mat-progress-bar>

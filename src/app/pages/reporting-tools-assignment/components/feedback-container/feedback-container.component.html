@@ -113,6 +113,17 @@
                   ></app-datasets-list>
                 </div>
               </mat-tab>
+              <mat-tab label="{{ 'Programs' | translate }}">
+                <div *ngIf="selectedTab.value === 2" class="mt-2">
+                  <app-programs-list
+                    [currentUser]="currentUser"
+                    [configurations]="configurations"
+                    [systemConfigs]="systemConfigs"
+                    [userSupportDataStoreKeys]="params?.userSupportKeys"
+                    (dataStoreChanged)="onDataStoreChange($event, 'dataset')"
+                  ></app-programs-list>
+                </div>
+              </mat-tab>
             </mat-tab-group>
           </div>
         </ng-template>

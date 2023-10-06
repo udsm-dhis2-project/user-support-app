@@ -19,14 +19,14 @@ import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-
   styleUrls: ['./request-form.component.css'],
 })
 export class RequestFormComponent implements OnInit {
-  @Input() assignedDataSets: DataSets[];
-  @Input() allDataSets: DataSets[];
+  @Input() assignedReportingTools: DataSets[];
+  @Input() reportingTools: DataSets[];
   @Input() userSupportKeys: string[];
   @Input() facility: FacilityModel;
   @Input() dataStoreMessageDetails: any[];
   @Input() dataSetAttributesData: any;
   @Input() keywordsKeys: any;
-  mergedDataSets: DataSets[];
+  mergedReportingTools: DataSets[];
   @Output() assignmentDetails = new EventEmitter<any>();
   searchingText: string;
   showConfirmingButtons: boolean = false;
@@ -46,12 +46,12 @@ export class RequestFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.mergedDataSets = mergeDataSetsWithAssignedOnes(
-      this.assignedDataSets,
-      this.allDataSets,
+    this.mergedReportingTools = mergeDataSetsWithAssignedOnes(
+      this.assignedReportingTools,
+      this.reportingTools,
       this.dataStoreMessageDetails
     );
-    this.assignedDataSets = this.mergedDataSets;
+    this.assignedReportingTools = this.mergedReportingTools;
   }
 
   getIfHasAssignedOuForCategories(
@@ -64,11 +64,11 @@ export class RequestFormComponent implements OnInit {
   toggleAssignment(
     event: Event,
     dataSetDetails: DataSets,
-    mergedDataSets: DataSets[],
+    mergedReportingTools: DataSets[],
     action: string
   ): void {
     event.stopPropagation();
-    this.mergedDataSets = mergedDataSets.map((dataSet) => {
+    this.mergedReportingTools = mergedReportingTools.map((dataSet) => {
       return {
         ...dataSet,
         assigned:
@@ -80,19 +80,58 @@ export class RequestFormComponent implements OnInit {
             : dataSet?.assigned,
       };
     });
-    const keyedAssignedDatasets = keyBy(this.assignedDataSets, 'id');
+    const keyedassignedReportingTools = keyBy(
+      this.assignedReportingTools,
+      'id'
+    );
     const assignmentData = {
-      deletions: this.mergedDataSets.filter(
-        (dataSet) =>
-          keyedAssignedDatasets[dataSet?.id]?.assigned && !dataSet?.assigned
+      deletions:
+        (
+          this.mergedReportingTools?.filter(
+            (reportingTool: any) => reportingTool?.type === 'dataset'
+          ) || []
+        )?.filter(
+          (dataSet) =>
+            keyedassignedReportingTools[dataSet?.id]?.assigned &&
+            !dataSet?.assigned
+        ) || [],
+      additions:
+        (
+          this.mergedReportingTools?.filter(
+            (reportingTool: any) => reportingTool?.type === 'dataset'
+          ) || []
+        )?.filter(
+          (dataSet) =>
+            (!keyedassignedReportingTools[dataSet?.id]?.assigned ||
+              (action === 'Update' && dataSet?.id === dataSetDetails?.id)) &&
+            dataSet?.assigned
+        ) || [],
+      programs: {
+        deletions:
+          (
+            this.mergedReportingTools?.filter(
+              (reportingTool: any) => reportingTool?.type === 'program'
+            ) || []
+          )?.filter(
+            (dataSet) =>
+              keyedassignedReportingTools[dataSet?.id]?.assigned &&
+              !dataSet?.assigned
+          ) || [],
+        additions:
+          (
+            this.mergedReportingTools?.filter(
+              (reportingTool: any) => reportingTool?.type === 'program'
+            ) || []
+          )?.filter(
+            (dataSet) =>
+              (!keyedassignedReportingTools[dataSet?.id]?.assigned ||
+                (action === 'Update' && dataSet?.id === dataSetDetails?.id)) &&
+              dataSet?.assigned
+          ) || [],
+      },
+      assigned: this.mergedReportingTools.filter(
+        (dataSet) => dataSet?.assigned
       ),
-      additions: this.mergedDataSets.filter(
-        (dataSet) =>
-          (!keyedAssignedDatasets[dataSet?.id]?.assigned ||
-            (action === 'Update' && dataSet?.id === dataSetDetails?.id)) &&
-          dataSet?.assigned
-      ),
-      assigned: this.mergedDataSets.filter((dataSet) => dataSet?.assigned),
       dataSetAttributesData:
         this.attributeBasedDataSetSelections[dataSetDetails?.id],
     };
@@ -102,7 +141,7 @@ export class RequestFormComponent implements OnInit {
   onCancelRequest(
     event: Event,
     requestDetails: any,
-    mergedDataSets: DataSets[],
+    mergedReportingTools: DataSets[],
     confirm: boolean
   ): void {
     event.stopPropagation();
@@ -111,7 +150,7 @@ export class RequestFormComponent implements OnInit {
       this.showConfirmingButtons = false;
       this.updatingRequest = true;
       // Update the cancelled request
-      this.mergedDataSets = mergedDataSets.map((dataSet) => {
+      this.mergedReportingTools = mergedReportingTools.map((dataSet) => {
         return {
           ...dataSet,
           assigned:

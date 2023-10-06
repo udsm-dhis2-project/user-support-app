@@ -12,17 +12,19 @@
         <tr>
           <th style="width: 30px">{{ 'SN' | translate }}</th>
           <th>{{ 'Dataset' | translate }}/{{ 'Form' | translate }}</th>
+          <th>{{ 'Type' | translate }}</th>
           <th style="width: 120px">{{ 'Category' | translate }}</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         <ng-container
-          *ngIf="(mergedDataSets | searchItem : searchingText).length > 0"
+          *ngIf="(mergedReportingTools | searchItem : searchingText).length > 0"
         >
           <ng-container
             *ngFor="
-              let mergedDataSet of mergedDataSets | searchItem : searchingText;
+              let mergedRepprtingTool of mergedReportingTools
+                | searchItem : searchingText;
               let count = index
             "
           >
@@ -30,22 +32,34 @@
               <td>
                 {{ count + 1 }}
               </td>
-              <td [ngStyle]="{ color: mergedDataSet?.assigned ? '' : '#F00' }">
-                {{ mergedDataSet?.name }}
+              <td
+                [ngStyle]="{
+                  color: mergedRepprtingTool?.assigned ? '' : '#F00'
+                }"
+              >
+                {{ mergedRepprtingTool?.name }}
               </td>
+
+              <td style="width: 30px">{{ mergedRepprtingTool?.type }}</td>
               <td>
                 <ng-container
-                  *ngIf="mergedDataSet?.categoryOptions?.length > 0"
+                  *ngIf="mergedRepprtingTool?.categoryOptions?.length > 0"
                 >
                   <app-dataset-categories
                     [organisationUnit]="facility"
-                    [categoryOptions]="mergedDataSet?.categoryOptions"
+                    [categoryOptions]="mergedRepprtingTool?.categoryOptions"
                     (categoryOptionsUpdateInfo)="
-                      onGetCategoryOptionsUpdateInfo($event, mergedDataSet)
+                      onGetCategoryOptionsUpdateInfo(
+                        $event,
+                        mergedRepprtingTool
+                      )
                     "
                     [dataSetAttributesData]="dataSetAttributesData"
                     (categoriesHasAssignedOu)="
-                      getIfHasAssignedOuForCategories($event, mergedDataSet)
+                      getIfHasAssignedOuForCategories(
+                        $event,
+                        mergedRepprtingTool
+                      )
                     "
                   ></app-dataset-categories>
                 </ng-container>
@@ -55,62 +69,68 @@
                   class="actions-btn"
                   [ngClass]="{
                     'btn-success':
-                      (!mergedDataSet?.assigned &&
-                        !mergedDataSet?.hasPendingRequest) ||
-                      (mergedDataSet?.assigned &&
-                        mergedDataSet?.categoryOptions?.length > 0),
+                      (!mergedRepprtingTool?.assigned &&
+                        !mergedRepprtingTool?.hasPendingRequest) ||
+                      (mergedRepprtingTool?.assigned &&
+                        mergedRepprtingTool?.categoryOptions?.length > 0),
                     'btn-danger':
-                      mergedDataSet?.assigned &&
-                      mergedDataSet?.categoryOptions?.length === 0 &&
-                      !mergedDataSet?.hasPendingRequest
+                      mergedRepprtingTool?.assigned &&
+                      (mergedRepprtingTool?.categoryOptions?.length === 0 ||
+                        mergedRepprtingTool?.type === 'program') &&
+                      !mergedRepprtingTool?.hasPendingRequest
                   }"
                   [disabled]="
-                    mergedDataSet?.hasPendingRequest ||
-                    (!attributeBasedDataSetSelections[mergedDataSet?.id] &&
-                      !categoriesHasAssignedOu[mergedDataSet?.id] &&
-                      mergedDataSet?.categoryOptions?.length > 0)
+                    mergedRepprtingTool?.hasPendingRequest ||
+                    (!attributeBasedDataSetSelections[
+                      mergedRepprtingTool?.id
+                    ] &&
+                      !categoriesHasAssignedOu[mergedRepprtingTool?.id] &&
+                      mergedRepprtingTool?.categoryOptions?.length > 0)
                   "
                   [ngStyle]="{
                     cursor:
-                      mergedDataSet?.hasPendingRequest ||
-                      (!attributeBasedDataSetSelections[mergedDataSet?.id] &&
-                        mergedDataSet?.categoryOptions?.length > 0 &&
-                        !categoriesHasAssignedOu[mergedDataSet?.id])
+                      mergedRepprtingTool?.hasPendingRequest ||
+                      (!attributeBasedDataSetSelections[
+                        mergedRepprtingTool?.id
+                      ] &&
+                        mergedRepprtingTool?.type === 'dataset' &&
+                        mergedRepprtingTool?.categoryOptions?.length > 0 &&
+                        !categoriesHasAssignedOu[mergedRepprtingTool?.id])
                         ? 'not-allowed'
                         : 'pointer'
                   }"
                   (click)="
                     toggleAssignment(
                       $event,
-                      mergedDataSet,
-                      mergedDataSets,
-                      mergedDataSet?.assigned &&
-                        mergedDataSet?.categoryOptions?.length > 0
+                      mergedRepprtingTool,
+                      mergedReportingTools,
+                      mergedRepprtingTool?.assigned &&
+                        mergedRepprtingTool?.categoryOptions?.length > 0
                         ? 'Update'
-                        : mergedDataSet?.assigned &&
-                          mergedDataSet?.categoryOptions?.length === 0
+                        : mergedRepprtingTool?.assigned &&
+                          mergedRepprtingTool?.categoryOptions?.length === 0
                         ? 'Remove'
                         : 'Assign'
                     )
                   "
                   [title]="
-                    !attributeBasedDataSetSelections[mergedDataSet?.id] &&
-                    mergedDataSet?.categoryOptions?.length > 0
+                    !attributeBasedDataSetSelections[mergedRepprtingTool?.id] &&
+                    mergedRepprtingTool?.categoryOptions?.length > 0
                       ? 'Please define Sub-forms'
                       : ''
                   "
                 >
                   {{
-                    (mergedDataSet?.assigned &&
-                    mergedDataSet?.categoryOptions?.length > 0
+                    (mergedRepprtingTool?.assigned &&
+                    mergedRepprtingTool?.categoryOptions?.length > 0
                       ? 'Update'
-                      : mergedDataSet?.assigned &&
-                        !mergedDataSet?.hasPendingRequest
+                      : mergedRepprtingTool?.assigned &&
+                        !mergedRepprtingTool?.hasPendingRequest
                       ? 'Remove'
-                      : !mergedDataSet?.assigned &&
-                        !mergedDataSet?.hasPendingRequest
+                      : !mergedRepprtingTool?.assigned &&
+                        !mergedRepprtingTool?.hasPendingRequest
                       ? 'Assign'
-                      : mergedDataSet?.forAddition
+                      : mergedRepprtingTool?.forAddition
                       ? 'Waiting assignment'
                       : 'Waiting un-assignment'
                     ) | translate
@@ -118,29 +138,29 @@
                 </button>
                 <button
                   *ngIf="
-                    mergedDataSet?.assigned &&
-                    mergedDataSet?.categoryOptions?.length > 0
+                    mergedRepprtingTool?.assigned &&
+                    mergedRepprtingTool?.categoryOptions?.length > 0
                   "
-                  class="actions-btn btn-danger ml-2"
+                  class="actions-btn btn-danger ml-2 actions-btn-remove"
                   (click)="
                     toggleAssignment(
                       $event,
-                      mergedDataSet,
-                      mergedDataSets,
-                      mergedDataSet?.assigned ? 'Remove' : 'Assign'
+                      mergedRepprtingTool,
+                      mergedReportingTools,
+                      mergedRepprtingTool?.assigned ? 'Remove' : 'Assign'
                     )
                   "
                 >
                   {{ 'Remove' | translate }}
                 </button>
                 <a
-                  *ngIf="mergedDataSet?.hasPendingRequest"
+                  *ngIf="mergedRepprtingTool?.hasPendingRequest"
                   class="ml-2 cancel-request"
                   (click)="
                     onCancelRequest(
                       $event,
-                      mergedDataSet,
-                      mergedDataSets,
+                      mergedRepprtingTool,
+                      mergedReportingTools,
                       false
                     )
                   "
@@ -149,7 +169,7 @@
                 <span
                   *ngIf="
                     showConfirmingButtons &&
-                    mergedDataSet?.id === currentDataset?.id
+                    mergedRepprtingTool?.id === currentDataset?.id
                   "
                 >
                   <button
@@ -165,8 +185,8 @@
                     (click)="
                       onCancelRequest(
                         $event,
-                        mergedDataSet,
-                        mergedDataSets,
+                        mergedRepprtingTool,
+                        mergedReportingTools,
                         true
                       )
                     "
@@ -177,7 +197,8 @@
                 <div
                   class="w-100"
                   *ngIf="
-                    updatingRequest && mergedDataSet?.id === currentDataset?.id
+                    updatingRequest &&
+                    mergedRepprtingTool?.id === currentDataset?.id
                   "
                 >
                   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -188,7 +209,9 @@
         </ng-container>
 
         <ng-container
-          *ngIf="(mergedDataSets | searchItem : searchingText).length === 0"
+          *ngIf="
+            (mergedReportingTools | searchItem : searchingText).length === 0
+          "
         >
           <tr>
             <td colspan="100%">

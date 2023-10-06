@@ -13,10 +13,17 @@ export class ApproveFeedbackService {
   approveChanges(data: any): Observable<any> {
     if (data?.method === 'POST') {
       return zip(
-        this.httpClient.post(
-          data?.url,
-          omit(data?.payload, 'dataSetAttributesData')
-        ),
+        data?.payload?.additions?.length > 0 ||
+          data?.payload?.deletions?.length > 0
+          ? this.httpClient.post(
+              data?.url,
+              omit(data?.payload, 'dataSetAttributesData')
+            )
+          : of(null),
+        data?.programsPayload?.deletions?.length > 0 ||
+          data?.programsPayload?.additions?.length > 0
+          ? this.httpClient.post(data?.programUrl, omit(data?.programsPayload))
+          : of(null),
         this.httpClient.delete(`dataStore/dhis2-user-support/${data?.id}`),
         data?.messageConversation
           ? this.httpClient.post(
