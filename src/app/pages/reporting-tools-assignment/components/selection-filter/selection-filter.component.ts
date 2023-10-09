@@ -7,7 +7,7 @@ import { mergeOusAddedAndRemovedFromDataSet } from 'src/app/shared/helpers/merge
   styleUrls: ['./selection-filter.component.css'],
 })
 export class SelectionFilterComponent implements OnInit {
-  @Input() dataSetDetails: any;
+  @Input() reportingToolDetails: any;
   @Input() allDataForUserSupport: any[];
   /** For Org Unit Filter */
   orgUnitObject: any;
@@ -26,7 +26,7 @@ export class SelectionFilterComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedOrgUnitItems = mergeOusAddedAndRemovedFromDataSet(
-      this.dataSetDetails,
+      this.reportingToolDetails,
       this.allDataForUserSupport
     );
     this.selectedOus.emit(this.selectedOrgUnitItems);

@@ -1,6 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProgramsService } from 'src/app/core/services/programs.service';
+import { MatDialog } from '@angular/material/dialog';
+import { OuSelectionFormRequestModalComponent } from '../ou-selection-form-request-modal/ou-selection-form-request-modal.component';
+import { MessagesDataService } from 'src/app/core/services/messages.service';
+import { DataStoreDataService } from 'src/app/core/services/datastore.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-programs-list',
@@ -28,10 +33,20 @@ export class ProgramsListComponent implements OnInit {
   @Output() dataStoreChanged: EventEmitter<boolean> =
     new EventEmitter<boolean>();
 
-  constructor(private programsService: ProgramsService) {}
+  constructor(
+    private programsService: ProgramsService,
+    private dialog: MatDialog,
+    private messageService: MessagesDataService,
+    private dataStoreService: DataStoreDataService,
+    private _snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.getPrograms();
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
   }
 
   getPrograms(): void {
@@ -39,6 +54,7 @@ export class ProgramsListComponent implements OnInit {
       page: this.page,
       pageSize: this.pageSize,
       searchingText: this.searchingText,
+      userSupportDataStoreKeys: this.userSupportDataStoreKeys,
     });
   }
 
@@ -52,5 +68,71 @@ export class ProgramsListComponent implements OnInit {
     this.page = event.pageIndex + 1;
     this.pageSize = Number(event?.pageSize);
     this.getPrograms();
+  }
+
+  onRequestProgram(event: Event, reportingTool: any): void {
+    event.stopPropagation();
+    this.dialog
+      .open(OuSelectionFormRequestModalComponent, {
+        width: '50%',
+        data: {
+          reportingTool,
+          type: 'program',
+          currentUser: this.currentUser,
+          configurations: this.configurations,
+          systemConfigs: this.systemConfigs,
+        },
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        this.dataStoreChanged.emit(res);
+      });
+  }
+
+  onCancelAll(
+    event: Event,
+    currentProgramDetails: any,
+    confirm: boolean
+  ): void {
+    event.stopPropagation();
+    this.currentProgram = currentProgramDetails;
+    if (confirm) {
+      this.showConfirmButtons = false;
+      this.updating = true;
+      this.messageService
+        .getMessagesMatchingTicketNumbers(currentProgramDetails?.keys)
+        .subscribe((messageResponse) => {
+          if (messageResponse) {
+            this.dataStoreService
+              .deleteAllKeysAndUpdateMessage(
+                currentProgramDetails?.keys,
+                messageResponse,
+                this.reasonForCancellingRequest
+              )
+              .subscribe((response) => {
+                if (response) {
+                  // TODO: Add support to handle errors
+                  this.reasonForCancellingRequest = null;
+                  this.updating = false;
+                  this.openSnackBar(
+                    'Successfully cancelled all requests',
+                    'Close'
+                  );
+                  this.getPrograms();
+                  setTimeout(() => {
+                    this._snackBar.dismiss();
+                  }, 2000);
+                }
+              });
+          }
+        });
+    } else {
+      this.showConfirmButtons = true;
+    }
+  }
+
+  onUnConfirm(event: Event): void {
+    event.stopPropagation();
+    this.showConfirmButtons = false;
   }
 }

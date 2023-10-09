@@ -10,38 +10,48 @@
 <div *ngIf="!savingData && !savedData">
   <div
     *ngIf="{
-      dataSetDetails: dataSetDetails$ | async,
+      reportingToolDetails: reportingToolDetails$ | async,
       allDataForUserSupport: allDataForUserSupport$ | async
     } as params"
   >
     <h4>
       {{ 'Assign or Remove Facilities for' | translate }}
-      {{ dialogData?.dataSet?.name }}
+      {{
+        dialogData?.dataSet?.name
+          ? dialogData?.dataSet?.name
+          : dialogData?.reportingTool?.name
+      }}
     </h4>
     <mat-progress-bar
       mode="indeterminate"
-      *ngIf="!params?.dataSetDetails || !params?.allDataForUserSupport"
+      *ngIf="!params?.reportingToolDetails || !params?.allDataForUserSupport"
     ></mat-progress-bar>
     <app-selection-filter
-      *ngIf="params?.dataSetDetails && params?.allDataForUserSupport"
-      [dataSetDetails]="params?.dataSetDetails"
+      *ngIf="params?.reportingToolDetails && params?.allDataForUserSupport"
+      [reportingToolDetails]="params?.reportingToolDetails"
       [allDataForUserSupport]="params?.allDataForUserSupport"
-      (selectedOus)="onGetSelectedOus($event, params?.dataSetDetails)"
+      (selectedOus)="onGetSelectedOus($event, params?.reportingToolDetails)"
     ></app-selection-filter>
     <div class="w-100 d-flex justify-content-end mt-2">
-      <button mat-button (click)="onClose($event)">
+      <button mat-stroked-button (click)="onClose($event)">
         {{ 'Close' | translate }}
       </button>
       <button
         class="ml-2"
-        mat-stroked-button
+        color="primary"
+        mat-flat-button
         [disabled]="
           !assignmentDetails ||
           (assignmentDetails?.deletions?.length === 0 &&
             assignmentDetails?.additions?.length === 0)
         "
         (click)="
-          saveRequest($event, selectedOrgUnitItems, dialogData?.currentUser)
+          saveRequest(
+            $event,
+            selectedOrgUnitItems,
+            dialogData?.currentUser,
+            params?.reportingToolDetails
+          )
         "
       >
         {{ 'Send' | translate }}

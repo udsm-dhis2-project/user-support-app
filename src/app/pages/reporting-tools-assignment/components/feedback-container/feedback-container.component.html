@@ -60,7 +60,7 @@
             [configurations]="configurations"
             [systemConfigs]="systemConfigs"
             [userSupportDataStoreKeys]="params?.userSupportKeys"
-            (dataStoreChanged)="onDataStoreChange($event, 'dataset')"
+            (dataStoreChanged)="onDataStoreChange($event, 'dataset', 2)"
           ></app-datasets-list>
         </div>
       </mat-tab>
@@ -77,7 +77,7 @@
             [configurations]="configurations"
             [systemConfigs]="systemConfigs"
             [userSupportDataStoreKeys]="params?.userSupportKeys"
-            (dataStoreChanged)="onDataStoreChange($event, 'dataset')"
+            (dataStoreChanged)="onDataStoreChange($event, 'program', 3)"
           ></app-programs-list>
         </div>
       </mat-tab>
@@ -146,7 +146,7 @@
                     [configurations]="configurations"
                     [systemConfigs]="systemConfigs"
                     [userSupportDataStoreKeys]="params?.userSupportKeys"
-                    (dataStoreChanged)="onDataStoreChange($event, 'dataset')"
+                    (dataStoreChanged)="onDataStoreChange($event, 'dataset', 2)"
                   ></app-datasets-list>
                 </div>
               </mat-tab>
@@ -163,7 +163,7 @@
                     [configurations]="configurations"
                     [systemConfigs]="systemConfigs"
                     [userSupportDataStoreKeys]="params?.userSupportKeys"
-                    (dataStoreChanged)="onDataStoreChange($event, 'dataset')"
+                    (dataStoreChanged)="onDataStoreChange($event, 'program', 3)"
                   ></app-programs-list>
                 </div>
               </mat-tab>

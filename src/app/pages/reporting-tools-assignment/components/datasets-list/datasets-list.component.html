@@ -90,7 +90,7 @@
                     <div
                       class="w-100 mt-2"
                       *ngIf="
-                        showConfirmButtons && dataRow?.id === currentOrgUnit?.id
+                        showConfirmButtons && dataSet?.id === currentDataSet?.id
                       "
                     >
                       <div class="w-100">
@@ -121,7 +121,7 @@
                           mat-button
                           [disabled]="!reasonForCancellingRequest"
                           class="ml-2 btn-success"
-                          (click)="onCancelAll($event, dataRow, dataRow, true)"
+                          (click)="onCancelAll($event, dataSet, true)"
                         >
                           {{ 'Confirm' | translate }}
                         </button>
@@ -131,7 +131,7 @@
                 </div>
                 <div
                   class="w-100"
-                  *ngIf="updating && dataRow?.id === currentOrgUnit?.id"
+                  *ngIf="updating && dataSet.id === currentDataSet?.id"
                 >
                   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                 </div>

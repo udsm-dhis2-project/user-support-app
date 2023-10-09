@@ -41,7 +41,7 @@ export class RespondFeedbackComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.dialogData);
+    // console.log(this.dialogData);
     this.messageConversation$ =
       this.messageAndDataStoreService.searchMessageConversationByTicketNumber(
         this.dialogData?.ticketNumber

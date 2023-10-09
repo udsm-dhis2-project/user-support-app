@@ -10,6 +10,7 @@ import {
 import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
+import { ProgramsService } from 'src/app/core/services/programs.service';
 
 @Component({
   selector: 'app-ou-selection-form-request-modal',
@@ -19,7 +20,7 @@ import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 export class OuSelectionFormRequestModalComponent implements OnInit {
   dialogData: any;
   selectedOrgUnitItems: any[] = [];
-  dataSetDetails$: Observable<any>;
+  reportingToolDetails$: Observable<any>;
   additions: any[];
   deletions: any[];
   savingData: boolean = false;
@@ -35,16 +36,20 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
     private dataSetsService: DataSetsService,
     private messagesAndDatastoreService: MessagesAndDatastoreService,
     private _snackBar: MatSnackBar,
-    private dataStoreService: DataStoreDataService
+    private dataStoreService: DataStoreDataService,
+    private programService: ProgramsService
   ) {
     this.dialogData = data;
     this.keywordsKeys = data?.configurations?.keywordsKeys;
   }
 
   ngOnInit(): void {
-    this.dataSetDetails$ = this.dataSetsService.getDataSetById(
-      this.dialogData?.dataSet?.id
-    );
+    this.reportingToolDetails$ =
+      !this.dialogData?.type || this.dialogData?.type !== 'program'
+        ? this.dataSetsService.getDataSetById(this.dialogData?.dataSet?.id)
+        : this.programService.getProgramById(
+            this.dialogData?.reportingTool?.id
+          );
 
     this.allDataForUserSupport$ = this.dataStoreService.getAllFromNameSpace(
       'dataStore/dhis2-user-support',
@@ -56,7 +61,7 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
     this._snackBar.open(message, action);
   }
 
-  onGetSelectedOus(items: any[], dataSetDetails: any): void {
+  onGetSelectedOus(items: any[], reportingToolDetails: any): void {
     this.selectedOrgUnitItems = items.map((item: any) => {
       return {
         id: item?.id,
@@ -67,13 +72,13 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
       items.filter(
         (item: any) =>
           (
-            dataSetDetails?.organisationUnits?.filter(
+            reportingToolDetails?.organisationUnits?.filter(
               (ou) => ou?.id === item?.id
             ) || []
           )?.length === 0
       ) || [];
     this.deletions =
-      dataSetDetails?.organisationUnits?.filter(
+      reportingToolDetails?.organisationUnits?.filter(
         (ou: any) =>
           (items?.filter((item) => item?.id == ou?.id) || [])?.length === 0
       ) || [];
@@ -92,7 +97,12 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
     this.assignmentDetails = assignmentDetails;
   }
 
-  saveRequest(event: Event, ous: string[], currentUser: any): void {
+  saveRequest(
+    event: Event,
+    ous: string[],
+    currentUser: any,
+    reportingTool: any
+  ): void {
     event.stopPropagation();
     this.savingData = true;
     const payload = {
@@ -102,7 +112,8 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
 
     const assignmentDetails = {
       ...payload,
-      dataSet: this.dialogData?.dataSet,
+      type: this.dialogData?.type ? this.dialogData?.type : 'dataset',
+      reportingTool,
       ticketNumber: 'DS' + Date.now(),
     };
 
@@ -112,6 +123,9 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
       assignmentDetails,
       this.keywordsKeys
     );
+
+    // console.log(assignmentDetails);
+    // console.log(message);
     const messageData = {
       subject: message?.subject,
       messageType: 'TICKET',
@@ -128,9 +142,13 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
       assignmentDetails,
       this.keywordsKeys
     );
-    const dataStoreKey =
-      assignmentDetails?.ticketNumber + '_' + assignmentDetails?.dataSet?.id;
 
+    // console.log(dataStorePayload);
+    const dataStoreKey =
+      assignmentDetails?.ticketNumber +
+      '_' +
+      assignmentDetails?.reportingTool?.id;
+    // console.log(dataStoreKey);
     this.messagesAndDatastoreService
       .createMessageAndUpdateDataStore(messageData, {
         id: dataStoreKey,

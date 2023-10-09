@@ -1,5 +1,4 @@
 <div *ngIf="{ programsDetails: programsDetails$ | async } as params">
-  <div class="h4 text-danger">[Under construction]</div>
   <div class="w-100">
     <mat-form-field class="w-25">
       <mat-label>Search </mat-label>
@@ -41,7 +40,6 @@
                 style="font-size: 0.8rem; width: 35%"
                 *ngIf="program?.hasPendingRequest"
               >
-                <!-- {{ dataRow | json }} -->
                 <mat-chip-list>
                   <mat-chip>
                     {{ program?.timeSinceResponseSent }}
@@ -55,20 +53,24 @@
                     <button
                       mat-stroked-button
                       [ngClass]="{
-                        'disabled-button': dataSet?.hasPendingRequest
+                        'disabled-button': program?.hasPendingRequest
                       }"
-                      [disabled]="true"
+                      (click)="onRequestProgram($event, program)"
                       class="action-btns"
                     >
-                      Request
+                      {{
+                        (program?.hasPendingRequest ? 'View' : 'Request')
+                          | translate
+                      }}
                     </button>
                   </div>
                   <div style="width: 60%">
                     <div class="w-100 d-flex justify-content-end">
                       <button
-                        style="color: red"
-                        mat-stroked-button
-                        [disabled]="true"
+                        color="warn"
+                        mat-flat-button
+                        (click)="onCancelAll($event, program, false)"
+                        *ngIf="program?.hasPendingRequest"
                       >
                         {{ 'Cancel' | translate }}
                       </button>
@@ -81,23 +83,39 @@
                     <div
                       class="w-100 mt-2"
                       *ngIf="
-                        showConfirmButtons && dataRow?.id === currentOrgUnit?.id
+                        showConfirmButtons && program.id === currentProgram?.id
                       "
                     >
-                      <div class="w-100"></div>
+                      <div class="w-100">
+                        <mat-form-field class="w-100">
+                          <mat-label>{{
+                            'Provide reason for cancelling form request'
+                              | translate
+                          }}</mat-label>
+                          <textarea
+                            [(ngModel)]="reasonForCancellingRequest"
+                            required
+                            matInput
+                            placeholder="{{ 'E.g' | translate }} {{
+                              'Nilituma kimakosa' | translate
+                            }}"
+                          ></textarea>
+                        </mat-form-field>
+                      </div>
                       <div class="w-100">
                         <button
-                          mat-button
-                          class="ml-2 btn-danger"
-                          [disabled]="true"
+                          color="warn"
+                          (click)="onUnConfirm($event)"
+                          mat-flat-button
+                          class="ml-2"
                         >
                           {{ 'Cancel' | translate }}
                         </button>
                         <button
-                          mat-button
+                          mat-stroked-button
                           [disabled]="!reasonForCancellingRequest"
                           class="ml-2 btn-success"
-                          [disabled]="true"
+                          (click)="onCancelAll($event, currentProgram, true)"
                         >
                           {{ 'Confirm' | translate }}
                         </button>
@@ -107,7 +125,7 @@
                 </div>
                 <div
                   class="w-100"
-                  *ngIf="updating && dataRow?.id === currentOrgUnit?.id"
+                  *ngIf="updating && program.id === currentProgram?.id"
                 >
                   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                 </div>

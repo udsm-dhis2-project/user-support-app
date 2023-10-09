@@ -31,9 +31,9 @@ export class DataStoreDataService {
           'Please remove the following datasets on the org unit',
         formRequestMessageHeaderKey: 'FORM REQUEST',
         addMessageFacilitiesFormRequestKey:
-          'Please add the following org units on dataset',
+          'Please add the following org units on',
         removeMessageFacilitiesFormRequestKey:
-          'Please un-assign the following org units on a dataset',
+          'Please un-assign the following org units on',
         messageChangePrefixKey: 'There are changes',
         Remove: 'Remove',
         Assign: 'Assign',

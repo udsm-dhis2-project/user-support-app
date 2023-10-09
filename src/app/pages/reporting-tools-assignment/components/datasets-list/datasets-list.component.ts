@@ -39,10 +39,15 @@ export class DatasetsListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.getDataSetsList();
+  }
+
+  getDataSetsList(): void {
     this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated(
       {
         page: this.page,
         pageSize: this.pageSize,
+        searchingText: this.searchingText,
         userSupportDataStoreKeys: this.userSupportDataStoreKeys,
       },
       this.configurations?.datasetClosedDateAttribute
@@ -56,42 +61,20 @@ export class DatasetsListComponent implements OnInit {
   searchDataset(event: any): void {
     this.searchingText = event.target.value;
     this.page = 1;
-    this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated(
-      {
-        page: this.page,
-        pageSize: this.pageSize,
-        searchingText: this.searchingText,
-        userSupportDataStoreKeys: this.userSupportDataStoreKeys,
-      },
-      this.configurations?.datasetClosedDateAttribute
-    );
+    this.getDataSetsList();
   }
 
   getItemsPerPage(event: any, pager: any): void {
     this.pageSize = Number(event.target.value);
     this.page = 1;
     this.itemPerPage = this.pageSize;
-    this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated(
-      {
-        page: this.page,
-        pageSize: this.pageSize,
-        userSupportDataStoreKeys: this.userSupportDataStoreKeys,
-      },
-      this.configurations?.datasetClosedDateAttribute
-    );
+    this.getDataSetsList();
   }
 
   getDataSets(event: Event, actionType, pager: any): void {
     event.stopPropagation();
     this.page = actionType === 'next' ? pager?.page + 1 : pager?.page - 1;
-    this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated(
-      {
-        page: this.page,
-        pageSize: this.pageSize,
-        userSupportDataStoreKeys: this.userSupportDataStoreKeys,
-      },
-      this.configurations?.datasetClosedDateAttribute
-    );
+    this.getDataSetsList();
   }
 
   onRequestDataSet(event: Event, dataSet: any): void {
@@ -109,13 +92,6 @@ export class DatasetsListComponent implements OnInit {
       .afterClosed()
       .subscribe((res) => {
         this.dataStoreChanged.emit(res);
-        // this.dataSetsDetails$ = this.dataSetsService.getDatasetsPaginated({
-        //   page: this.page,
-        //   pageSize: this.pageSize,
-        //   searchingText: this.searchingText,
-        //   userSupportDataStoreKeys: this.userSupportDataStoreKeys,
-        // },
-        // this.configurations?.datasetClosedDateAttribute);
       });
   }
 
@@ -146,6 +122,7 @@ export class DatasetsListComponent implements OnInit {
                   );
 
                   // this.dataStoreChanged.emit(true);
+                  this.getDataSetsList();
                   setTimeout(() => {
                     this._snackBar.dismiss();
                   }, 2000);
@@ -156,5 +133,10 @@ export class DatasetsListComponent implements OnInit {
     } else {
       this.showConfirmButtons = true;
     }
+  }
+
+  onUnConfirm(event: Event): void {
+    event.stopPropagation();
+    this.showConfirmButtons = false;
   }
 }

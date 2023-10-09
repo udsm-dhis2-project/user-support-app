@@ -119,7 +119,14 @@ export function constructMessageForDataSetAssignment(
       ? (keywordsKeys && keywordsKeys['addMessageFacilitiesFormRequestKey']
           ? keywordsKeys['addMessageFacilitiesFormRequestKey']
           : `Naomba kuongezewa vituo vifuatavyo kwenye fomu `) +
-        `${assignmentDetails?.dataSet?.name}:- \n` +
+        ' ' +
+        assignmentDetails?.type?.toUpperCase() +
+        ' : ' +
+        `${
+          assignmentDetails?.dataSet
+            ? assignmentDetails?.dataSet?.name
+            : assignmentDetails?.reportingTool?.name
+        }:- \n` +
         assignmentDetails?.additions
           .map((addition, index) => {
             return index + 1 + '. ' + addition?.name;
@@ -133,7 +140,14 @@ export function constructMessageForDataSetAssignment(
       ? (keywordsKeys && keywordsKeys['removeMessageFacilitiesFormRequestKey']
           ? keywordsKeys['removeMessageFacilitiesFormRequestKey']
           : `Naomba kuondolewa vituo vifuatavyo kwenye fomu `) +
-        `${assignmentDetails?.dataSet?.name} \n` +
+        ' ' +
+        assignmentDetails?.type?.toUpperCase() +
+        ' : ' +
+        `${
+          assignmentDetails?.dataSet
+            ? assignmentDetails?.dataSet?.name
+            : assignmentDetails?.reportingTool?.name
+        } \n` +
         assignmentDetails?.deletions
           .map((deletion, index) => {
             return index + 1 + '. ' + deletion?.name;
@@ -163,11 +177,16 @@ export function getDataStoreDetailsForFormRequestsByDataSet(
           ? keywordsKeys['Remove']
           : 'Remove') +
         ' ' +
-        assignmentDetails?.deletions?.length +
+        (assignmentDetails?.deletions?.length +
+          (assignmentDetails?.programs
+            ? assignmentDetails?.deletions?.length
+            : 0)) +
         (keywordsKeys && keywordsKeys['organisationunits from']
           ? ' ' + keywordsKeys['organisationunits from'] + ' '
           : ' organisationunits from ') +
-        assignmentDetails?.dataSet?.name
+        (assignmentDetails?.dataSet
+          ? assignmentDetails?.dataSet?.name
+          : assignmentDetails?.reportingTool?.name)
       : '';
 
   action +=
@@ -188,12 +207,16 @@ export function getDataStoreDetailsForFormRequestsByDataSet(
           : 'Assign') +
         ' ' +
         (assignmentDetails?.additions?.length +
-          assignmentDetails?.programs?.additions?.length) +
+          (assignmentDetails?.programs
+            ? assignmentDetails?.programs?.additions?.length
+            : 0)) +
         (keywordsKeys && keywordsKeys['organisationunits to']
           ? ' ' + keywordsKeys['organisationunits to']
           : 'organisationunits to') +
         ' ' +
-        assignmentDetails?.dataSet?.name
+        (assignmentDetails?.dataSet
+          ? assignmentDetails?.dataSet?.name
+          : assignmentDetails?.reportingTool?.name)
       : '';
 
   let replyMessage = '';
@@ -205,12 +228,16 @@ export function getDataStoreDetailsForFormRequestsByDataSet(
           : 'Removed') +
         ' ' +
         (assignmentDetails?.deletions?.length +
-          assignmentDetails?.programs?.deletions?.length) +
+          (assignmentDetails?.programs
+            ? assignmentDetails?.programs?.deletions?.length
+            : 0)) +
         (keywordsKeys && keywordsKeys['organisationunits from the form']
           ? ' ' + keywordsKeys['organisationunits from the form']
           : ' organisationunits from the form') +
         ' ' +
-        assignmentDetails?.dataSet?.name
+        (assignmentDetails?.dataSet
+          ? assignmentDetails?.dataSet?.name
+          : assignmentDetails?.reportingTool?.name)
       : '';
 
   replyMessage +=
@@ -231,12 +258,16 @@ export function getDataStoreDetailsForFormRequestsByDataSet(
           : 'Assigned') +
         ' ' +
         (assignmentDetails?.additions?.length +
-          assignmentDetails?.programs?.additions?.length) +
+          (assignmentDetails?.programs
+            ? assignmentDetails?.programs?.additions?.length
+            : 0)) +
         (keywordsKeys && keywordsKeys['organisationunits to the form']
           ? ' ' + keywordsKeys['organisationunits to the form']
           : ' organisationunits to the form') +
         ' ' +
-        assignmentDetails?.dataSet?.name
+        (assignmentDetails?.dataSet
+          ? assignmentDetails?.dataSet?.name
+          : assignmentDetails?.reportingTool?.name)
       : '';
 
   return {
@@ -264,34 +295,38 @@ export function getDataStoreDetailsForFormRequestsByDataSet(
             })
           : [],
     },
-    programsPayload: {
-      deletions:
-        assignmentDetails?.programs?.deletions?.length > 0
-          ? assignmentDetails?.deletions.map((deletion) => {
-              return {
-                id: deletion?.id,
-                name: deletion?.name,
-              };
-            })
-          : [],
-      additions:
-        assignmentDetails?.programs?.additions?.length > 0
-          ? assignmentDetails?.additions.map((addition) => {
-              return {
-                id: addition?.id,
-                name: addition?.name,
-              };
-            })
-          : [],
-    },
+    programsPayload: assignmentDetails?.programs
+      ? {
+          deletions:
+            assignmentDetails?.programs?.deletions?.length > 0
+              ? assignmentDetails?.deletions.map((deletion) => {
+                  return {
+                    id: deletion?.id,
+                    name: deletion?.name,
+                  };
+                })
+              : [],
+          additions:
+            assignmentDetails?.programs?.additions?.length > 0
+              ? assignmentDetails?.additions.map((addition) => {
+                  return {
+                    id: addition?.id,
+                    name: addition?.name,
+                  };
+                })
+              : [],
+        }
+      : null,
     programsUrl: `programs/${
       assignmentDetails?.program?.id
     }/organisationUnits.json?cache=${assignmentDetails?.ticketNumber.replace(
       'DS',
       ''
     )}`,
-    url: `dataSets/${
-      assignmentDetails?.dataSet?.id
+    url: `${assignmentDetails?.type !== 'program' ? 'dataSets' : 'programs'}/${
+      assignmentDetails?.dataSet
+        ? assignmentDetails?.dataSet?.id
+        : assignmentDetails?.reportingTool?.id
     }/organisationUnits.json?cache=${assignmentDetails?.ticketNumber.replace(
       'DS',
       ''
@@ -303,7 +338,7 @@ export function getDataStoreDetailsForFormRequests(
   assignmentDetails: any,
   keywordsKeys
 ): any {
-  console.log('keywordsKeys', keywordsKeys);
+  // console.log('keywordsKeys', keywordsKeys);
   let action = '';
   action +=
     assignmentDetails?.deletions?.length > 0 ||
@@ -313,7 +348,9 @@ export function getDataStoreDetailsForFormRequests(
           : 'Remove') +
         ' ' +
         (assignmentDetails?.deletions?.length +
-          assignmentDetails?.programs?.deletions?.length) +
+          (assignmentDetails?.programs
+            ? assignmentDetails?.programs?.deletions?.length
+            : 0)) +
         (keywordsKeys && keywordsKeys['datasets from']
           ? keywordsKeys['datasets from']
           : ' datasets/programs from') +
@@ -369,7 +406,9 @@ export function getDataStoreDetailsForFormRequests(
           : 'Removed') +
         ' ' +
         (assignmentDetails?.deletions?.length +
-          assignmentDetails?.programs?.deletions?.length) +
+          (assignmentDetails?.programs
+            ? assignmentDetails?.programs?.deletions?.length
+            : 0)) +
         ' ' +
         (keywordsKeys && keywordsKeys['datasets from']
           ? keywordsKeys['datasets from']
@@ -402,7 +441,9 @@ export function getDataStoreDetailsForFormRequests(
           : 'Assigned') +
         ' ' +
         (assignmentDetails?.additions?.length +
-          assignmentDetails?.programs?.additions?.length) +
+          (assignmentDetails?.programs
+            ? assignmentDetails?.programs?.additions?.length
+            : 0)) +
         ' ' +
         (keywordsKeys && keywordsKeys['datasets to']
           ? keywordsKeys['datasets to']

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
+import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -26,7 +27,35 @@ export class ProgramsService {
         }`
       )
       .pipe(
-        map((response) => response),
+        map((response) => {
+          const filteredPrograms = response?.programs;
+          return {
+            ...response,
+            programs: filteredPrograms.map((dataSet) => {
+              const matchedKeys =
+                paginationDetails?.userSupportDataStoreKeys.filter(
+                  (key) => key.indexOf(dataSet?.id) > -1
+                ) || [];
+              return {
+                ...dataSet,
+                hasPendingRequest: matchedKeys?.length > 0,
+
+                keys: matchedKeys,
+                timeSinceResponseSent:
+                  matchedKeys.length > 0
+                    ? moment(
+                        Number(matchedKeys[0].split('_')[0].replace('DS', ''))
+                      ).fromNow()
+                    : '',
+                date:
+                  matchedKeys.length > 0
+                    ? Date.now() -
+                      Number(matchedKeys[0].split('_')[0].replace('DS', ''))
+                    : null,
+              };
+            }),
+          };
+        }),
         catchError((error: any) => of(error))
       );
   }
@@ -44,6 +73,21 @@ export class ProgramsService {
           })
         ),
         catchError((error: any) => of(error))
+      );
+  }
+
+  getProgramById(id: string, fields?: string): Observable<any> {
+    return this.httpClient
+      .get(
+        `programs/${id}.json?fields=${
+          fields ? fields : 'id,name,organisationUnits[id,name]'
+        }`
+      )
+      .pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((error) => of(error))
       );
   }
 }
