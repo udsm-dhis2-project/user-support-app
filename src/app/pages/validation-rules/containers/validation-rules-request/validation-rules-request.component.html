@@ -1,5 +1,12 @@
 <div class="w-100">
-  <div class="w-100" *ngIf="canApprove && canRequest">
+  <div
+    class="w-100"
+    *ngIf="
+      currentUser?.keyedAuthorities['ALL'] ||
+      currentUser?.keyedAuthorities['US_VALIDATION_RULE_REQUESTS_VIEW'] ||
+      currentUser?.keyedAuthorities['US_VALIDATION_RULE_APPROVE']
+    "
+  >
     <mat-tab-group>
       <mat-tab
         label="{{ 'Requests' | translate }}"
@@ -27,7 +34,7 @@
       </mat-tab>
     </mat-tab-group>
   </div>
-  <div
+  <!-- <div
     class="w-100"
     *ngIf="
       currentUser?.keyedAuthorities['ALL'] ||
@@ -37,7 +44,7 @@
     <app-requested-validation-rules
       [currentUser]="currentUser"
     ></app-requested-validation-rules>
-  </div>
+  </div> -->
   <div class="w-100" *ngIf="canRequest && !canApprove">
     <app-format-custom-form
       [systemConfigs]="systemConfigs"

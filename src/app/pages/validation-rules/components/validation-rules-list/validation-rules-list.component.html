@@ -10,8 +10,14 @@
       />
     </mat-form-field>
   </div>
-  <div *ngIf="{ validationRules: validationRules$ | async } as params">
-    <table class="table" *ngIf="params?.validationRules">
+  <div
+    style="overflow: auto"
+    *ngIf="{ validationRules: validationRules$ | async } as params"
+  >
+    <table
+      class="table table-striped table-bordered mat-elevation-z1"
+      *ngIf="params?.validationRules"
+    >
       <thead>
         <tr>
           <th style="width: 20px">SN</th>

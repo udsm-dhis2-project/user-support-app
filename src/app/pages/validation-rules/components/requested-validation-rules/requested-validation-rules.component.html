@@ -8,14 +8,14 @@
     mode="indeterminate"
     *ngIf="!params?.validationRulesRequests"
   ></mat-progress-bar>
-  <div class="w-100">
+  <div class="w-100" style="overflow: auto">
     <!-- {{ params?.validationRulesRequests | json }} -->
-    <table class="table">
+    <table class="table table-striped table-bordered mat-elevation-z1">
       <thead>
         <tr>
           <th style="width: 40px">{{ 'SN' | translate }}</th>
           <th>{{ 'Request' | translate }}</th>
-          <th></th>
+          <th>{{ 'Actions' | translate }}</th>
         </tr>
       </thead>
       <tbody>
