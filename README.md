@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The level of effort being used in supporting data managers requests at sub-national levels for a country like Tanzania is huge and hence would require support team that attend users feedback to be large enough. Also when it comes to supporting Ministry of Health Programmes like RCH, HIV, MALARIA, eIDSR e.t.c, its a headache and may require each program to have an expert on DHIS2 but also given access to DHIS2 maintenance app, which is in-practical it some point.
+The level of effort being used in supporting data managers requests at sub-national levels for a country like Tanzania is huge and hence would require support team that attend users feedback to be large enough. Also when it comes to supporting Ministry of Health Programmes like RCH, HIV, MALARIA, eIDSR e.t.c, its a headache and may require each program to have an expert on DHIS2 but also given access to DHIS2 maintenance app, which is impractical it some point.
 
 Form/Dataset assignment and un-assignment requests through built-in DHIS2 feedback messaging app has been a way so far used, but with User Support, large part of the load to work on a number of requests is moved down to sub-national level users. In the process, sub-national level user can request form/dataset and the central team at national level can just approve or reject it with few clicks.
 
