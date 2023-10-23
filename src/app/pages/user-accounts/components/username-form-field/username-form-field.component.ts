@@ -36,7 +36,8 @@ export class UsernameFormFieldComponent implements OnInit {
           .toLowerCase()
           .trim(),
       };
-    });
+    })
+      .filter((item) => item.username.length >= 5);
 
     this.usersDataService
       .checkForUserNamesAvailability(this.potentialUsernames)
