@@ -54,8 +54,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     NgxDhis2MenuModule,
 
     /**
-     * Translation module
-     */
+     Translation module
+    */
+
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
