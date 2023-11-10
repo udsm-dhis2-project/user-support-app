@@ -161,6 +161,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
             payload: request?.payload,
           };
           // console.log('data', data);
+          console.log('>>>>>>>>Inside the request');
           this.usersDataService.approveChanges(data).subscribe((response) => {
             if (response) {
               this.getRequestInformation();
