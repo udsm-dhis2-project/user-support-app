@@ -72,7 +72,9 @@ export function HttpLoaderFactory(http: HttpClient) {
       serializer: FullRouterStateSerializer,
     }),
 
-    !environment.production ? StoreDevtoolsModule.instrument({connectInZone: true}) : [],
+    !environment.production
+      ? StoreDevtoolsModule.instrument({ connectInZone: true })
+      : [],
   ],
   providers: [{ provide: RouterStateSerializer, useClass: RouteSerializer }],
   bootstrap: [AppComponent],

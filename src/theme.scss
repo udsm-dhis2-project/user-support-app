@@ -1,8 +1,11 @@
-@import '@angular/material/theming';
 
-@include mat-core();
+@use '@angular/material' as mat;
+@import 'bootstrap/scss/bootstrap';
 
-$icare-primary: (
+
+@include mat.core();
+
+$usupport-primary: (
   50: #e5f2f9,
   100: #bfddf1,
   200: #95c7e8,
@@ -35,14 +38,27 @@ $icare-primary: (
   ),
 );
 
-$primary: mat-palette($icare-primary);
-$accent: mat-palette($mat-deep-orange, A200, A100, A400);
-$warn: mat-palette($mat-red);
 
-$theme: mat-light-theme($primary, $accent, $warn);
+$primary: mat.define-palette($usupport-primary);
+$accent: mat.define-palette(mat.$blue-grey-palette, A200, A100, A400);
+// $warn: mat.define-palette(mat.$red);
 
-@include angular-material-theme($theme);
+
+
+$theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $primary,
+      accent: $accent,
+    ),
+    typography: mat.define-typography-config(),
+    density: 0,
+  )
+);
+
+
+@include mat.all-component-themes($theme);
 
 .icare__bg-primary {
-  background-color: mat-color($primary);
+  background-color: mat.get-theme-color($theme, primary);
 }

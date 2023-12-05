@@ -1,4 +1,3 @@
-import { Text } from '@angular/compiler/src/render3/r3_ast';
 import { Component, Input, OnInit } from '@angular/core';
 import { UsersDataService } from 'src/app/core/services/users.service';
 import { Dropdown } from 'src/app/shared/modules/form/models/dropdown.model';

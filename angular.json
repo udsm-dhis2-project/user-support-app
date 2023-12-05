@@ -24,11 +24,7 @@
               "src/manifest.webapp",
               "src/manifest.json"
             ],
-            "styles": [
-              "./src/theme.scss",
-              "node_modules/bootstrap/dist/css/bootstrap.css",
-              "src/styles.scss"
-            ],
+            "styles": ["src/theme.scss", "src/styles.scss"],
             "scripts": [],
             "vendorChunk": true,
             "extractLicenses": false,
@@ -115,8 +111,6 @@
   },
   "cli": {
     "analytics": "542a320c-8705-4503-b91b-79ffabc8f703",
-    "schematicCollections": [
-      "@ngrx/schematics"
-    ]
+    "schematicCollections": ["@ngrx/schematics"]
   }
 }
