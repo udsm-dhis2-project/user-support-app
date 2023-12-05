@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxDhis2OrgUnitFilterModule } from '@iapps/ngx-dhis2-org-unit-filter';
-import { NgxDhis2DataFilterModule } from '@iapps/ngx-dhis2-data-filter';
+// import { NgxDhis2DataFilterModule } from '@iapps/ngx-dhis2-data-filter';
 import { NgxDhis2PeriodFilterModule } from '@iapps/ngx-dhis2-period-filter';
 import { materialModules } from './materials.module';
 import { sharedComponents, sharedEntryComponents } from './components';
@@ -16,7 +16,7 @@ import { TranslateModule } from '@ngx-translate/core';
     FormModule,
     ...materialModules,
     NgxDhis2OrgUnitFilterModule,
-    NgxDhis2DataFilterModule,
+    // NgxDhis2DataFilterModule,
     NgxDhis2PeriodFilterModule,
     TranslateModule,
   ],
@@ -25,7 +25,7 @@ import { TranslateModule } from '@ngx-translate/core';
     FormModule,
     ...materialModules,
     NgxDhis2OrgUnitFilterModule,
-    NgxDhis2DataFilterModule,
+    // NgxDhis2DataFilterModule,
     NgxDhis2PeriodFilterModule,
     SearchItemPipe,
     FilterFormRequestsPipe,
