@@ -8,13 +8,12 @@ import { toolsComponents, toolsEntryComponents } from './components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [...reportingToolsAssignmentPages, ...toolsComponents],
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    SharedModule,
-    ReportingToolsAssignmentRoutingModule,
-  ],
-  entryComponents: [...toolsEntryComponents],
+    declarations: [...reportingToolsAssignmentPages, ...toolsComponents],
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        SharedModule,
+        ReportingToolsAssignmentRoutingModule,
+    ]
 })
 export class ReportingToolsAssignmentModule {}

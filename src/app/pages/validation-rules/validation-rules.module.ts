@@ -12,17 +12,16 @@ import { ValidationRulesRequestRoutingModule } from './validation-rules-routing.
 import { validationRulesContainers } from './containers';
 
 @NgModule({
-  declarations: [
-    ...validationRulesRequestComponents,
-    ...validationRulesContainers,
-    ...validationRulesPages,
-  ],
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    SharedModule,
-    ValidationRulesRequestRoutingModule,
-  ],
-  entryComponents: [...entryValidationRulesRequestComponents],
+    declarations: [
+        ...validationRulesRequestComponents,
+        ...validationRulesContainers,
+        ...validationRulesPages,
+    ],
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        SharedModule,
+        ValidationRulesRequestRoutingModule,
+    ]
 })
 export class ValidationRulesRequestModule {}

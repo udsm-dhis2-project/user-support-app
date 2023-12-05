@@ -7,12 +7,11 @@ import { accountsComponents } from './components';
 import { accountsModals } from './modals';
 
 @NgModule({
-  declarations: [
-    ...userAccountsPages,
-    ...accountsComponents,
-    ...accountsModals,
-  ],
-  imports: [CommonModule, UserAccountsRoutingModule, SharedModule],
-  entryComponents: [...accountsModals],
+    declarations: [
+        ...userAccountsPages,
+        ...accountsComponents,
+        ...accountsModals,
+    ],
+    imports: [CommonModule, UserAccountsRoutingModule, SharedModule]
 })
 export class UserAccountsModule {}
