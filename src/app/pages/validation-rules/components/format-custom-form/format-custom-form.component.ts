@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import * as _ from 'lodash';
@@ -24,7 +24,7 @@ export class FormatCustomFormComponent implements OnInit {
   validationRuleId: string;
   searchString: string = '';
   _htmlMarkup: SafeHtml;
-  dataSetCtrl: FormControl = new FormControl('');
+  dataSetCtrl: UntypedFormControl = new UntypedFormControl('');
   dataset: any;
   importanceOptions = [
     {
@@ -92,7 +92,7 @@ export class FormatCustomFormComponent implements OnInit {
   expressionDescriptionRight$: Observable<any>;
   expressionDescriptionLeft$: Observable<any>;
   curretOperatorId: string;
-  selectedTab = new FormControl(0);
+  selectedTab = new UntypedFormControl(0);
   currentuser$: Observable<any>;
 
   constructor(

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { duduceTheHighetLevelFromOus } from 'src/app/core/helpers/organisation-units.helpers';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
@@ -21,7 +21,7 @@ export class FeedbackContainerComponent implements OnInit {
   orgUnitLevels$: Observable<OrgUnitLevelsModel[]>;
   showRequest: boolean = false;
 
-  selectedTab = new FormControl(0);
+  selectedTab = new UntypedFormControl(0);
   constructor(
     private dataStoreService: DataStoreDataService,
     private orgUnitsProvisionalService: OrgUnitsProvisionalService
