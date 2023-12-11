@@ -1,3 +1,11 @@
+.header-bar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  z-index: 1400;
+  height: 48px;
+}
 .application-content {
   margin-top: 50px;
   background-color: #fafafa !important;

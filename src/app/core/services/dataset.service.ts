@@ -3,7 +3,7 @@ import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Injectable({
   providedIn: 'root',

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
-import { NgxDhis2MenuModule } from '@iapps/ngx-dhis2-menu';
+// import { NgxDhis2MenuModule } from '@iapps/ngx-dhis2-menu';
 import { EffectsModule } from '@ngrx/effects';
 import {
   RouterStateSerializer,
@@ -22,6 +22,7 @@ import { CoreModule, RouteSerializer } from './core';
 import { effects } from './store/effects';
 import { metaReducers, reducers } from './store/reducers';
 import { materialModules } from './shared/materials.module';
+import { HeaderBarModule } from '@iapps/ng-dhis2-ui';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -35,6 +36,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     RoutingModule,
     CoreModule,
+    HeaderBarModule,
     ...materialModules,
     BrowserAnimationsModule,
     StoreModule.forRoot(reducers, { metaReducers }),
@@ -51,7 +53,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     /**
      * Menu  module
      */
-    NgxDhis2MenuModule,
+    // NgxDhis2MenuModule,
 
     /**
      Translation module

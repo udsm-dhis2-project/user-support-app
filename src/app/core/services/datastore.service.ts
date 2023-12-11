@@ -10,7 +10,7 @@ import {
   getDataStoreUrlParams,
   getPaginatedDataStoreKeys,
 } from 'src/app/shared/helpers/datastore.helper';
-import * as moment from 'moment';
+import moment from 'moment';
 
 import { orderBy } from 'lodash';
 

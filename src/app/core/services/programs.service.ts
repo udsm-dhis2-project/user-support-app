@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 

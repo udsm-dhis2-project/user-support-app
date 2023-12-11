@@ -11,13 +11,18 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "target": "ES2022",
+    "useDefineForClassFields": false,
+    "emitDecoratorMetadata": true,
+    "jsx": "react",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "typeRoots": [
       "node_modules/@types"
     ],
     "lib": [
       "es2017",
       "dom"
-    ],
-    "useDefineForClassFields": false
+    ]
   }
 }
