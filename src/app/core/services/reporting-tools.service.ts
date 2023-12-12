@@ -34,6 +34,7 @@ export class ReportingToolsService {
       .pipe(
         map((response) => {
           return {
+            organisationUnits: response?.organisationUnits,
             data: response?.organisationUnits
               .filter((ou) => !ou?.closedDate)
               .map((orgUnit) => {
@@ -137,7 +138,7 @@ export class ReportingToolsService {
           )?.map((dataSet) => {
             return {
               ...dataSet,
-              type: 'dataset',
+              type: 'DATASET',
               categoryOptions: flatten(
                 (
                   dataSet?.categoryCombo?.categoryOptionCombos?.filter(

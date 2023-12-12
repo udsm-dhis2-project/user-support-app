@@ -31,26 +31,26 @@ export class ProgramsService {
           const filteredPrograms = response?.programs;
           return {
             ...response,
-            programs: filteredPrograms.map((dataSet) => {
+            programs: filteredPrograms?.map((program: any) => {
               const matchedKeys =
-                paginationDetails?.userSupportDataStoreKeys.filter(
-                  (key) => key.indexOf(dataSet?.id) > -1
+                paginationDetails?.userSupportDataStoreKeys?.filter(
+                  (key) => key?.indexOf(program?.id) > -1
                 ) || [];
               return {
-                ...dataSet,
+                ...program,
                 hasPendingRequest: matchedKeys?.length > 0,
 
                 keys: matchedKeys,
                 timeSinceResponseSent:
-                  matchedKeys.length > 0
+                  matchedKeys?.length > 0
                     ? moment(
-                        Number(matchedKeys[0].split('_')[0].replace('DS', ''))
+                        Number(matchedKeys[0]?.split('_')[0]?.replace('DS', ''))
                       ).fromNow()
                     : '',
                 date:
-                  matchedKeys.length > 0
+                  matchedKeys?.length > 0
                     ? Date.now() -
-                      Number(matchedKeys[0].split('_')[0].replace('DS', ''))
+                      Number(matchedKeys[0]?.split('_')[0]?.replace('DS', ''))
                     : null,
               };
             }),
@@ -68,7 +68,7 @@ export class ProgramsService {
           response?.programs?.map((program: any) => {
             return {
               ...program,
-              type: 'program',
+              type: 'PROGRAM',
             };
           })
         ),

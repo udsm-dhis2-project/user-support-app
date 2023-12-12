@@ -7,54 +7,54 @@
   </div>
 </div>
 
-<div *ngIf="!savingData && !savedData">
-  <div
-    class="request-container"
+<ng-container *ngIf="!savingData && !savedData">
+  <ng-container
     *ngIf="{
       assignedReportingTools: assignedReportingTools$ | async,
       reportingTools: reportingTools$ | async,
       dataStoreMessageDetails: dataStoreMessageDetails$ | async
     } as params"
   >
-    <h5>
+    <h2 mat-dialog-title>
       {{ dialogData?.facility?.name }}
-    </h5>
-    <div
-      class="contents"
-      *ngIf="
-        (params?.assignedReportingTools &&
-          params?.reportingTools &&
-          ouHasPendingRequest &&
-          params?.dataStoreMessageDetails) ||
-        (!ouHasPendingRequest &&
-          params?.assignedReportingTools &&
-          params?.reportingTools)
-      "
-    >
-      <app-request-form
-        [assignedReportingTools]="params?.assignedReportingTools"
-        [reportingTools]="params?.reportingTools"
-        [userSupportKeys]="dialogData?.userSupportKeys"
-        [dataStoreMessageDetails]="params?.dataStoreMessageDetails"
-        [dataSetAttributesData]="dataSetAttributesData"
-        [facility]="dialogData?.facility"
-        [keywordsKeys]="keywordsKeys"
-        (assignmentDetails)="
-          onGetAssignmentDetails($event, dialogData?.facility)
+    </h2>
+    <mat-dialog-content class="mat-typography">
+      <div
+        class="contents"
+        *ngIf="
+          (params?.assignedReportingTools &&
+            params?.reportingTools &&
+            ouHasPendingRequest &&
+            params?.dataStoreMessageDetails) ||
+          (!ouHasPendingRequest &&
+            params?.assignedReportingTools &&
+            params?.reportingTools)
         "
-      ></app-request-form>
-    </div>
-    <mat-progress-bar
-      mode="indeterminate"
-      *ngIf="
-        !params?.assignedReportingTools ||
-        !params?.reportingTools ||
-        (!params?.dataStoreMessageDetails && ouHasPendingRequest)
-      "
-    ></mat-progress-bar>
-
-    <div mat-dialog-actions class="d-flex justify-content-end">
-      <button mat-stroked-button (click)="onClose($event)">
+      >
+        <app-request-form
+          [assignedReportingTools]="params?.assignedReportingTools"
+          [reportingTools]="params?.reportingTools"
+          [userSupportKeys]="dialogData?.userSupportKeys"
+          [dataStoreMessageDetails]="params?.dataStoreMessageDetails"
+          [dataSetAttributesData]="dataSetAttributesData"
+          [facility]="dialogData?.facility"
+          [keywordsKeys]="keywordsKeys"
+          (assignmentDetails)="
+            onGetAssignmentDetails($event, dialogData?.facility)
+          "
+        ></app-request-form>
+      </div>
+      <mat-progress-bar
+        mode="indeterminate"
+        *ngIf="
+          !params?.assignedReportingTools ||
+          !params?.reportingTools ||
+          (!params?.dataStoreMessageDetails && ouHasPendingRequest)
+        "
+      ></mat-progress-bar>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="onClose($event)">
         {{ 'Close' | translate }}
       </button>
       <button
@@ -79,12 +79,12 @@
       >
         {{ 'Send' | translate }}
       </button>
-    </div>
-  </div>
-</div>
+    </mat-dialog-actions>
+  </ng-container>
 
-<div *ngIf="savedData">
-  <p class="success-message">
-    {{ 'Successfully sent form request' | translate }}
-  </p>
-</div>
+  <div *ngIf="savedData">
+    <p class="success-message">
+      {{ 'Successfully sent form request' | translate }}
+    </p>
+  </div>
+</ng-container>

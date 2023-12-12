@@ -113,9 +113,12 @@ export class DataStoreDataService {
   }
 
   getDataStoreKeys(): Observable<string[]> {
-    return this.httpClient.get('dataStore/dhis2-user-support').pipe(
+    return this.httpClient.get('dataStore/dhis2-user-support', {}).pipe(
       map((response) => {
-        return response;
+        return (
+          response['dhis2-user-support']?.map((keyData: any) => keyData?.id) ||
+          []
+        );
       }),
       catchError((error) => of(error))
     );
@@ -308,7 +311,10 @@ export class DataStoreDataService {
     isFeedbackRecepient?: boolean
   ): Observable<string[]> {
     return this.httpClient.get('dataStore/' + namespace).pipe(
-      map((response) => {
+      map((serverResponse) => {
+        const response = serverResponse[namespace]?.map(
+          (keyData: any) => keyData?.id
+        );
         return category == 'UA'
           ? response?.filter((key) => {
               if (

@@ -29,7 +29,6 @@ export class ApproveUserAccountsModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('DATA', this.dialogData);
     this.getRequestInformation();
   }
 

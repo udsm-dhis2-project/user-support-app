@@ -30,12 +30,11 @@
 }
 
 .list-item {
-  cursor: pointer;
+  cursor: pointer !important;
   display: flex;
   -webkit-box-align: stretch;
   align-items: stretch;
   padding: 0px;
-  cursor: pointer;
   list-style: none;
   transition: background-color 150ms ease-in-out 0s;
   color: rgb(33, 41, 52);

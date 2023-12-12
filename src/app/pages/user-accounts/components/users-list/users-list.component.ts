@@ -162,7 +162,7 @@ export class UsersListComponent implements OnInit {
   openUserPassResetDialog(user: any) {
     this.dialog
       .open(UpdateUserPasswordModalComponent, {
-        minWidth: '50%',
+        minWidth: '25%',
         data: {
           user,
         },
