@@ -1,0 +1,40 @@
+<ng-container *ngIf="{ systemId: systemId$ | async } as params">
+  <h2 mat-dialog-title>Create role</h2>
+  <mat-dialog-content class="mat-typography">
+    <div class="loading-overlay" *ngIf="adding">
+      <div class="text-center">
+        <div>{{ 'Adding' | translate }} ....</div>
+        <div class="mt-3 d-flex justify-content-center w-100">
+          <mat-spinner diameter="50" strokeWidth="2"></mat-spinner>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngIf="!adding">
+      <app-form
+        [fields]="roleFields"
+        (formUpdate)="onFormUpdate($event)"
+      ></app-form>
+      <app-multiple-items-selection
+        [resourceType]="'userRoles'"
+        [selectedItems]="selectedItems"
+        (selectedItemsList)="onGetSelectedItems($event)"
+      ></app-multiple-items-selection>
+    </ng-container>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onSave($event)"
+      [disabled]="
+        !isFormValid ||
+        !selectedItems ||
+        selectedItems?.length === 0 ||
+        !params?.systemId
+      "
+    >
+      Save
+    </button>
+  </mat-dialog-actions>
+</ng-container>

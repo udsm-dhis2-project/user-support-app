@@ -107,6 +107,18 @@
                     [routerLink]="'statistics'"
                     >{{ 'Statistics' | translate }}</mat-list-item
                   > -->
+                  <mat-list-item
+                    *ngIf="
+                      params?.currentUser &&
+                      (params?.currentUser?.keyedAuthorities['ALL'] ||
+                        params?.currentUser?.keyedAuthorities['US_SETTINGS'])
+                    "
+                    role="listitem"
+                    class="list-item"
+                    routerLinkActive="active-menu-item"
+                    [routerLink]="'settings'"
+                    >{{ 'Settings' | translate }}</mat-list-item
+                  >
                 </mat-list>
               </div>
             </mat-drawer>
@@ -203,6 +215,19 @@
                     routerLinkActive="active-menu-item"
                     [routerLink]="'validation-rules-request'"
                     >{{ 'Validation Rules request' | translate }}</mat-list-item
+                  >
+
+                  <mat-list-item
+                    *ngIf="
+                      params?.currentUser &&
+                      (params?.currentUser?.keyedAuthorities['ALL'] ||
+                        params?.currentUser?.keyedAuthorities['US_SETTINGS'])
+                    "
+                    role="listitem"
+                    class="list-item"
+                    routerLinkActive="active-menu-item"
+                    [routerLink]="'settings'"
+                    >{{ 'Settings' | translate }}</mat-list-item
                   >
                 </mat-list>
                 <div class="contents-container">
