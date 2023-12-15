@@ -18,8 +18,9 @@
           <th>{{ 'Names' | translate }}</th>
           <th>{{ 'Username' | translate }}</th>
           <th>{{ 'Email' | translate }}</th>
+          <th>{{ 'Phone number' | translate }}</th>
           <th>{{ 'Last login' | translate }}</th>
-          <th>{{ 'Disabled' | translate }}</th>
+          <th>{{ 'Status' | translate }}</th>
           <th>{{ 'Action' | translate }}</th>
         </tr>
       </thead>
@@ -41,10 +42,16 @@
               {{ user?.email }}
             </td>
             <td>
+              {{ user?.phoneNumber }}
+            </td>
+            <td>
               {{ user?.userCredentials?.lastLogin }}
             </td>
             <td>
-              <mat-icon *ngIf="user?.userCredentials?.disabled">done</mat-icon>
+              <span *ngIf="user?.userCredentials?.disabled"
+                >Inactive(Disable)</span
+              >
+              <span *ngIf="!user?.userCredentials?.disabled">Active</span>
             </td>
             <td>
               <button
@@ -150,20 +157,25 @@
     </table>
     <!-- {{ params?.usersResponse?.pager | json }} -->
     <div
-      class="d-flex justify-content-end mt-2"
+      class="mt-2"
       *ngIf="
         !params?.usersResponse?.message && params?.usersResponse?.pager?.total
       "
     >
-      <mat-paginator
-        [length]="params?.usersResponse?.pager?.total"
-        aria-label="Select page"
-        [pageSize]="pageSize"
-        [pageIndex]="pageIndex"
-        [pageSizeOptions]="pageSizeOptions"
-        (page)="getUsers($event, params?.usersResponse?.pager)"
-      >
-      </mat-paginator>
+      <div class="row">
+        <div class="col-11 d-flex justify-content-end">
+          <mat-paginator
+            [length]="params?.usersResponse?.pager?.total"
+            aria-label="Select page"
+            [pageSize]="pageSize"
+            [pageIndex]="pageIndex"
+            [pageSizeOptions]="pageSizeOptions"
+            (page)="getUsers($event, params?.usersResponse?.pager)"
+          >
+          </mat-paginator>
+        </div>
+        <div class="col-1"></div>
+      </div>
 
       <!-- <button
         mat-stroked-button

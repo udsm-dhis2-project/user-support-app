@@ -38,7 +38,7 @@ export class UsersDataService {
       .get(
         `users.json?pageSize=${pageSize}&page=${page}${
           q ? '&query=' + q : ''
-        }&fields=id,firstName,organisationUnits[id,level,name,code,path],surname,name,email,userCredentials[username,lastlogin,disabled]&order=firstName~asc${
+        }&fields=id,firstName,organisationUnits[id,level,name,code,path,parent[id,name,parent[id,name]]],surname,name,email,phoneNumber,userCredentials[username,lastlogin,disabled]&order=firstName~asc${
           pathSection
             ? '&filter=organisationUnits.path:ilike:' + pathSection
             : ''
