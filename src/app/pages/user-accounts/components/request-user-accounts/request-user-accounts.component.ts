@@ -483,11 +483,14 @@ export class RequestUserAccountsComponent implements OnInit {
       },
     ];
 
+    console.log('selectedRoles', this.selectedRoles);
+
     this.selectedUserGroups = [
       {
         id: this.formData?.userGroup?.value,
       },
     ];
+    console.log('selectedUserGroups', this.selectedUserGroups);
     this.isAccessControlFormValid = formvalue.isValid;
   }
 

@@ -87,7 +87,10 @@ export class CreateGroupModalComponent implements OnInit {
                   ) || []
                 : this.data?.configurations?.allowedUserGroupsForRequest),
               {
-                id: this.data?.group ? this.data?.group?.id : id,
+                id:
+                  this.data?.group && this.data?.group?.id
+                    ? this.data?.group?.id
+                    : id,
                 name: this.formValuesData?.name?.value,
                 description: this.formValuesData?.description?.value,
                 associatedGroups: this.selectedItems,

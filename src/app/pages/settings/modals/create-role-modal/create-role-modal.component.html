@@ -26,7 +26,7 @@
     <button
       mat-flat-button
       color="primary"
-      (click)="onSave($event)"
+      (click)="onSave($event, params?.systemId)"
       [disabled]="
         !isFormValid ||
         !selectedItems ||

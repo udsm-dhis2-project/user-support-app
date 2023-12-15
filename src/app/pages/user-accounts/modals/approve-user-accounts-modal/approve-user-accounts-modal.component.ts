@@ -199,6 +199,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
         if (response && response != 'none') {
           const messageConversation = response;
           const selectedUsername = this.currentUsername;
+          console.log('DDD', this.dialogData?.configurations);
           if (this.currentUsername) {
             const data = {
               id: request?.id,
@@ -311,28 +312,29 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                 }),
               },
             };
+            console.log('DATA', data);
 
-            this.usersDataService.approveChanges(data).subscribe((response) => {
-              if (response) {
-                this.currentUsername = null;
-                // If datastore key is complete please delete
-                if (countOfUsersRemainedToCreate == 1) {
-                  // delete first
-                  this.dataStoreDataService
-                    .deleteDataStoreKey(request?.id)
-                    .subscribe((response) => {
-                      this.getRequestInformation();
-                      this.saving = false;
-                      setTimeout(() => {
-                        this.dialogRef.close(true);
-                      });
-                    });
-                } else {
-                  this.getRequestInformation();
-                  this.saving = false;
-                }
-              }
-            });
+            // this.usersDataService.approveChanges(data).subscribe((response) => {
+            //   if (response) {
+            //     this.currentUsername = null;
+            //     // If datastore key is complete please delete
+            //     if (countOfUsersRemainedToCreate == 1) {
+            //       // delete first
+            //       this.dataStoreDataService
+            //         .deleteDataStoreKey(request?.id)
+            //         .subscribe((response) => {
+            //           this.getRequestInformation();
+            //           this.saving = false;
+            //           setTimeout(() => {
+            //             this.dialogRef.close(true);
+            //           });
+            //         });
+            //     } else {
+            //       this.getRequestInformation();
+            //       this.saving = false;
+            //     }
+            //   }
+            // });
           } else {
             this.saving = false;
           }

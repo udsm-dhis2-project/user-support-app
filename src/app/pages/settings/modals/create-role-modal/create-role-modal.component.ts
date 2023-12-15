@@ -87,7 +87,10 @@ export class CreateRoleModalComponent implements OnInit {
                   ) || []
                 : this.data?.configurations?.allowedUserRolesForRequest),
               {
-                id: this.data?.role ? this.data?.role?.id : id,
+                id:
+                  this.data?.role && this.data?.role?.id
+                    ? this.data?.role?.id
+                    : id,
                 name: this.formValuesData?.name?.value,
                 description: this.formValuesData?.description?.value,
                 associatedRoles: this.selectedItems,

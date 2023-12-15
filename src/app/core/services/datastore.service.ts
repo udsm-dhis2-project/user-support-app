@@ -72,11 +72,23 @@ export class DataStoreDataService {
           id: 'ZI4hVQsL7Dq',
           name: 'Data Entrant',
           systemName: 'Data Manager',
+          associatedRoles: [
+            {
+              id: 'ZI4hVQsL7Dq',
+              name: 'Data Entrant',
+            },
+          ],
         },
         {
           id: 'wnEvOlOb9U9',
           name: 'Program Manager (Can not enter data)',
           systemName: 'Program Manager',
+          associatedRoles: [
+            {
+              id: 'wnEvOlOb9U9',
+              name: 'Program Manager (Can not enter data)',
+            },
+          ],
           expectedUserGroups: [
             {
               id: 'zk2Zubvm2kP',
@@ -99,7 +111,7 @@ export class DataStoreDataService {
         },
       ],
       usersSettings: {
-        defaultPassword: 'HMIS@2022',
+        defaultPassword: 'Hmis@2022',
       },
     };
     return this.httpClient
