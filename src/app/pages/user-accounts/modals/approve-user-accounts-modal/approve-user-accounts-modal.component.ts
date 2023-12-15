@@ -199,7 +199,6 @@ export class ApproveUserAccountsModalComponent implements OnInit {
         if (response && response != 'none') {
           const messageConversation = response;
           const selectedUsername = this.currentUsername;
-          console.log('DDD', this.dialogData?.configurations);
           if (this.currentUsername) {
             const data = {
               id: request?.id,
@@ -214,37 +213,56 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                         ?.defaultPassword,
                     username: selectedUsername,
                     userRoles:
-                      userToApprove?.userCredentials?.userRoles?.filter(
-                        (role) => role?.id != ''
-                      ) || [
-                        {
-                          id: 'ZI4hVQsL7Dq',
-                        },
-                      ],
-                  },
-                  userGroups: [
-                    ...userToApprove?.userGroups,
-                    ...flatten(
                       (
-                        this.dialogData?.configurations?.allowedUserGroupsForRequest?.filter(
-                          (group) =>
-                            userToApprove?.userGroups[0]?.id === group?.id
+                        flatten(
+                          (
+                            userToApprove?.userCredentials?.userRoles?.filter(
+                              (role) => role?.id != ''
+                            ) || []
+                          )?.map((userRole: any) => {
+                            return flatten(
+                              (
+                                this.dialogData?.configurations?.allowedUserRolesForRequest?.filter(
+                                  (role: any) => role?.id === userRole?.id
+                                ) || []
+                              )?.map(
+                                (configuredRole: any) =>
+                                  configuredRole?.associatedRoles || []
+                              ) || []
+                            );
+                          })
                         ) || []
-                      )?.map((userGroup) => {
-                        return userGroup?.associatedGroups.map((group) => {
-                          return !group?.id
-                            ? null
-                            : {
-                                id: group?.id,
-                              };
-                        });
-                      })
-                    ),
-                  ]?.filter((group) => group && group?.id != '') || [
-                    {
-                      id: 'zk2Zubvm2kP',
-                    },
-                  ],
+                      )?.map((role: any) => {
+                        return {
+                          id: role?.id,
+                        };
+                      }) || [],
+                  },
+                  userGroups:
+                    (
+                      flatten(
+                        (
+                          userToApprove?.userGroups?.filter(
+                            (group) => group?.id != ''
+                          ) || []
+                        )?.map((userGroup: any) => {
+                          return flatten(
+                            (
+                              this.dialogData?.configurations?.allowedUserGroupsForRequest?.filter(
+                                (group: any) => group?.id === userGroup?.id
+                              ) || []
+                            )?.map(
+                              (configuredGroup: any) =>
+                                configuredGroup?.associatedGroups || []
+                            ) || []
+                          );
+                        })
+                      ) || []
+                    )?.map((group: any) => {
+                      return {
+                        id: group?.id,
+                      };
+                    }) || [],
                   dataViewOrganisationUnits:
                     userToApprove?.dataViewOrganisationUnits?.length > 0
                       ? userToApprove?.dataViewOrganisationUnits?.map((ou) => {
@@ -312,29 +330,28 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                 }),
               },
             };
-            console.log('DATA', data);
 
-            // this.usersDataService.approveChanges(data).subscribe((response) => {
-            //   if (response) {
-            //     this.currentUsername = null;
-            //     // If datastore key is complete please delete
-            //     if (countOfUsersRemainedToCreate == 1) {
-            //       // delete first
-            //       this.dataStoreDataService
-            //         .deleteDataStoreKey(request?.id)
-            //         .subscribe((response) => {
-            //           this.getRequestInformation();
-            //           this.saving = false;
-            //           setTimeout(() => {
-            //             this.dialogRef.close(true);
-            //           });
-            //         });
-            //     } else {
-            //       this.getRequestInformation();
-            //       this.saving = false;
-            //     }
-            //   }
-            // });
+            this.usersDataService.approveChanges(data).subscribe((response) => {
+              if (response) {
+                this.currentUsername = null;
+                // If datastore key is complete please delete
+                if (countOfUsersRemainedToCreate == 1) {
+                  // delete first
+                  this.dataStoreDataService
+                    .deleteDataStoreKey(request?.id)
+                    .subscribe((response) => {
+                      this.getRequestInformation();
+                      this.saving = false;
+                      setTimeout(() => {
+                        this.dialogRef.close(true);
+                      });
+                    });
+                } else {
+                  this.getRequestInformation();
+                  this.saving = false;
+                }
+              }
+            });
           } else {
             this.saving = false;
           }
