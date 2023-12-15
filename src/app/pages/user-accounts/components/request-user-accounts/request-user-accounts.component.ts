@@ -296,7 +296,7 @@ export class RequestUserAccountsComponent implements OnInit {
                   );
                 })
                 .join('\n')} `,
-              subject: 'UA' + Date.now().toString() + '- MAOMBI YA ACCOUNT',
+              subject: 'UA' + Date.now().toString() + '- ACCOUNT REQUEST',
             },
             replyMessage: 'to be constructed',
             payload: this.formDataToStoreLocally?.map((data, index) => {

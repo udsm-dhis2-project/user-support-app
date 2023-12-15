@@ -104,7 +104,7 @@ export class UsersListComponent implements OnInit {
               }: \n\n  Username: ${user?.userCredentials?.username} \n Names: ${
                 user?.name
               } \n Email: ${user?.email ? user?.email : ''}`,
-              subject: 'UA' + Date.now().toString() + '- MAOMBI YA ACCOUNT',
+              subject: 'UA' + Date.now().toString() + '- ACCOUNT REQUEST',
             },
             replyMessage: `Account ${user?.userCredentials?.username} for ${
               user?.name
