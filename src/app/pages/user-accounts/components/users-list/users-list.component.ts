@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, map } from 'rxjs';
+import { Observable, map, startWith } from 'rxjs';
 import { UsersDataService } from 'src/app/core/services/users.service';
 import { UpdateUserActivationModalComponent } from '../../modals/update-user-activation-modal/update-user-activation-modal.component';
 import { UpdateUserOrgunitModalComponent } from '../../modals/update-user-orgunit-modal/update-user-orgunit-modal.component';
@@ -9,6 +9,10 @@ import { UpdateUserRoleModalComponent } from '../../modals/update-user-role-moda
 import { UploadUsersModalComponent } from '../../modals/upload-users-modal/upload-users-modal.component';
 import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormControl } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
   selector: 'app-users-list',
@@ -26,6 +30,13 @@ export class UsersListComponent implements OnInit {
   pageSizeOptions: number[] = [5, 10, 20, 25, 50, 100, 200];
   saving: boolean = false;
   @Input() levels: any[];
+
+  ouLevelsControl = new FormControl('');
+  options: string[] = [];
+  filteredOptions: Observable<string[]>;
+  selectedLevel: number;
+  accountStatus: any;
+
   constructor(
     private usersDataService: UsersDataService,
     private dialog: MatDialog,
@@ -34,6 +45,36 @@ export class UsersListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.options = this.levels;
+    this.filteredOptions = this.ouLevelsControl.valueChanges.pipe(
+      startWith(''),
+      map((value: any) => {
+        const name = typeof value === 'string' ? value : value?.name;
+        return name ? this._filter(name as string) : this.options.slice();
+      })
+    );
+    this.loadUsersList();
+  }
+
+  displayFn(item: any): string {
+    return item && item?.name ? item?.name : '';
+  }
+
+  private _filter(name: string): any[] {
+    const filterValue = name.toLowerCase();
+
+    return this.options.filter((option: any) =>
+      option?.name.toLowerCase().includes(filterValue)
+    );
+  }
+
+  onGetSelectedOption(event: MatAutocompleteSelectedEvent): void {
+    this.selectedLevel = event?.option?.value?.level;
+    this.loadUsersList();
+  }
+
+  getAccountStatus(event: MatRadioChange): void {
+    this.accountStatus = event.value;
     this.loadUsersList();
   }
 
@@ -43,7 +84,9 @@ export class UsersListComponent implements OnInit {
       this.page,
       this.searchingText,
       this.currentUser?.organisationUnits[0]?.id,
-      this.levels
+      this.levels,
+      this.selectedLevel,
+      this.accountStatus
     );
   }
 

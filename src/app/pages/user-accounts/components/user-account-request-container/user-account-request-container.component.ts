@@ -16,7 +16,7 @@ export class UserAccountRequestContainerComponent implements OnInit {
   constructor(private orgUnitPrivisionalService: OrgUnitsProvisionalService) {}
 
   ngOnInit(): void {
-    this.levels$ = this.orgUnitPrivisionalService.getOrgUnitLevels(2).pipe(
+    this.levels$ = this.orgUnitPrivisionalService.getOrgUnitLevels(1).pipe(
       map((orgUnitLevels: any) => {
         return orderBy(orgUnitLevels, ['level'], ['asc']);
       })

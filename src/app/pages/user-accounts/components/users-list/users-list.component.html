@@ -4,12 +4,57 @@
     usersResponse: usersResponse$ | async
   } as params"
 >
-  <div class="w-100 mt-2 mb-2">
-    <mat-form-field class="w-50">
+  <div class="w-100 mt-2 mb-2 d-flex">
+    <mat-form-field class="w-25">
       <mat-label>{{ 'Search' | translate }} </mat-label>
       <mat-icon matPrefix>search</mat-icon>
       <input matInput (keyup)="searchUser($event)" />
     </mat-form-field>
+    <div class="w-75 d-flex justify-content-end">
+      <div class="w-25">
+        <section>
+          <mat-radio-group (change)="getAccountStatus($event)">
+            <mat-radio-button value="active"
+              >Active<span
+                class="ml-1"
+                *ngIf="accountStatus && accountStatus === 'active'"
+              >
+                [{{ params?.usersResponse?.pager?.total }}]
+              </span></mat-radio-button
+            >
+            <mat-radio-button value="disabled"
+              >In-active
+              <span
+                class="ml-1"
+                *ngIf="accountStatus && accountStatus === 'disabled'"
+              >
+                [{{ params?.usersResponse?.pager?.total }}]
+              </span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </section>
+      </div>
+      <mat-form-field class="w-25" appearance="outline">
+        <mat-label>Levels</mat-label>
+        <input
+          type="text"
+          placeholder="Search"
+          aria-label="Number"
+          matInput
+          [formControl]="ouLevelsControl"
+          [matAutocomplete]="auto"
+        />
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          [displayWith]="displayFn"
+          (optionSelected)="onGetSelectedOption($event)"
+        >
+          @for (option of filteredOptions | async; track option) {
+          <mat-option [value]="option">{{ option?.name }}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
   </div>
 
   <div *ngIf="params?.usersResponse">
@@ -21,9 +66,11 @@
           <th>{{ 'Username' | translate }}</th>
           <th>{{ 'Email' | translate }}</th>
           <th>{{ 'Phone number' | translate }}</th>
-          <th *ngFor="let level of levels">
-            {{ level?.name }}
-          </th>
+          <ng-container *ngFor="let level of levels">
+            <th *ngIf="level?.level > 1">
+              {{ level?.name }}
+            </th>
+          </ng-container>
           <th>{{ 'Last login' | translate }}</th>
           <th>{{ 'Status' | translate }}</th>
           <th>{{ 'Action' | translate }}</th>
@@ -49,9 +96,12 @@
             <td>
               {{ user?.phoneNumber }}
             </td>
-            <td *ngFor="let level of levels">
-              {{ user?.leveledOrgUnitsTree[level?.level]?.name }}
-            </td>
+
+            <ng-container *ngFor="let level of levels">
+              <td *ngIf="level?.level > 1">
+                {{ user?.leveledOrgUnitsTree[level?.level]?.name }}
+              </td>
+            </ng-container>
             <td>
               {{ user?.userCredentials?.lastLogin }}
             </td>

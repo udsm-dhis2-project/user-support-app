@@ -34,7 +34,9 @@ export class UsersDataService {
     page: number,
     q?: string,
     pathSection?: string,
-    levels?: any[]
+    levels?: any[],
+    selectedLevel?: number,
+    accountStatus?: string
   ): Observable<any> {
     return this.httpClient
       .get(
@@ -43,6 +45,15 @@ export class UsersDataService {
         }&fields=id,firstName,organisationUnits[id,level,name,code,path,parent[id,name,level,parent[id,name,level]]],surname,name,email,phoneNumber,userCredentials[username,lastlogin,disabled]&order=firstName~asc${
           pathSection
             ? '&filter=organisationUnits.path:ilike:' + pathSection
+            : ''
+        }${
+          selectedLevel
+            ? '&filter=organisationUnits.level:eq:' + selectedLevel
+            : ''
+        }${
+          accountStatus
+            ? '&filter=userCredentials.disabled:eq:' +
+              (accountStatus == 'active' ? false : true)
             : ''
         }`
       )
