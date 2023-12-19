@@ -1,10 +1,11 @@
-import { flatten } from 'lodash';
+import { flatten, keyBy } from 'lodash';
 import { Injectable } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Observable, of, zip } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { FeedbackRecepientModel } from 'src/app/shared/models/users.model';
 import { HttpClient } from '@angular/common/http';
+import { flattenToArrayGivenOrgUnits } from '../helpers/organisation-units.helpers';
 
 @Injectable({
   providedIn: 'root',
@@ -32,13 +33,14 @@ export class UsersDataService {
     pageSize: number,
     page: number,
     q?: string,
-    pathSection?: string
+    pathSection?: string,
+    levels?: any[]
   ): Observable<any> {
     return this.httpClient
       .get(
         `users.json?pageSize=${pageSize}&page=${page}${
           q ? '&query=' + q : ''
-        }&fields=id,firstName,organisationUnits[id,level,name,code,path,parent[id,name,parent[id,name]]],surname,name,email,phoneNumber,userCredentials[username,lastlogin,disabled]&order=firstName~asc${
+        }&fields=id,firstName,organisationUnits[id,level,name,code,path,parent[id,name,level,parent[id,name,level]]],surname,name,email,phoneNumber,userCredentials[username,lastlogin,disabled]&order=firstName~asc${
           pathSection
             ? '&filter=organisationUnits.path:ilike:' + pathSection
             : ''
@@ -46,7 +48,22 @@ export class UsersDataService {
       )
       .pipe(
         map((response) => {
-          return response;
+          return {
+            ...response,
+            users: response?.users?.map((user: any) => {
+              return {
+                ...user,
+                leveledOrgUnitsTree: keyBy(
+                  flatten(
+                    user?.organisationUnits?.map((orgUnit: any) => {
+                      return flattenToArrayGivenOrgUnits(orgUnit);
+                    })
+                  ),
+                  'level'
+                ),
+              };
+            }),
+          };
         }),
         catchError((error) => of(error))
       );

@@ -1,4 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Observable, map } from 'rxjs';
+import { OrgUnitsProvisionalService } from 'src/app/core/services/organisationunits.service';
+import { orderBy } from 'lodash';
 
 @Component({
   selector: 'app-user-account-request-container',
@@ -9,9 +12,16 @@ export class UserAccountRequestContainerComponent implements OnInit {
   @Input() currentUser: any;
   @Input() systemConfigs: any;
   @Input() configurations: any;
-  constructor() {}
+  levels$: Observable<any>;
+  constructor(private orgUnitPrivisionalService: OrgUnitsProvisionalService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.levels$ = this.orgUnitPrivisionalService.getOrgUnitLevels(2).pipe(
+      map((orgUnitLevels: any) => {
+        return orderBy(orgUnitLevels, ['level'], ['asc']);
+      })
+    );
+  }
 
   get isSecondTier(): boolean {
     return (

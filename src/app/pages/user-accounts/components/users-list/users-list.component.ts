@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { UsersDataService } from 'src/app/core/services/users.service';
 import { UpdateUserActivationModalComponent } from '../../modals/update-user-activation-modal/update-user-activation-modal.component';
 import { UpdateUserOrgunitModalComponent } from '../../modals/update-user-orgunit-modal/update-user-orgunit-modal.component';
@@ -25,6 +25,7 @@ export class UsersListComponent implements OnInit {
   @Input() systemConfigs: any;
   pageSizeOptions: number[] = [5, 10, 20, 25, 50, 100, 200];
   saving: boolean = false;
+  @Input() levels: any[];
   constructor(
     private usersDataService: UsersDataService,
     private dialog: MatDialog,
@@ -41,7 +42,8 @@ export class UsersListComponent implements OnInit {
       this.pageSize,
       this.page,
       this.searchingText,
-      this.currentUser?.organisationUnits[0]?.id
+      this.currentUser?.organisationUnits[0]?.id,
+      this.levels
     );
   }
 

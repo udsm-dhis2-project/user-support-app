@@ -7,3 +7,16 @@ export function duduceTheHighetLevelFromOus(organisationUnits: any[]): number {
   });
   return hightestLevel;
 }
+
+export function flattenToArrayGivenOrgUnits(item, result = []): any[] {
+  const flattenedItem = { ...item };
+  delete flattenedItem?.parent;
+
+  result.push(flattenedItem);
+
+  if (item?.parent) {
+    flattenToArrayGivenOrgUnits(item?.parent, result);
+  }
+
+  return result;
+}

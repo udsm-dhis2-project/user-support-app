@@ -1,6 +1,8 @@
 <div
   class="users-list-container"
-  *ngIf="{ usersResponse: usersResponse$ | async } as params"
+  *ngIf="{
+    usersResponse: usersResponse$ | async
+  } as params"
 >
   <div class="w-100 mt-2 mb-2">
     <mat-form-field class="w-50">
@@ -19,6 +21,9 @@
           <th>{{ 'Username' | translate }}</th>
           <th>{{ 'Email' | translate }}</th>
           <th>{{ 'Phone number' | translate }}</th>
+          <th *ngFor="let level of levels">
+            {{ level?.name }}
+          </th>
           <th>{{ 'Last login' | translate }}</th>
           <th>{{ 'Status' | translate }}</th>
           <th>{{ 'Action' | translate }}</th>
@@ -43,6 +48,9 @@
             </td>
             <td>
               {{ user?.phoneNumber }}
+            </td>
+            <td *ngFor="let level of levels">
+              {{ user?.leveledOrgUnitsTree[level?.level]?.name }}
             </td>
             <td>
               {{ user?.userCredentials?.lastLogin }}
