@@ -13,12 +13,7 @@
     dataSetsCategoriesPayload: dataSetsCategoriesPayload$ | async
   } as params"
 >
-  <mat-progress-bar
-    mode="indeterminate"
-    *ngIf="!params?.messageConversation || !params?.dataSetsCategoriesPayload"
-  ></mat-progress-bar>
-
-  <h2 mat-dialog-title>{{ 'Account approval' | translate }}</h2>
+  <h2 mat-dialog-title>{{ 'Reporting Tool Approval' | translate }}</h2>
   <mat-dialog-content class="mat-typography">
     <div
       class="approve-container"
@@ -49,7 +44,7 @@
           <p>
             {{ dialogData?.action }}
           </p>
-          <a (click)="toggleDetails($event)">{{
+          <a style="cursor: pointer" (click)="toggleDetails($event)">{{
             viewDetails ? 'View less' : 'View details'
           }}</a>
 
@@ -84,7 +79,7 @@
               {{ (successfullyApproved ? 'Done' : 'Close') | translate }}
             </button>
             <button
-              mat-flat-button
+              mat-stroked-button
               [disabled]="
                 successfullyApproved ||
                 (dilogData?.actionType === 'REJECTED' &&

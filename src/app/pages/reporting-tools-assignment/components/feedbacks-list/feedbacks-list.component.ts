@@ -49,7 +49,7 @@ export class FeedbacksListComponent implements OnInit {
     event.stopPropagation();
     this.dialog
       .open(RespondFeedbackComponent, {
-        width: '30%',
+        minWidth: '30%',
         data: { ...data, actionType: 'APPROVE' },
       })
       .afterClosed()
@@ -64,7 +64,7 @@ export class FeedbacksListComponent implements OnInit {
     event.stopPropagation();
     this.dialog
       .open(RespondFeedbackComponent, {
-        width: '30%',
+        minWidth: '30%',
         data: { ...data, actionType: 'REJECTED' },
       })
       .afterClosed()
@@ -79,7 +79,7 @@ export class FeedbacksListComponent implements OnInit {
     event.stopPropagation();
     this.dialog
       .open(RespondFeedbackComponent, {
-        width: '30%',
+        minWidth: '30%',
         data: { ...data, actionType: 'REJECTED' },
       })
       .afterClosed()

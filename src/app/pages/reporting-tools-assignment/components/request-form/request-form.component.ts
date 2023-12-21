@@ -69,6 +69,7 @@ export class RequestFormComponent implements OnInit {
   ): void {
     event.stopPropagation();
     this.mergedReportingTools = mergedReportingTools.map((dataSet) => {
+      // console.log('DATASET', dataSet);
       return {
         ...dataSet,
         assigned:
@@ -88,7 +89,8 @@ export class RequestFormComponent implements OnInit {
       deletions:
         (
           this.mergedReportingTools?.filter(
-            (reportingTool: any) => reportingTool?.type === 'dataset'
+            (reportingTool: any) =>
+              reportingTool?.type?.toLowerCase() === 'dataset'
           ) || []
         )?.filter(
           (dataSet) =>
@@ -98,7 +100,8 @@ export class RequestFormComponent implements OnInit {
       additions:
         (
           this.mergedReportingTools?.filter(
-            (reportingTool: any) => reportingTool?.type === 'dataset'
+            (reportingTool: any) =>
+              reportingTool?.type?.toLowerCase() === 'dataset'
           ) || []
         )?.filter(
           (dataSet) =>
@@ -110,7 +113,8 @@ export class RequestFormComponent implements OnInit {
         deletions:
           (
             this.mergedReportingTools?.filter(
-              (reportingTool: any) => reportingTool?.type === 'program'
+              (reportingTool: any) =>
+                reportingTool?.type?.toLowerCase() === 'program'
             ) || []
           )?.filter(
             (dataSet) =>
@@ -120,14 +124,17 @@ export class RequestFormComponent implements OnInit {
         additions:
           (
             this.mergedReportingTools?.filter(
-              (reportingTool: any) => reportingTool?.type === 'program'
+              (reportingTool: any) =>
+                reportingTool?.type?.toLowerCase() === 'program'
             ) || []
-          )?.filter(
-            (dataSet) =>
-              (!keyedassignedReportingTools[dataSet?.id]?.assigned ||
-                (action === 'Update' && dataSet?.id === dataSetDetails?.id)) &&
+          )?.filter((dataSet) => {
+            if (
+              !keyedassignedReportingTools[dataSet?.id]?.assigned &&
               dataSet?.assigned
-          ) || [],
+            ) {
+              return dataSet;
+            }
+          }) || [],
       },
       assigned: this.mergedReportingTools.filter(
         (dataSet) => dataSet?.assigned
@@ -135,6 +142,8 @@ export class RequestFormComponent implements OnInit {
       dataSetAttributesData:
         this.attributeBasedDataSetSelections[dataSetDetails?.id],
     };
+
+    // console.log('assignmentData', assignmentData);
     this.assignmentDetails.emit(assignmentData);
   }
 
