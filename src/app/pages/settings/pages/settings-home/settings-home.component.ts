@@ -8,6 +8,7 @@ import { getCurrentUser } from 'src/app/store/selectors';
 import { CreateRoleModalComponent } from '../../modals/create-role-modal/create-role-modal.component';
 import { SharedDeleteConfigItemModalComponent } from '../../modals/shared-delete-config-item-modal/shared-delete-config-item-modal.component';
 import { CreateGroupModalComponent } from '../../modals/create-group-modal/create-group-modal.component';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-settings-home',
@@ -18,6 +19,9 @@ export class SettingsHomeComponent implements OnInit {
   configurations$: Observable<any>;
   currentUser$: Observable<any>;
   saving: boolean = false;
+  selectedLanguage: { name: string; key: string };
+  selectedLanguageTranslations$: Observable<any>;
+  translations: any = {};
   constructor(
     private dataStoreService: DataStoreDataService,
     private store: Store<State>,
@@ -140,5 +144,23 @@ export class SettingsHomeComponent implements OnInit {
           }
         });
     }
+  }
+
+  getSelectedLanguage(event: MatSelectChange): void {
+    this.selectedLanguage = event.value;
+  }
+
+  getSelectedLanguageTranslations() {
+    /**
+     * Steps:
+     * 1. Dispatch action to load translations using language key
+     * 2. Use select to get the translations
+     */
+    // this.selectedLanguageTranslations$ = st
+  }
+
+  getTranslationValue(translationValue: string, keyword: string): void {
+    this.translations[keyword] = translationValue;
+    console.log(this.translations);
   }
 }
