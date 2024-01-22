@@ -4,6 +4,7 @@ import { Field } from './field.model';
 export class FormValue {
   form: UntypedFormGroup;
   fields: Field<string>[];
+  e: any;
   constructor(form: UntypedFormGroup, fields: Field<string>[]) {
     this.form = form;
     this.fields = fields;
