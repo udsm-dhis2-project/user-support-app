@@ -210,57 +210,61 @@
           </button>
         </mat-card-actions>
       </mat-card>
-    
-        <div class="row">
-          <div class="col-md-6 col-sm-12 col-sx-12">
-            <mat-form-field>
-              <mat-label>Languages</mat-label>
-              <mat-select (selectionChange)="getSelectedLanguage($event)">
-                <mat-option
-                  *ngFor="let language of params?.configurations?.languages"
-                  [value]="language"
-                  >{{ language?.name }}</mat-option
-                >
-              </mat-select>
-            </mat-form-field>
-          </div>
-  
-          <div class="col-md-6 col-sm-12 col-sx-12 d-flex justify-content-end">
-            <button mat-stroked-button (click)="openDialog()">New language</button>
-          </div>
-        </div>
-        <div class="w-100" *ngIf="selectedLanguage">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Keyword</th>
-                <th>Translation</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="
-                  let keyword of params?.configurations?.translationKeywords
-                "
+
+      <div class="row">
+        <div class="col-md-6 col-sm-12 col-sx-12">
+          <mat-form-field>
+            <mat-label>Languages</mat-label>
+            <mat-select (selectionChange)="getSelectedLanguage($event)">
+              <mat-option
+                *ngFor="let language of params?.configurations?.languages"
+                [value]="language"
+                >{{ language?.name }}</mat-option
               >
-                <td>
-                  {{ keyword }}
-                </td>
-                <td>
-                  <app-capture-translation
-                    *ngIf="params?.selectedLanguageTranslations"
-                    [translation]="params?.selectedLanguageTranslations[keyword]"
-                    (translationValue)="getTranslationValue($event, keyword)"
-                    (updatedValue)="getUpdatedValue($event, keyword)"
-                  ></app-capture-translation>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            </mat-select>
+          </mat-form-field>
         </div>
-     
+
+        <div class="col-md-6 col-sm-12 col-sx-12 d-flex justify-content-end">
+          <button mat-stroked-button (click)="openDialog()">
+            New language
+          </button>
+        </div>
+      </div>
+      <div
+        class="w-100"
+        *ngIf="selectedLanguage"
+        style="height: 350px; overflow: auto"
+      >
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Keyword</th>
+              <th>Translation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="
+                let keyword of params?.configurations?.translationKeywords
+              "
+            >
+              <td>
+                {{ keyword }}
+              </td>
+              <td>
+                <app-capture-translation
+                  *ngIf="params?.selectedLanguageTranslations"
+                  [translation]="params?.selectedLanguageTranslations[keyword]"
+                  (translationValue)="getTranslationValue($event, keyword)"
+                  (updatedValue)="getUpdatedValue($event, keyword)"
+                ></app-capture-translation>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    
   </div>
   <div
     class="alert alert-warning"
