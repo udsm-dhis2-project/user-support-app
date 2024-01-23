@@ -9,8 +9,13 @@ import { getCurrentUser } from './store/selectors';
 import { MatDialog } from '@angular/material/dialog';
 import { MessagesModalComponent } from './shared/components/messages-modal/messages-modal.component';
 import { DataStoreDataService } from './core/services/datastore.service';
-import { loadSystemConfigurations } from './store/actions';
+import {
+  loadSystemConfigurations,
+  loadTranslation,
+  setDefaultLanguage,
+} from './store/actions';
 import { getSystemConfigs } from './store/selectors/system-configurations.selectors';
+import { getCurrentTranslations } from './store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +27,7 @@ export class AppComponent implements OnInit {
   systemSettings$: Observable<any>;
   ready: boolean = false;
   configurations$: Observable<any>;
+  translations$: Observable<any>;
 
   constructor(
     private translate: TranslateService,
@@ -32,6 +38,7 @@ export class AppComponent implements OnInit {
   ) {
     // this language will be used as a fallback when a translation isn't found in the current language
     this.translate.setDefaultLang('en');
+    this.store.dispatch(loadTranslation({ key: 'en' }));
 
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     this.translate.use('en');
@@ -51,6 +58,7 @@ export class AppComponent implements OnInit {
     this.ready = false;
     setTimeout(() => {
       this.translate.use(locale);
+      this.store.dispatch(loadTranslation({ key: locale }));
       this.ready = true;
     }, 50);
   }
@@ -70,6 +78,12 @@ export class AppComponent implements OnInit {
         this.configurations$.subscribe((response) => {
           if (response) {
             this.translate.use(response?.defaultLocale);
+            this.store.dispatch(
+              setDefaultLanguage({
+                key: response?.defaultLocale ? response?.defaultLocale : 'en',
+              })
+            );
+            this.translations$ = this.store.select(getCurrentTranslations);
             document
               .getElementById('locale-selection')
               .setAttribute('value', response?.defaultLocale);

@@ -5,7 +5,8 @@
     *ngIf="{
       currentUser: currentUser$ | async,
       userSupportNameSpaceResponse: userSupportNameSpaceResponse$ | async,
-      systemSettings: systemSettings$ | async
+      systemSettings: systemSettings$ | async,
+      translations: translations$ | async
     } as params"
   >
     <div class="container-fluid">
@@ -40,7 +41,7 @@
                     "
                     routerLinkActive="active-menu-item"
                     [routerLink]="'reporting-tools/request'"
-                    >{{ 'Form requests' | translate }}</mat-list-item
+                    >{{ params?.translations['Form requests'] }}</mat-list-item
                   >
 
                   <!-- <mat-list-item
@@ -75,7 +76,7 @@
                     "
                     routerLinkActive="active-menu-item"
                     [routerLink]="'user-accounts'"
-                    >{{ 'User accounts' | translate }}</mat-list-item
+                    >{{ params?.translations['User accounts'] }}</mat-list-item
                   >
 
                   <mat-list-item
@@ -93,7 +94,9 @@
                     class="list-item"
                     routerLinkActive="active-menu-item"
                     [routerLink]="'validation-rules-request'"
-                    >{{ 'Validation Rules request' | translate }}</mat-list-item
+                    >{{
+                      params?.translations['Validation Rules request']
+                    }}</mat-list-item
                   >
                   <!-- <mat-list-item
                     *ngIf="
@@ -117,7 +120,7 @@
                     class="list-item"
                     routerLinkActive="active-menu-item"
                     [routerLink]="'settings'"
-                    >{{ 'Settings' | translate }}</mat-list-item
+                    >{{ params?.translations['Settings'] }}</mat-list-item
                   >
                 </mat-list>
               </div>
@@ -154,7 +157,7 @@
                         ])
                     "
                     [routerLink]="'reporting-tools/request'"
-                    >{{ 'Form requests' | translate }}</mat-list-item
+                    >{{ params?.translations['Form requests'] }}</mat-list-item
                   >
                   <!-- <mat-list-item
                     role="listitem"
@@ -197,7 +200,7 @@
                         params?.currentUser?.keyedAuthorities['F_USER_VIEW'])
                     "
                     [routerLink]="'user-accounts'"
-                    >{{ 'User account' | translate }}</mat-list-item
+                    >{{ params?.translations['User account'] }}</mat-list-item
                   >
                   <mat-list-item
                     *ngIf="
@@ -214,7 +217,9 @@
                     class="list-item"
                     routerLinkActive="active-menu-item"
                     [routerLink]="'validation-rules-request'"
-                    >{{ 'Validation Rules request' | translate }}</mat-list-item
+                    >{{
+                      params?.translations['Validation Rules request']
+                    }}</mat-list-item
                   >
 
                   <mat-list-item
@@ -227,7 +232,7 @@
                     class="list-item"
                     routerLinkActive="active-menu-item"
                     [routerLink]="'settings'"
-                    >{{ 'Settings' | translate }}</mat-list-item
+                    >{{ params?.translations['Settings'] }}</mat-list-item
                   >
                 </mat-list>
                 <div class="contents-container">
