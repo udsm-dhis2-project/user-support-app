@@ -1,6 +1,6 @@
 import { flatten, keyBy } from 'lodash';
 import { Injectable } from '@angular/core';
-import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
+import { HttpConfig, NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Observable, of, zip } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { FeedbackRecepientModel } from 'src/app/shared/models/users.model';
@@ -87,8 +87,8 @@ export class UsersDataService {
   }
 
   approveChanges(data: any): Observable<any> {
-    console.log('');
     if (data?.method === 'POST') {
+      if (!(data?.url?.includes('enabled') || data?.url?.includes('disabled'))) {
       return zip(
         data?.userPayload
           ? this.httpClient.post('users', data?.userPayload)
@@ -113,17 +113,10 @@ export class UsersDataService {
         map((response) => response),
         catchError((error) => of(error))
       );
-    } else if (data?.method === 'DELETE') {
-      return this.httpClient
-        .delete(`dataStore/dhis2-user-support/${data?.id}`)
-        .pipe(
-          map((response) => response),
-          catchError((error) => of(error))
-        );
-    } else if (data?.method === 'PATCH') {
+    } else if (data?.method === 'POST') {
       return zip(
         data?.payload
-          ? this.httpClientService.patch(
+          ? this.httpClientService.post(
               `../../../api/${data?.url}`,
               data?.payload
             )
@@ -145,10 +138,21 @@ export class UsersDataService {
         map((response) => response),
         catchError((error) => of(error))
       );
-    } else if (data?.method === 'PUT') {
+    }}
+    else if (data?.method === 'DELETE') {
+      return this.httpClient
+        .delete(`dataStore/dhis2-user-support/${data?.id}`)
+        .pipe(
+          map((response) => response),
+          catchError((error) => of(error))
+        );
+    }  else if (data?.method === 'PATCH') {
+      const httpOptions: HttpConfig = {
+        httpHeaders: { 'Content-Type': 'application/json-patch+json' }
+    };
       return zip(
         data?.payload
-          ? this.httpClient.put(`${data?.url}`, data?.payload)
+          ? this.httpClient.patch(`${data?.url}`, data?.payload, httpOptions)
           : of(null),
         this.httpClient.delete(`dataStore/dhis2-user-support/${data?.id}`),
         data?.messageConversation
