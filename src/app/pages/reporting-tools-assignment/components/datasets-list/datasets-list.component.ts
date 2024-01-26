@@ -1,11 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
+import { Observable} from 'rxjs';
+import { Store } from '@ngrx/store';
 import { DataSetsService } from 'src/app/core/services/dataset.service';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { MessagesDataService } from 'src/app/core/services/messages.service';
 import { OuSelectionFormRequestModalComponent } from '../ou-selection-form-request-modal/ou-selection-form-request-modal.component';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
+import { State } from 'src/app/store/reducers';
 
 @Component({
   selector: 'app-datasets-list',
@@ -14,6 +17,7 @@ import { OuSelectionFormRequestModalComponent } from '../ou-selection-form-reque
 })
 export class DatasetsListComponent implements OnInit {
   dataSetsDetails$: Observable<any[]>;
+  translations$: Observable<any>;
   pageSize: number = 10;
   page: number = 1;
   itemPerPage: number = 10;
@@ -32,6 +36,7 @@ export class DatasetsListComponent implements OnInit {
 
   constructor(
     private dataSetsService: DataSetsService,
+    private store: Store<State>,
     private dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private dataStoreService: DataStoreDataService,
@@ -39,7 +44,9 @@ export class DatasetsListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.getDataSetsList();
+
   }
 
   getDataSetsList(): void {

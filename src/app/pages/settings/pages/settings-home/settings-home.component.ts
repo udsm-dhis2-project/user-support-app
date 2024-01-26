@@ -10,6 +10,7 @@ import { SharedDeleteConfigItemModalComponent } from '../../modals/shared-delete
 import { CreateGroupModalComponent } from '../../modals/create-group-modal/create-group-modal.component';
 import { MatSelectChange } from '@angular/material/select';
 import { NewLanguageDialogComponent } from '../../components/new-language-dialog/new-language-dialog.component';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-settings-home',
@@ -19,6 +20,7 @@ import { NewLanguageDialogComponent } from '../../components/new-language-dialog
 export class SettingsHomeComponent implements OnInit {
   configurations$: Observable<any>;
   currentUser$: Observable<any>;
+  translations$: Observable<any>;
   saving: boolean = false;
   selectedLanguage: { name: string; key: string };
   selectedLanguageTranslations$: Observable<any>;
@@ -31,6 +33,7 @@ export class SettingsHomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUser$ = this.store.select(getCurrentUser);
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.getConfigs();
   }
 
@@ -164,6 +167,7 @@ export class SettingsHomeComponent implements OnInit {
     this.selectedLanguageTranslations$ = this.dataStoreService.getKeyData(
       this.selectedLanguage.key
     )
+
   }
 
   getTranslationValue(translationValue: string, keyword: string): void {

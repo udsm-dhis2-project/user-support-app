@@ -95,7 +95,7 @@
                     routerLinkActive="active-menu-item"
                     [routerLink]="'validation-rules-request'"
                     >{{
-                      params?.translations['Validation Rules request']
+                      params?.translations['Validation Rules request'] || 'Validation Rules request' 
                     }}</mat-list-item
                   >
                   <!-- <mat-list-item
