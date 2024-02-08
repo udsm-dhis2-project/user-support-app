@@ -36,3 +36,8 @@ export const getCurrentTranslations = createSelector(
   getCurrentLanguageKey,
   (state: TranslationState, key: string) => state.entities[key]?.data
 );
+
+export const getCurrentSettingsSelectedLanguageKey = createSelector(
+  translationsState,
+  (state: TranslationState) => state.selectedSettingsLanguageKey
+);

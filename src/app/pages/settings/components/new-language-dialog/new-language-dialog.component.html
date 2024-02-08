@@ -1,17 +1,39 @@
+<h2 mat-dialog-title>New language</h2>
 <mat-dialog-content>
   <form (ngSubmit)="onSubmit()">
-    <mat-form-field>
-        <input matInput placeholder="Key" [(ngModel)]="key" name="key" required>
-      </mat-form-field>
-    <mat-form-field>
-      <input matInput placeholder="Name" [(ngModel)]="name" name="name" required>
+    <mat-form-field class="w-100" appearance="outline">
+      <input
+        matInput
+        placeholder="Translation key"
+        [(ngModel)]="key"
+        name="key"
+        required
+      />
+    </mat-form-field>
+    <mat-form-field class="w-100" appearance="outline">
+      <input
+        matInput
+        placeholder="Name"
+        [(ngModel)]="name"
+        name="name"
+        required
+      />
     </mat-form-field>
     <div *ngIf="keyedKeyWords[key]">
-        <p class="text-danger" >Key {{key}} for {{keyedKeyWords[key].name}} already exists</p>
+      <p class="text-danger">
+        Key {{ key }} for {{ keyedKeyWords[key].name }} already exists
+      </p>
     </div>
-    <mat-dialog-actions>
+    <mat-dialog-actions class="d-flex justify-content-end">
       <button mat-stroked-button (click)="onCancel()">Cancel</button>
-      <button mat-flat-button [disabled]="key && keyedKeyWords[key]" type="submit" color="primary">Submit</button>
+      <button
+        mat-flat-button
+        [disabled]="key && keyedKeyWords[key]"
+        type="submit"
+        color="primary"
+      >
+        Submit
+      </button>
     </mat-dialog-actions>
   </form>
 </mat-dialog-content>

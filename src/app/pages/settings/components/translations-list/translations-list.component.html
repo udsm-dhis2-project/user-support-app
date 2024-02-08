@@ -1,0 +1,32 @@
+<ng-container
+  *ngIf="{
+    selectedLanguageTranslations: selectedLanguageTranslations$ | async
+  } as params"
+>
+  <div class="w-100" style="height: 1000px; overflow: auto">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Keyword</th>
+          <th>Translation</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let keyword of configurations?.translationKeywords">
+          <td>
+            {{ keyword }}
+          </td>
+          <td>
+            <app-capture-translation
+              *ngIf="params?.selectedLanguageTranslations"
+              [translation]="params?.selectedLanguageTranslations[keyword]"
+              (translationValue)="onGetTranslationValue($event, keyword)"
+              (updatedValue)="oGetUpdatedValue($event, keyword)"
+            ></app-capture-translation>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-container>

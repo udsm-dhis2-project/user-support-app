@@ -10,7 +10,11 @@ import { SharedDeleteConfigItemModalComponent } from '../../modals/shared-delete
 import { CreateGroupModalComponent } from '../../modals/create-group-modal/create-group-modal.component';
 import { MatSelectChange } from '@angular/material/select';
 import { NewLanguageDialogComponent } from '../../components/new-language-dialog/new-language-dialog.component';
-import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
+import {
+  getCurrentSettingsSelectedLanguageKey,
+  getCurrentTranslations,
+} from 'src/app/store/selectors/translations.selectors';
+import { setSelectedSettingsLanguageKey } from 'src/app/store/actions';
 
 @Component({
   selector: 'app-settings-home',
@@ -23,8 +27,10 @@ export class SettingsHomeComponent implements OnInit {
   translations$: Observable<any>;
   saving: boolean = false;
   selectedLanguage: { name: string; key: string };
+  selectedLanguageKey: string;
   selectedLanguageTranslations$: Observable<any>;
   translations: any = {};
+  selectedSettingsLanguageKey$: Observable<string>;
   constructor(
     private dataStoreService: DataStoreDataService,
     private store: Store<State>,
@@ -32,6 +38,9 @@ export class SettingsHomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.selectedSettingsLanguageKey$ = this.store.select(
+      getCurrentSettingsSelectedLanguageKey
+    );
     this.currentUser$ = this.store.select(getCurrentUser);
     this.translations$ = this.store.select(getCurrentTranslations);
     this.getConfigs();
@@ -151,11 +160,18 @@ export class SettingsHomeComponent implements OnInit {
   }
 
   getSelectedLanguage(event: MatSelectChange): void {
-    this.selectedLanguage = event.value;
-
-    this.selectedLanguageTranslations$ = this.dataStoreService.getKeyData(
-      this.selectedLanguage.key
-    )
+    this.selectedLanguageKey = event.value;
+    this.selectedSettingsLanguageKey$ = of(null);
+    this.store.dispatch(
+      setSelectedSettingsLanguageKey({
+        key: this.selectedLanguageKey,
+      })
+    );
+    setTimeout(() => {
+      this.selectedSettingsLanguageKey$ = this.store.select(
+        getCurrentSettingsSelectedLanguageKey
+      );
+    }, 50);
   }
 
   getSelectedLanguageTranslations() {
@@ -165,12 +181,11 @@ export class SettingsHomeComponent implements OnInit {
      * 2. Use select to get the translations
      */
     this.selectedLanguageTranslations$ = this.dataStoreService.getKeyData(
-      this.selectedLanguage.key
-    )
-
+      this.selectedLanguageKey
+    );
   }
 
-  getTranslationValue(translationValue: string, keyword: string): void {
+  onGetTranslationValue(translationValue: string, keyword: string): void {
     this.translations[keyword] = translationValue;
     // console.log(translationValue + 'The best we can do');
   }
@@ -179,7 +194,7 @@ export class SettingsHomeComponent implements OnInit {
     // this.translations[keyword] = translationValue;
     console.log(updatedValue + 'The best we can do');
   }
-  
+
   openDialog(): void {
     this.configurations$
       .pipe(
@@ -189,7 +204,7 @@ export class SettingsHomeComponent implements OnInit {
             width: '300px',
             data: { keyedKeyWords: configurations?.languages },
           });
-  
+
           return dialogRef.afterClosed();
         })
       )
@@ -201,30 +216,36 @@ export class SettingsHomeComponent implements OnInit {
         }
       });
   }
-  
-  private updateConfigurations(newLanguage: any): void {
-    this.configurations$.pipe(
-      take(1),
-      switchMap((configurations: any) => {
-        configurations.languages.push(newLanguage);
-  
-        return this.dataStoreService.updateDataStoreKey('configurations', configurations);
-      })
-    ).subscribe(() => this.getConfigs());
-  }
-  
-  private createDataStoreKey(key: string): void {
-    this.configurations$.pipe(
-      take(1),
-      switchMap((configurations: any) => {
-       
-const resultObject: { [key: string]: string } = {};
 
-for (const item of configurations.translationKeywords) {
-  resultObject[item] = "";
-}
-        return this.dataStoreService.createDataStoreKey(key, resultObject);
-      })
-    ).subscribe();
+  private updateConfigurations(newLanguage: any): void {
+    this.configurations$
+      .pipe(
+        take(1),
+        switchMap((configurations: any) => {
+          configurations.languages.push(newLanguage);
+
+          return this.dataStoreService.updateDataStoreKey(
+            'configurations',
+            configurations
+          );
+        })
+      )
+      .subscribe(() => this.getConfigs());
+  }
+
+  private createDataStoreKey(key: string): void {
+    this.configurations$
+      .pipe(
+        take(1),
+        switchMap((configurations: any) => {
+          const resultObject: { [key: string]: string } = {};
+
+          for (const item of configurations.translationKeywords) {
+            resultObject[item] = '';
+          }
+          return this.dataStoreService.createDataStoreKey(key, resultObject);
+        })
+      )
+      .subscribe();
   }
 }

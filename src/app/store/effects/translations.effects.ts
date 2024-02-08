@@ -4,6 +4,7 @@ import {
   loadTranslation,
   loadingTranslationFails,
   setDefaultLanguage,
+  setSelectedSettingsLanguageKey,
 } from '../actions';
 import { catchError, map, mergeMap, of, switchMap, withLatestFrom } from 'rxjs';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
@@ -30,6 +31,7 @@ export class TranslationsEffects {
             mergeMap((response: any) => {
               return [
                 setDefaultLanguage({ key: action.key }),
+                setSelectedSettingsLanguageKey({ key: action.key }),
                 addLoadedTranslation({
                   translation: { id: action.key, data: response },
                 }),
@@ -37,7 +39,10 @@ export class TranslationsEffects {
             }),
             catchError((error: any) => of(loadingTranslationFails(error)))
           );
-        return of(setDefaultLanguage({ key: action.key }));
+        return of(
+          setDefaultLanguage({ key: action.key }),
+          setSelectedSettingsLanguageKey({ key: action.key })
+        );
       })
     )
   );

@@ -9,6 +9,7 @@ import {
   loadTranslation,
   loadingTranslationFails,
   setDefaultLanguage,
+  setSelectedSettingsLanguageKey,
 } from '../actions';
 import {
   errorBaseState,
@@ -33,6 +34,10 @@ export const reducer = createReducer(
   on(setDefaultLanguage, (state, { key }) => ({
     ...state,
     currentLanguage: key,
+  })),
+  on(setSelectedSettingsLanguageKey, (state, { key }) => ({
+    ...state,
+    selectedSettingsLanguageKey: key,
   }))
 );
 

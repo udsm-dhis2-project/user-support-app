@@ -13,6 +13,7 @@ import {
   loadSystemConfigurations,
   loadTranslation,
   setDefaultLanguage,
+  setSelectedSettingsLanguageKey,
 } from './store/actions';
 import { getSystemConfigs } from './store/selectors/system-configurations.selectors';
 import { getCurrentTranslations } from './store/selectors/translations.selectors';
