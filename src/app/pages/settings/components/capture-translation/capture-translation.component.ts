@@ -10,7 +10,6 @@ import { Textbox } from 'src/app/shared/modules/form/models/text-box.model';
 export class CaptureTranslationComponent implements OnInit {
   @Input() translation: string;
   @Output() translationValue: EventEmitter<string> = new EventEmitter<string>();
-  @Output() updatedValue: EventEmitter<string> = new EventEmitter<string>();
   formField: any;
 
   ngOnInit(): void {
@@ -26,9 +25,5 @@ export class CaptureTranslationComponent implements OnInit {
 
   onFormUpdate(formValue: FormValue): void {
     this.translationValue.emit(formValue.getValues()?.translation?.value);
-  }
-
-  onChange(value: String): void {
-    // console.log(value);
   }
 }
