@@ -55,9 +55,11 @@ export class TranslationsListComponent implements OnInit {
         ...this.updatedKeys,
       })
       .subscribe((response: any) => {
-        this.selectedLanguageTranslations$ = this.dataStoreService.getKeyData(
-          this.key
-        );
+        if (response) {
+          this.selectedLanguageTranslations$ = this.dataStoreService.getKeyData(
+            this.key
+          );
+        }
       });
   }
 }

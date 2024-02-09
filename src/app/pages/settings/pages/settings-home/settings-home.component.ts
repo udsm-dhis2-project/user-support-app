@@ -15,6 +15,8 @@ import {
   getCurrentTranslations,
 } from 'src/app/store/selectors/translations.selectors';
 import { setSelectedSettingsLanguageKey } from 'src/app/store/actions';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { SharedConfirmationModalComponent } from '../../modals/shared-confirmation-modal/shared-confirmation-modal.component';
 
 @Component({
   selector: 'app-settings-home',
@@ -247,5 +249,38 @@ export class SettingsHomeComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+
+  onOpenDefaultLanguageConfirmationModal(
+    event: MatCheckboxChange,
+    configurations: any,
+    key: string
+  ): void {
+    console.log(event);
+    this.dialog
+      .open(SharedConfirmationModalComponent, {
+        minWidth: '25%',
+        data: {
+          title: 'Confirmation',
+          message: !event?.checked
+            ? 'Are you sure to remove default language?'
+            : 'Are you sure to set this as default language, it will replace existing one?',
+        },
+      })
+      .afterClosed()
+      .subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.dataStoreService
+            .updateDataStoreKey('configurations', {
+              ...configurations,
+              defaultLocale: event.checked ? key : null,
+            })
+            .subscribe((response: any) => {
+              if (response) {
+                this.getConfigs();
+              }
+            });
+        }
+      });
   }
 }
