@@ -41,7 +41,6 @@ export class AppComponent implements OnInit {
   ) {
     // this language will be used as a fallback when a translation isn't found in the current language
     this.translate.setDefaultLang('en');
-    this.store.dispatch(loadTranslation({ key: 'en' }));
 
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     this.translate.use('en');
@@ -80,7 +79,7 @@ export class AppComponent implements OnInit {
           this.dataStoreService.getUserSupportConfigurations();
         this.configurations$.subscribe((response) => {
           if (response) {
-            console.log(response);
+            this.store.dispatch(loadTranslation({ key: 'en' }));
             this.translate.use(response?.defaultLocale);
             this.store.dispatch(
               setDefaultLanguage({
@@ -88,15 +87,6 @@ export class AppComponent implements OnInit {
               })
             );
             this.translations$ = this.store.select(getCurrentTranslations);
-            document
-              .getElementById('locale-selection')
-              .setAttribute('value', response?.defaultLocale);
-
-            const opt: any = document.querySelector(
-              `#locale-selection option[value="${response?.defaultLocale}"]`
-            );
-            opt.selected = true;
-            opt.defaultSelected = true;
           }
         });
       }
