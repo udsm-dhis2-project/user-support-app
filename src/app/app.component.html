@@ -6,7 +6,8 @@
       currentUser: currentUser$ | async,
       userSupportNameSpaceResponse: userSupportNameSpaceResponse$ | async,
       systemSettings: systemSettings$ | async,
-      translations: translations$ | async
+      translations: translations$ | async,
+      configurations: configurations$ | async
     } as params"
   >
     <div class="container-fluid">
@@ -95,7 +96,8 @@
                     routerLinkActive="active-menu-item"
                     [routerLink]="'validation-rules-request'"
                     >{{
-                      params?.translations['Validation Rules request'] || 'Validation Rules request' 
+                      params?.translations['Validation Rules request'] ||
+                        'Validation Rules request'
                     }}</mat-list-item
                   >
                   <!-- <mat-list-item
@@ -128,15 +130,22 @@
             <mat-drawer-content>
               <div class="drawer-contents-container p-2 ml-2">
                 <div class="w-100 d-flex justify-content-end">
-                  <select
-                    id="locale-selection"
-                    (change)="onChangeLanguage($event)"
-                  >
-                    <option value="sw">Swahili</option>
-                    <option value="en">English</option>
-                    <option value="fr">France</option>
-                    <option value="rw">Rwanda</option>
-                  </select>
+                  <mat-form-field style="margin-top: -20px">
+                    <mat-select
+                      [value]="
+                        selectedLanguageKey
+                          ? selectedLanguageKey
+                          : params?.configurations?.defaultLocale
+                      "
+                      (selectionChange)="onChangeLanguage($event)"
+                    >
+                      <mat-option
+                        *ngFor="let option of params?.configurations?.languages"
+                        [value]="option?.key"
+                        >{{ option?.name }}</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
                 </div>
                 <mat-list role="list" class="top-menu">
                   <mat-list-item

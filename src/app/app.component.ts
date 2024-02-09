@@ -17,6 +17,7 @@ import {
 } from './store/actions';
 import { getSystemConfigs } from './store/selectors/system-configurations.selectors';
 import { getCurrentTranslations } from './store/selectors/translations.selectors';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +30,7 @@ export class AppComponent implements OnInit {
   ready: boolean = false;
   configurations$: Observable<any>;
   translations$: Observable<any>;
+  selectedLanguageKey: string;
 
   constructor(
     private translate: TranslateService,
@@ -54,12 +56,12 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onChangeLanguage(event: Event): void {
-    const locale = (event?.target as HTMLInputElement)?.value;
+  onChangeLanguage(event: MatSelectChange): void {
+    this.selectedLanguageKey = event?.value;
     this.ready = false;
     setTimeout(() => {
-      this.translate.use(locale);
-      this.store.dispatch(loadTranslation({ key: locale }));
+      // this.translate.use(locale);
+      this.store.dispatch(loadTranslation({ key: this.selectedLanguageKey }));
       this.ready = true;
     }, 50);
   }
@@ -78,6 +80,7 @@ export class AppComponent implements OnInit {
           this.dataStoreService.getUserSupportConfigurations();
         this.configurations$.subscribe((response) => {
           if (response) {
+            console.log(response);
             this.translate.use(response?.defaultLocale);
             this.store.dispatch(
               setDefaultLanguage({
