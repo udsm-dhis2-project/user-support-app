@@ -217,7 +217,7 @@ export class DataStoreDataService {
     return this.httpClient
       .get(`dataStore/dhis2-user-support/configurations`)
       .pipe(
-        switchMap((response: any) => {
+        switchMap((configurationsResponse: any) => {
           const enTranslations: any = {
             Access: 'Access',
             Action: 'Action',
@@ -313,7 +313,11 @@ export class DataStoreDataService {
             addMessageFormRequest: 'Please, add the following datasets',
             of: 'of',
           };
-          if (response && response?.status && response?.status === 'ERROR') {
+          if (
+            configurationsResponse &&
+            configurationsResponse?.status &&
+            configurationsResponse?.status === 'ERROR'
+          ) {
             return zip(
               this.httpClient.post(
                 'dataStore/dhis2-user-support/configurations',
@@ -325,12 +329,15 @@ export class DataStoreDataService {
               )
             );
           } else {
-            if (!response?.languages && !response?.translationKeywords) {
+            if (
+              !configurationsResponse?.languages &&
+              !configurationsResponse?.translationKeywords
+            ) {
               return zip(
                 this.httpClient.put(
                   'dataStore/dhis2-user-support/configurations',
                   {
-                    ...response,
+                    ...configurationsResponse,
                     translationKeywords: [
                       'Welcome',
                       'Settings',
