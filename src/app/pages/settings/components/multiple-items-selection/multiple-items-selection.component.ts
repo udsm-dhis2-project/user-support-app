@@ -15,6 +15,7 @@ export class MultipleItemsSelectionComponent implements OnInit {
   resources$: Observable<any>;
   constructor(private httpClientService: NgxDhis2HttpClientService) {}
   ngOnInit(): void {
+    this.selectedItemsList.emit(this.selectedItems);
     this.getResources();
   }
 

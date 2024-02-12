@@ -62,6 +62,12 @@ export class CreateGroupModalComponent implements OnInit {
 
   onGetSelectedItems(items: any[]): void {
     this.selectedItems = items;
+    if (
+      (this.data?.group?.name || this.formValuesData?.name?.value) &&
+      this.selectedItems?.length > 0
+    ) {
+      this.isFormValid = true;
+    }
   }
 
   onSave(event: Event, id: string): void {
@@ -71,7 +77,9 @@ export class CreateGroupModalComponent implements OnInit {
         minWidth: '20%',
         data: {
           title: 'Confirmation',
-          message: `Are you sure to add ${this.formValuesData?.name?.value}?`,
+          message: `Are you sure to add ${
+            this.formValuesData?.name?.value || this.data?.group?.name
+          }?`,
         },
       })
       .afterClosed()
@@ -93,8 +101,11 @@ export class CreateGroupModalComponent implements OnInit {
                   this.data?.group && this.data?.group?.id
                     ? this.data?.group?.id
                     : id,
-                name: this.formValuesData?.name?.value,
-                description: this.formValuesData?.description?.value,
+                name:
+                  this.formValuesData?.name?.value || this.data?.group?.name,
+                description:
+                  this.formValuesData?.description?.value ||
+                  this.data?.group?.description,
                 associatedGroups: this.selectedItems || [],
               },
             ],

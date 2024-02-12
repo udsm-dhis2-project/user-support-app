@@ -62,6 +62,12 @@ export class CreateRoleModalComponent implements OnInit {
 
   onGetSelectedItems(items: any[]): void {
     this.selectedItems = items;
+    if (
+      (this.data?.role?.name || this.formValuesData?.name?.value) &&
+      this.selectedItems?.length > 0
+    ) {
+      this.isFormValid = true;
+    }
   }
 
   onSave(event: Event, id: string): void {
@@ -71,7 +77,9 @@ export class CreateRoleModalComponent implements OnInit {
         minWidth: '20%',
         data: {
           title: 'Confirmation',
-          message: `Are you sure to add ${this.formValuesData?.name?.value}?`,
+          message: `Are you sure to add ${
+            this.formValuesData?.name?.value || this.data?.role?.name
+          }?`,
         },
       })
       .afterClosed()
@@ -92,8 +100,10 @@ export class CreateRoleModalComponent implements OnInit {
                   this.data?.role && this.data?.role?.id
                     ? this.data?.role?.id
                     : id,
-                name: this.formValuesData?.name?.value,
-                description: this.formValuesData?.description?.value,
+                name: this.formValuesData?.name?.value || this.data?.role?.name,
+                description:
+                  this.formValuesData?.description?.value ||
+                  this.data?.role?.description,
                 associatedRoles: this.selectedItems || [],
               },
             ],
