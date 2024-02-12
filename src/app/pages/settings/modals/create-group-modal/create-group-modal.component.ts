@@ -50,7 +50,7 @@ export class CreateGroupModalComponent implements OnInit {
         key: 'description',
         label: 'Description',
         value: this.data?.group?.description,
-        required: true,
+        required: false,
       }),
     ];
   }
@@ -82,10 +82,12 @@ export class CreateGroupModalComponent implements OnInit {
             ...this.data?.configurations,
             allowedUserGroupsForRequest: [
               ...(this.data?.group
-                ? this.data?.configurations?.allowedUserGroupsForRequest?.filter(
+                ? (
+                    this.data?.configurations?.allowedUserGroupsForRequest || []
+                  )?.filter(
                     (group: any) => group?.id !== this.data?.group?.id
                   ) || []
-                : this.data?.configurations?.allowedUserGroupsForRequest),
+                : this.data?.configurations?.allowedUserGroupsForRequest || []),
               {
                 id:
                   this.data?.group && this.data?.group?.id
@@ -93,7 +95,7 @@ export class CreateGroupModalComponent implements OnInit {
                     : id,
                 name: this.formValuesData?.name?.value,
                 description: this.formValuesData?.description?.value,
-                associatedGroups: this.selectedItems,
+                associatedGroups: this.selectedItems || [],
               },
             ],
           };

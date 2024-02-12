@@ -50,7 +50,7 @@ export class CreateRoleModalComponent implements OnInit {
         key: 'description',
         label: 'Description',
         value: this.data?.role?.description,
-        required: true,
+        required: false,
       }),
     ];
   }
@@ -82,10 +82,11 @@ export class CreateRoleModalComponent implements OnInit {
             ...this.data?.configurations,
             allowedUserRolesForRequest: [
               ...(this.data?.role
-                ? this.data?.configurations?.allowedUserRolesForRequest?.filter(
-                    (role: any) => role?.id !== this.data?.role?.id
-                  ) || []
-                : this.data?.configurations?.allowedUserRolesForRequest),
+                ? (
+                    this.data?.configurations?.allowedUserRolesForRequest || []
+                  )?.filter((role: any) => role?.id !== this.data?.role?.id) ||
+                  []
+                : this.data?.configurations?.allowedUserRolesForRequest || []),
               {
                 id:
                   this.data?.role && this.data?.role?.id
@@ -93,7 +94,7 @@ export class CreateRoleModalComponent implements OnInit {
                     : id,
                 name: this.formValuesData?.name?.value,
                 description: this.formValuesData?.description?.value,
-                associatedRoles: this.selectedItems,
+                associatedRoles: this.selectedItems || [],
               },
             ],
           };
