@@ -9,7 +9,6 @@ import { CreateRoleModalComponent } from '../../modals/create-role-modal/create-
 import { SharedDeleteConfigItemModalComponent } from '../../modals/shared-delete-config-item-modal/shared-delete-config-item-modal.component';
 import { CreateGroupModalComponent } from '../../modals/create-group-modal/create-group-modal.component';
 import { MatSelectChange } from '@angular/material/select';
-import { NewLanguageDialogComponent } from '../../components/new-language-dialog/new-language-dialog.component';
 import {
   getCurrentSettingsSelectedLanguageKey,
   getCurrentTranslations,
@@ -198,59 +197,7 @@ export class SettingsHomeComponent implements OnInit {
     console.log(updatedValue + 'The best we can do');
   }
 
-  openDialog(): void {
-    this.configurations$
-      .pipe(
-        take(1),
-        switchMap((configurations: any) => {
-          const dialogRef = this.dialog.open(NewLanguageDialogComponent, {
-            width: '300px',
-            data: { keyedKeyWords: configurations?.languages },
-          });
 
-          return dialogRef.afterClosed();
-        })
-      )
-      .subscribe((result: any) => {
-        if (result) {
-          this.updateConfigurations(result);
-          this.createDataStoreKey(result.key);
-          // Additional logic for appending keywords wit                                                                              h new language and key
-        }
-      });
-  }
-
-  private updateConfigurations(newLanguage: any): void {
-    this.configurations$
-      .pipe(
-        take(1),
-        switchMap((configurations: any) => {
-          configurations.languages.push(newLanguage);
-
-          return this.dataStoreService.updateDataStoreKey(
-            'configurations',
-            configurations
-          );
-        })
-      )
-      .subscribe(() => this.getConfigs());
-  }
-
-  private createDataStoreKey(key: string): void {
-    this.configurations$
-      .pipe(
-        take(1),
-        switchMap((configurations: any) => {
-          const resultObject: { [key: string]: string } = {};
-
-          for (const item of configurations.translationKeywords) {
-            resultObject[item] = '';
-          }
-          return this.dataStoreService.createDataStoreKey(key, resultObject);
-        })
-      )
-      .subscribe();
-  }
 
   onOpenDefaultLanguageConfirmationModal(
     event: MatCheckboxChange,
