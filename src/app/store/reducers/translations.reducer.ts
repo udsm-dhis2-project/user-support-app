@@ -18,22 +18,27 @@ import {
 
 export const reducer = createReducer(
   initialTranslationState,
+  
   on(loadTranslation, (state) => ({
     ...state,
     ...loadingBaseState,
   })),
+
   on(addLoadedTranslation, (state, { translation }) =>
     translationAdapter.addOne(translation, { ...state, ...loadedBaseState })
   ),
+
   on(loadingTranslationFails, (state, { error }) => ({
     ...state,
     ...errorBaseState,
     error,
   })),
+
   on(setDefaultLanguage, (state, { key }) => ({
     ...state,
     currentLanguage: key,
-  }))
+  })),
+
 );
 
 export function translationReducer(state, action): TranslationState {

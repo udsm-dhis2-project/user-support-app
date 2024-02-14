@@ -17,6 +17,7 @@ import { getCurrentTranslations } from 'src/app/store/selectors/translations.sel
   templateUrl: './settings-home.component.html',
   styleUrl: './settings-home.component.css',
 })
+
 export class SettingsHomeComponent implements OnInit {
   configurations$: Observable<any>;
   currentUser$: Observable<any>;

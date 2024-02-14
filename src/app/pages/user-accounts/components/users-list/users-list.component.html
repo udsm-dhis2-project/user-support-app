@@ -182,7 +182,7 @@
                 <button
                   *ngIf="currentUser?.keyedAuthorities['ALL']"
                   mat-menu-item
-                  [disabled]="true"
+                  [disabled]="false"
                   (click)="openUserRoleDialog()"
                 >
                   <div class="d-flex align-items-center">
