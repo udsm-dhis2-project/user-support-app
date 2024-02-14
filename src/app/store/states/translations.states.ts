@@ -8,6 +8,7 @@ export interface TranslationModel {
 }
 export interface TranslationState extends EntityState<any>, BaseState {
   currentLanguage: string;
+  selectedSettingsLanguageKey: string;
 }
 
 export const translationAdapter: EntityAdapter<any> =
@@ -17,4 +18,5 @@ export const initialTranslationState: TranslationState =
   translationAdapter.getInitialState({
     ...initialBaseState,
     currentLanguage: null,
+    selectedSettingsLanguageKey: null,
   });

@@ -6,7 +6,8 @@
       currentUser: currentUser$ | async,
       userSupportNameSpaceResponse: userSupportNameSpaceResponse$ | async,
       systemSettings: systemSettings$ | async,
-      translations: translations$ | async
+      translations: translations$ | async,
+      configurations: configurations$ | async
     } as params"
   >
     <div class="container-fluid">
@@ -41,7 +42,9 @@
                     "
                     routerLinkActive="active-menu-item"
                     [routerLink]="'reporting-tools/request'"
-                    >{{ params?.translations['Form requests'] }}</mat-list-item
+                    >{{
+                      params?.translations['Form requests'] || 'Form requests'
+                    }}</mat-list-item
                   >
 
                   <!-- <mat-list-item
@@ -76,7 +79,9 @@
                     "
                     routerLinkActive="active-menu-item"
                     [routerLink]="'user-accounts'"
-                    >{{ params?.translations['User accounts'] }}</mat-list-item
+                    >{{
+                      params?.translations['User accounts'] || 'User accounts'
+                    }}</mat-list-item
                   >
 
                   <mat-list-item
@@ -95,7 +100,8 @@
                     routerLinkActive="active-menu-item"
                     [routerLink]="'validation-rules-request'"
                     >{{
-                      params?.translations['Validation Rules request'] || 'Validation Rules request' 
+                      params?.translations['Validation Rules request'] ||
+                        'Validation Rules request'
                     }}</mat-list-item
                   >
                   <!-- <mat-list-item
@@ -120,7 +126,9 @@
                     class="list-item"
                     routerLinkActive="active-menu-item"
                     [routerLink]="'settings'"
-                    >{{ params?.translations['Settings'] }}</mat-list-item
+                    >{{
+                      params?.translations['Settings'] || 'Settings'
+                    }}</mat-list-item
                   >
                 </mat-list>
               </div>
@@ -128,15 +136,24 @@
             <mat-drawer-content>
               <div class="drawer-contents-container p-2 ml-2">
                 <div class="w-100 d-flex justify-content-end">
-                  <select
-                    id="locale-selection"
-                    (change)="onChangeLanguage($event)"
+                  <mat-form-field
+                    style="margin-top: -24px; margin-bottom: -24px"
                   >
-                    <option value="sw">Swahili</option>
-                    <option value="en">English</option>
-                    <option value="fr">France</option>
-                    <option value="rw">Rwanda</option>
-                  </select>
+                    <mat-select
+                      [value]="
+                        selectedLanguageKey
+                          ? selectedLanguageKey
+                          : params?.configurations?.defaultLocale
+                      "
+                      (selectionChange)="onChangeLanguage($event)"
+                    >
+                      <mat-option
+                        *ngFor="let option of params?.configurations?.languages"
+                        [value]="option?.key"
+                        >{{ option?.name }}</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
                 </div>
                 <mat-list role="list" class="top-menu">
                   <mat-list-item
@@ -157,7 +174,9 @@
                         ])
                     "
                     [routerLink]="'reporting-tools/request'"
-                    >{{ params?.translations['Form requests'] }}</mat-list-item
+                    >{{
+                      params?.translations['Form requests'] || 'Form requests'
+                    }}</mat-list-item
                   >
                   <!-- <mat-list-item
                     role="listitem"
@@ -200,7 +219,9 @@
                         params?.currentUser?.keyedAuthorities['F_USER_VIEW'])
                     "
                     [routerLink]="'user-accounts'"
-                    >{{ params?.translations['User account'] }}</mat-list-item
+                    >{{
+                      params?.translations['User account'] || 'User account'
+                    }}</mat-list-item
                   >
                   <mat-list-item
                     *ngIf="
@@ -218,7 +239,8 @@
                     routerLinkActive="active-menu-item"
                     [routerLink]="'validation-rules-request'"
                     >{{
-                      params?.translations['Validation Rules request']
+                      params?.translations['Validation Rules request'] ||
+                        'Validation Rules request'
                     }}</mat-list-item
                   >
 
@@ -232,7 +254,9 @@
                     class="list-item"
                     routerLinkActive="active-menu-item"
                     [routerLink]="'settings'"
-                    >{{ params?.translations['Settings'] }}</mat-list-item
+                    >{{
+                      params?.translations['Settings'] || 'Settings'
+                    }}</mat-list-item
                   >
                 </mat-list>
                 <div class="contents-container">

@@ -1,0 +1,51 @@
+<ng-container
+  *ngIf="{
+    selectedLanguageTranslations: selectedLanguageTranslations$ | async
+  } as params"
+>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.selectedLanguageTranslations"
+  ></mat-progress-bar>
+  <div class="d-flex justify-content-end">
+    <button
+      mat-flat-button
+      (click)="updateTranslation($event, params?.selectedLanguageTranslations)"
+      color="primary"
+      [disabled]="!shouldBeUpdated"
+    >
+      Update
+    </button>
+  </div>
+  <div class="w-100" style="height: 1000px; overflow: auto">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Keyword</th>
+          <th>Translation</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let keyword of configurations?.translationKeywords">
+          <td>
+            {{ keyword }}
+          </td>
+          <td>
+            <app-capture-translation
+              *ngIf="params?.selectedLanguageTranslations"
+              [translation]="params?.selectedLanguageTranslations[keyword]"
+              (translationValue)="
+                onGetTranslationValue(
+                  $event,
+                  keyword,
+                  params?.selectedLanguageTranslations
+                )
+              "
+            ></app-capture-translation>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-container>

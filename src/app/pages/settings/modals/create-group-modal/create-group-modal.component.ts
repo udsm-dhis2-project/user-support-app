@@ -50,7 +50,7 @@ export class CreateGroupModalComponent implements OnInit {
         key: 'description',
         label: 'Description',
         value: this.data?.group?.description,
-        required: true,
+        required: false,
       }),
     ];
   }
@@ -62,6 +62,12 @@ export class CreateGroupModalComponent implements OnInit {
 
   onGetSelectedItems(items: any[]): void {
     this.selectedItems = items;
+    if (
+      (this.data?.group?.name || this.formValuesData?.name?.value) &&
+      this.selectedItems?.length > 0
+    ) {
+      this.isFormValid = true;
+    }
   }
 
   onSave(event: Event, id: string): void {
@@ -71,7 +77,9 @@ export class CreateGroupModalComponent implements OnInit {
         minWidth: '20%',
         data: {
           title: 'Confirmation',
-          message: `Are you sure to add ${this.formValuesData?.name?.value}?`,
+          message: `Are you sure to add ${
+            this.formValuesData?.name?.value || this.data?.group?.name
+          }?`,
         },
       })
       .afterClosed()
@@ -82,18 +90,23 @@ export class CreateGroupModalComponent implements OnInit {
             ...this.data?.configurations,
             allowedUserGroupsForRequest: [
               ...(this.data?.group
-                ? this.data?.configurations?.allowedUserGroupsForRequest?.filter(
+                ? (
+                    this.data?.configurations?.allowedUserGroupsForRequest || []
+                  )?.filter(
                     (group: any) => group?.id !== this.data?.group?.id
                   ) || []
-                : this.data?.configurations?.allowedUserGroupsForRequest),
+                : this.data?.configurations?.allowedUserGroupsForRequest || []),
               {
                 id:
                   this.data?.group && this.data?.group?.id
                     ? this.data?.group?.id
                     : id,
-                name: this.formValuesData?.name?.value,
-                description: this.formValuesData?.description?.value,
-                associatedGroups: this.selectedItems,
+                name:
+                  this.formValuesData?.name?.value || this.data?.group?.name,
+                description:
+                  this.formValuesData?.description?.value ||
+                  this.data?.group?.description,
+                associatedGroups: this.selectedItems || [],
               },
             ],
           };

@@ -19,3 +19,8 @@ export const setDefaultLanguage = createAction(
   '[Translation] set default languages',
   props<{ key: string }>()
 );
+
+export const setSelectedSettingsLanguageKey = createAction(
+  '[Translation] set selected settings language key',
+  props<{ key: string }>()
+);
