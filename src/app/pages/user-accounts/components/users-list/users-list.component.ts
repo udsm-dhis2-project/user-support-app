@@ -13,6 +13,7 @@ import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatRadioChange } from '@angular/material/radio';
+import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 
 @Component({
   selector: 'app-users-list',
@@ -21,6 +22,7 @@ import { MatRadioChange } from '@angular/material/radio';
 })
 export class UsersListComponent implements OnInit {
   usersResponse$: Observable<any>;
+  configurations$: Observable<any>;
   pageSize: number = 10;
   page: number = 1;
   pageIndex: number = 0;
@@ -41,11 +43,13 @@ export class UsersListComponent implements OnInit {
     private usersDataService: UsersDataService,
     private dialog: MatDialog,
     private messageAndDataStoreService: MessagesAndDatastoreService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private dataStoreService: DataStoreDataService
   ) { }
 
   ngOnInit(): void {
     this.options = this.levels;
+    this.configurations$ = this.dataStoreService.getUserSupportConfigurations();
     this.filteredOptions = this.ouLevelsControl.valueChanges.pipe(
       startWith(''),
       map((value: any) => {
@@ -288,10 +292,22 @@ export class UsersListComponent implements OnInit {
     });
   }
 
-  openUserRoleDialog() {
+  openUserRoleDialog(user,configuration) {
     this.dialog.open(UpdateUserRoleModalComponent, {
       width: '50%',
+      data: {
+        configuration: configuration,
+        user: user,
+      }
+    })
+    .afterClosed()
+    .subscribe((res) => {
+      if(res){
+        console.log(res, "response");
+      }
     });
+
+    console.log(configuration);
   }
 }
 

@@ -42,7 +42,7 @@ export class UsersDataService {
       .get(
         `users.json?pageSize=${pageSize}&page=${page}${
           q ? '&query=' + q : ''
-        }&fields=id,firstName,organisationUnits[id,level,name,code,path,parent[id,name,level,parent[id,name,level]]],surname,name,email,phoneNumber,userCredentials[username,lastlogin,disabled]&order=firstName~asc${
+        }&fields=id,firstName,organisationUnits[id,level,name,code,path,parent[id,name,level,parent[id,name,level]]],surname,name,email,phoneNumber,userRoles,userGroups,userCredentials[username,lastlogin,disabled]&order=firstName~asc${
           pathSection
             ? '&filter=organisationUnits.path:ilike:' + pathSection
             : ''
