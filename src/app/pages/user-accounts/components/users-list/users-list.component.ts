@@ -223,7 +223,7 @@ export class UsersListComponent implements OnInit {
               value: [],
             },
           ];
-          
+
 
           this.saving = true;
           const dataStoreKey =
@@ -292,7 +292,7 @@ export class UsersListComponent implements OnInit {
     });
   }
 
-  openUserRoleDialog(user,configuration) {
+  openUserRoleDialog(user, configuration) {
     this.dialog.open(UpdateUserRoleModalComponent, {
       width: '50%',
       data: {
@@ -300,14 +300,95 @@ export class UsersListComponent implements OnInit {
         user: user,
       }
     })
-    .afterClosed()
-    .subscribe((res) => {
-      if(res){
-        console.log(res, "response");
-      }
-    });
+      .afterClosed()
+      .subscribe((res) => {
+        if (res) {
 
-    console.log(configuration);
+          const payload = [
+            {
+              op: "add",
+              path: "/userRoles",
+              value: [
+                { id: res.role.value },
+                ...user.userRoles
+
+              ]
+            },
+            {
+              op: "add",
+              path: "/userGroups",
+              value: [
+                { id: res.userGroup.value },
+                ...user.userGroups
+
+              ]
+            },
+            {
+              op: "add",
+              path: "/attributeValues",
+              value: []
+            }];
+
+          this.saving = true;
+          const dataStoreKey =
+            'UA' +
+            Date.now() +
+            '_' +
+            this.currentUser?.organisationUnits[0]?.id;
+          const dataForMessageAndDataStore = {
+            id: dataStoreKey,
+            ticketNumber: 'UA' + Date.now().toString(),
+            action: `Respond to account update of ${user?.name} account requested by ${this.currentUser?.displayName
+              }`,
+            message: {
+              message: `The following account was requested for account user role/group update: \n\n  Username: ${user?.userCredentials?.username} \n Names: ${user?.name
+                } \n Email: ${user?.email ? user?.email : ''}`,
+              subject: 'UA' + Date.now().toString() + '- ACCOUNT REQUEST',
+            },
+            replyMessage: `User role/group for Account ${user?.userCredentials?.username} for ${user?.name
+              } has been updated`,
+            payload: payload,
+            url: 'users/' + user?.id,
+            type: 'userRoles',
+            method: 'PATCH',
+            user: this.currentUser,
+          };
+
+          const messageData = {
+            subject: dataForMessageAndDataStore?.message?.subject,
+            messageType: 'TICKET',
+            users: [],
+            userGroups: [{ id: this.systemConfigs?.feedbackRecipients?.id }],
+            organisationUnits: [],
+            attachments: [],
+            text: dataForMessageAndDataStore?.message?.message,
+          };
+
+          this.messageAndDataStoreService
+            .createMessageAndUpdateDataStore(messageData, {
+              id: dataStoreKey,
+              user: {
+                id: this.currentUser?.id,
+                displayName: this.currentUser?.displayName,
+                userName: this.currentUser?.userCredentials?.username,
+                jobTitle: this.currentUser?.jobTitle,
+                email: this.currentUser?.email,
+                organisationUnits: this.currentUser?.organisationUnits,
+                phoneNumber: this.currentUser?.phoneNumber,
+              },
+              message: dataForMessageAndDataStore?.message,
+              ...dataForMessageAndDataStore,
+            })
+            .subscribe((response) => {
+              this.saving = false;
+              this.openSnackBar('Successfully sent the request', 'Close');
+              setTimeout(() => {
+                this._snackBar.dismiss();
+                // this.router.navigate(['/user-accounts/list']);
+              }, 2000);
+            });
+        }
+      });
   }
 }
 
