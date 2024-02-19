@@ -11,7 +11,6 @@ import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatRadioChange } from '@angular/material/radio';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 
@@ -303,26 +302,26 @@ export class UsersListComponent implements OnInit {
       .afterClosed()
       .subscribe((res) => {
         if (res) {
-
           const payload = [
             {
               op: "add",
               path: "/userRoles",
-              value: [
-                { id: res.role.value },
+              value: res.isAssigned ? 
+              user.userRoles.filter(role => role.id !== res.role) : [
+                { id: res.role },
                 ...user.userRoles
-
               ]
             },
-            {
-              op: "add",
-              path: "/userGroups",
-              value: [
-                { id: res.userGroup.value },
-                ...user.userGroups
-
-              ]
-            },
+            // {
+            //   op: "add",
+            //   path: "/userGroups",
+            //   value: res.assignedGroups ? 
+            //   user.userGroups.filter(group => group.id !== res.group) : 
+            //   [
+            //     {id: res.group},
+            //     ...user.userGroups
+            //   ]
+            // },
             {
               op: "add",
               path: "/attributeValues",

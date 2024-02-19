@@ -13,7 +13,8 @@ import { FormValue } from 'src/app/shared/modules/form/models/form-value.model';
 export class UpdateUserRoleModalComponent implements OnInit {
   selectedOptions: any = {};
   accessFormFields: Field<string>[];
-  disableButton: boolean = false;
+  isAssigned: boolean = false;
+  response: any;
 
   constructor(
     private matDialogRef: MatDialogRef<UpdateUserRoleModalComponent>,
@@ -40,41 +41,46 @@ export class UpdateUserRoleModalComponent implements OnInit {
 
         ),
       }),
-      new Dropdown({
-        id: 'userGroup',
-        key: 'userGroup',
-        label: 'Groups',
-        required: true,
-        options: this.data?.configuration?.allowedUserGroupsForRequest?.map(
-          (group) => {
-            return {
-              id: group?.id,
-              key: group?.id,
-              label: group?.name,
-              name: group?.name,
-            };
-          }
+      // new Dropdown({
+      //   id: 'userGroup',
+      //   key: 'userGroup',
+      //   label: 'Groups',
+      //   required: true,
+      //   options: this.data?.configuration?.allowedUserGroupsForRequest?.map(
+      //     (group) => {
+      //       return {
+      //         id: group?.id,
+      //         key: group?.id,
+      //         label: group?.name,
+      //         name: group?.name,
+      //       };
+      //     }
 
-        ),
-      }),];
+      //   ),
+      // })
+      ,];
   }
 
   confirmUserRoleUpdate() {
-    this.matDialogRef.close(this.selectedOptions);
+
+    this.response = {
+      isAssigned: this.isAssigned,
+      role: this.selectedOptions.role.value
+    }
+
+    this.matDialogRef.close(this.response);
   }
 
   onFormUpdate(formvalue: FormValue) {
     this.selectedOptions = formvalue.getValues();
 
-    const roleAssigned = this.checkIfAlreadyAssigned(this.data.user.userRoles, this.selectedOptions.role.value, 'userRoles', 'role');
-    const groupAssigned = this.checkIfAlreadyAssigned(this.data.user.userGroups, this.selectedOptions.userGroup.value, 'userGroups', 'group');
-    
+    const roleAssigned = this.checkIfAlreadyAssigned(this.data.user.userRoles, this.selectedOptions.role.value,  'role');    
 
-    this.disableButton = roleAssigned || groupAssigned
+    this.isAssigned = roleAssigned
 
   }
 
-checkIfAlreadyAssigned(options: any[], selectedValue: string, property: string, propertyName: string) {
+checkIfAlreadyAssigned(options: any[], selectedValue: string, propertyName: string) {
   if (selectedValue) {
     for (let i = 0; i < options.length; i++) {
       
