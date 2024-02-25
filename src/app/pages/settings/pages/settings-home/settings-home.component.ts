@@ -22,7 +22,6 @@ import { SharedConfirmationModalComponent } from '../../modals/shared-confirmati
   templateUrl: './settings-home.component.html',
   styleUrl: './settings-home.component.css',
 })
-
 export class SettingsHomeComponent implements OnInit {
   configurations$: Observable<any>;
   currentUser$: Observable<any>;
@@ -33,6 +32,7 @@ export class SettingsHomeComponent implements OnInit {
   selectedLanguageTranslations$: Observable<any>;
   translations: any = {};
   selectedSettingsLanguageKey$: Observable<string>;
+  defaultPassword: string;
   constructor(
     private dataStoreService: DataStoreDataService,
     private store: Store<State>,
@@ -197,8 +197,6 @@ export class SettingsHomeComponent implements OnInit {
     console.log(updatedValue + 'The best we can do');
   }
 
-
-
   onOpenDefaultLanguageConfirmationModal(
     event: MatCheckboxChange,
     configurations: any,
@@ -222,6 +220,42 @@ export class SettingsHomeComponent implements OnInit {
             .updateDataStoreKey('configurations', {
               ...configurations,
               defaultLocale: event.checked ? key : null,
+            })
+            .subscribe((response: any) => {
+              if (response) {
+                this.getConfigs();
+              }
+            });
+        }
+      });
+  }
+
+  onGetPassword(password: string): void {
+    this.defaultPassword = password;
+    console.log(this.defaultPassword);
+  }
+
+  onUpdatePassword(event: Event, configurations: any): void {
+    event.stopPropagation();
+    console.log(configurations);
+    this.dialog
+      .open(SharedConfirmationModalComponent, {
+        minWidth: '25%',
+        data: {
+          title: 'Confirmation',
+          message: 'Are you sure to update default password?',
+        },
+      })
+      .afterClosed()
+      .subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.dataStoreService
+            .updateDataStoreKey('configurations', {
+              ...configurations,
+              usersSettings: {
+                ...configurations?.usersSettings,
+                defaultPassword: this.defaultPassword,
+              },
             })
             .subscribe((response: any) => {
               if (response) {

@@ -1,11 +1,20 @@
-<div class="w-100 pl-2 pr-2" *ngIf="{
+<div
+  class="w-100 pl-2 pr-2"
+  *ngIf="{
     configurations: configurations$ | async,
     translations: translations$ | async,
     selectedSettingsLanguageKey: selectedSettingsLanguageKey$ | async
-  } as params">
+  } as params"
+>
   <div class="h3">{{ params?.translations['Settings'] }}</div>
-  <mat-progress-bar mode="indeterminate" *ngIf="!params?.configurations"></mat-progress-bar>
-  <div class="row" *ngIf="params?.configurations && !params?.configurations?.error">
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.configurations"
+  ></mat-progress-bar>
+  <div
+    class="row"
+    *ngIf="params?.configurations && !params?.configurations?.error"
+  >
     <div class="col-md-6 col-sm-12 col-sx-12">
       <mat-card class="mb-3">
         <mat-card-header>
@@ -22,7 +31,11 @@
                 </div>
               </div>
             </div>
-            <table *ngIf="!saving" mat-table [dataSource]="params?.configurations?.allowedUserRolesForRequest">
+            <table
+              *ngIf="!saving"
+              mat-table
+              [dataSource]="params?.configurations?.allowedUserRolesForRequest"
+            >
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>Name</th>
                 <td mat-cell *matCellDef="let element">{{ element?.name }}</td>
@@ -39,19 +52,29 @@
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
                 <td mat-cell *matCellDef="let element">
                   <div class="actions">
-                    <button mat-icon-button [matMenuTriggerFor]="actionsMenu" class="icon-button">
+                    <button
+                      mat-icon-button
+                      [matMenuTriggerFor]="actionsMenu"
+                      class="icon-button"
+                    >
                       <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #actionsMenu="matMenu">
-                      <button (click)="
+                      <button
+                        (click)="
                           onEdit(element, params?.configurations, 'role')
-                        " mat-menu-item>
+                        "
+                        mat-menu-item
+                      >
                         <mat-icon>edit</mat-icon>
                         Edit
                       </button>
-                      <button mat-menu-item (click)="
+                      <button
+                        mat-menu-item
+                        (click)="
                           onDelete(element, params?.configurations, role)
-                        ">
+                        "
+                      >
                         <mat-icon>delete</mat-icon>
                         Delete
                       </button>
@@ -60,17 +83,50 @@
                 </td>
               </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="['name', 'associatedRoles', 'actions']"></tr>
-              <tr mat-row *matRowDef="
+              <tr
+                mat-header-row
+                *matHeaderRowDef="['name', 'associatedRoles', 'actions']"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="
                   let row;
                   columns: ['name', 'associatedRoles', 'actions']
-                "></tr>
+                "
+              ></tr>
             </table>
           </div>
         </mat-card-content>
         <mat-card-actions align="end">
-          <button mat-icon-button (click)="onAddNewRole($event, params?.configurations)">
+          <button
+            mat-icon-button
+            (click)="onAddNewRole($event, params?.configurations)"
+          >
             <mat-icon>add</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+      <mat-card class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Default user account password</mat-card-title>
+          <mat-card-subtitle></mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="w-100 mt-2">
+            <app-capture-password
+              [configurations]="params?.configurations"
+              (defaultPassword)="onGetPassword($event)"
+            ></app-capture-password>
+          </div>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button
+            color="primary"
+            mat-flat-button
+            [disabled]="!defaultPassword"
+            (click)="onUpdatePassword($event, params?.configurations)"
+          >
+            Update
           </button>
         </mat-card-actions>
       </mat-card>
@@ -83,7 +139,9 @@
           <div class="w-100">
             <table class="table">
               <tbody>
-                <tr *ngFor="let title of params?.configurations?.referenceTitles">
+                <tr
+                  *ngFor="let title of params?.configurations?.referenceTitles"
+                >
                   <td>
                     {{ title?.name }}
                   </td>
@@ -103,7 +161,10 @@
         </mat-card-header>
         <mat-card-content>
           <div class="w-100">
-            <table mat-table [dataSource]="params?.configurations?.allowedUserGroupsForRequest">
+            <table
+              mat-table
+              [dataSource]="params?.configurations?.allowedUserGroupsForRequest"
+            >
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>Name</th>
                 <td mat-cell *matCellDef="let element">{{ element?.name }}</td>
@@ -121,19 +182,29 @@
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
                 <td mat-cell *matCellDef="let element">
                   <div class="actions">
-                    <button mat-icon-button [matMenuTriggerFor]="actionsMenu" class="icon-button">
+                    <button
+                      mat-icon-button
+                      [matMenuTriggerFor]="actionsMenu"
+                      class="icon-button"
+                    >
                       <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #actionsMenu="matMenu">
-                      <button (click)="
+                      <button
+                        (click)="
                           onEdit(element, params?.configurations, 'group')
-                        " mat-menu-item>
+                        "
+                        mat-menu-item
+                      >
                         <mat-icon>edit</mat-icon>
                         Edit
                       </button>
-                      <button mat-menu-item (click)="
+                      <button
+                        mat-menu-item
+                        (click)="
                           onDelete(element, params?.configurations, 'group')
-                        ">
+                        "
+                      >
                         <mat-icon>delete</mat-icon>
                         Delete
                       </button>
@@ -141,16 +212,25 @@
                   </div>
                 </td>
               </ng-container>
-              <tr mat-header-row *matHeaderRowDef="['name', 'associatedGroups', 'actions']"></tr>
-              <tr mat-row *matRowDef="
+              <tr
+                mat-header-row
+                *matHeaderRowDef="['name', 'associatedGroups', 'actions']"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="
                   let row;
                   columns: ['name', 'associatedGroups', 'actions']
-                "></tr>
+                "
+              ></tr>
             </table>
           </div>
         </mat-card-content>
         <mat-card-actions align="end">
-          <button mat-icon-button (click)="onAddNewGroup($event, params?.configurations)">
+          <button
+            mat-icon-button
+            (click)="onAddNewGroup($event, params?.configurations)"
+          >
             <mat-icon>add</mat-icon>
           </button>
         </mat-card-actions>
@@ -167,41 +247,58 @@
                 <div class="col-md-8 col-sm-12 col-sx-12">
                   <mat-form-field>
                     <mat-label>Languages</mat-label>
-                    <mat-select [value]="params?.configurations?.defaultLocale"
-                      (selectionChange)="getSelectedLanguage($event)">
-                      <mat-option *ngFor="
+                    <mat-select
+                      [value]="params?.configurations?.defaultLocale"
+                      (selectionChange)="getSelectedLanguage($event)"
+                    >
+                      <mat-option
+                        *ngFor="
                           let language of params?.configurations?.languages
-                        " [value]="language.key">{{ language?.name }}</mat-option>
+                        "
+                        [value]="language.key"
+                        >{{ language?.name }}</mat-option
+                      >
                     </mat-select>
                   </mat-form-field>
                 </div>
                 <div class="col-4 col-sm-12 col-sx-12 justify-content-end">
                   <section>
-                    <mat-checkbox color="primary" [checked]="
+                    <mat-checkbox
+                      color="primary"
+                      [checked]="
                         params?.selectedSettingsLanguageKey ===
                         params?.configurations?.defaultLocale
-                      " (change)="
+                      "
+                      (change)="
                         onOpenDefaultLanguageConfirmationModal(
                           $event,
                           params?.configurations,
                           params?.selectedSettingsLanguageKey
                         )
-                      ">Is default?</mat-checkbox>
+                      "
+                      >Is default?</mat-checkbox
+                    >
                   </section>
                 </div>
               </div>
             </div>
             <div class="col-12" *ngIf="params?.selectedSettingsLanguageKey">
-              <app-translations-list [configurations]="params?.configurations"
+              <app-translations-list
+                [configurations]="params?.configurations"
                 [key]="params?.selectedSettingsLanguageKey"
-                (selectedTranslationValue)="onGetTranslationValue($event)"></app-translations-list>
+                (selectedTranslationValue)="onGetTranslationValue($event)"
+              ></app-translations-list>
             </div>
           </div>
         </mat-card-content>
       </mat-card>
     </div>
   </div>
-  <div class="alert alert-warning" role="alert" *ngIf="params?.configurations && params?.configurations?.error">
+  <div
+    class="alert alert-warning"
+    role="alert"
+    *ngIf="params?.configurations && params?.configurations?.error"
+  >
     {{ params?.configurations?.error?.httpStatusCode }}
     {{ params?.configurations?.error?.httpStatus }}
   </div>
