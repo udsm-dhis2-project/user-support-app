@@ -363,13 +363,13 @@ export class UsersListComponent implements OnInit {
                 user?.userCredentials?.username
               } \n Names: ${user?.name} \n Email: ${
                 user?.email ? user?.email : ''
-              } \n\n
+              } \n
               User Roles: ${(
                 dataToUpdate?.userRoles?.map(
                   (roleReference: any) => roleReference?.name
                 ) || []
               ).join(',')}\n
-              User Groups: ${(
+              and User Groups: ${(
                 dataToUpdate?.userGroups?.map(
                   (groupReference: any) => groupReference?.name
                 ) || []
@@ -383,11 +383,11 @@ export class UsersListComponent implements OnInit {
               dataToUpdate?.userRoles?.map(
                 (roleReference: any) => roleReference?.name
               ) || []
-            ).join(',')}] and groups [${(
+            ).join(',')}] and \n user groups [${(
               dataToUpdate?.userGroups?.map(
                 (groupReference: any) => groupReference?.name
               ) || []
-            ).join(',')}] for user with account ${
+            ).join(',')}] \n for user with account/username ${
               user?.userCredentials?.username
             } for ${user?.name} has been updated`,
             payload: payload,
