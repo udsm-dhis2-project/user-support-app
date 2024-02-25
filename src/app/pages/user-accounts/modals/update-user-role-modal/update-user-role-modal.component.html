@@ -1,26 +1,37 @@
-<div class="w-100" mat-dialog-title> Update User Role [Under Construction]</div>
+<!-- TODO: Add translations -->
+<div class="w-100 text-muted" mat-dialog-title>
+  Update User Roles and user groups
+</div>
 
 <mat-dialog-content>
   <div class="row">
-    <div class="col-12 mt-4">
-      <div class="h5">{{ 'Access' | translate }}</div>
-      <app-form
-        [fields]="accessFormFields"
-        [isFormHorizontal]="false"
-        (formUpdate)="onFormUpdate($event)"
-      ></app-form>
+    <div class="col-12 mt-2 user-roles-selection-container">
+      <div class="h5">User roles</div>
+      <app-multiple-items-selection
+        [useLoadedList]="true"
+        [loadedItemsList]="data?.configurations?.allowedUserRolesForRequest"
+        [selectedItems]="[]"
+        (selectedItemsList)="onGetSelectedUserRoles($event)"
+      ></app-multiple-items-selection>
+    </div>
+    <div class="col-12 mt-4 user-roles-selection-container">
+      <div class="h5">User groups</div>
+      <app-multiple-items-selection
+        [useLoadedList]="true"
+        [loadedItemsList]="data?.configurations?.allowedUserGroupsForRequest"
+        [selectedItems]="[]"
+        (selectedItemsList)="onGetSelectedUserGroups($event)"
+      ></app-multiple-items-selection>
     </div>
   </div>
 </mat-dialog-content>
-<div class="p-3">
 <mat-dialog-actions align="end">
   <button mat-stroked-button mat-dialog-close>Cancel</button>
   <button
     mat-flat-button
     color="primary"
-    (click)="confirmUserRoleUpdate()"
+    (click)="onConfirmUserRolesUpdate($event)"
   >
-    {{isAssigned ? 'Unassign' : 'Assign'}}
+    Update
   </button>
 </mat-dialog-actions>
-</div>

@@ -13,6 +13,7 @@ import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatRadioChange } from '@angular/material/radio';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
+import { flatten } from 'lodash';
 
 @Component({
   selector: 'app-users-list',
@@ -44,7 +45,7 @@ export class UsersListComponent implements OnInit {
     private messageAndDataStoreService: MessagesAndDatastoreService,
     private _snackBar: MatSnackBar,
     private dataStoreService: DataStoreDataService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.options = this.levels;
@@ -124,15 +125,18 @@ export class UsersListComponent implements OnInit {
         data: {
           user,
           header: 'Confirming',
-          message: `Do you want to ${user?.userCredentials?.disabled ? ' activate ' : ' deactivate'
-            } ${user?.name} (${user?.userCredentials?.username})`,
+          message: `Do you want to ${
+            user?.userCredentials?.disabled ? ' activate ' : ' deactivate'
+          } ${user?.name} (${user?.userCredentials?.username})`,
         },
       })
       .afterClosed()
       .subscribe((update?: boolean) => {
         if (update) {
           this.saving = true;
-          const action = user?.userCredentials?.disabled ? 'enabled' : 'disabled';
+          const action = user?.userCredentials?.disabled
+            ? 'enabled'
+            : 'disabled';
           const dataStoreKey =
             'UA' +
             Date.now() +
@@ -141,21 +145,25 @@ export class UsersListComponent implements OnInit {
           const dataForMessageAndDataStore = {
             id: dataStoreKey,
             ticketNumber: 'UA' + Date.now().toString(),
-            action: `Respond to ${user?.userCredentials?.disabled ? 'activation ' : 'deactivation '
-              } of ${user?.name} account requested by ${this.currentUser?.displayName
-              }`,
+            action: `Respond to ${
+              user?.userCredentials?.disabled ? 'activation ' : 'deactivation '
+            } of ${user?.name} account requested by ${
+              this.currentUser?.displayName
+            }`,
             message: {
-              message: `The following account was requested for ${user?.userCredentials?.disabled ? ' activation' : 'deactivation'
-                }: \n\n  Username: ${user?.userCredentials?.username} \n Names: ${user?.name
-                } \n Email: ${user?.email ? user?.email : ''}`,
+              message: `The following account was requested for ${
+                user?.userCredentials?.disabled ? ' activation' : 'deactivation'
+              }: \n\n  Username: ${user?.userCredentials?.username} \n Names: ${
+                user?.name
+              } \n Email: ${user?.email ? user?.email : ''}`,
               subject: 'UA' + Date.now().toString() + '- ACCOUNT REQUEST',
             },
-            replyMessage: `Account ${user?.userCredentials?.username} for ${user?.name
-              } has been ${user?.userCredentials?.disabled ? 'activated' : 'de-activated'
-              }`,
-            payload: {
-
-            },
+            replyMessage: `Account ${user?.userCredentials?.username} for ${
+              user?.name
+            } has been ${
+              user?.userCredentials?.disabled ? 'activated' : 'de-activated'
+            }`,
+            payload: {},
             url: 'users/' + user?.id + '/' + action,
             type: user?.userCredentials?.disabled ? 'activate' : 'deactivate',
             method: 'POST',
@@ -223,7 +231,6 @@ export class UsersListComponent implements OnInit {
             },
           ];
 
-
           this.saving = true;
           const dataStoreKey =
             'UA' +
@@ -235,9 +242,11 @@ export class UsersListComponent implements OnInit {
             ticketNumber: 'UA' + Date.now().toString(),
             action: `Respond to password reset request for user ${user?.name} as requested by ${this.currentUser?.displayName}`,
             message: {
-              message: `The following account was requested for password reset: \n\n  Username: ${user?.userCredentials?.username
-                } \n Names: ${user?.name} \n Email: ${user?.email ? user?.email : ''
-                }`,
+              message: `The following account was requested for password reset: \n\n  Username: ${
+                user?.userCredentials?.username
+              } \n Names: ${user?.name} \n Email: ${
+                user?.email ? user?.email : ''
+              }`,
               subject: 'UA' + Date.now().toString() + '- PASSWORD RESET',
             },
             replyMessage: `Password for ${user?.userCredentials?.username} (${user?.name}) has been updated successfully. \n\n The password is ${password}`,
@@ -285,48 +294,59 @@ export class UsersListComponent implements OnInit {
       });
   }
 
-  openUserOrgunitDialog() {
+  openUserOrgunitDialog(): void {
     this.dialog.open(UpdateUserOrgunitModalComponent, {
-      width: '50%',
+      minWidth: '50%',
     });
   }
 
-  openUserRoleDialog(user, configuration) {
-    this.dialog.open(UpdateUserRoleModalComponent, {
-      width: '50%',
-      data: {
-        configuration: configuration,
-        user: user,
-      }
-    })
+  openUserRoleDialog(user: any, configurations: any): void {
+    this.dialog
+      .open(UpdateUserRoleModalComponent, {
+        minWidth: '50%',
+        data: {
+          configurations,
+          user,
+        },
+      })
       .afterClosed()
-      .subscribe((res) => {
-        if (res) {
+      .subscribe((dataToUpdate: any) => {
+        if (dataToUpdate) {
           const payload = [
             {
-              op: "add",
-              path: "/userRoles",
-              value: res.isAssigned ? 
-              user.userRoles.filter(role => role.id !== res.role) : [
-                { id: res.role },
-                ...user.userRoles
-              ]
+              op: 'add',
+              path: '/userRoles',
+              value:
+                flatten(
+                  dataToUpdate?.userRoles?.map((userRoleReference: any) => {
+                    return userRoleReference?.associatedRoles?.map(
+                      (userRole: any) => {
+                        return {
+                          id: userRole?.id,
+                        };
+                      }
+                    );
+                  })
+                ) || [],
             },
-            // {
-            //   op: "add",
-            //   path: "/userGroups",
-            //   value: res.assignedGroups ? 
-            //   user.userGroups.filter(group => group.id !== res.group) : 
-            //   [
-            //     {id: res.group},
-            //     ...user.userGroups
-            //   ]
-            // },
             {
-              op: "add",
-              path: "/attributeValues",
-              value: []
-            }];
+              op: 'add',
+              path: '/userGroups',
+              value:
+                flatten(
+                  dataToUpdate?.userGroups?.map((userGroupReference: any) => {
+                    return userGroupReference?.associatedGroups?.map(
+                      (userGroup: any) => {
+                        return {
+                          id: userGroup?.id,
+                        };
+                      }
+                    );
+                  })
+                ) || [],
+            },
+            { op: 'add', path: '/attributeValues', value: [] },
+          ];
 
           this.saving = true;
           const dataStoreKey =
@@ -337,15 +357,39 @@ export class UsersListComponent implements OnInit {
           const dataForMessageAndDataStore = {
             id: dataStoreKey,
             ticketNumber: 'UA' + Date.now().toString(),
-            action: `Respond to account update of ${user?.name} account requested by ${this.currentUser?.displayName
-              }`,
+            action: `Respond to account update of ${user?.name} account requested by ${this.currentUser?.displayName}`,
             message: {
-              message: `The following account was requested for account user role/group update: \n\n  Username: ${user?.userCredentials?.username} \n Names: ${user?.name
-                } \n Email: ${user?.email ? user?.email : ''}`,
-              subject: 'UA' + Date.now().toString() + '- ACCOUNT REQUEST',
+              message: `The following account was requested for user roles and groups update: \n\n  Username: ${
+                user?.userCredentials?.username
+              } \n Names: ${user?.name} \n Email: ${
+                user?.email ? user?.email : ''
+              } \n\n
+              User Roles: ${(
+                dataToUpdate?.userRoles?.map(
+                  (roleReference: any) => roleReference?.name
+                ) || []
+              ).join(',')}\n
+              User Groups: ${(
+                dataToUpdate?.userGroups?.map(
+                  (groupReference: any) => groupReference?.name
+                ) || []
+              ).join(',')}`,
+              subject:
+                'UA' +
+                Date.now().toString() +
+                '- ACCOUNT REQUEST: Update Roles and Groups',
             },
-            replyMessage: `User role/group for Account ${user?.userCredentials?.username} for ${user?.name
-              } has been updated`,
+            replyMessage: `User roles [${(
+              dataToUpdate?.userRoles?.map(
+                (roleReference: any) => roleReference?.name
+              ) || []
+            ).join(',')}] and groups [${(
+              dataToUpdate?.userGroups?.map(
+                (groupReference: any) => groupReference?.name
+              ) || []
+            ).join(',')}] for user with account ${
+              user?.userCredentials?.username
+            } for ${user?.name} has been updated`,
             payload: payload,
             url: 'users/' + user?.id,
             type: 'userRoles',
@@ -390,5 +434,3 @@ export class UsersListComponent implements OnInit {
       });
   }
 }
-
-

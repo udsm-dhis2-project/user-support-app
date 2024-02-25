@@ -9,6 +9,7 @@ import { FormModule } from './modules/form/form.module';
 import { SearchItemPipe } from './pipes/search-item.pipe';
 import { FilterFormRequestsPipe } from './pipes/filter-requests.pipe';
 import { TranslateModule } from '@ngx-translate/core';
+import { FilterItemsPipe } from './pipes/filter-items.pipe';
 
 @NgModule({
   imports: [
@@ -24,11 +25,14 @@ import { TranslateModule } from '@ngx-translate/core';
     CommonModule,
     FormModule,
     ...materialModules,
+    ...sharedComponents,
+    ...sharedEntryComponents,
     NgxDhis2OrgUnitFilterModule,
     // NgxDhis2DataFilterModule,
     NgxDhis2PeriodFilterModule,
     SearchItemPipe,
     FilterFormRequestsPipe,
+    FilterItemsPipe,
     TranslateModule,
   ],
   declarations: [
@@ -36,6 +40,7 @@ import { TranslateModule } from '@ngx-translate/core';
     ...sharedEntryComponents,
     SearchItemPipe,
     FilterFormRequestsPipe,
+    FilterItemsPipe,
   ],
 })
 export class SharedModule {}
