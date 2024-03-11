@@ -67,7 +67,7 @@ export class RequestUserAccountsComponent implements OnInit {
   saving: boolean = false;
 
   currentUserToCreateSelected: string;
-  readyToSave: boolean = false;
+  readyToSend: boolean = false;
   pageReady: boolean = false;
   formUpdateIsDone: boolean = false;
   prevIndex: number = 0;
@@ -159,7 +159,7 @@ export class RequestUserAccountsComponent implements OnInit {
       ? [
           ...this.formDataToStoreLocally,
           {
-            id: 'REF' + Date.now(),
+            id: 'REF' + Date.now() + ':' + this.formData?.phoneNumber?.value,
             firstName: this.formData?.firstName?.value.trim(),
             lastName: this.formData?.lastName?.value.trim(),
             phoneNumber: this.formData?.phoneNumber?.value,
@@ -233,7 +233,7 @@ export class RequestUserAccountsComponent implements OnInit {
     // testing logic
     // jdksdjsk;
 
-    this.readyToSave = true;
+    this.readyToSend = true;
   }
 
   onClear(event: Event): void {
@@ -243,7 +243,7 @@ export class RequestUserAccountsComponent implements OnInit {
     this.createAccessControlFields();
   }
 
-  onSave(event: Event): void {
+  onSend(event: Event): void {
     event.stopPropagation();
     // console.log('formDataToStoreLocally', this.formDataToStoreLocally);
     this.dialog
@@ -259,7 +259,7 @@ export class RequestUserAccountsComponent implements OnInit {
         if (confirmed) {
           this.saving = true;
           this.shouldConfirm = false;
-          this.readyToSave = false;
+          this.readyToSend = false;
           // Clear local storage
           // Send data to datastore and messaging after confirm
           const dataStoreKey =
@@ -364,7 +364,7 @@ export class RequestUserAccountsComponent implements OnInit {
 
   backtoRequest(event: Event): void {
     event.stopPropagation();
-    this.readyToSave = false;
+    this.readyToSend = false;
   }
 
   createDemographicFields(data?: any): void {
@@ -483,14 +483,11 @@ export class RequestUserAccountsComponent implements OnInit {
       },
     ];
 
-    console.log('selectedRoles', this.selectedRoles);
-
     this.selectedUserGroups = [
       {
         id: this.formData?.userGroup?.value,
       },
     ];
-    console.log('selectedUserGroups', this.selectedUserGroups);
     this.isAccessControlFormValid = formvalue.isValid;
   }
 

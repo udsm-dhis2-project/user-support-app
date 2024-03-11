@@ -18,7 +18,7 @@
     </div>
   </div>
   <div class="p-3" *ngIf="pageReady">
-    <div class="row" *ngIf="!readyToSave">
+    <div class="row" *ngIf="!readyToSend">
       <div class="col-md-4 col-sx-12">
         <div>
           <div class="h5">{{ 'Demographic' | translate }}</div>
@@ -68,7 +68,7 @@
         </div>
       </div>
     </div>
-    <div class="w-100" *ngIf="readyToSave">
+    <div class="w-100" *ngIf="readyToSend">
       <table class="table">
         <thead>
           <tr>
@@ -110,7 +110,7 @@
     <div class="row d-flex justify-content-end mt-2">
       <!-- [disabled]="!isDemographicFormValid || !isAccessControlFormValid" -->
       <!-- <button
-        *ngIf="!readyToSave"
+        *ngIf="!readyToSend"
         [disabled]="prevIndex === 0"
         mat-stroked-button
         color="primary"
@@ -119,12 +119,13 @@
         Previous
       </button> -->
       <button
-        *ngIf="!readyToSave"
+        *ngIf="!readyToSend"
         mat-flat-button
         [disabled]="
           !isAccessControlFormValid ||
           selectedOrgUnitItemsForDataEntry?.length == 0 ||
-          selectedOrgUnitItemsForReport?.length == 0
+          selectedOrgUnitItemsForReport?.length == 0 ||
+          !isDemographicFormValid
         "
         color="primary"
         class="ml-2"
@@ -133,7 +134,7 @@
         {{ 'Add' | translate }}
       </button>
       <button
-        *ngIf="!readyToSave"
+        *ngIf="!readyToSend"
         [disabled]="formDataToStoreLocally?.length === 0 || formData?.firstName"
         mat-flat-button
         color="primary"
@@ -143,7 +144,7 @@
         {{ 'Finish request' | translate }}
       </button>
       <button
-        *ngIf="readyToSave"
+        *ngIf="readyToSend"
         mat-flat-button
         color="primary"
         (click)="backtoRequest($event)"
@@ -152,14 +153,15 @@
       </button>
     </div>
     <div class="row d-flex justify-content-end mt-2">
-      <button mat-stroked-button (click)="onClear($event)">
+      <button *ngIf="!readyToSend" mat-stroked-button (click)="onClear($event)">
         {{ 'Clear' | translate }}
       </button>
       <button
+        *ngIf="readyToSend"
         mat-flat-button
         color="primary"
-        [disabled]="!readyToSave"
-        (click)="onSave($event)"
+        [disabled]="!readyToSend"
+        (click)="onSend($event)"
         class="ml-2"
       >
         {{ 'Send' | translate }}

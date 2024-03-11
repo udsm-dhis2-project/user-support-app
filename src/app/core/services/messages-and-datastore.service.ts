@@ -16,7 +16,7 @@ export class MessagesAndDatastoreService {
     return zip(
       this.httpClient.post(
         `messageConversations/feedback?subject=${messageData?.subject}`,
-        messageData?.text
+        messageData?.text.toString()
       ),
       this.httpClient.post(
         `dataStore/dhis2-user-support/${dataStoreInformation?.id}`,
