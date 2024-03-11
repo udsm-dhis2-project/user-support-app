@@ -1,10 +1,11 @@
-import { flatten } from 'lodash';
+import { flatten, keyBy } from 'lodash';
 import { Injectable } from '@angular/core';
-import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
+import { HttpConfig, NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Observable, of, zip } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { FeedbackRecepientModel } from 'src/app/shared/models/users.model';
 import { HttpClient } from '@angular/common/http';
+import { flattenToArrayGivenOrgUnits } from '../helpers/organisation-units.helpers';
 
 @Injectable({
   providedIn: 'root',
@@ -32,21 +33,48 @@ export class UsersDataService {
     pageSize: number,
     page: number,
     q?: string,
-    pathSection?: string
+    pathSection?: string,
+    levels?: any[],
+    selectedLevel?: number,
+    accountStatus?: string
   ): Observable<any> {
     return this.httpClient
       .get(
         `users.json?pageSize=${pageSize}&page=${page}${
           q ? '&query=' + q : ''
-        }&fields=id,firstName,organisationUnits[id,level,name,code,path],surname,name,email,userCredentials[username,lastlogin,disabled]&order=firstName~asc${
+        }&fields=id,firstName,organisationUnits[id,level,name,code,path,parent[id,name,level,parent[id,name,level]]],surname,name,email,phoneNumber,userRoles,userGroups,userCredentials[username,lastlogin,disabled]&order=firstName~asc${
           pathSection
             ? '&filter=organisationUnits.path:ilike:' + pathSection
+            : ''
+        }${
+          selectedLevel
+            ? '&filter=organisationUnits.level:eq:' + selectedLevel
+            : ''
+        }${
+          accountStatus
+            ? '&filter=userCredentials.disabled:eq:' +
+              (accountStatus == 'active' ? false : true)
             : ''
         }`
       )
       .pipe(
         map((response) => {
-          return response;
+          return {
+            ...response,
+            users: response?.users?.map((user: any) => {
+              return {
+                ...user,
+                leveledOrgUnitsTree: keyBy(
+                  flatten(
+                    user?.organisationUnits?.map((orgUnit: any) => {
+                      return flattenToArrayGivenOrgUnits(orgUnit);
+                    })
+                  ),
+                  'level'
+                ),
+              };
+            }),
+          };
         }),
         catchError((error) => of(error))
       );
@@ -59,8 +87,8 @@ export class UsersDataService {
   }
 
   approveChanges(data: any): Observable<any> {
-    console.log('');
     if (data?.method === 'POST') {
+      if (!(data?.url?.includes('enabled') || data?.url?.includes('disabled'))) {
       return zip(
         data?.userPayload
           ? this.httpClient.post('users', data?.userPayload)
@@ -85,17 +113,10 @@ export class UsersDataService {
         map((response) => response),
         catchError((error) => of(error))
       );
-    } else if (data?.method === 'DELETE') {
-      return this.httpClient
-        .delete(`dataStore/dhis2-user-support/${data?.id}`)
-        .pipe(
-          map((response) => response),
-          catchError((error) => of(error))
-        );
-    } else if (data?.method === 'PATCH') {
+    } else if (data?.method === 'POST') {
       return zip(
         data?.payload
-          ? this.httpClientService.patch(
+          ? this.httpClientService.post(
               `../../../api/${data?.url}`,
               data?.payload
             )
@@ -117,10 +138,21 @@ export class UsersDataService {
         map((response) => response),
         catchError((error) => of(error))
       );
-    } else if (data?.method === 'PUT') {
+    }}
+    else if (data?.method === 'DELETE') {
+      return this.httpClient
+        .delete(`dataStore/dhis2-user-support/${data?.id}`)
+        .pipe(
+          map((response) => response),
+          catchError((error) => of(error))
+        );
+    }  else if (data?.method === 'PATCH') {
+      const httpOptions: HttpConfig = {
+        httpHeaders: { 'Content-Type': 'application/json-patch+json' }
+    };
       return zip(
         data?.payload
-          ? this.httpClient.put(`${data?.url}`, data?.payload)
+          ? this.httpClient.patch(`${data?.url}`, data?.payload, httpOptions)
           : of(null),
         this.httpClient.delete(`dataStore/dhis2-user-support/${data?.id}`),
         data?.messageConversation

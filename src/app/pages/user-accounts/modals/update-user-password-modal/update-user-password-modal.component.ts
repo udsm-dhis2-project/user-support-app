@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -10,12 +10,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class UpdateUserPasswordModalComponent implements OnInit {
   passwordsMatch: boolean = false;
   errorMessage: string = '';
-  changePassword: FormGroup = new FormGroup({
-    password: new FormControl('', [
+  changePassword: UntypedFormGroup = new UntypedFormGroup({
+    password: new UntypedFormControl('', [
       Validators.required,
       Validators.minLength(8),
     ]),
-    repeatPassword: new FormControl('', [
+    repeatPassword: new UntypedFormControl('', [
       Validators.required,
       Validators.minLength(8),
     ]),

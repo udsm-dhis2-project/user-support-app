@@ -3,12 +3,12 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
-import { NgxDhis2MenuModule } from '@iapps/ngx-dhis2-menu';
+// import { NgxDhis2MenuModule } from '@iapps/ngx-dhis2-menu';
 import { EffectsModule } from '@ngrx/effects';
 import {
   RouterStateSerializer,
   StoreRouterConnectingModule,
-  DefaultRouterStateSerializer,
+  FullRouterStateSerializer,
 } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -22,6 +22,7 @@ import { CoreModule, RouteSerializer } from './core';
 import { effects } from './store/effects';
 import { metaReducers, reducers } from './store/reducers';
 import { materialModules } from './shared/materials.module';
+import { HeaderBarModule } from '@iapps/ng-dhis2-ui';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -35,6 +36,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     RoutingModule,
     CoreModule,
+    HeaderBarModule,
     ...materialModules,
     BrowserAnimationsModule,
     StoreModule.forRoot(reducers, { metaReducers }),
@@ -51,7 +53,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     /**
      * Menu  module
      */
-    NgxDhis2MenuModule,
+    // NgxDhis2MenuModule,
 
     /**
      Translation module
@@ -69,10 +71,12 @@ export function HttpLoaderFactory(http: HttpClient) {
      * @ngrx/router-store keeps router state up-to-date in the store
      */
     StoreRouterConnectingModule.forRoot({
-      serializer: DefaultRouterStateSerializer,
+      serializer: FullRouterStateSerializer,
     }),
 
-    !environment.production ? StoreDevtoolsModule.instrument() : [],
+    !environment.production
+      ? StoreDevtoolsModule.instrument({ connectInZone: true })
+      : [],
   ],
   providers: [{ provide: RouterStateSerializer, useClass: RouteSerializer }],
   bootstrap: [AppComponent],

@@ -7,13 +7,12 @@ import { StatisticsRoutingModule } from './statistics-routing.module';
 import { components, entryComponents } from './components';
 
 @NgModule({
-  declarations: [...containers, ...components],
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    SharedModule,
-    StatisticsRoutingModule,
-  ],
-  entryComponents: [...entryComponents],
+    declarations: [...containers, ...components],
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        SharedModule,
+        StatisticsRoutingModule,
+    ]
 })
 export class StatisticsModule {}

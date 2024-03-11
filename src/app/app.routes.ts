@@ -40,6 +40,11 @@ export const routes: Routes = [
         (m) => m.StatisticsModule
       ),
   },
+  {
+    path: 'settings',
+    loadChildren: () =>
+      import('./pages/settings/settings.module').then((m) => m.SettingsModule),
+  },
 ];
 
 @NgModule({
@@ -47,7 +52,6 @@ export const routes: Routes = [
     RouterModule.forRoot(routes, {
       useHash: true,
       preloadingStrategy: PreloadAllModules,
-      relativeLinkResolution: 'legacy',
     }),
   ],
   exports: [RouterModule],

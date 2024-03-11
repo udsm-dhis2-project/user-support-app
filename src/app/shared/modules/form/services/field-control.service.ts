@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { Field } from "../models/field.model";
 import { FieldsData } from "../models/fields-data.model";
 
@@ -7,26 +7,26 @@ import { FieldsData } from "../models/fields-data.model";
 export class FieldControlService {
   constructor() {}
 
-  toFormGroup(fields: Field<string>[], fieldsData?: FieldsData): FormGroup {
+  toFormGroup(fields: Field<string>[], fieldsData?: FieldsData): UntypedFormGroup {
     const group: any = {};
     fields.forEach((field) => {
       const fieldData = fieldsData ? fieldsData[field.id]?.latest : null;
       if (field?.key) {
         group[field.key] = field.required
-          ? new FormControl(
+          ? new UntypedFormControl(
               {
                 value: fieldData?.value || field.value || "",
                 disabled: field?.disabled,
               },
               Validators.required
             )
-          : new FormControl({
+          : new UntypedFormControl({
               value: fieldData?.value || field.value || "",
               disabled: field?.disabled,
             });
       }
     });
 
-    return new FormGroup(group);
+    return new UntypedFormGroup(group);
   }
 }

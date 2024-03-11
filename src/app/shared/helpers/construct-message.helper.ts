@@ -104,7 +104,7 @@ export function constructMessageForFacilityAssignment(
       ' - ' +
       (keywordsKeys && keywordsKeys['messageRequestHeader']
         ? keywordsKeys['formRequestMessageHeaderKey']
-        : 'MAOMBI YA FOMU'),
+        : 'FORM REQUEST'),
     message,
   };
 }
@@ -160,7 +160,7 @@ export function constructMessageForDataSetAssignment(
       ' - ' +
       (keywordsKeys && keywordsKeys['messageRequestHeader']
         ? keywordsKeys['formRequestMessageHeaderKey']
-        : 'MAOMBI YA FOMU'),
+        : 'FORM REQUEST'),
     message,
   };
 }

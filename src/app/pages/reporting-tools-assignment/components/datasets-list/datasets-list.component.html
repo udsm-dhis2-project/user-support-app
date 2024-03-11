@@ -1,4 +1,4 @@
-<div *ngIf="{ dataSetsDetails: dataSetsDetails$ | async } as params">
+<div *ngIf="{ dataSetsDetails: dataSetsDetails$ | async, translations: translations$ | async } as params">
   <div class="w-100">
     <mat-form-field class="w-25">
       <mat-label>Search </mat-label>
@@ -11,7 +11,11 @@
       <thead class="custom-header-bg">
         <tr>
           <th style="width: 20px">{{ 'SN' | translate }}</th>
-          <th>{{ 'Dataset' | translate }}</th>
+          <th>
+            {{ params?.translations['Dataset'] || 'Dataset' }}
+            // {{ 'Dataset' | translate }}
+          
+          </th>
           <th>{{ 'Reporting Facilities' | translate }}</th>
           <th>{{ 'Actions' | translate }}</th>
         </tr>

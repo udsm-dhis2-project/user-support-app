@@ -24,11 +24,7 @@
               "src/manifest.webapp",
               "src/manifest.json"
             ],
-            "styles": [
-              "./src/theme.scss",
-              "node_modules/bootstrap/dist/css/bootstrap.css",
-              "src/styles.scss"
-            ],
+            "styles": ["src/theme.scss", "src/styles.scss"],
             "scripts": [],
             "vendorChunk": true,
             "extractLicenses": false,
@@ -64,19 +60,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "user-support-app:build",
-            "proxyConfig": "proxy-config.json"
+            "proxyConfig": "proxy-config.json",
+            "buildTarget": "user-support-app:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "user-support-app:build:production"
+              "buildTarget": "user-support-app:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "user-support-app:build"
+            "buildTarget": "user-support-app:build"
           }
         },
         "test": {
@@ -90,13 +86,6 @@
             "styles": ["./src/theme.scss", "src/styles.css"],
             "scripts": [],
             "assets": ["src/favicon.ico", "src/assets", "src/manifest.json"]
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -116,20 +105,12 @@
               "devServerTarget": "user-support-app:serve:production"
             }
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
-          }
         }
       }
     }
   },
-  "defaultProject": "user-support-app",
   "cli": {
     "analytics": "542a320c-8705-4503-b91b-79ffabc8f703",
-    "defaultCollection": "@ngrx/schematics"
+    "schematicCollections": ["@ngrx/schematics"]
   }
 }

@@ -6,118 +6,129 @@
     </div>
   </div>
 </div>
-<div
-  class="approve-accounts-modal"
+
+<ng-container
   *ngIf="{ dataStoreInformation: dataStoreInformation$ | async } as params"
 >
   <mat-progress-bar
     mode="indeterminate"
     *ngIf="!params?.dataStoreInformation"
   ></mat-progress-bar>
-  <div class="h4">{{ 'Account approval' | translate }}</div>
-  <div style="max-height: 50vh; overflow: auto" class="mt-2">
-    <table
-      class="table table-bordered"
-      *ngIf="
-        params?.dataStoreInformation && !params?.dataStoreInformation?.type
-      "
-    >
-      <thead>
-        <tr>
-          <th>{{ 'SN' | translate }}</th>
-          <th>{{ 'Names' | translate }}</th>
-          <th>{{ 'Time' | translate }}</th>
-          <th>{{ 'Action' | translate }}</th>
-        </tr>
-      </thead>
-      <tbody *ngIf="params?.dataStoreInformation">
-        <ng-container
-          *ngFor="
-            let user of params?.dataStoreInformation?.payload;
-            let count = index
-          "
-        >
-          <tr
-            [ngClass]="{
-              'created-user': user?.status == 'CREATED',
-              'approved-user': user?.status == 'APPROVED'
-            }"
-          >
-            <td>
-              {{ count + 1 }}
-            </td>
-            <td>
-              {{ user?.firstName }} {{ user?.surname }}
-              <span *ngIf="user?.username">({{ user?.username }})</span>
-            </td>
-            <td>
-              {{ dialogData?.request?.timeSinceResponseSent }}
-            </td>
-            <td>
-              <button
-                class="ml-2"
-                [disabled]="
-                  user?.status === 'CREATED' || user?.status === 'APPROVED'
-                "
-                mat-stroked-button
-                (click)="
-                  onTier2Approve($event, user, params?.dataStoreInformation)
-                "
-              >
-                {{
-                  dialogData?.isFeedbackRecepient
-                    ? 'First confirmation'
-                    : 'Confirm'
-                }}
-              </button>
-            </td>
+
+  <h2 mat-dialog-title>{{ 'Account approval' | translate }}</h2>
+  <mat-dialog-content class="mat-typography">
+    <div style="max-height: 50vh; overflow: auto" class="mt-2">
+      <table
+        class="table table-bordered"
+        *ngIf="
+          params?.dataStoreInformation && !params?.dataStoreInformation?.type
+        "
+      >
+        <thead>
+          <tr>
+            <th>{{ 'SN' | translate }}</th>
+            <th>{{ 'Names' | translate }}</th>
+            <th>{{ 'Time' | translate }}</th>
+            <th>{{ 'Action' | translate }}</th>
           </tr>
-          <tr
-            *ngIf="user?.status == 'APPROVED'"
-            [ngClass]="{
-              'created-user': user?.status == 'CREATED',
-              'approved-user': user?.status == 'APPROVED'
-            }"
+        </thead>
+        <tbody *ngIf="params?.dataStoreInformation">
+          <ng-container
+            *ngFor="
+              let user of params?.dataStoreInformation?.payload;
+              let count = index
+            "
           >
-            <td colspan="3">
-              <app-username-form-field
-                [user]="user"
-                [count]="count"
-                (validityCheckMessage)="onGetvalidityCheckMessage($event)"
-                (usernameData)="onGetUsernameData($event)"
-                (usernameValid)="onGetUsernameValidity($event)"
-              ></app-username-form-field>
-            </td>
-            <td>
-              <button
-                *ngIf="dialogData?.isFeedbackRecepient"
-                [disabled]="
-                  user?.status === 'CREATED' ||
-                  user?.status !== 'APPROVED' ||
-                  !isCurrentUsernameValid ||
-                  !currentUsername
-                "
-                mat-stroked-button
-                (click)="onApprove($event, user, params?.dataStoreInformation)"
-              >
-                Confirm
-              </button>
-              <div class="text-danger mt-2">
-                {{ validityCheckMessage }}
-              </div>
-            </td>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
-    <div
+            <tr
+              [ngClass]="{
+                'created-user': user?.status == 'CREATED',
+                'approved-user': user?.status == 'APPROVED'
+              }"
+            >
+              <td>
+                {{ count + 1 }}
+              </td>
+              <td>
+                {{ user?.firstName }} {{ user?.surname }}
+                <span *ngIf="user?.username">({{ user?.username }})</span>
+              </td>
+              <td>
+                {{ dialogData?.request?.timeSinceResponseSent }}
+              </td>
+              <td>
+                <button
+                  class="ml-2"
+                  [disabled]="
+                    user?.status === 'CREATED' || user?.status === 'APPROVED'
+                  "
+                  mat-stroked-button
+                  (click)="
+                    onTier2Approve($event, user, params?.dataStoreInformation)
+                  "
+                >
+                  {{
+                    dialogData?.isFeedbackRecepient
+                      ? 'First confirmation'
+                      : 'Confirm'
+                  }}
+                </button>
+              </td>
+            </tr>
+            <tr
+              *ngIf="user?.status == 'APPROVED'"
+              [ngClass]="{
+                'created-user': user?.status == 'CREATED',
+                'approved-user': user?.status == 'APPROVED'
+              }"
+            >
+              <td colspan="3">
+                <app-username-form-field
+                  [user]="user"
+                  [count]="count"
+                  (validityCheckMessage)="onGetvalidityCheckMessage($event)"
+                  (usernameData)="onGetUsernameData($event)"
+                  (usernameValid)="onGetUsernameValidity($event)"
+                ></app-username-form-field>
+              </td>
+              <td>
+                <button
+                  *ngIf="dialogData?.isFeedbackRecepient"
+                  [disabled]="
+                    user?.status === 'CREATED' ||
+                    user?.status !== 'APPROVED' ||
+                    !isCurrentUsernameValid ||
+                    !currentUsername
+                  "
+                  mat-stroked-button
+                  (click)="
+                    onApprove($event, user, params?.dataStoreInformation)
+                  "
+                >
+                  Confirm
+                </button>
+                <div class="text-danger mt-2">
+                  {{ validityCheckMessage }}
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+      <div
+        *ngIf="
+          params?.dataStoreInformation && params?.dataStoreInformation?.type
+        "
+      >
+        <div [innerHTML]="params?.dataStoreInformation?.message?.message"></div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      (click)="onClose($event)"
       *ngIf="params?.dataStoreInformation && params?.dataStoreInformation?.type"
     >
-      <div [innerHTML]="params?.dataStoreInformation?.message?.message"></div>
-    </div>
-  </div>
-  <div class="w-100 d-flex justify-content-end mt-2">
-    <button mat-stroked-button (click)="onClose($event)">
       {{ 'Cancel' | translate }}
     </button>
     <button
@@ -129,5 +140,5 @@
     >
       {{ 'Confirm' | translate }}
     </button>
-  </div>
-</div>
+  </mat-dialog-actions>
+</ng-container>

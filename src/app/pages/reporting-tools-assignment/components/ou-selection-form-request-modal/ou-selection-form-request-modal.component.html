@@ -7,61 +7,64 @@
   </div>
 </div>
 
-<div *ngIf="!savingData && !savedData">
-  <div
+<ng-container *ngIf="!savingData && !savedData">
+  <ng-container
     *ngIf="{
       reportingToolDetails: reportingToolDetails$ | async,
       allDataForUserSupport: allDataForUserSupport$ | async
     } as params"
   >
-    <h4>
+    <h2 mat-dialog-title>
       {{ 'Assign or Remove Facilities for' | translate }}
       {{
         dialogData?.dataSet?.name
           ? dialogData?.dataSet?.name
           : dialogData?.reportingTool?.name
       }}
-    </h4>
-    <mat-progress-bar
-      mode="indeterminate"
-      *ngIf="!params?.reportingToolDetails || !params?.allDataForUserSupport"
-    ></mat-progress-bar>
-    <app-selection-filter
-      *ngIf="params?.reportingToolDetails && params?.allDataForUserSupport"
-      [reportingToolDetails]="params?.reportingToolDetails"
-      [allDataForUserSupport]="params?.allDataForUserSupport"
-      (selectedOus)="onGetSelectedOus($event, params?.reportingToolDetails)"
-    ></app-selection-filter>
-    <div class="w-100 d-flex justify-content-end mt-2">
-      <button mat-stroked-button (click)="onClose($event)">
-        {{ 'Close' | translate }}
-      </button>
-      <button
-        class="ml-2"
-        color="primary"
-        mat-flat-button
-        [disabled]="
-          !assignmentDetails ||
-          (assignmentDetails?.deletions?.length === 0 &&
-            assignmentDetails?.additions?.length === 0)
-        "
-        (click)="
-          saveRequest(
-            $event,
-            selectedOrgUnitItems,
-            dialogData?.currentUser,
-            params?.reportingToolDetails
-          )
-        "
-      >
-        {{ 'Send' | translate }}
-      </button>
-    </div>
+    </h2>
+    <mat-dialog-content class="mat-typography">
+      <mat-progress-bar
+        mode="indeterminate"
+        *ngIf="!params?.reportingToolDetails || !params?.allDataForUserSupport"
+      ></mat-progress-bar>
+      <app-selection-filter
+        *ngIf="params?.reportingToolDetails && params?.allDataForUserSupport"
+        [reportingToolDetails]="params?.reportingToolDetails"
+        [allDataForUserSupport]="params?.allDataForUserSupport"
+        (selectedOus)="onGetSelectedOus($event, params?.reportingToolDetails)"
+      ></app-selection-filter>
+      <div class="w-100 d-flex justify-content-end mt-2">
+        <button mat-stroked-button (click)="onClose($event)">
+          {{ 'Close' | translate }}
+        </button>
+        <button
+          class="ml-2"
+          color="primary"
+          mat-flat-button
+          [disabled]="
+            !assignmentDetails ||
+            (assignmentDetails?.deletions?.length === 0 &&
+              assignmentDetails?.additions?.length === 0)
+          "
+          (click)="
+            saveRequest(
+              $event,
+              selectedOrgUnitItems,
+              dialogData?.currentUser,
+              params?.reportingToolDetails
+            )
+          "
+        >
+          {{ 'Send' | translate }}
+        </button>
+      </div>
 
-    <div *ngIf="savedData">
-      <p class="success-message">
-        {{ 'Successfully sent form request' | translate }}
-      </p>
-    </div>
-  </div>
-</div>
+      <div *ngIf="savedData">
+        <p class="success-message">
+          {{ 'Successfully sent form request' | translate }}
+        </p>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end"> </mat-dialog-actions>
+  </ng-container>
+</ng-container>

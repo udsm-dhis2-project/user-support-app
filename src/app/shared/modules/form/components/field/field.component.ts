@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { Field } from '../../models/field.model';
 import { MetadataService } from '../../services/metadata-service.service';
@@ -13,7 +13,7 @@ export class FieldComponent {
   @Input() field: Field<string>;
   @Input() isReport: boolean;
   @Input() value: any;
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() isCheckBoxButton: boolean;
   @Input() fieldClass: string;
   @Input() shouldDisable: boolean;
@@ -22,8 +22,8 @@ export class FieldComponent {
 
   constructor(private metadataService: MetadataService) {}
 
-  @Output() fieldUpdate: EventEmitter<FormGroup> =
-    new EventEmitter<FormGroup>();
+  @Output() fieldUpdate: EventEmitter<UntypedFormGroup> =
+    new EventEmitter<UntypedFormGroup>();
 
   get isValid(): boolean {
     return this.form?.controls[this.field.id]?.valid;

@@ -6,7 +6,7 @@ import {
   Output,
   OnChanges,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Field } from '../../models/field.model';
 import { FieldControlService } from '../../services';
 import { find } from 'lodash';
@@ -32,7 +32,7 @@ export class FormComponent implements OnInit, OnChanges {
 
   values: any;
 
-  form: FormGroup;
+  form: UntypedFormGroup;
   payload = '';
 
   constructor(private fieldControlService: FieldControlService) {}
@@ -52,7 +52,7 @@ export class FormComponent implements OnInit, OnChanges {
     this.formUpdate.emit(this.form.getRawValue());
   }
 
-  onFieldUpdate(form: FormGroup): void {
+  onFieldUpdate(form: UntypedFormGroup): void {
     if (!this.showSaveButton && form) {
       this.formUpdate.emit(new FormValue(this.form, this.fields));
 

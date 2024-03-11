@@ -10,7 +10,13 @@
     "module": "es2020",
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "target": "es2015",
+    "target": "ES2022",
+    "useDefineForClassFields": false,
+    "emitDecoratorMetadata": true,
+    "jsx": "react",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "typeRoots": [
       "node_modules/@types"
     ],

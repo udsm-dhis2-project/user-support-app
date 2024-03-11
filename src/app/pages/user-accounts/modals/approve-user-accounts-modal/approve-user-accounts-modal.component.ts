@@ -29,7 +29,6 @@ export class ApproveUserAccountsModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('DATA', this.dialogData);
     this.getRequestInformation();
   }
 
@@ -214,37 +213,56 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                         ?.defaultPassword,
                     username: selectedUsername,
                     userRoles:
-                      userToApprove?.userCredentials?.userRoles?.filter(
-                        (role) => role?.id != ''
-                      ) || [
-                        {
-                          id: 'ZI4hVQsL7Dq',
-                        },
-                      ],
-                  },
-                  userGroups: [
-                    ...userToApprove?.userGroups,
-                    ...flatten(
                       (
-                        this.dialogData?.configurations?.allowedUserGroupsForRequest?.filter(
-                          (group) =>
-                            userToApprove?.userGroups[0]?.id === group?.id
+                        flatten(
+                          (
+                            userToApprove?.userCredentials?.userRoles?.filter(
+                              (role) => role?.id != ''
+                            ) || []
+                          )?.map((userRole: any) => {
+                            return flatten(
+                              (
+                                this.dialogData?.configurations?.allowedUserRolesForRequest?.filter(
+                                  (role: any) => role?.id === userRole?.id
+                                ) || []
+                              )?.map(
+                                (configuredRole: any) =>
+                                  configuredRole?.associatedRoles || []
+                              ) || []
+                            );
+                          })
                         ) || []
-                      )?.map((userGroup) => {
-                        return userGroup?.associatedGroups.map((group) => {
-                          return !group?.id
-                            ? null
-                            : {
-                                id: group?.id,
-                              };
-                        });
-                      })
-                    ),
-                  ]?.filter((group) => group && group?.id != '') || [
-                    {
-                      id: 'zk2Zubvm2kP',
-                    },
-                  ],
+                      )?.map((role: any) => {
+                        return {
+                          id: role?.id,
+                        };
+                      }) || [],
+                  },
+                  userGroups:
+                    (
+                      flatten(
+                        (
+                          userToApprove?.userGroups?.filter(
+                            (group) => group?.id != ''
+                          ) || []
+                        )?.map((userGroup: any) => {
+                          return flatten(
+                            (
+                              this.dialogData?.configurations?.allowedUserGroupsForRequest?.filter(
+                                (group: any) => group?.id === userGroup?.id
+                              ) || []
+                            )?.map(
+                              (configuredGroup: any) =>
+                                configuredGroup?.associatedGroups || []
+                            ) || []
+                          );
+                        })
+                      ) || []
+                    )?.map((group: any) => {
+                      return {
+                        id: group?.id,
+                      };
+                    }) || [],
                   dataViewOrganisationUnits:
                     userToApprove?.dataViewOrganisationUnits?.length > 0
                       ? userToApprove?.dataViewOrganisationUnits?.map((ou) => {

@@ -1,0 +1,16 @@
+.list-item {
+  border-bottom: solid 1px #eee;
+  cursor: pointer;
+}
+
+.items-container {
+  max-height: 200px !important;
+  overflow: auto;
+}
+
+.items-list-header {
+  font-weight: 600;
+  margin-bottom: 4px;
+  font-size: 1.2rem;
+  color: #222222b5;
+}

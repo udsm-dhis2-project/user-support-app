@@ -47,7 +47,7 @@ export class RespondFeedbackComponent implements OnInit {
         this.dialogData?.ticketNumber
       );
     if (this.dialogData?.payload?.dataSetAttributesData?.length > 0) {
-      this.dataSetsCategoriesPayload$ = zip(
+      this.dataSetsCategoriesPayload$ = zip<any[]>(
         ...this.dialogData?.payload?.dataSetAttributesData.map(
           (dataSetAttribute) => {
             return this.httpClient

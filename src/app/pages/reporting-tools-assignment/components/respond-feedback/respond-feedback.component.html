@@ -7,100 +7,135 @@
   </div>
 </div>
 
-<div class="approve-container" *ngIf="!savingData && !savedData && !missingKey">
-  <div
-    *ngIf="{
-      messageConversation: messageConversation$ | async,
-      dataSetsCategoriesPayload: dataSetsCategoriesPayload$ | async
-    } as params"
-  >
-    <mat-progress-bar
-      mode="indeterminate"
-      *ngIf="!params?.messageConversation || !params?.dataSetsCategoriesPayload"
-    ></mat-progress-bar>
-    <div class="w-100" *ngIf="params?.messageConversation">
-      <div class="w-100" *ngIf="dataRow?.user">
-        From:
-        <span class="ml-4">
-          From {{ dataRow?.user?.displayName }}
-          <span *ngIf="dataRow?.user?.phoneNumber">
-            ({{ dataRow?.user?.phoneNumber }})
-          </span>
-        </span>
-      </div>
-      <p>
-        {{ dialogData?.action }}
-      </p>
-      <a (click)="toggleDetails($event)">{{
-        viewDetails ? 'View less' : 'View details'
-      }}</a>
+<ng-container
+  *ngIf="{
+    messageConversation: messageConversation$ | async,
+    dataSetsCategoriesPayload: dataSetsCategoriesPayload$ | async
+  } as params"
+>
+  <h2 mat-dialog-title>{{ 'Reporting Tool Approval' | translate }}</h2>
+  <mat-dialog-content class="mat-typography">
+    <div
+      class="approve-container"
+      *ngIf="!savingData && !savedData && !missingKey"
+    >
+      <div
+        *ngIf="{
+          messageConversation: messageConversation$ | async,
+          dataSetsCategoriesPayload: dataSetsCategoriesPayload$ | async
+        } as params"
+      >
+        <mat-progress-bar
+          mode="indeterminate"
+          *ngIf="
+            !params?.messageConversation || !params?.dataSetsCategoriesPayload
+          "
+        ></mat-progress-bar>
+        <div class="w-100" *ngIf="params?.messageConversation">
+          <div class="w-100" *ngIf="dataRow?.user">
+            From:
+            <span class="ml-4">
+              From {{ dataRow?.user?.displayName }}
+              <span *ngIf="dataRow?.user?.phoneNumber">
+                ({{ dataRow?.user?.phoneNumber }})
+              </span>
+            </span>
+          </div>
+          <p>
+            {{ dialogData?.action }}
+          </p>
+          <a style="cursor: pointer" (click)="toggleDetails($event)">{{
+            viewDetails ? 'View less' : 'View details'
+          }}</a>
 
-      <div
-        *ngIf="viewDetails"
-        class="mt-2"
-        [innerHtml]="dialogData?.message?.message"
-      ></div>
-      <div
-        class="w-100 mt-2"
-        *ngIf="dialogData?.actionType && dialogData?.actionType === 'REJECTED'"
-      >
-        <mat-form-field class="w-100">
-          <mat-label>Reason for rejection</mat-label>
-          <textarea
-            matInput
-            [(ngModel)]="reasonForRejection"
-            rows="3"
-          ></textarea>
-        </mat-form-field>
-      </div>
-      <p
-        class="text-warning mt-2"
-        *ngIf="reasonForRejection && reasonForRejection.length < 8"
-      >
-        {{ 'Not a valid reason' | translate }}
-      </p>
-      <div mat-dialog-actions class="d-flex justify-content-end">
-        <button mat-button (click)="onClose($event)">
-          {{ (successfullyApproved ? 'Done' : 'Close') | translate }}
-        </button>
-        <button
-          mat-button
-          [disabled]="
-            successfullyApproved ||
-            (dialogData?.actionType === 'REJECTED' &&
-              (!reasonForRejection || reasonForRejection?.length < 8))
-          "
-          class="ml-2 btn-success"
-          (click)="
-            onSave(
-              $event,
-              dialogData,
-              params?.messageConversation,
-              params?.dataSetsCategoriesPayload
-            )
-          "
-        >
-          {{ 'Confirm' | translate }}
-        </button>
+          <div
+            *ngIf="viewDetails"
+            class="mt-2"
+            [innerHtml]="dialogData?.message?.message"
+          ></div>
+          <div
+            class="w-100 mt-2"
+            *ngIf="
+              dialogData?.actionType && dialogData?.actionType === 'REJECTED'
+            "
+          >
+            <mat-form-field class="w-100">
+              <mat-label>Reason for rejection</mat-label>
+              <textarea
+                matInput
+                [(ngModel)]="reasonForRejection"
+                rows="3"
+              ></textarea>
+            </mat-form-field>
+          </div>
+          <p
+            class="text-warning mt-2"
+            *ngIf="reasonForRejection && reasonForRejection.length < 8"
+          >
+            {{ 'Not a valid reason' | translate }}
+          </p>
+          <div mat-dialog-actions class="d-flex justify-content-end">
+            <button mat-button (click)="onClose($event)">
+              {{ (successfullyApproved ? 'Done' : 'Close') | translate }}
+            </button>
+            <button
+              mat-stroked-button
+              [disabled]="
+                successfullyApproved ||
+                (dilogData?.actionType === 'REJECTED' &&
+                  (!reasonForRejection || reasonForRejection?.length < 8))
+              "
+              class="ml-2"
+              (click)="
+                onSave(
+                  $event,
+                  dialogData,
+                  params?.messageConversation,
+                  params?.dataSetsCategoriesPayload
+                )
+              "
+            >
+              {{ 'Confirm' | translate }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<div
-  class="w-100 success-message"
-  *ngIf="savedData && !missingKey && dialogData?.actionType === 'APPROVE'"
->
-  <p>{{ 'Successfully updated' | translate }}!</p>
-</div>
+    <div
+      class="w-100 success-message"
+      *ngIf="savedData && !missingKey && dialogData?.actionType === 'APPROVE'"
+    >
+      <p>{{ 'Successfully updated' | translate }}!</p>
+    </div>
 
-<div
-  class="w-100 success-message"
-  *ngIf="savedData && !missingKey && dialogData?.actionType === 'REJECTED'"
->
-  <p>{{ 'Successfully sent' | translate }}!</p>
-</div>
+    <div
+      class="w-100 success-message"
+      *ngIf="savedData && !missingKey && dialogData?.actionType === 'REJECTED'"
+    >
+      <p>{{ 'Successfully sent' | translate }}!</p>
+    </div>
 
-<div *ngIf="missingKey">
-  <p>{{ 'Already attended' | translate }}!</p>
-</div>
+    <div *ngIf="missingKey">
+      <p>{{ 'Already attended' | translate }}!</p>
+    </div>
+  </mat-dialog-content>
+  <!-- <mat-dialog-actions align="end">
+    <button
+      mat-button
+      (click)="onClose($event)"
+      *ngIf="params?.dataStoreInformation && params?.dataStoreInformation?.type"
+    >
+      {{ 'Cancel' | translate }}
+    </button>
+    <button
+      *ngIf="params?.dataStoreInformation && params?.dataStoreInformation?.type"
+      class="ml-2"
+      mat-flat-button
+      color="primary"
+      (click)="onUpdateUser($event, params?.dataStoreInformation)"
+    >
+      {{ 'Confirm' | translate }}
+    </button>
+  </mat-dialog-actions> -->
+</ng-container>

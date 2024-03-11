@@ -13,6 +13,5 @@ import { accountsModals } from './modals';
     ...accountsModals,
   ],
   imports: [CommonModule, UserAccountsRoutingModule, SharedModule],
-  entryComponents: [...accountsModals],
 })
 export class UserAccountsModule {}

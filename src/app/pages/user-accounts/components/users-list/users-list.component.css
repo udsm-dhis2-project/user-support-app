@@ -1,7 +1,12 @@
 button {
-    outline: none !important;
+  outline: none !important;
 }
 
 button:hover {
-    outline: none !important;
+  outline: none !important;
+}
+
+::ng-deep label {
+  display: inline-block;
+  margin-bottom: 0 !important;
 }

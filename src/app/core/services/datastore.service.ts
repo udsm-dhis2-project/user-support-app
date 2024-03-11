@@ -10,7 +10,7 @@ import {
   getDataStoreUrlParams,
   getPaginatedDataStoreKeys,
 } from 'src/app/shared/helpers/datastore.helper';
-import * as moment from 'moment';
+import moment from 'moment';
 
 import { orderBy } from 'lodash';
 
@@ -47,6 +47,106 @@ export class DataStoreDataService {
         'datasets from': 'datasets from',
         'datasets to': 'datasets to',
       },
+      translationKeywords: [
+        'Welcome',
+        'Settings',
+        'User feedback',
+        'SN',
+        'Request',
+        'Date',
+        'Actions',
+        'View Details',
+        'Feedbacks to attend',
+        'Requesting',
+        'Facilities',
+        'Datasets',
+        'Facility',
+        'Assigned Datasets',
+        'Change level',
+        'View',
+        'Request form',
+        'Cancel',
+        'Search',
+        'Dataset/Form',
+        'Category',
+        'Waiting assignment',
+        'Assign',
+        'Remove',
+        'Update',
+        'Close',
+        'Send',
+        'No request available',
+        'Users',
+        'Names',
+        'Username',
+        'Email',
+        'Last login',
+        'Disabled',
+        'Action',
+        'Enable',
+        'Activate',
+        'Disable',
+        'De-activate',
+        'Password',
+        'Reset',
+        'Password Reset',
+        'Update Orgunit',
+        'Update Userrole',
+        'Update User Role',
+        'User Role',
+        'User',
+        'Role',
+        'Orgunit',
+        'New',
+        'Next',
+        'Preview',
+        'This is alerting request. Approve only when you have confirmed',
+        'Approve',
+        'Reject',
+        'Successfully sent form request',
+        'Assign or Remove Facilities for',
+        'Saving',
+        'Request has been rejected',
+        'Dataset',
+        'Form',
+        'Not a valid reason',
+        'Done',
+        'Confirm',
+        'Already attended',
+        'Successfully updated',
+        'Successfully sent',
+        'Provide reason for cancelling form request',
+        'of',
+        'Form requests',
+        'User accounts',
+        'Previous',
+        'Access',
+        'Demographic',
+        'Data entry',
+        'Report',
+        'User Account Request',
+        'Finish request',
+        'Groups',
+        'Back to Request List',
+        'No item Matching the search',
+        'Reporting Facilities',
+        'No Request is available',
+        'Requests',
+        'Pending requests',
+        'First name',
+        'Last name',
+        'Phone number',
+        'Back to request',
+        'Clear',
+        'Confirming',
+        'Validation Rules request',
+      ],
+      languages: [
+        {
+          key: 'en',
+          name: 'English',
+        },
+      ],
       userGroupsToToggleFormRequests: [
         {
           id: '',
@@ -72,11 +172,23 @@ export class DataStoreDataService {
           id: 'ZI4hVQsL7Dq',
           name: 'Data Entrant',
           systemName: 'Data Manager',
+          associatedRoles: [
+            {
+              id: 'ZI4hVQsL7Dq',
+              name: 'Data Entrant',
+            },
+          ],
         },
         {
           id: 'wnEvOlOb9U9',
           name: 'Program Manager (Can not enter data)',
           systemName: 'Program Manager',
+          associatedRoles: [
+            {
+              id: 'wnEvOlOb9U9',
+              name: 'Program Manager (Can not enter data)',
+            },
+          ],
           expectedUserGroups: [
             {
               id: 'zk2Zubvm2kP',
@@ -99,23 +211,262 @@ export class DataStoreDataService {
         },
       ],
       usersSettings: {
-        defaultPassword: 'HMIS@2022',
+        defaultPassword: 'Hmis@2022',
       },
     };
     return this.httpClient
-      .post(`dataStore/dhis2-user-support/configurations`, configurations)
+      .get(`dataStore/dhis2-user-support/configurations`)
       .pipe(
-        map((response: any) => {
-          return response;
+        switchMap((configurationsResponse: any) => {
+          const enTranslations: any = {
+            Access: 'Access',
+            Action: 'Action',
+            Actions: 'Actions',
+            Activate: 'Activate',
+            'Already attended': 'Already attended',
+            Approve: 'Approve',
+            Assign: 'Assign',
+            'Assign or Remove Facilities for':
+              'Assign or Remove Facilities for',
+            'Assigned Datasets': 'Assigned Datasets',
+            'Back to Request List': 'Back to Request List',
+            'Back to request': 'Back to request',
+            Cancel: 'Cancel',
+            Category: 'Category',
+            'Change level': 'Change level',
+            Clear: 'Clear',
+            Close: 'Close',
+            Confirm: 'Confirm',
+            Confirming: 'Confirming',
+            'Data entry': 'Data entry',
+            Dataset: 'Dataset',
+            'Dataset/Form': 'Dataset/Form',
+            Datasets: 'Datasets',
+            Date: 'Date',
+            'De-activate': 'De-activate',
+            Demographic: 'Demographic',
+            Disable: 'Disable',
+            Disabled: 'Disabled',
+            Done: 'Done',
+            Email: 'Email',
+            Enable: 'Enable',
+            Facilities: 'Facilities',
+            Facility: 'Facility',
+            'Feedbacks to attend': 'Feedbacks to attend',
+            'Finish request': 'Finish request',
+            'First name': 'First name',
+            Form: 'Form',
+            'Form requests': 'Form requests',
+            Groups: 'Groups',
+            'Last login': 'Last login',
+            'Last name': 'Last name',
+            Names: 'Names',
+            New: 'New',
+            Next: 'Next',
+            'No Request is available': 'No Request is available',
+            'No item Matching the search': 'No item Matching the search',
+            'No request available': 'No request available',
+            'Not a valid reason': 'Not a valid reason',
+            Orgunit: 'Orgunit',
+            Password: 'Password',
+            'Password Reset': 'Password Reset',
+            'Pending requests': 'Pending requests',
+            'Phone number': 'Phone number',
+            Preview: 'Preview',
+            Previous: 'Previous',
+            'Provide reason for cancelling form request':
+              'Provide reason for cancelling form request',
+            Reject: 'Reject',
+            Remove: 'Remove',
+            Report: 'Report',
+            'Reporting Facilities': 'Reporting Facilities',
+            Request: 'Request',
+            'Request form': 'Request form',
+            'Request has been rejected': 'Request has been rejected',
+            Requesting: 'Requesting',
+            Requests: 'Requests',
+            Reset: 'Reset',
+            SN: 'SN',
+            Saving: 'Saving',
+            Search: 'Search',
+            Send: 'Send',
+            Settings: 'Settings',
+            'Successfully sent': 'Successfully sent',
+            'Successfully sent form request': 'Successfully sent form request',
+            'Successfully updated': 'Successfully updated',
+            'This is alerting request. Approve only when you have confirmed':
+              'This is alerting request. Approve only when you have confirmed',
+            Update: 'Update',
+            'Update Orgunit': 'Update Orgunit',
+            'Update Userrole': 'Update Userrole',
+            'User Account Request': 'User Account Request',
+            'User Role': 'User Role',
+            'User accounts': 'User accounts',
+            'User feedback': 'User feedback',
+            Username: 'Username',
+            Users: 'Users',
+            'Validation Rules request': 'Validation Rules request',
+            View: 'View',
+            'View Details': 'View Details',
+            'Waiting assignment': 'Waiting assignment',
+            Welcome: 'Welcome',
+            addMessageFormRequest: 'Please, add the following datasets',
+            of: 'of',
+          };
+          if (
+            configurationsResponse &&
+            configurationsResponse?.status &&
+            configurationsResponse?.status === 'ERROR'
+          ) {
+            return zip(
+              this.httpClient.post(
+                'dataStore/dhis2-user-support/configurations',
+                configurations
+              ),
+              this.httpClient.post(
+                `dataStore/dhis2-user-support/en`,
+                enTranslations
+              )
+            );
+          } else {
+            if (
+              !configurationsResponse?.languages &&
+              !configurationsResponse?.translationKeywords
+            ) {
+              return zip(
+                this.httpClient.put(
+                  'dataStore/dhis2-user-support/configurations',
+                  {
+                    ...configurationsResponse,
+                    translationKeywords: [
+                      'Welcome',
+                      'Settings',
+                      'User feedback',
+                      'SN',
+                      'Request',
+                      'Date',
+                      'Actions',
+                      'View Details',
+                      'Feedbacks to attend',
+                      'Requesting',
+                      'Facilities',
+                      'Datasets',
+                      'Facility',
+                      'Assigned Datasets',
+                      'Change level',
+                      'View',
+                      'Request form',
+                      'Cancel',
+                      'Search',
+                      'Dataset/Form',
+                      'Category',
+                      'Waiting assignment',
+                      'Assign',
+                      'Remove',
+                      'Update',
+                      'Close',
+                      'Send',
+                      'No request available',
+                      'Users',
+                      'Names',
+                      'Username',
+                      'Email',
+                      'Last login',
+                      'Disabled',
+                      'Action',
+                      'Enable',
+                      'Activate',
+                      'Disable',
+                      'De-activate',
+                      'Password',
+                      'Reset',
+                      'Password Reset',
+                      'Update Orgunit',
+                      'Update Userrole',
+                      'Update User Role',
+                      'User Role',
+                      'User',
+                      'Role',
+                      'Orgunit',
+                      'New',
+                      'Next',
+                      'Preview',
+                      'This is alerting request. Approve only when you have confirmed',
+                      'Approve',
+                      'Reject',
+                      'Successfully sent form request',
+                      'Assign or Remove Facilities for',
+                      'Saving',
+                      'Request has been rejected',
+                      'Dataset',
+                      'Form',
+                      'Not a valid reason',
+                      'Done',
+                      'Confirm',
+                      'Already attended',
+                      'Successfully updated',
+                      'Successfully sent',
+                      'Provide reason for cancelling form request',
+                      'of',
+                      'Form requests',
+                      'User accounts',
+                      'Previous',
+                      'Access',
+                      'Demographic',
+                      'Data entry',
+                      'Report',
+                      'User Account Request',
+                      'Finish request',
+                      'Groups',
+                      'Back to Request List',
+                      'No item Matching the search',
+                      'Reporting Facilities',
+                      'No Request is available',
+                      'Requests',
+                      'Pending requests',
+                      'First name',
+                      'Last name',
+                      'Phone number',
+                      'Back to request',
+                      'Clear',
+                      'Confirming',
+                      'Validation Rules request',
+                    ],
+                    languages: [
+                      {
+                        key: 'en',
+                        name: 'English',
+                      },
+                      {
+                        key: 'sw',
+                        name: 'Swahili',
+                      },
+                      {
+                        key: 'rw',
+                        name: 'Kinyarwanda',
+                      },
+                    ],
+                  }
+                ),
+                this.httpClient.post(
+                  `dataStore/dhis2-user-support/en`,
+                  enTranslations
+                )
+              );
+            }
+          }
         }),
         catchError((error) => of(error))
       );
   }
 
   getDataStoreKeys(): Observable<string[]> {
-    return this.httpClient.get('dataStore/dhis2-user-support').pipe(
+    return this.httpClient.get('dataStore/dhis2-user-support', {}).pipe(
       map((response) => {
-        return response;
+        return (
+          response['dhis2-user-support']?.map((keyData: any) => keyData?.id) ||
+          []
+        );
       }),
       catchError((error) => of(error))
     );
@@ -155,6 +506,15 @@ export class DataStoreDataService {
         }
       );
     });
+  }
+
+  createDataStoreKey(key: string, data: any): Observable<any> {
+    return this.httpClient
+      .post(`dataStore/dhis2-user-support/${key}`, data)
+      .pipe(
+        map((response) => response),
+        catchError((error) => of(error))
+      );
   }
 
   findByKeys(
@@ -308,7 +668,10 @@ export class DataStoreDataService {
     isFeedbackRecepient?: boolean
   ): Observable<string[]> {
     return this.httpClient.get('dataStore/' + namespace).pipe(
-      map((response) => {
+      map((serverResponse) => {
+        const response = serverResponse[namespace]?.map(
+          (keyData: any) => keyData?.id
+        );
         return category == 'UA'
           ? response?.filter((key) => {
               if (

@@ -17,3 +17,7 @@
   border-radius: 8px;
   background-color: transparent;
 }
+
+::ng-deep .mdc-button {
+  padding: 0 8px 0 8px !important;
+}

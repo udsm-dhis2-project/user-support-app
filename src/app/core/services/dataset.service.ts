@@ -3,7 +3,7 @@ import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Injectable({
   providedIn: 'root',
@@ -50,7 +50,7 @@ export class DataSetsService {
           const filteredDataSets = !dataSetClosedAttributeDetails
             ? response?.dataSets
             : dataSetClosedAttributeDetails
-            ? response?.dataSets.filter(
+            ? response?.dataSets?.filter(
                 (dataSet) =>
                   (
                     dataSet?.attributeValues?.filter(
@@ -65,13 +65,12 @@ export class DataSetsService {
             ...response,
             dataSets: filteredDataSets.map((dataSet) => {
               const matchedKeys =
-                paginationDetails?.userSupportDataStoreKeys.filter(
-                  (key) => key.indexOf(dataSet?.id) > -1
+                paginationDetails?.userSupportDataStoreKeys?.filter(
+                  (key) => key?.indexOf(dataSet?.id) > -1
                 ) || [];
               return {
                 ...dataSet,
                 hasPendingRequest: matchedKeys?.length > 0,
-
                 keys: matchedKeys,
                 timeSinceResponseSent:
                   matchedKeys.length > 0

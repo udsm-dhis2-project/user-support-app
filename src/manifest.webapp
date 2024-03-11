@@ -1,6 +1,6 @@
 {
   "version": "2.0.0-beta.4",
-  "name": "User Support App",
+  "name": "User Support",
   "description": "User Support Application",
   "appType": "APP",
   "launch_path": "index.html",
@@ -10,7 +10,7 @@
     "128": "assets/icons/icon-128x128.png"
   },
   "developer": {
-    "name": "UDSM DHIS2",
+    "name": "UDSM DHIS2 Lab",
     "email": "udsm.dhis.project@gmail.com",
     "website": "https://dhis2.udsm.ac.tz",
     "twitter": "https://twitter.com/udsmdhis2lab"
@@ -32,6 +32,7 @@
     "US_ACTIVATE_ACCOUNT",
     "US_DEACTIVATE_ACCOUNT",
     "US_VALIDATION_RULE_REQUEST",
-    "US_VALIDATION_RULE_APPROVE"
+    "US_VALIDATION_RULE_APPROVE",
+    "US_SETTINGS"
   ]
 }

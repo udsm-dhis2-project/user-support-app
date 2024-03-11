@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Observable, of, zip } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import {
@@ -34,6 +34,7 @@ export class ReportingToolsService {
       .pipe(
         map((response) => {
           return {
+            organisationUnits: response?.organisationUnits,
             data: response?.organisationUnits
               .filter((ou) => !ou?.closedDate)
               .map((orgUnit) => {
@@ -137,7 +138,7 @@ export class ReportingToolsService {
           )?.map((dataSet) => {
             return {
               ...dataSet,
-              type: 'dataset',
+              type: 'DATASET',
               categoryOptions: flatten(
                 (
                   dataSet?.categoryCombo?.categoryOptionCombos?.filter(

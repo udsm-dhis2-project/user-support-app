@@ -6,7 +6,7 @@
       <input matInput [(ngModel)]="searchingText" />
     </mat-form-field>
   </div>
-  <div style="max-height: 400px; overflow: auto">
+  <div>
     <table class="table table-bordered">
       <thead>
         <tr>
@@ -107,8 +107,7 @@
                       mergedRepprtingTool?.assigned &&
                         mergedRepprtingTool?.categoryOptions?.length > 0
                         ? 'Update'
-                        : mergedRepprtingTool?.assigned &&
-                          mergedRepprtingTool?.categoryOptions?.length === 0
+                        : mergedRepprtingTool?.assigned
                         ? 'Remove'
                         : 'Assign'
                     )
