@@ -202,7 +202,6 @@ export class SettingsHomeComponent implements OnInit {
     configurations: any,
     key: string
   ): void {
-    console.log(event);
     this.dialog
       .open(SharedConfirmationModalComponent, {
         minWidth: '25%',
@@ -232,12 +231,10 @@ export class SettingsHomeComponent implements OnInit {
 
   onGetPassword(password: string): void {
     this.defaultPassword = password;
-    console.log(this.defaultPassword);
   }
 
   onUpdatePassword(event: Event, configurations: any): void {
     event.stopPropagation();
-    console.log(configurations);
     this.dialog
       .open(SharedConfirmationModalComponent, {
         minWidth: '25%',

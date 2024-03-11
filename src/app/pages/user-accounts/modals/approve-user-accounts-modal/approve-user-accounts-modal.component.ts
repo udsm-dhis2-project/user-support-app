@@ -373,8 +373,10 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                 userToApprove?.firstName +
                 ' ' +
                 userToApprove?.surname +
-                '  - ' +
-                userToApprove?.phoneNumber
+                '  - Phone No.: ' +
+                userToApprove?.phoneNumber +
+                'and Email address: ' +
+                userToApprove?.email
               }  is: username=  ${selectedUsername} and password = ${
                 this.dialogData?.configurations?.usersSettings?.defaultPassword
               }\n ${(request?.payload?.filter((user) => user?.username) || [])
@@ -386,8 +388,10 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                     userPayload?.firstName +
                     ' ' +
                     userPayload?.surname +
-                    ' - ' +
+                    ' - Phone No.: ' +
                     userPayload?.phoneNumber +
+                    ' and Email address ' +
+                    userPayload?.email +
                     ' is ' +
                     userPayload?.username +
                     ' and password is ' +

@@ -1,5 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -35,15 +39,18 @@ export class UpdateUserPasswordModalComponent implements OnInit {
     const repeatPwd = this.changePassword.get('repeatPassword')?.value;
     // console.log(pwd)
     const isPassWordCorrect = this.validatePassword(pwd);
-    if (pwd.length >= 8 && !isPassWordCorrect) {
+    if (pwd?.length >= 8 && !isPassWordCorrect) {
       this.errorMessage =
         'At least one number, one small letter, one capital later and one special character required';
-    } else if (pwd.length > 4 && pwd.length < 8) {
+    } else if (pwd?.length > 4 && pwd?.length < 8) {
       this.errorMessage = 'At least 8 characters required';
     } else {
       this.errorMessage = '';
     }
-    this.passwordsMatch = pwd == repeatPwd ? true : false;
+    this.passwordsMatch =
+      pwd == repeatPwd && pwd != undefined && repeatPwd != undefined
+        ? true
+        : false;
     this.password = pwd;
     return this.changePassword.get('password');
   }
@@ -53,21 +60,24 @@ export class UpdateUserPasswordModalComponent implements OnInit {
     const repeatPwd = this.changePassword.get('repeatPassword')?.value;
     // console.log(pwd)
     const isPassWordCorrect = this.validatePassword(repeatPwd);
-    if (pwd.length >= 8 && !isPassWordCorrect) {
+    if (pwd?.length >= 8 && !isPassWordCorrect) {
       this.errorMessage =
         'At least one number, one small letter, one capital later and one special character required';
     } else {
       this.errorMessage = '';
     }
-    this.passwordsMatch = pwd == repeatPwd ? true : false;
+    this.passwordsMatch =
+      pwd == repeatPwd && pwd != undefined && repeatPwd != undefined
+        ? true
+        : false;
     this.password = pwd;
     return this.changePassword.get('repeatPassword');
   }
 
-  validatePassword(inputtxt) {
+  validatePassword(inputtxt): boolean {
     var check =
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
-    if (inputtxt.match(check)) {
+    if (inputtxt?.match(check)) {
       return true;
     } else {
       return false;
