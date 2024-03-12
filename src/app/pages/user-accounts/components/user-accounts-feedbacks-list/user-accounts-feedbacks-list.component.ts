@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { ApproveUserAccountsModalComponent } from '../../modals/approve-user-accounts-modal/approve-user-accounts-modal.component';
+import { RejectUserAccountModalComponent } from '../../modals/reject-user-account-modal/reject-user-account-modal.component';
 
 @Component({
   selector: 'app-user-accounts-feedbacks-list',
@@ -59,6 +60,23 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
           configurations: this.configurations,
           isFeedbackRecepient,
           isSecondTier: this.isSecondTier,
+        },
+      })
+      .afterClosed()
+      .subscribe((shouldReload) => {
+        if (shouldReload) {
+          this.getUserRequests();
+        }
+      });
+  }
+  onOpenRejectModal(event: Event, datarow): void {
+    event.stopPropagation();
+    this.dialog
+      .open(RejectUserAccountModalComponent, {
+        minWidth: '50%',
+        data: {
+          datarow,
+          configurations: this.configurations,
         },
       })
       .afterClosed()
