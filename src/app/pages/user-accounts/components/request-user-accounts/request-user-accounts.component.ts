@@ -26,6 +26,7 @@ export class RequestUserAccountsComponent implements OnInit {
   accessFormFields: Field<string>[];
   formData: any = {};
   formDataToStoreLocally: any[] = [];
+  onEditing: boolean = false;
 
   isDemographicFormValid: boolean = false;
   isAccessControlFormValid: boolean = false;
@@ -79,34 +80,34 @@ export class RequestUserAccountsComponent implements OnInit {
     private _snackBar: MatSnackBar,
     private router: Router,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    const storedUsersData = localStorage.getItem('usersToCreate');
-    if (storedUsersData) {
-      this.formDataToStoreLocally = JSON.parse(storedUsersData);
-      this.selectedOrgUnitItemsForDataEntry =
-        this.formDataToStoreLocally[
-          this.formDataToStoreLocally?.length - 1
-        ]?.entryOrgUnits;
-      this.selectedOrgUnitItemsForReport =
-        this.formDataToStoreLocally[
-          this.formDataToStoreLocally?.length - 1
-        ]?.reportOrgUnits;
-      this.currentUserToCreateSelected =
-        this.formDataToStoreLocally[
-          this.formDataToStoreLocally?.length - 1
-        ]?.id;
-      this.selectedRoles =
-        this.formDataToStoreLocally[
-          this.formDataToStoreLocally?.length - 1
-        ]?.userRoles;
+    // const storedUsersData = localStorage.getItem('usersToCreate');
+    // if (storedUsersData) {
+    //   this.formDataToStoreLocally = JSON.parse(storedUsersData);
+    //   this.selectedOrgUnitItemsForDataEntry =
+    //     this.formDataToStoreLocally[
+    //       this.formDataToStoreLocally?.length - 1
+    //     ]?.entryOrgUnits;
+    //   this.selectedOrgUnitItemsForReport =
+    //     this.formDataToStoreLocally[
+    //       this.formDataToStoreLocally?.length - 1
+    //     ]?.reportOrgUnits;
+    //   this.currentUserToCreateSelected =
+    //     this.formDataToStoreLocally[
+    //       this.formDataToStoreLocally?.length - 1
+    //     ]?.id;
+    //   this.selectedRoles =
+    //     this.formDataToStoreLocally[
+    //       this.formDataToStoreLocally?.length - 1
+    //     ]?.userRoles;
 
-      this.selectedUserGroups =
-        this.formDataToStoreLocally[
-          this.formDataToStoreLocally?.length - 1
-        ]?.userGroups;
-    }
+    //   this.selectedUserGroups =
+    //     this.formDataToStoreLocally[
+    //       this.formDataToStoreLocally?.length - 1
+    //     ]?.userGroups;
+    // }
 
     this.createDemographicFields(
       this.formDataToStoreLocally?.length > 0
@@ -145,8 +146,10 @@ export class RequestUserAccountsComponent implements OnInit {
     }
   }
 
+
   onNext(event: Event): void {
     event.stopPropagation();
+    
     // Ensure the first ones have been taken and stored on localstorage
     // Do not clear access control (only clear demographic)
 
@@ -156,7 +159,7 @@ export class RequestUserAccountsComponent implements OnInit {
     this.formDataToStoreLocally = !this.formUpdateIsDone
       ? this.formDataToStoreLocally
       : !this.currentUserToCreateSelected
-      ? [
+        ? [
           ...this.formDataToStoreLocally,
           {
             id: 'REF' + Date.now() + ':' + this.formData?.phoneNumber?.value,
@@ -172,7 +175,7 @@ export class RequestUserAccountsComponent implements OnInit {
             userRoles: this.selectedRoles,
           },
         ]
-      : this.formDataToStoreLocally?.map((data) => {
+        : this.formDataToStoreLocally?.map((data) => {
           if (data?.id === this.currentUserToCreateSelected) {
             return {
               id: this.currentUserToCreateSelected,
@@ -199,6 +202,7 @@ export class RequestUserAccountsComponent implements OnInit {
             return data;
           }
         });
+
     this.currentUserToCreateSelected = null;
     localStorage.setItem(
       'usersToCreate',
@@ -215,6 +219,7 @@ export class RequestUserAccountsComponent implements OnInit {
       this.showOrgUnit = true;
     }, 100);
     this.formData = null;
+
   }
 
   onFinish(event: Event): void {
@@ -367,6 +372,48 @@ export class RequestUserAccountsComponent implements OnInit {
     this.readyToSend = false;
   }
 
+  onEdit(id: string): void {
+    event.stopPropagation();
+    this.readyToSend = false;
+    this.onEditing = true;
+
+
+    const storedUsersData = localStorage.getItem('usersToCreate');
+
+    if (storedUsersData) {
+      this.formDataToStoreLocally = JSON.parse(storedUsersData).filter(data => data?.id === id);
+
+      this.selectedOrgUnitItemsForDataEntry =
+        this.formDataToStoreLocally[0]?.entryOrgUnits;
+      this.selectedOrgUnitItemsForReport =
+        this.formDataToStoreLocally[0]?.reportOrgUnits;
+      this.currentUserToCreateSelected =
+        this.formDataToStoreLocally[0]?.id;
+      this.selectedRoles =
+        this.formDataToStoreLocally[0]?.userRoles;
+
+      this.selectedUserGroups =
+        this.formDataToStoreLocally[0]?.userGroups;
+    }
+
+    this.createDemographicFields(
+      this.formDataToStoreLocally?.length > 0
+        ? this.formDataToStoreLocally[0]
+        : null
+    );
+    this.createAccessControlFields(
+      this.formDataToStoreLocally?.length > 0
+        ? this.formDataToStoreLocally[0]
+        : null
+    );
+
+    this.formDataToStoreLocally = JSON.parse(storedUsersData);
+
+    // if (this.formDataToStoreLocally?.length) {
+    //   this.prevIndex = this.formDataToStoreLocally?.length - 1;
+    // }
+  }
+
   createDemographicFields(data?: any): void {
     this.formFields = [
       new Textbox({
@@ -377,14 +424,6 @@ export class RequestUserAccountsComponent implements OnInit {
         value: data ? data?.firstName : null,
         options: [],
       }),
-      // new Textbox({
-      //   id: 'middleName',
-      //   key: 'middleName',
-      //   label: 'Middlename',
-      //   value: data ? data?.middleName : null,
-      //   required: false,
-      //   options: [],
-      // }),
       new Textbox({
         id: 'lastName',
         key: 'lastName',
@@ -408,24 +447,81 @@ export class RequestUserAccountsComponent implements OnInit {
         type: 'phonenumber',
         value: data ? data?.phoneNumber : null,
         required: true,
-      }),
-      // new Dropdown({
-      //   id: 'title',
-      //   key: 'title',
-      //   label: 'Title',
-      //   required: false,
-      //   value: data ? data?.title : null,
-      //   options: this.configurations?.referenceTitles?.map((title) => {
-      //     return {
-      //       id: title?.id,
-      //       key: title?.id,
-      //       label: title?.name,
-      //       name: title?.name,
-      //     };
-      //   }),
-      // }),
+      })
     ];
     this.pageReady = true;
+  }
+
+  onSubmit(event: Event){
+    this.readyToSend = true;
+    this.onEditing = false;
+
+    this.showOrgUnit = false;
+    this.pageReady = false;
+    this.formDataToStoreLocally = !this.formUpdateIsDone
+      ? this.formDataToStoreLocally
+      : !this.currentUserToCreateSelected
+        ? [
+          ...this.formDataToStoreLocally,
+          {
+            id: 'REF' + Date.now() + ':' + this.formData?.phoneNumber?.value,
+            firstName: this.formData?.firstName?.value.trim(),
+            lastName: this.formData?.lastName?.value.trim(),
+            phoneNumber: this.formData?.phoneNumber?.value,
+            email: this.formData?.email?.value.trim(),
+            title: this.formData?.title?.value,
+            titleDescription: this.formData?.titleDescription?.value,
+            entryOrgUnits: this.selectedOrgUnitItemsForDataEntry,
+            reportOrgUnits: this.selectedOrgUnitItemsForReport,
+            userGroups: this.selectedUserGroups,
+            userRoles: this.selectedRoles,
+          },
+        ]
+        : this.formDataToStoreLocally?.map((data) => {
+          if (data?.id === this.currentUserToCreateSelected) {
+            return {
+              id: this.currentUserToCreateSelected,
+              firstName: this.formData?.firstName?.value.trim(),
+              lastName: this.formData?.lastName?.value.trim(),
+              phoneNumber: this.formData?.phoneNumber?.value,
+              email: this.formData?.email?.value.trim(),
+              title: this.formData?.title?.value,
+              titleDescription: this.formData?.titleDescription?.value,
+              entryOrgUnits: this.formData?.entry?.value,
+              reportOrgUnits: this.formData?.report?.value,
+              userGroups: [
+                {
+                  id: this.formData?.userGroup?.value,
+                },
+              ],
+              userRoles: [
+                {
+                  id: this.formData?.userRole?.value,
+                },
+              ],
+            };
+          } else {
+            return data;
+          }
+        });
+
+    this.currentUserToCreateSelected = null;
+    localStorage.setItem(
+      'usersToCreate',
+      JSON.stringify(this.formDataToStoreLocally)
+    );
+    if (this.formDataToStoreLocally?.length) {
+      this.prevIndex = this.formDataToStoreLocally?.length - 1;
+    }
+    this.createDemographicFields();
+
+    this.selectedOrgUnitItemsForDataEntry = [];
+    this.selectedOrgUnitItemsForReport = [];
+    setTimeout(() => {
+      this.showOrgUnit = true;
+    }, 100);
+    this.formData = null;
+
   }
 
   createAccessControlFields(data?: any): void {
@@ -469,6 +565,7 @@ export class RequestUserAccountsComponent implements OnInit {
   }
 
   onUpdateDemographicForm(formvalue: FormValue): void {
+    console.log('form changes');
     this.formData = { ...this.formData, ...formvalue.getValues() };
     this.formUpdateIsDone = true;
     this.isDemographicFormValid = formvalue.isValid;

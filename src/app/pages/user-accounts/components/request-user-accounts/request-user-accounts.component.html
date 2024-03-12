@@ -78,6 +78,7 @@
             <th>{{ 'Last name' | translate }}</th>
             <th>{{ 'Email' | translate }}</th>
             <th>{{ 'Phone number' | translate }}</th>
+            <th>{{ 'Option' | translate }}</th>
           </tr>
         </thead>
         <tbody>
@@ -100,6 +101,17 @@
             <td>
               {{ user?.phoneNumber }}
             </td>
+            <td>
+              <button
+              *ngIf="readyToSend"
+              mat-stroked-button
+              color="primary"
+              (click)="onEdit(user?.id)"
+              class="ml-2"
+            >
+              {{ 'Edit' | translate }}
+            </button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -119,7 +131,7 @@
         Previous
       </button> -->
       <button
-        *ngIf="!readyToSend"
+        *ngIf="!readyToSend && !onEditing"
         mat-flat-button
         [disabled]="
           !isAccessControlFormValid ||
@@ -132,10 +144,19 @@
         (click)="onNext($event)"
       >
         {{ 'Add' | translate }}
-      </button>
+    </button>
+      <button
+        *ngIf="onEditing"
+        mat-flat-button
+        color="primary"
+        class="ml-2"
+        (click)="onSubmit($event)"
+      >
+        {{ 'Save' | translate }}
+    </button>
       <button
         *ngIf="!readyToSend"
-        [disabled]="formDataToStoreLocally?.length === 0 || formData?.firstName"
+        [disabled]="formDataToStoreLocally?.length === 0 || formData?.firstName && !onEditing"
         mat-flat-button
         color="primary"
         class="ml-2"
