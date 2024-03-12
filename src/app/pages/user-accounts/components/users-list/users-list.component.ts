@@ -254,6 +254,17 @@ export class UsersListComponent implements OnInit {
             url: 'users/' + user?.id,
             type: 'password',
             method: 'PATCH',
+            privateMessage: {
+              subject:
+                'UA' + Date.now().toString() + '- PASSWORD RESET CONFIRMATION',
+              users: [
+                {
+                  id: user?.id,
+                },
+              ],
+              text: `Your new password is ${password} for username ${user?.userCredentials?.username}\n
+              Contact ${this.currentUser?.name} (${this.currentUser?.email}/${this.currentUser?.phoneNumber}) for more details`,
+            },
             user: this.currentUser,
           };
 

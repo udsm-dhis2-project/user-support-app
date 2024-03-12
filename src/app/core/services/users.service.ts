@@ -207,7 +207,10 @@ export class UsersDataService {
               `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
               null
             )
-          : this.httpClient.post(`messageConversations`, data?.messageBody)
+          : this.httpClient.post(`messageConversations`, data?.messageBody),
+        data?.payload[0] && data?.payload[0]?.path === '/password'
+          ? this.httpClient.post(`messageConversations`, data?.privateMessage)
+          : of(null)
       ).pipe(
         map((response) => response),
         catchError((error) => of(error))

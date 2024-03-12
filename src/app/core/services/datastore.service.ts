@@ -211,7 +211,7 @@ export class DataStoreDataService {
         },
       ],
       usersSettings: {
-        defaultPassword: 'Hmis@2022',
+        defaultPassword: 'Hmis@' + new Date().getFullYear(),
       },
     };
     return this.httpClient

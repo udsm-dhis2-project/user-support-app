@@ -153,14 +153,13 @@ export class ApproveUserAccountsModalComponent implements OnInit {
             id: request?.id,
             method: request?.method,
             url: request?.url,
+            privateMessage: request?.privateMessage,
             messageConversation: {
               ...messageConversation,
               approvalMessage: request?.replyMessage,
             },
             payload: request?.payload,
           };
-          // console.log('data', data);
-          console.log('>>>>>>>>Inside the request');
           this.usersDataService.approveChanges(data).subscribe((response) => {
             if (response) {
               this.getRequestInformation();
