@@ -73,7 +73,12 @@ export class UsernameFormFieldComponent implements OnInit {
       this.validityCheckMessage.emit(
         'Username should not have less than 5 characters'
       );
-    } else {
+    } else if (this.containsOnlySpecialCharacters(username)) {
+      this.usernameValid.emit(false);
+      this.validityCheckMessage.emit('Username can not have special characters only');
+      
+    }
+    else {
       this.usersDataService.verifyUsername(username).subscribe((response) => {
         if (response?.length > 0) {
           this.usernameExist = true;
@@ -90,5 +95,20 @@ export class UsernameFormFieldComponent implements OnInit {
         }
       });
     }
+  }
+
+  containsOnlySpecialCharacters(input: string): boolean {
+    // Define special characters
+    const specialCharacters = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~'];
+
+  
+    // Iterate over each character in the input string
+    for (const char of input) {
+      // Check if the character is not a special character
+      if (!specialCharacters.includes(char)) {
+        return false; // Return false if the character is not a special character
+      }
+    }
+    return true; // Return true if all characters are special characters
   }
 }

@@ -360,7 +360,7 @@ export class UsersListComponent implements OnInit {
           ];
 
           this.saving = true;
-          const dataStoreKey =
+        const dataStoreKey =
             'UA' +
             Date.now() +
             '_' +

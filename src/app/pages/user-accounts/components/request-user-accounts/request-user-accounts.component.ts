@@ -73,6 +73,7 @@ export class RequestUserAccountsComponent implements OnInit {
   formUpdateIsDone: boolean = false;
   prevIndex: number = 0;
   showOrgUnit: boolean = true;
+  configurations$: any;
 
   constructor(
     private dataStoreService: DataStoreDataService,
@@ -83,6 +84,8 @@ export class RequestUserAccountsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.configurations$ = this.dataStoreService.getUserSupportConfigurations();
+
     // const storedUsersData = localStorage.getItem('usersToCreate');
     // if (storedUsersData) {
     //   this.formDataToStoreLocally = JSON.parse(storedUsersData);
@@ -208,6 +211,8 @@ export class RequestUserAccountsComponent implements OnInit {
       'usersToCreate',
       JSON.stringify(this.formDataToStoreLocally)
     );
+
+    console.log('this.formDataToStoreLocally', this.formDataToStoreLocally);
     if (this.formDataToStoreLocally?.length) {
       this.prevIndex = this.formDataToStoreLocally?.length - 1;
     }
@@ -248,9 +253,9 @@ export class RequestUserAccountsComponent implements OnInit {
     this.createAccessControlFields();
   }
 
-  onSend(event: Event): void {
+  onSend(event: Event, configurations: any): void {
     event.stopPropagation();
-    // console.log('formDataToStoreLocally', this.formDataToStoreLocally);
+
     this.dialog
       .open(ConfirmSendingAccountsRequestComponent, {
         minWidth: '30%',
@@ -261,6 +266,7 @@ export class RequestUserAccountsComponent implements OnInit {
       })
       .afterClosed()
       .subscribe((confirmed?: boolean) => {
+        
         if (confirmed) {
           this.saving = true;
           this.shouldConfirm = false;
@@ -280,6 +286,8 @@ export class RequestUserAccountsComponent implements OnInit {
             message: {
               message: `The following accounts were requested accordingly: \n\n ${this.formDataToStoreLocally
                 ?.map((data, index) => {
+                  console.log('data', data);
+                  console.log('configurations', configurations);
                   return (
                     (index + 1).toString() +
                     '. ' +
@@ -292,6 +300,19 @@ export class RequestUserAccountsComponent implements OnInit {
                     (data?.email ? data?.email : ' - ') +
                     ' Phone number :' +
                     data?.phoneNumber +
+                    ' User role ->  <b>' +
+                    (configurations?.allowedUserRolesForRequest
+                      ?.filter(role => role?.id === data.userRoles[0]?.id)
+                      .map(role => role?.name
+                      )) +
+                    '</b>' +
+                    ' User group ->  <b>' +
+                    (configurations?.allowedUserGroupsForRequest
+                      ?.filter(group => group?.id === data.userGroups[0]?.id)
+                      .map((group) => 
+                      group?.name
+                      )) +
+                    '</b>' +
                     ' Entry access level ->  <b>' +
                     data?.entryOrgUnits?.map((ou) => ou?.name).join(', ') +
                     '</b>' +

@@ -1,4 +1,8 @@
-<div class="new-user-request-container">
+<div 
+*ngIf="{
+  configurations: configurations$ | async
+} as params"
+class="new-user-request-container">
   <div class="col-12 d-flex align-items-center mb-3">
     <button mat-flat-button color="primary" routerLink="/user-accounts/list">
       <mat-icon>arrow_back</mat-icon>
@@ -182,7 +186,7 @@
         mat-flat-button
         color="primary"
         [disabled]="!readyToSend"
-        (click)="onSend($event)"
+        (click)="onSend($event, params?.configurations)"
         class="ml-2"
       >
         {{ 'Send' | translate }}
