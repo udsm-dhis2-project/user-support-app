@@ -7,7 +7,7 @@ import {
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { FormValue } from 'src/app/shared/modules/form/models/form-value.model';
 import { Textbox } from 'src/app/shared/modules/form/models/text-box.model';
-import { SharedConfirmationModalComponent } from '../shared-confirmation-modal/shared-confirmation-modal.component';
+import { SharedConfirmationModalComponent } from '../../../../shared/modals/shared-confirmation-modal/shared-confirmation-modal.component';
 import { UIDsFromSystemService } from 'src/app/core/services/get-uids-from-system.service';
 import { Observable, map } from 'rxjs';
 

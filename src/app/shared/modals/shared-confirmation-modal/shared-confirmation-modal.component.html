@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>{{ data?.title }}</h2>
+<mat-dialog-content class="mat-typography">
+  <p class="mt-2">
+    {{ data?.message }}
+  </p>
+  <div *ngIf="formField">
+    <app-form
+      [fields]="[formField]"
+      (formUpdate)="onFormUpdate($event)"
+    ></app-form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>No</button>
+  <button
+    mat-flat-button
+    [disabled]="!reason && data?.captureReason"
+    [color]="data?.color ? data?.color : 'primary'"
+    (click)="onConfirm($event)"
+  >
+    Yes
+  </button>
+</mat-dialog-actions>

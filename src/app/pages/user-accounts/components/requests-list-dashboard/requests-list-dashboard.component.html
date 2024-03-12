@@ -2,9 +2,11 @@
   class="requests-list-container"
   *ngIf="{ allDataForUserSupport: allDataForUserSupport$ | async } as params"
 >
-  <div class="loading-overlay" *ngIf="saving">
+  <div class="loading-overlay" *ngIf="saving || deletingRequest">
     <div class="text-center">
-      <div>{{ 'Saving' | translate }} ....</div>
+      <div>
+        {{ saving ? ('Saving' | translate) : ('Deleting' | translate) }} ....
+      </div>
       <div class="mt-3 d-flex justify-content-center w-100">
         <mat-spinner diameter="50" strokeWidth="2"></mat-spinner>
       </div>
@@ -51,17 +53,28 @@
               <td>
                 {{ dataRow?.timeSinceResponseSent }}
               </td>
-              <td class="d-flext justify-content-end">
-                <button
-                  *ngIf="!dataRow?.type"
-                  mat-flat-button
-                  (click)="onToggleDetails($event, dataRow)"
-                >
-                  {{ 'View details' | translate }}
-                </button>
-                <!-- <button mat-button class="ml-2">
+              <td>
+                <div class="w-100 d-flext justify-content-end">
+                  <button
+                    *ngIf="!dataRow?.type"
+                    mat-flat-button
+                    (click)="onToggleDetails($event, dataRow)"
+                  >
+                    {{ 'View details' | translate }}
+                  </button>
+                  <!-- <button mat-button class="ml-2">
                   <mat-icon title="Delete Request">delete</mat-icon>
                 </button> -->
+
+                  <button
+                    *ngIf="currentUser?.id === dataRow?.user?.id"
+                    mat-flat-button
+                    (click)="onDeleteRequest($event, dataRow)"
+                    color="warn"
+                  >
+                    Delete
+                  </button>
+                </div>
               </td>
             </tr>
             <tr *ngIf="viewMoreDetails[dataRow?.id]">
@@ -107,7 +120,6 @@
                           {{ user?.status }}
                         </td>
                         <td>
-                          <p class="w-100"></p>
                           <button
                             mat-stroked-button
                             [disabled]="user?.status"

@@ -15,7 +15,7 @@ import {
 } from 'src/app/store/selectors/translations.selectors';
 import { setSelectedSettingsLanguageKey } from 'src/app/store/actions';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { SharedConfirmationModalComponent } from '../../modals/shared-confirmation-modal/shared-confirmation-modal.component';
+import { SharedConfirmationModalComponent } from '../../../../shared/modals/shared-confirmation-modal/shared-confirmation-modal.component';
 
 @Component({
   selector: 'app-settings-home',

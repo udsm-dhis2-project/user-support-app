@@ -1,9 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
+import { Observable, zip } from 'rxjs';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
 import { UsersDataService } from 'src/app/core/services/users.service';
+import { SharedConfirmationModalComponent } from 'src/app/shared/modals/shared-confirmation-modal/shared-confirmation-modal.component';
 
 @Component({
   selector: 'app-requests-list-dashboard',
@@ -22,11 +24,13 @@ export class RequestsListDashboardComponent implements OnInit {
   itemsToConfirm: any = {};
   alertMessages: any = {};
   searchingText: string;
+  deletingRequest: boolean = false;
   constructor(
     private dataStoreService: DataStoreDataService,
     private messageAndDataStoreService: MessagesAndDatastoreService,
     private dialog: MatDialog,
-    private usersDataService: UsersDataService
+    private usersDataService: UsersDataService,
+    private httpClient: NgxDhis2HttpClientService
   ) {}
 
   ngOnInit(): void {
@@ -137,5 +141,50 @@ export class RequestsListDashboardComponent implements OnInit {
 
       this.itemsToConfirm[user?.referenceId] = user?.referenceId;
     }
+  }
+
+  onDeleteRequest(event: Event, request: any): void {
+    event.stopPropagation();
+
+    this.dialog
+      .open(SharedConfirmationModalComponent, {
+        minWidth: '20%',
+        data: {
+          title: 'Confirm request delete',
+          message:
+            'Are you sure to delete this request? If yes, provide reason',
+          color: 'warn',
+          captureReason: true,
+        },
+      })
+      .afterClosed()
+      .subscribe((confirmResponse?: any) => {
+        if (confirmResponse?.confirmed) {
+          this.deletingRequest = true;
+          this.messageAndDataStoreService
+            .searchMessageConversationByTicketNumber(request?.message?.subject)
+            .subscribe((messageConversation: any) => {
+              if (messageConversation && messageConversation !== 'none') {
+                if (messageConversation) {
+                  zip(
+                    this.httpClient.post(
+                      `messageConversations/${messageConversation?.id}`,
+                      `Request has been deleted by ${this.currentUser?.name} (${this.currentUser?.email}/${this.currentUser?.phoneNumber})\n Reason: ${confirmResponse?.reason}`
+                    ),
+                    this.dataStoreService.deleteDataStoreKey(request?.id)
+                  ).subscribe((responses: any[]) => {
+                    if (!responses[1]?.error) {
+                      this.deletingRequest = false;
+                      this.getRequests();
+                    } else {
+                      // Handle error
+                      this.deletingRequest = false;
+                    }
+                  });
+                }
+              }
+            });
+        }
+      });
   }
 }

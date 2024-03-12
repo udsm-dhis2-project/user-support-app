@@ -10,6 +10,7 @@ import { SearchItemPipe } from './pipes/search-item.pipe';
 import { FilterFormRequestsPipe } from './pipes/filter-requests.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 import { FilterItemsPipe } from './pipes/filter-items.pipe';
+import { modals } from './modals';
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { FilterItemsPipe } from './pipes/filter-items.pipe';
     ...materialModules,
     ...sharedComponents,
     ...sharedEntryComponents,
+    ...modals,
     NgxDhis2OrgUnitFilterModule,
     // NgxDhis2DataFilterModule,
     NgxDhis2PeriodFilterModule,
@@ -38,6 +40,7 @@ import { FilterItemsPipe } from './pipes/filter-items.pipe';
   declarations: [
     ...sharedComponents,
     ...sharedEntryComponents,
+    ...modals,
     SearchItemPipe,
     FilterFormRequestsPipe,
     FilterItemsPipe,
