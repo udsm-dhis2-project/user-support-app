@@ -220,6 +220,20 @@ export class UsersDataService {
     }
   }
 
+  rejectChanges(data: any): Observable<any> {
+      return zip(
+        this.httpClient.put(`dataStore/dhis2-user-support/${data?.id}`, data),
+        data?.messageConversation
+          ? this.httpClient.post(
+              `messageConversations/${data?.messageConversation?.id}`,
+              data?.rejectionReasonMessage)
+          : this.httpClient.post(`messageConversations`, data?.messageBody)
+      ).pipe(
+        map((response) => response),
+        catchError((error) => error)
+      );
+    }
+
   verifyUsername(username: string): Observable<any> {
     return this.httpClient
       .get(`users?filter=userCredentials.username:eq:${username}&fields=id`)

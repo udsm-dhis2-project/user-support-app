@@ -69,15 +69,12 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
         }
       });
   }
-  onOpenRejectModal(event: Event, datarow): void {
+  onOpenRejectModal(event: Event, data: any): void {
     event.stopPropagation();
     this.dialog
       .open(RejectUserAccountModalComponent, {
         minWidth: '50%',
-        data: {
-          datarow,
-          configurations: this.configurations,
-        },
+        data: { ...data, actionType: 'REJECTED' },
       })
       .afterClosed()
       .subscribe((shouldReload) => {
@@ -86,4 +83,5 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
         }
       });
   }
+
 }
