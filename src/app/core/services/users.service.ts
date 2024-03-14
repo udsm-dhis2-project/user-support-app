@@ -17,7 +17,7 @@ export class UsersDataService {
   constructor(
     private httpClient: NgxDhis2HttpClientService,
     private httpClientService: HttpClient
-  ) {}
+  ) { }
 
   getUsersByUserGroup(
     userGroupId: string
@@ -43,21 +43,17 @@ export class UsersDataService {
   ): Observable<any> {
     return this.httpClient
       .get(
-        `users.json?pageSize=${pageSize}&page=${page}${
-          q ? '&query=' + q : ''
-        }&fields=id,firstName,organisationUnits[id,level,name,code,path,parent[id,name,level,parent[id,name,level]]],surname,name,email,phoneNumber,userRoles,userGroups,userCredentials[username,lastlogin,disabled]&order=firstName~asc${
-          pathSection
-            ? '&filter=organisationUnits.path:ilike:' + pathSection
-            : ''
-        }${
-          selectedLevel
-            ? '&filter=organisationUnits.level:eq:' + selectedLevel
-            : ''
-        }${
-          accountStatus
-            ? '&filter=userCredentials.disabled:eq:' +
-              (accountStatus == 'active' ? false : true)
-            : ''
+        `users.json?pageSize=${pageSize}&page=${page}${q ? '&query=' + q : ''
+        }&fields=id,firstName,organisationUnits[id,level,name,code,path,parent[id,name,level,parent[id,name,level]]],surname,name,email,phoneNumber,userRoles,userGroups,userCredentials[username,lastlogin,disabled]&order=firstName~asc${pathSection
+          ? '&filter=organisationUnits.path:ilike:' + pathSection
+          : ''
+        }${selectedLevel
+          ? '&filter=organisationUnits.level:eq:' + selectedLevel
+          : ''
+        }${accountStatus
+          ? '&filter=userCredentials.disabled:eq:' +
+          (accountStatus == 'active' ? false : true)
+          : ''
         }`
       )
       .pipe(
@@ -104,15 +100,15 @@ export class UsersDataService {
           ),
           data?.messageConversation
             ? this.httpClient.post(
-                `messageConversations/${data?.messageConversation?.id}`,
-                data?.messageConversation?.approvalMessage
-              )
+              `messageConversations/${data?.messageConversation?.id}`,
+              data?.messageConversation?.approvalMessage
+            )
             : of(null),
           data?.messageConversation
             ? this.httpClient.post(
-                `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
-                null
-              )
+              `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
+              null
+            )
             : this.httpClient.post(`messageConversations`, data?.messageBody)
         ).pipe(
           switchMap((responses: any[]) => {
@@ -121,30 +117,28 @@ export class UsersDataService {
             const userResponse: any = responses[0];
             return userResponse
               ? this.httpClient.post(`messageConversations`, {
-                  subject: 'HMIS DHIS2 ACCOUNT',
-                  users: [
-                    {
-                      id: userResponse?.id
-                        ? userResponse?.id
-                        : userResponse?.response?.uid,
-                      username: userResponse?.userCredentials?.username
-                        ? userResponse?.userCredentials?.username
-                        : data?.userPayload?.userCredentials?.username,
-                      type: 'user',
-                    },
-                  ],
-                  userGroups: [],
-                  text: `Your creadentials are: \n Username: ${
-                    userResponse?.userCredentials?.username
+                subject: 'HMIS DHIS2 ACCOUNT',
+                users: [
+                  {
+                    id: userResponse?.id
+                      ? userResponse?.id
+                      : userResponse?.response?.uid,
+                    username: userResponse?.userCredentials?.username
                       ? userResponse?.userCredentials?.username
-                      : data?.userPayload?.userCredentials?.username
+                      : data?.userPayload?.userCredentials?.username,
+                    type: 'user',
+                  },
+                ],
+                userGroups: [],
+                text: `Your creadentials are: \n Username: ${userResponse?.userCredentials?.username
+                    ? userResponse?.userCredentials?.username
+                    : data?.userPayload?.userCredentials?.username
                   } \n
-                    Password: ${
-                      data?.userPayload?.userCredentials?.password
-                    } \n\n
+                    Password: ${data?.userPayload?.userCredentials?.password
+                  } \n\n
                     MoH requires you to change password after login.
                     The account will be disabled if it is not used for 3 months consecutively`,
-                })
+              })
               : of([]);
           }),
           catchError((error) => of(error))
@@ -153,22 +147,22 @@ export class UsersDataService {
         return zip(
           data?.payload
             ? this.httpClientService.post(
-                `../../../api/${data?.url}`,
-                data?.payload
-              )
+              `../../../api/${data?.url}`,
+              data?.payload
+            )
             : of(null),
           this.httpClient.delete(`dataStore/dhis2-user-support/${data?.id}`),
           data?.messageConversation
             ? this.httpClient.post(
-                `messageConversations/${data?.messageConversation?.id}`,
-                data?.messageConversation?.approvalMessage
-              )
+              `messageConversations/${data?.messageConversation?.id}`,
+              data?.messageConversation?.approvalMessage
+            )
             : of(null),
           data?.messageConversation
             ? this.httpClient.post(
-                `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
-                null
-              )
+              `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
+              null
+            )
             : this.httpClient.post(`messageConversations`, data?.messageBody)
         ).pipe(
           map((response) => response),
@@ -198,15 +192,15 @@ export class UsersDataService {
         this.httpClient.delete(`dataStore/dhis2-user-support/${data?.id}`),
         data?.messageConversation
           ? this.httpClient.post(
-              `messageConversations/${data?.messageConversation?.id}`,
-              data?.messageConversation?.approvalMessage
-            )
+            `messageConversations/${data?.messageConversation?.id}`,
+            data?.messageConversation?.approvalMessage
+          )
           : of(null),
         data?.messageConversation
           ? this.httpClient.post(
-              `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
-              null
-            )
+            `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
+            null
+          )
           : this.httpClient.post(`messageConversations`, data?.messageBody),
         data?.payload[0] && data?.payload[0]?.path === '/password'
           ? this.httpClient.post(`messageConversations`, data?.privateMessage)
@@ -221,18 +215,18 @@ export class UsersDataService {
   }
 
   rejectChanges(data: any): Observable<any> {
-      return zip(
-        this.httpClient.put(`dataStore/dhis2-user-support/${data?.id}`, data),
-        data?.messageConversation
-          ? this.httpClient.post(
-              `messageConversations/${data?.messageConversation?.id}`,
-              data?.rejectionReasonMessage)
-          : this.httpClient.post(`messageConversations`, data?.messageBody)
-      ).pipe(
-        map((response) => response),
-        catchError((error) => error)
-      );
-    }
+    return zip(
+      this.httpClient.put(`dataStore/dhis2-user-support/${data?.id}`, data),
+      data?.messageConversation
+        ? this.httpClient.post(
+          `messageConversations/${data?.messageConversation?.id}`,
+          data?.rejectionReasonMessage)
+        : this.httpClient.post(`messageConversations`, data?.messageBody)
+    ).pipe(
+      map((response) => response),
+      catchError((error) => error)
+    );
+  }
 
   verifyUsername(username: string): Observable<any> {
     return this.httpClient

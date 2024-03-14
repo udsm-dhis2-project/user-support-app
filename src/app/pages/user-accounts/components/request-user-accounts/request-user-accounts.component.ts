@@ -152,7 +152,7 @@ export class RequestUserAccountsComponent implements OnInit {
 
   onNext(event: Event): void {
     event.stopPropagation();
-    
+
     // Ensure the first ones have been taken and stored on localstorage
     // Do not clear access control (only clear demographic)
 
@@ -229,6 +229,7 @@ export class RequestUserAccountsComponent implements OnInit {
 
   onFinish(event: Event): void {
     event.stopPropagation();
+    this.onEditing = false;
     // testing logic
     this.formDataToStoreLocally = removeDuplicates(
       this.formDataToStoreLocally,
@@ -240,8 +241,7 @@ export class RequestUserAccountsComponent implements OnInit {
       JSON.stringify(this.formDataToStoreLocally)
     );
     this.createDemographicFields();
-    // testing logic
-    // jdksdjsk;
+    this.createAccessControlFields();
 
     this.readyToSend = true;
   }
@@ -266,7 +266,7 @@ export class RequestUserAccountsComponent implements OnInit {
       })
       .afterClosed()
       .subscribe((confirmed?: boolean) => {
-        
+
         if (confirmed) {
           this.saving = true;
           this.shouldConfirm = false;
@@ -286,8 +286,6 @@ export class RequestUserAccountsComponent implements OnInit {
             message: {
               message: `The following accounts were requested accordingly: \n\n ${this.formDataToStoreLocally
                 ?.map((data, index) => {
-                  console.log('data', data);
-                  console.log('configurations', configurations);
                   return (
                     (index + 1).toString() +
                     '. ' +
@@ -309,8 +307,8 @@ export class RequestUserAccountsComponent implements OnInit {
                     ' User group ->  <b>' +
                     (configurations?.allowedUserGroupsForRequest
                       ?.filter(group => group?.id === data.userGroups[0]?.id)
-                      .map((group) => 
-                      group?.name
+                      .map((group) =>
+                        group?.name
                       )) +
                     '</b>' +
                     ' Entry access level ->  <b>' +
@@ -397,9 +395,14 @@ export class RequestUserAccountsComponent implements OnInit {
     event.stopPropagation();
     this.readyToSend = false;
     this.onEditing = true;
+    this.formUpdateIsDone = false;
+
+    this.pageReady = false;
 
 
     const storedUsersData = localStorage.getItem('usersToCreate');
+
+    console.log('on edit', storedUsersData);
 
     if (storedUsersData) {
       this.formDataToStoreLocally = JSON.parse(storedUsersData).filter(data => data?.id === id);
@@ -430,9 +433,9 @@ export class RequestUserAccountsComponent implements OnInit {
 
     this.formDataToStoreLocally = JSON.parse(storedUsersData);
 
-    // if (this.formDataToStoreLocally?.length) {
-    //   this.prevIndex = this.formDataToStoreLocally?.length - 1;
-    // }
+    if (this.formDataToStoreLocally?.length) {
+      this.prevIndex = this.formDataToStoreLocally?.length - 1;
+    }
   }
 
   createDemographicFields(data?: any): void {
@@ -473,9 +476,53 @@ export class RequestUserAccountsComponent implements OnInit {
     this.pageReady = true;
   }
 
-  onSubmit(event: Event){
+  onSubmit(event: Event) {
     this.readyToSend = true;
     this.onEditing = false;
+
+    console.log(
+      'fist assignment',
+      [
+        ...this.formDataToStoreLocally,
+        {
+          id: 'REF' + Date.now() + ':' + this.formData?.phoneNumber?.value,
+          firstName: this.formData?.firstName?.value.trim(),
+          lastName: this.formData?.lastName?.value.trim(),
+          phoneNumber: this.formData?.phoneNumber?.value,
+          email: this.formData?.email?.value.trim(),
+          title: this.formData?.title?.value,
+          titleDescription: this.formData?.titleDescription?.value,
+          entryOrgUnits: this.selectedOrgUnitItemsForDataEntry,
+          reportOrgUnits: this.selectedOrgUnitItemsForReport,
+          userGroups: this.selectedUserGroups,
+          userRoles: this.selectedRoles,
+        },
+      ]
+    )
+    console.log(
+      'second assignment',
+      {
+        id: this.currentUserToCreateSelected,
+        firstName: this.formData?.firstName?.value.trim(),
+        lastName: this.formData?.lastName?.value.trim(),
+        phoneNumber: this.formData?.phoneNumber?.value,
+        email: this.formData?.email?.value.trim(),
+        title: this.formData?.title?.value,
+        titleDescription: this.formData?.titleDescription?.value,
+        entryOrgUnits: this.formData?.entry?.value,
+        reportOrgUnits: this.formData?.report?.value,
+        userGroups: [
+          {
+            id: this.formData?.userGroup?.value,
+          },
+        ],
+        userRoles: [
+          {
+            id: this.formData?.userRole?.value,
+          },
+        ],
+      }
+    )
 
     this.showOrgUnit = false;
     this.pageReady = false;
@@ -501,23 +548,23 @@ export class RequestUserAccountsComponent implements OnInit {
         : this.formDataToStoreLocally?.map((data) => {
           if (data?.id === this.currentUserToCreateSelected) {
             return {
-              id: this.currentUserToCreateSelected,
-              firstName: this.formData?.firstName?.value.trim(),
-              lastName: this.formData?.lastName?.value.trim(),
-              phoneNumber: this.formData?.phoneNumber?.value,
-              email: this.formData?.email?.value.trim(),
-              title: this.formData?.title?.value,
-              titleDescription: this.formData?.titleDescription?.value,
-              entryOrgUnits: this.formData?.entry?.value,
-              reportOrgUnits: this.formData?.report?.value,
+              id: this.currentUserToCreateSelected || data.id,
+              firstName: this.formData?.firstName?.value.trim() || data.firstName,
+              lastName: this.formData?.lastName?.value.trim() || data.lastName,
+              phoneNumber: this.formData?.phoneNumber?.value || data.phoneNumber,
+              email: this.formData?.email?.value.trim() || data.email,
+              title: this.formData?.title?.value || data.title,
+              titleDescription: this.formData?.titleDescription?.value || data.titleDescription,
+              entryOrgUnits: this.formData?.entry?.value || data.entryOrgUnits,
+              reportOrgUnits: this.formData?.report?.value || data.reportOrgUnits,
               userGroups: [
                 {
-                  id: this.formData?.userGroup?.value,
+                  id: this.formData?.userGroup?.value || data.userGroups[0]?.id,
                 },
               ],
               userRoles: [
                 {
-                  id: this.formData?.userRole?.value,
+                  id: this.formData?.userRole?.value || data.userRoles[0]?.id,
                 },
               ],
             };
@@ -527,14 +574,20 @@ export class RequestUserAccountsComponent implements OnInit {
         });
 
     this.currentUserToCreateSelected = null;
+
     localStorage.setItem(
       'usersToCreate',
       JSON.stringify(this.formDataToStoreLocally)
     );
+
+    console.log('on save', JSON.stringify(this.formDataToStoreLocally));
+
     if (this.formDataToStoreLocally?.length) {
       this.prevIndex = this.formDataToStoreLocally?.length - 1;
     }
+
     this.createDemographicFields();
+    this.createAccessControlFields();
 
     this.selectedOrgUnitItemsForDataEntry = [];
     this.selectedOrgUnitItemsForReport = [];
