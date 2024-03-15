@@ -212,7 +212,6 @@ export class RequestUserAccountsComponent implements OnInit {
       JSON.stringify(this.formDataToStoreLocally)
     );
 
-    console.log('this.formDataToStoreLocally', this.formDataToStoreLocally);
     if (this.formDataToStoreLocally?.length) {
       this.prevIndex = this.formDataToStoreLocally?.length - 1;
     }
@@ -402,8 +401,6 @@ export class RequestUserAccountsComponent implements OnInit {
 
     const storedUsersData = localStorage.getItem('usersToCreate');
 
-    console.log('on edit', storedUsersData);
-
     if (storedUsersData) {
       this.formDataToStoreLocally = JSON.parse(storedUsersData).filter(data => data?.id === id);
 
@@ -480,50 +477,6 @@ export class RequestUserAccountsComponent implements OnInit {
     this.readyToSend = true;
     this.onEditing = false;
 
-    console.log(
-      'fist assignment',
-      [
-        ...this.formDataToStoreLocally,
-        {
-          id: 'REF' + Date.now() + ':' + this.formData?.phoneNumber?.value,
-          firstName: this.formData?.firstName?.value.trim(),
-          lastName: this.formData?.lastName?.value.trim(),
-          phoneNumber: this.formData?.phoneNumber?.value,
-          email: this.formData?.email?.value.trim(),
-          title: this.formData?.title?.value,
-          titleDescription: this.formData?.titleDescription?.value,
-          entryOrgUnits: this.selectedOrgUnitItemsForDataEntry,
-          reportOrgUnits: this.selectedOrgUnitItemsForReport,
-          userGroups: this.selectedUserGroups,
-          userRoles: this.selectedRoles,
-        },
-      ]
-    )
-    console.log(
-      'second assignment',
-      {
-        id: this.currentUserToCreateSelected,
-        firstName: this.formData?.firstName?.value.trim(),
-        lastName: this.formData?.lastName?.value.trim(),
-        phoneNumber: this.formData?.phoneNumber?.value,
-        email: this.formData?.email?.value.trim(),
-        title: this.formData?.title?.value,
-        titleDescription: this.formData?.titleDescription?.value,
-        entryOrgUnits: this.formData?.entry?.value,
-        reportOrgUnits: this.formData?.report?.value,
-        userGroups: [
-          {
-            id: this.formData?.userGroup?.value,
-          },
-        ],
-        userRoles: [
-          {
-            id: this.formData?.userRole?.value,
-          },
-        ],
-      }
-    )
-
     this.showOrgUnit = false;
     this.pageReady = false;
     this.formDataToStoreLocally = !this.formUpdateIsDone
@@ -579,8 +532,6 @@ export class RequestUserAccountsComponent implements OnInit {
       'usersToCreate',
       JSON.stringify(this.formDataToStoreLocally)
     );
-
-    console.log('on save', JSON.stringify(this.formDataToStoreLocally));
 
     if (this.formDataToStoreLocally?.length) {
       this.prevIndex = this.formDataToStoreLocally?.length - 1;
@@ -639,7 +590,6 @@ export class RequestUserAccountsComponent implements OnInit {
   }
 
   onUpdateDemographicForm(formvalue: FormValue): void {
-    console.log('form changes');
     this.formData = { ...this.formData, ...formvalue.getValues() };
     this.formUpdateIsDone = true;
     this.isDemographicFormValid = formvalue.isValid;
