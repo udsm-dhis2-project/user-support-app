@@ -19,11 +19,13 @@
                 <mat-list role="list" class="meu-list">
                   <!-- TODO: Add loader before display found user display name -->
                   <mat-list-item role="listitem" class="welcome-user-item">
-                    <mat-icon color="primary">person</mat-icon>
-                    <b class="ml-1 current-user-name">{{
-                      params?.currentUser?.displayName
-                    }}</b></mat-list-item
-                  >
+                    <button mat-icon-button class="current-user-name">
+                      <mat-icon style="margin-bottom: -6px" color="primary"
+                        >person</mat-icon
+                      >
+                      {{ params?.currentUser?.displayName }}
+                    </button>
+                  </mat-list-item>
                   <mat-list-item
                     role="listitem"
                     class="list-item"
@@ -84,7 +86,7 @@
                     }}</mat-list-item
                   >
 
-                  <mat-list-item
+                  <!-- <mat-list-item
                     *ngIf="
                       params?.currentUser &&
                       (params?.currentUser?.keyedAuthorities['ALL'] ||
@@ -103,7 +105,7 @@
                       params?.translations['Validation Rules request'] ||
                         'Validation Rules request'
                     }}</mat-list-item
-                  >
+                  > -->
                   <!-- <mat-list-item
                     *ngIf="
                       params?.currentUser?.userGroupsKeyed[
@@ -223,7 +225,7 @@
                       params?.translations['User account'] || 'User account'
                     }}</mat-list-item
                   >
-                  <mat-list-item
+                  <!-- <mat-list-item
                     *ngIf="
                       params?.currentUser &&
                       (params?.currentUser?.keyedAuthorities['ALL'] ||
@@ -242,7 +244,7 @@
                       params?.translations['Validation Rules request'] ||
                         'Validation Rules request'
                     }}</mat-list-item
-                  >
+                  > -->
 
                   <mat-list-item
                     *ngIf="

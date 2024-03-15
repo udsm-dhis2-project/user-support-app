@@ -40,14 +40,14 @@ export class UserAccountRequestContainerComponent implements OnInit {
 
   get isFeedbackRecepient(): boolean {
     return (
-      (
-        (this.currentUser?.userGroups || []).filter(
-          (userGroup) =>
-            userGroup?.id === this.systemConfigs?.feedbackRecipients?.id
-        ) || []
-      )?.length > 0 ||
+      (this.currentUser?.userGroups || []).filter(
+        (userGroup) =>
+          userGroup?.id === this.systemConfigs?.feedbackRecipients?.id
+      ) || []
+    )?.length > 0 ||
       this.currentUser?.keyedAuthorities['US_USER_ACCOUNT_REQUESTS_VIEW'] ||
       this.currentUser?.keyedAuthorities['US_USER_ACCOUNT_APPROVE']
-    );
+      ? true
+      : false;
   }
 }

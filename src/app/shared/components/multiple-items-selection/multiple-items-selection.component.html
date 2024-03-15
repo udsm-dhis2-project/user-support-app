@@ -1,36 +1,38 @@
-<mat-progress-bar
-  mode="indeterminate"
-  *ngIf="!(resources$ | async)"
-></mat-progress-bar>
-<table class="table table-bordered">
-  <tbody>
-    <tr>
-      <td class="w-50">
-        <div class="items-container">
-          <div class="items-list-header">Available items</div>
-          <div
-            class="list-item text-left"
-            *ngFor="
-              let available of resources$ | async | filterItems : selectedItems
-            "
-            (click)="onSelectItem($event, available, 'select')"
-          >
-            {{ available?.name }}
+<ng-container *ngIf="{ resources: resources$ | async } as params">
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.resources"
+  ></mat-progress-bar>
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <td class="w-50">
+          <div class="items-container">
+            <div class="items-list-header">Available items</div>
+            <div
+              class="list-item text-left"
+              *ngFor="
+                let available of params?.resources | filterItems : selectedItems
+              "
+              (click)="onSelectItem($event, available, 'select')"
+            >
+              {{ available?.name }}
+            </div>
           </div>
-        </div>
-      </td>
-      <td class="w-50">
-        <div class="items-container">
-          <div class="items-list-header">selected items</div>
-          <div
-            class="list-item text-left"
-            *ngFor="let item of selectedItems"
-            (click)="onSelectItem($event, item, 'un-select')"
-          >
-            {{ item?.name }}
+        </td>
+        <td class="w-50">
+          <div class="items-container">
+            <div class="items-list-header">selected items</div>
+            <div
+              class="list-item text-left"
+              *ngFor="let item of selectedItems"
+              (click)="onSelectItem($event, item, 'un-select')"
+            >
+              {{ item?.name }}
+            </div>
           </div>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-container>

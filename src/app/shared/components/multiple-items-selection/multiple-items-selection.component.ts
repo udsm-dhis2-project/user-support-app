@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
-import { Observable, map, of } from 'rxjs';
-import { uniqBy } from 'lodash';
+import { Observable, map, of, switchMap, zip } from 'rxjs';
+import { uniqBy, flatten } from 'lodash';
 
 @Component({
   selector: 'app-multiple-items-selection',
@@ -25,10 +25,42 @@ export class MultipleItemsSelectionComponent implements OnInit {
   getResources(): void {
     this.resources$ = !this.useLoadedList
       ? this.httpClientService
-          .get(`${this.resourceType}.json?fields=id,name,code`)
+          .get(
+            `${this.resourceType}.json?fields=id,name,code&page=1&pageSize=50`
+          )
           .pipe(
-            map((response: any) => {
-              return response[this.resourceType];
+            switchMap((response: any) => {
+              let pageInformation: any[] = [];
+              for (
+                let count = 0;
+                count < response?.pager?.total / response?.pager?.pageSize;
+                count++
+              ) {
+                pageInformation = [
+                  ...pageInformation,
+                  {
+                    page: count + 1,
+                    pageSize: response?.pager?.pageSize,
+                  },
+                ];
+              }
+              return zip(
+                ...pageInformation.map((pageInfo: any) => {
+                  return this.httpClientService
+                    .get(
+                      `${this.resourceType}.json?fields=id,name,code&page=${pageInfo.page}&pageSize=${pageInfo?.pageSize}`
+                    )
+                    .pipe(
+                      map((response: any) => {
+                        return response[this.resourceType];
+                      })
+                    );
+                })
+              ).pipe(
+                map((responses: any) => {
+                  return flatten(responses);
+                })
+              );
             })
           )
       : of(this.loadedItemsList);
