@@ -10,14 +10,12 @@
     <table class="table table-striped table-bordered mat-elevation-z1">
       <thead class="custom-header-bg">
         <tr>
-          <th style="width: 20px">{{ 'SN' | translate }}</th>
+          <th style="width: 20px">{{params?.translations['SN'] || 'SN'}}</th>
           <th>
             {{ params?.translations['Dataset'] || 'Dataset' }}
-            // {{ 'Dataset' | translate }}
-          
           </th>
-          <th>{{ 'Reporting Facilities' | translate }}</th>
-          <th>{{ 'Actions' | translate }}</th>
+          <th>{{ params?.translations['Reporting Facilities'] || 'Reporting Facilities' }}</th>
+          <th>{{ params?.translations['Actions'] || "Actions" }}</th>
         </tr>
       </thead>
       <tbody>
@@ -64,14 +62,14 @@
                       class="action-btns"
                       [title]="
                         (dataSet?.hasPendingRequest
-                          ? 'Waiting for response'
+                          ? params?.translations['Waiting for response']
                           : ''
-                        ) | translate
+                        ) || ['Waiting for response']
                       "
                     >
                       {{
-                        (dataSet?.hasPendingRequest ? 'View' : 'Request')
-                          | translate
+                        params?.translations[(dataSet?.hasPendingRequest ? 'View' : 'Request')]
+                          || (dataSet?.hasPendingRequest ? 'View' : 'Request')
                       }}
                     </button>
                   </div>
@@ -83,7 +81,7 @@
                         (click)="onCancelAll($event, dataSet, false)"
                         *ngIf="dataSet?.hasPendingRequest"
                       >
-                        {{ 'Cancel' | translate }}
+                        {{ params?.translations['Cancel'] || 'Cancel' }}
                       </button>
                     </div>
                     <!-- <div class="w-100" *ngIf="dataRow?.hasPendingRequest">
@@ -100,15 +98,15 @@
                       <div class="w-100">
                         <mat-form-field class="w-100">
                           <mat-label>{{
-                            'Provide reason for cancelling form request'
-                              | translate
+                            params?.translations['Provide reason for cancelling form request']
+                              || 'Provide reason for cancelling form request'
                           }}</mat-label>
                           <textarea
                             [(ngModel)]="reasonForCancellingRequest"
                             required
                             matInput
-                            placeholder="{{ 'E.g' | translate }} {{
-                              'Nilituma kimakosa' | translate
+                            placeholder="{{ params?.translations['E.g'] || 'E.g' }} {{
+                              params?.translations['Nilituma kimakosa'] || 'Nilituma kimakosa'
                             }}"
                           ></textarea>
                         </mat-form-field>
@@ -119,7 +117,7 @@
                           (click)="onUnConfirm($event)"
                           class="ml-2 btn-danger"
                         >
-                          {{ 'Cancel' | translate }}
+                          {{ params?.translations['Cancel'] || "Cancel" }}
                         </button>
                         <button
                           mat-button
@@ -127,7 +125,7 @@
                           class="ml-2 btn-success"
                           (click)="onCancelAll($event, dataSet, true)"
                         >
-                          {{ 'Confirm' | translate }}
+                          {{ params?.translations['Confirm'] || 'Confirm' }}
                         </button>
                       </div>
                     </div>
@@ -150,11 +148,11 @@
       <div style="width: 150" class="mt-2">
         <span>
           <span>{{ params?.dataSetsDetails?.pager?.pageSize }}</span>
-          {{ 'of' | translate }}
+          {{ params?.translations['of'] || 'of' }}
           <span>
             {{ params?.dataSetsDetails?.pager?.total }}
           </span>
-          {{ 'datasets' | translate }}
+          {{ params?.translations['datasets'] || 'datasets' }}
         </span>
       </div>
       <select
@@ -170,7 +168,7 @@
       </select>
       <button
         mat-button
-        title="{{ 'Previous' | translate }}"
+        title="{{ params?.translations['Previous'] || 'Previous' }}"
         class="pagination-buttons ml-2"
         [disabled]="params?.dataSetsDetails?.pager?.page == 1"
         (click)="
@@ -185,7 +183,7 @@
       </button>
       <button
         mat-button
-        title="{{ 'Next' | translate }}"
+        title="{{ params?.translations['Next'] || 'Next' }}"
         [disabled]="params?.dataSetsDetails?.pager?.total / pageSize < page"
         class="pagination-buttons ml-2"
         (click)="getDataSets($event, 'next', params?.dataSetsDetails?.pager)"

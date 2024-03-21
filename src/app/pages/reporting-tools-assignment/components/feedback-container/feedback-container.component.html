@@ -2,7 +2,8 @@
   class="feedback-container"
   *ngIf="{
     userSupportKeys: userSupportKeys$ | async,
-    orgUnitLevels: orgUnitLevels$ | async
+    orgUnitLevels: orgUnitLevels$ | async,
+    translations: translations$ | async
   } as params"
 >
   <div
@@ -15,7 +16,7 @@
       (click)="toggleSupport($event)"
       [checked]="showRequest ? true : false"
     >
-      {{ (showRequest ? 'Feebacks' : 'Requests') | translate }}
+      {{ params?.translations[(showRequest ? 'Feebacks' : 'Requests')] || (showRequest ? 'Feebacks' : 'Requests') }}
     </mat-slide-toggle>
   </div>
   <div
@@ -30,7 +31,7 @@
       (selectedIndexChange)="selectedTab.setValue($event)"
     >
       <mat-tab
-        label="{{ 'Organisation units' | translate }}"
+        label="{{ params?.translations['Organisation units'] || 'Organisation units' }}"
         *ngIf="
           currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
           currentUser?.keyedAuthorities['ALL']
@@ -48,7 +49,7 @@
         </div>
       </mat-tab>
       <mat-tab
-        label="{{ 'Datasets' | translate }}"
+        label="{{ params?.translations['Datasets'] || 'Datasets' }}"
         *ngIf="
           currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
           currentUser?.keyedAuthorities['ALL']
@@ -65,7 +66,7 @@
         </div>
       </mat-tab>
       <mat-tab
-        label="{{ 'Programs' | translate }}"
+        label="{{ params?.translations['Programs'] || 'Programs' }}"
         *ngIf="
           currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
           currentUser?.keyedAuthorities['ALL']
@@ -87,7 +88,7 @@
   <div *ngIf="isFeedbackRecepient && params?.userSupportKeys">
     <mat-tab-group>
       <mat-tab
-        label="{{ 'Feedbacks' | translate }}"
+        label="{{ params?.translations['Feedbacks'] || 'Feebacks' }}"
         *ngIf="
           currentUser?.keyedAuthorities['US_FORM_REQUESTS_VIEW'] ||
           currentUser?.keyedAuthorities['US_FORM_APPROVE'] ||
@@ -106,7 +107,7 @@
           </div>
         </ng-template>
       </mat-tab>
-      <mat-tab label="{{ 'Requesting' | translate }}">
+      <mat-tab label="{{ params.translations['Requesting'] || 'Requesting' }}">
         <ng-template matTabContent>
           <div class="p-3">
             <mat-tab-group
@@ -116,7 +117,7 @@
               (selectedIndexChange)="selectedTab.setValue($event)"
             >
               <mat-tab
-                label="{{ 'Organisation units' | translate }}"
+                label="{{ params?.translations['Organisation units'] || 'Organisation units' }}"
                 *ngIf="
                   currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
                   currentUser?.keyedAuthorities['ALL']
@@ -134,7 +135,7 @@
                 </div>
               </mat-tab>
               <mat-tab
-                label="{{ 'Datasets' | translate }}"
+                label="{{ params?.translations['Datasets'] || 'Datasets' }}"
                 *ngIf="
                   currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
                   currentUser?.keyedAuthorities['ALL']
@@ -151,7 +152,7 @@
                 </div>
               </mat-tab>
               <mat-tab
-                label="{{ 'Programs' | translate }}"
+                label="{{ params?.translations['Programs'] || 'Programs' }}"
                 *ngIf="
                   currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
                   currentUser?.keyedAuthorities['ALL']

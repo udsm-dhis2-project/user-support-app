@@ -6,6 +6,9 @@ import { OuSelectionFormRequestModalComponent } from '../ou-selection-form-reque
 import { MessagesDataService } from 'src/app/core/services/messages.service';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {  Store } from '@ngrx/store';
+import { State } from 'src/app/store/reducers';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-programs-list',
@@ -14,6 +17,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class ProgramsListComponent implements OnInit {
   programsDetails$: Observable<any[]>;
+  translations$: Observable<any[]>;
   pageSize: number = 10;
   page: number = 1;
   pageIndex: number = 0;
@@ -24,6 +28,7 @@ export class ProgramsListComponent implements OnInit {
   updating: boolean = false;
   reasonForCancellingRequest: string;
   currentOrgUnit: any;
+
 
   @Input() currentUser: any;
   @Input() configurations: any;
@@ -38,10 +43,12 @@ export class ProgramsListComponent implements OnInit {
     private dialog: MatDialog,
     private messageService: MessagesDataService,
     private dataStoreService: DataStoreDataService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private store: Store<State>
   ) {}
 
   ngOnInit(): void {
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.getPrograms();
   }
 

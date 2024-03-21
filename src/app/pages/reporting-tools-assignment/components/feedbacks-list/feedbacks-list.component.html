@@ -1,40 +1,33 @@
-<div
-  *ngIf="{ allDataForUserSupport: allDataForUserSupport$ | async } as params"
->
-  <div class="h5 feedback-header">{{ 'User feedback' | translate }}</div>
-  <div
-    class="w-100"
-    style="overflow: auto"
-    *ngIf="
+<div *ngIf="
+  { allDataForUserSupport: allDataForUserSupport$ | async,
+    translations: translations$ | async
+  } as params">   
+  <div class="h5 feedback-header">{{ params?.translations['User feedback'] || "User feedback" }}</div>
+  <div class="w-100" style="overflow: auto" *ngIf="
       params?.allDataForUserSupport &&
       params?.allDataForUserSupport?.data?.length > 0
-    "
-  >
+    ">
     <table class="table table-striped table-bordered mat-elevation-z1 p-2">
       <thead class="custom-header-bg">
         <tr>
-          <th style="width: 15px">{{ 'SN' | translate }}</th>
-          <th>{{ 'Request' | translate }}</th>
-          <th>{{ 'Date' | translate }}</th>
+          <th style="width: 15px">{{ params?.translations['SN'] || 'SN' }}</th>
+          <th>{{ params?.translations['Requests'] || 'Requests' }}</th>
+          <th>{{ params?.translations['Date'] || 'Date' }}</th>
           <th style="width: 200px" class="text-right">
-            {{ 'Actions' | translate }}
+            {{ params?.translations['Actions'] || 'Actions' }}
           </th>
         </tr>
       </thead>
       <tbody>
-        <ng-container
-          *ngFor="
+        <ng-container *ngFor="
             let dataRow of params?.allDataForUserSupport?.data
               | FilterFormRequests : 'status' : 'REJECTED';
             let count = index
-          "
-        >
-          <ng-container
-            *ngIf="
+          ">
+          <ng-container *ngIf="
               !dataRow?.type ||
               (dataRow?.type && dataRow?.type !== 'VALIDATION_RULE_REQUEST')
-            "
-          >
+            ">
             <tr>
               <td>{{ count + 1 }}</td>
               <td>
@@ -47,14 +40,10 @@
               </td>
               <td>
                 <div class="d-flex justify-content-end">
-                  <button
-                    class="details-toggle"
-                    mat-stroked-button
-                    (click)="toggleViewMore($event, dataRow)"
-                  >
+                  <button class="details-toggle" mat-stroked-button (click)="toggleViewMore($event, dataRow)">
                     {{
-                      (moreOpenedDetails[dataRow?.id] ? 'Back' : 'View Details')
-                        | translate
+                    params?.translations[(moreOpenedDetails[dataRow?.id] ? 'Back' : 'View Details')]
+                    || (moreOpenedDetails[dataRow?.id] ? 'Back' : 'View Details')
                     }}
                   </button>
                 </div>
@@ -65,13 +54,10 @@
               <td colspan="100%">
                 <div class="w-100 d-flex justify-content-between">
                   <div style="width: 85%" class="more-contents">
-                    <div
-                      class="h6"
-                      [ngClass]="{ 'text-danger': dataRow?.shouldAlert }"
-                    >
+                    <div class="h6" [ngClass]="{ 'text-danger': dataRow?.shouldAlert }">
                       <span>{{ dataRow?.message?.subject }}</span>
                       <span class="ml-4" *ngIf="dataRow?.user">
-                        {{ 'From' | translate }}
+                        {{ params?.translations['From'] || 'Form' }}
                         {{ dataRow?.user?.displayName }}
                         <span *ngIf="dataRow?.user?.phoneNumber">
                           ({{ dataRow?.user?.phoneNumber }})
@@ -81,38 +67,25 @@
                     <div [innerHtml]="dataRow?.message?.message"></div>
                   </div>
                   <div style="width: 15%">
-                    <p
-                      *ngIf="dataRow?.shouldAlert"
-                      class="text-center"
-                      [ngClass]="{ 'text-danger': dataRow?.shouldAlert }"
-                    >
+                    <p *ngIf="dataRow?.shouldAlert" class="text-center"
+                      [ngClass]="{ 'text-danger': dataRow?.shouldAlert }">
                       {{
-                        'This is alerting request. Approve only when you have confirmed'
-                          | translate
+                      params?.translations['This is alerting request. Approve only when you have confirmed']
+                      || 'This is alerting request. Approve only when you have confirmed'
                       }}
                     </p>
                     <div class="d-flex justify-content-end">
-                      <button
-                        *ngIf="
+                      <button *ngIf="
                           currentUser?.keyedAuthorities['US_FORM_APPROVE'] ||
                           currentUser?.keyedAuthorities['ALL']
-                        "
-                        mat-stroked-button
-                        (click)="onApprove($event, dataRow)"
-                        class="btn-success mt-5 ml-2"
-                      >
-                        {{ 'Approve' | translate }}
+                        " mat-stroked-button (click)="onApprove($event, dataRow)" class="btn-success mt-5 ml-2">
+                        {{ params?.translations['Approve'] || 'Approve' }}
                       </button>
-                      <button
-                        *ngIf="
+                      <button *ngIf="
                           currentUser?.keyedAuthorities['US_FORM_APPROVE'] ||
                           currentUser?.keyedAuthorities['ALL']
-                        "
-                        mat-stroked-button
-                        (click)="onReject($event, dataRow)"
-                        class="btn-danger mt-5 ml-2"
-                      >
-                        {{ 'Reject' | translate }}
+                        " mat-stroked-button (click)="onReject($event, dataRow)" class="btn-danger mt-5 ml-2">
+                        {{ params?.translations['Reject'] || 'Reject' }}
                       </button>
                     </div>
                   </div>
@@ -124,20 +97,14 @@
       </tbody>
     </table>
   </div>
-  <div
-    style="padding: 15% 10%"
-    *ngIf="
+  <div style="padding: 15% 10%" *ngIf="
       params?.allDataForUserSupport &&
       params?.allDataForUserSupport?.data?.length === 0
-    "
-  >
+    ">
     <div style="border: solid 1px #eee; height: 20%"></div>
     <div class="alert alert-warning mt-2" role="alert">
-      {{ 'No any feedback to attend' | translate }}
+      {{ params?.translations['No any feedback to attend'] || 'No any feedback to attend' }}
     </div>
   </div>
-  <mat-progress-bar
-    mode="indeterminate"
-    *ngIf="!params?.allDataForUserSupport"
-  ></mat-progress-bar>
+  <mat-progress-bar mode="indeterminate" *ngIf="!params?.allDataForUserSupport"></mat-progress-bar>
 </div>

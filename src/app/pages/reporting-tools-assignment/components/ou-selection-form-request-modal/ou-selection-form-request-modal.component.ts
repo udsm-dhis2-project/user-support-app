@@ -11,6 +11,9 @@ import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { ProgramsService } from 'src/app/core/services/programs.service';
+import { Store } from '@ngrx/store';
+import { State } from 'src/app/store/reducers';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-ou-selection-form-request-modal',
@@ -29,6 +32,7 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
   dataStoreMessageDetails$: Observable<any>;
   assignmentDetails: any;
   allDataForUserSupport$: Observable<any>;
+  translations$: Observable<any>;
   keywordsKeys: any;
   constructor(
     private dialogRef: MatDialogRef<OuSelectionFormRequestModalComponent>,
@@ -37,19 +41,22 @@ export class OuSelectionFormRequestModalComponent implements OnInit {
     private messagesAndDatastoreService: MessagesAndDatastoreService,
     private _snackBar: MatSnackBar,
     private dataStoreService: DataStoreDataService,
-    private programService: ProgramsService
+    private programService: ProgramsService,
+    private store: Store<State>,
+
   ) {
     this.dialogData = data;
     this.keywordsKeys = data?.configurations?.keywordsKeys;
   }
 
   ngOnInit(): void {
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.reportingToolDetails$ =
       !this.dialogData?.type || this.dialogData?.type !== 'program'
         ? this.dataSetsService.getDataSetById(this.dialogData?.dataSet?.id)
         : this.programService.getProgramById(
-            this.dialogData?.reportingTool?.id
-          );
+          this.dialogData?.reportingTool?.id
+        );
 
     this.allDataForUserSupport$ = this.dataStoreService.getAllFromNameSpace(
       'dataStore/dhis2-user-support',

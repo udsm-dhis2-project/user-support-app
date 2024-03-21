@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { SystemConfigsModel } from 'src/app/shared/models/system-configurations.model';
 import { RespondFeedbackComponent } from '../respond-feedback/respond-feedback.component';
+import { Store } from '@ngrx/store';
+import { State } from 'src/app/store/reducers';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-feedbacks-list',
@@ -17,12 +20,16 @@ export class FeedbacksListComponent implements OnInit {
   @Input() systemConfigs: SystemConfigsModel;
   allDataForUserSupport$: Observable<any>;
   moreOpenedDetails: any = {};
+  translations$: Observable<any>;
   constructor(
     private dataStoreService: DataStoreDataService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private store: Store<State>,
+
   ) {}
 
   ngOnInit(): void {
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.getFeedbacksList();
   }
 

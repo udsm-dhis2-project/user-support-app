@@ -1,6 +1,6 @@
 <div class="loading-overlay" *ngIf="savingData">
   <div class="text-center">
-    <div>{{ 'Saving' | translate }} ....</div>
+    <div>{{ params?.translations['Saving'] || 'Saving' }} ....</div>
     <div class="mt-3 d-flex justify-content-center w-100">
       <mat-spinner diameter="50" strokeWidth="2"></mat-spinner>
     </div>
@@ -11,11 +11,12 @@
   <ng-container
     *ngIf="{
       reportingToolDetails: reportingToolDetails$ | async,
-      allDataForUserSupport: allDataForUserSupport$ | async
+      allDataForUserSupport: allDataForUserSupport$ | async,
+      translations: translations$ | async
     } as params"
   >
     <h2 mat-dialog-title>
-      {{ 'Assign or Remove Facilities for' | translate }}
+      {{ params?.translations['Assign or Remove Facilities for'] || 'Assign or Remove Facilities for' }}
       {{
         dialogData?.dataSet?.name
           ? dialogData?.dataSet?.name
@@ -35,7 +36,7 @@
       ></app-selection-filter>
       <div class="w-100 d-flex justify-content-end mt-2">
         <button mat-stroked-button (click)="onClose($event)">
-          {{ 'Close' | translate }}
+          {{ params?.translations['Close'] || 'Close' }}
         </button>
         <button
           class="ml-2"
@@ -55,13 +56,13 @@
             )
           "
         >
-          {{ 'Send' | translate }}
+          {{ params?.translations['Send'] || 'Send' }}
         </button>
       </div>
 
       <div *ngIf="savedData">
         <p class="success-message">
-          {{ 'Successfully sent form request' | translate }}
+          {{ params?.translations['Successfully sent form request'] || 'Successfully sent form request' }}
         </p>
       </div>
     </mat-dialog-content>
