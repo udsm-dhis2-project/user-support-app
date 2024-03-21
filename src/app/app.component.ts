@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
     private titleService: Title,
     private store: Store<State>,
     private dialog: MatDialog,
-    private dataStoreService: DataStoreDataService
+    private dataStoreService: DataStoreDataService,
   ) {
     // this language will be used as a fallback when a translation isn't found in the current language
     this.translate.setDefaultLang('en');
@@ -55,11 +55,10 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onChangeLanguage(event: MatSelectChange): void {
+  onChangeLanguage(event: MatSelectChange): void { 
     this.selectedLanguageKey = event?.value;
     this.ready = false;
     setTimeout(() => {
-      // this.translate.use(locale);
       this.store.dispatch(loadTranslation({ key: this.selectedLanguageKey }));
       this.ready = true;
     }, 50);
@@ -87,6 +86,7 @@ export class AppComponent implements OnInit {
               })
             );
             this.translations$ = this.store.select(getCurrentTranslations);
+         
           }
         });
       }

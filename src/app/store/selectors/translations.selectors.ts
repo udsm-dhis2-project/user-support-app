@@ -7,7 +7,7 @@ import {
 
 export const translationsState = createSelector(
   getRootState,
-  (state: State) => state.translations
+  (state: State) => state.translations 
 );
 
 export const {
@@ -34,7 +34,7 @@ export const getCurrentLanguageKey = createSelector(
 export const getCurrentTranslations = createSelector(
   translationsState,
   getCurrentLanguageKey,
-  (state: TranslationState, key: string) => state.entities[key]?.data
+  (state: TranslationState, key: string) => state.entities[key]?.data || {}
 );
 
 export const getCurrentSettingsSelectedLanguageKey = createSelector(
