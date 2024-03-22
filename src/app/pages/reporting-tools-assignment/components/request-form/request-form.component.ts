@@ -12,6 +12,10 @@ import {
 } from 'src/app/shared/helpers/construct-message.helper';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { State } from 'src/app/store/reducers';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-request-form',
@@ -35,10 +39,12 @@ export class RequestFormComponent implements OnInit {
 
   attributeBasedDataSetSelections: any = {};
   categoriesHasAssignedOu: any = {};
+translations$: Observable<any>;
   constructor(
     private dataStoreService: DataStoreDataService,
     private messageAndDataStoreService: MessagesAndDatastoreService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private store: Store<State>
   ) {}
 
   openSnackBar(message: string, action: string) {
@@ -46,6 +52,7 @@ export class RequestFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.mergedReportingTools = mergeDataSetsWithAssignedOnes(
       this.assignedReportingTools,
       this.reportingTools,

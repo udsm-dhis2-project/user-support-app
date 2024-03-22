@@ -10,10 +10,11 @@
 <ng-container
   *ngIf="{
     messageConversation: messageConversation$ | async,
-    dataSetsCategoriesPayload: dataSetsCategoriesPayload$ | async
+    dataSetsCategoriesPayload: dataSetsCategoriesPayload$ | async,
+    translations: translations$ | async
   } as params"
 >
-  <h2 mat-dialog-title>{{ 'Reporting Tool Approval' | translate }}</h2>
+  <h2 mat-dialog-title>{{ params?.translations['Reporting Tool Approval'] || 'Reporting Tool Approval' }}</h2>
   <mat-dialog-content class="mat-typography">
     <div
       class="approve-container"
@@ -72,11 +73,11 @@
             class="text-warning mt-2"
             *ngIf="reasonForRejection && reasonForRejection.length < 8"
           >
-            {{ 'Not a valid reason' | translate }}
+            {{ params?.translations['Not a valid reason'] || 'Not a valid reason' }}
           </p>
           <div mat-dialog-actions class="d-flex justify-content-end">
             <button mat-button (click)="onClose($event)">
-              {{ (successfullyApproved ? 'Done' : 'Close') | translate }}
+              {{ (successfullyApproved ? params?.translations['Done' ]|| 'Done' : params?.translations['Close']) || 'Close'  }} 
             </button>
             <button
               mat-stroked-button
@@ -95,7 +96,7 @@
                 )
               "
             >
-              {{ 'Confirm' | translate }}
+              {{ params?.translations['Confirm'] || 'Confirm' }}
             </button>
           </div>
         </div>
@@ -106,18 +107,18 @@
       class="w-100 success-message"
       *ngIf="savedData && !missingKey && dialogData?.actionType === 'APPROVE'"
     >
-      <p>{{ 'Successfully updated' | translate }}!</p>
+      <p>{{ params?.translations['Successfully updated'] || 'Successfully updated' }}!</p>
     </div>
 
     <div
       class="w-100 success-message"
       *ngIf="savedData && !missingKey && dialogData?.actionType === 'REJECTED'"
     >
-      <p>{{ 'Successfully sent' | translate }}!</p>
+      <p>{{ params?.translations['Successfully sent'] || 'Successfully sent' }}!</p>
     </div>
 
     <div *ngIf="missingKey">
-      <p>{{ 'Already attended' | translate }}!</p>
+      <p>{{ params?.translations['Already attended'] || 'Already attended' }}!</p>
     </div>
   </mat-dialog-content>
   <!-- <mat-dialog-actions align="end">

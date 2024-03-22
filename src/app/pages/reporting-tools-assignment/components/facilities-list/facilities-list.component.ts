@@ -14,6 +14,9 @@ import {
 import { SystemConfigsModel } from 'src/app/shared/models/system-configurations.model';
 import { RequestFormModalComponent } from '../request-form-modal/request-form-modal.component';
 import { MatSelectChange } from '@angular/material/select';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
+import { Store } from '@ngrx/store';
+import { State } from 'src/app/store/reducers';
 @Component({
   selector: 'app-facilities-list',
   templateUrl: './facilities-list.component.html',
@@ -28,6 +31,7 @@ export class FacilitiesListComponent implements OnInit {
   @Output() dataStoreChanged = new EventEmitter<boolean>();
   searchingText: string;
   reportingToolsResponse$: Observable<ReportingToolsResponseModel>;
+  translations$: Observable<any>;
   pageCount: number = 10;
   lowestLevel: number;
   updating: boolean = false;
@@ -39,7 +43,8 @@ export class FacilitiesListComponent implements OnInit {
     private dataStoreService: DataStoreDataService,
     private messageService: MessagesDataService,
     private dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private store: Store<State>,
+    private _snackBar: MatSnackBar,
   ) {}
 
   openSnackBar(message: string, action: string) {
@@ -47,6 +52,8 @@ export class FacilitiesListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.translations$ = this.store.select(getCurrentTranslations);
+
     this.lowestLevel = this.orgUnitLevels[0]?.level;
     let currentPage;
     currentPage = localStorage.getItem('currentFacilityListPage');

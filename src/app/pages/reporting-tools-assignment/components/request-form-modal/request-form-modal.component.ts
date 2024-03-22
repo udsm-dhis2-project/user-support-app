@@ -13,6 +13,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProgramsService } from 'src/app/core/services/programs.service';
 import { map } from 'rxjs/operators';
 import { flatten, orderBy } from 'lodash';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
+import { State } from 'src/app/store/reducers';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-request-form-modal',
@@ -23,6 +26,7 @@ export class RequestFormModalComponent implements OnInit {
   dialogData: any;
   assignedReportingTools$: Observable<any[]>;
   reportingTools$: Observable<any[]>;
+  translations$: Observable<any>;
   assignmentDetails: any;
   savingData: boolean = false;
   uids$: Observable<string[]>;
@@ -38,7 +42,8 @@ export class RequestFormModalComponent implements OnInit {
     private messagesAndDatastoreService: MessagesAndDatastoreService,
     private dataStoreService: DataStoreDataService,
     private _snackBar: MatSnackBar,
-    private programsService: ProgramsService
+    private programsService: ProgramsService,
+    private store: Store<State>
   ) {
     this.dialogData = data;
     this.keywordsKeys = data?.configurations?.keywordsKeys;
@@ -49,6 +54,7 @@ export class RequestFormModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this,this.translations$ = this.store.select(getCurrentTranslations);
     const matchedKeys =
       this.dialogData?.userSupportKeys.filter(
         (key) => key?.indexOf(this.dialogData?.facility?.id) > -1

@@ -8,6 +8,9 @@ import { ApproveFeedbackService } from 'src/app/core/services/approve-feedback.s
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
 import { uniqBy } from 'lodash';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
+import { State } from 'src/app/store/reducers';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-respond-feedback',
@@ -24,6 +27,7 @@ export class RespondFeedbackComponent implements OnInit {
   missingKey: boolean = false;
   reasonForRejection: string = '';
   dataSetsCategoriesPayload$: Observable<any[]>;
+  translations$: Observable<any>;
   constructor(
     private dialogRef: MatDialogRef<RespondFeedbackComponent>,
     @Inject(MAT_DIALOG_DATA) data,
@@ -31,7 +35,8 @@ export class RespondFeedbackComponent implements OnInit {
     private messageAndDataStoreService: MessagesAndDatastoreService,
     private _snackBar: MatSnackBar,
     private dataStoreService: DataStoreDataService,
-    private httpClient: NgxDhis2HttpClientService
+    private httpClient: NgxDhis2HttpClientService,
+    private store: Store<State>
   ) {
     this.dialogData = data;
   }
@@ -42,6 +47,7 @@ export class RespondFeedbackComponent implements OnInit {
 
   ngOnInit(): void {
     // console.log(this.dialogData);
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.messageConversation$ =
       this.messageAndDataStoreService.searchMessageConversationByTicketNumber(
         this.dialogData?.ticketNumber

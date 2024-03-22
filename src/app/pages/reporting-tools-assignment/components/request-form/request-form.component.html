@@ -1,7 +1,9 @@
-<div class="merged-datasets-container">
+<div class="merged-datasets-container" *ngIf="{
+  translations: translations$ | async,
+}">
   <div class="w-100 mt-2">
     <mat-form-field class="w-50">
-      <mat-label>{{ 'Search' | translate }} </mat-label>
+      <mat-label>{{ params?.translations['Search'] || 'Search' }} </mat-label>
       <mat-icon matPrefix>search</mat-icon>
       <input matInput [(ngModel)]="searchingText" />
     </mat-form-field>
@@ -10,10 +12,10 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th style="width: 30px">{{ 'SN' | translate }}</th>
-          <th>{{ 'Dataset' | translate }}/{{ 'Form' | translate }}</th>
-          <th>{{ 'Type' | translate }}</th>
-          <th style="width: 120px">{{ 'Category' | translate }}</th>
+          <th style="width: 30px">{{ params?.translations['SN'] || 'SN' }}</th>
+          <th>{{ params?.translations['Dataset'] || 'Dataset' }}/{{ params?.translations['Form'] || 'Form'}}</th>
+          <th>{{ params?.translations['Type'] || 'Type' }}</th>
+          <th style="width: 120px">{{ params?.translations['Category'] || 'Category' }}</th>
           <th></th>
         </tr>
       </thead>
@@ -122,17 +124,17 @@
                   {{
                     (mergedRepprtingTool?.assigned &&
                     mergedRepprtingTool?.categoryOptions?.length > 0
-                      ? 'Update'
+                      ? params?.translations['Update'] || 'Update'
                       : mergedRepprtingTool?.assigned &&
                         !mergedRepprtingTool?.hasPendingRequest
-                      ? 'Remove'
+                      ? params?.translations['Remove'] || 'Remove'
                       : !mergedRepprtingTool?.assigned &&
                         !mergedRepprtingTool?.hasPendingRequest
-                      ? 'Assign'
+                      ? params?.translations['Assign'] || 'Assign'
                       : mergedRepprtingTool?.forAddition
-                      ? 'Waiting assignment'
-                      : 'Waiting un-assignment'
-                    ) | translate
+                      ? params?.translations['Waiting assignment'] || 'Waiting assignment'
+                      : params?.translations['Waiting un-assignment'] || 'Waiting un-assignment'
+                    )
                   }}
                 </button>
                 <button
@@ -150,7 +152,7 @@
                     )
                   "
                 >
-                  {{ 'Remove' | translate }}
+                  {{ params?.translations['Remove'] || 'Remove' }}
                 </button>
                 <a
                   *ngIf="mergedRepprtingTool?.hasPendingRequest"
@@ -163,7 +165,7 @@
                       false
                     )
                   "
-                  >{{ 'Cancel' | translate }}</a
+                  >{{ params?.translations['Cancel'] || 'Cancel' }}</a
                 >
                 <span
                   *ngIf="
@@ -176,7 +178,7 @@
                     (click)="onUnConfirm($event)"
                     class="ml-2 btn-danger"
                   >
-                    {{ 'Cancel' | translate }}
+                    {{ params?.translations['Cancel'] || 'Cancel' }}
                   </button>
                   <button
                     mat-button
@@ -190,7 +192,7 @@
                       )
                     "
                   >
-                    {{ 'Confirm' | translate }}
+                    {{ params?.translations['Confirm'] || 'Confirm' }}
                   </button>
                 </span>
                 <div
@@ -215,7 +217,7 @@
           <tr>
             <td colspan="100%">
               <div class="alert alert-warning" role="alert">
-                {{ 'No item Matching the search' | translate }}
+                {{ params?.translations['No item Matching the search'] || 'No item Matching the search' }}
               </div>
             </td>
           </tr>

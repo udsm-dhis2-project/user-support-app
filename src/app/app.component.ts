@@ -86,9 +86,6 @@ export class AppComponent implements OnInit {
               })
             );
             this.translations$ = this.store.select(getCurrentTranslations);
-            this.translations$.subscribe((translations) => {
-              console.log('translations', translations);
-            })
           }
         });
       }

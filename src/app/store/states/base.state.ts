@@ -11,7 +11,7 @@ export const initialBaseState: BaseState = {
   loading: false,
   loaded: false,
   hasError: false,
-  error: null
+  error: null,
 };
 
 export const loadingBaseState: BaseState = {

@@ -10,6 +10,9 @@ import { Textbox } from 'src/app/shared/modules/form/models/text-box.model';
 import { SharedConfirmationModalComponent } from '../../../../shared/modals/shared-confirmation-modal/shared-confirmation-modal.component';
 import { UIDsFromSystemService } from 'src/app/core/services/get-uids-from-system.service';
 import { Observable, map } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { State } from 'src/app/store/reducers';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-create-group-modal',
@@ -23,14 +26,17 @@ export class CreateGroupModalComponent implements OnInit {
   adding: boolean = false;
   formValuesData: any;
   systemId$: Observable<any>;
+  translations$: Observable<any>;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<CreateGroupModalComponent>,
     private dataStoreService: DataStoreDataService,
     private dialog: MatDialog,
-    private uidFromSystemService: UIDsFromSystemService
+    private uidFromSystemService: UIDsFromSystemService,
+    private store: Store<State>
   ) {}
   ngOnInit(): void {
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.selectedItems = this.data?.group
       ? this.data?.group?.associatedGroups || []
       : [];

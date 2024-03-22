@@ -3,7 +3,7 @@
   <mat-dialog-content class="mat-typography">
     <div class="loading-overlay" *ngIf="adding">
       <div class="text-center">
-        <div>{{ 'Adding' | translate }} ....</div>
+        <div>{{ params?.translations['Adding'] || 'Adding' }}....</div>
         <div class="mt-3 d-flex justify-content-center w-100">
           <mat-spinner diameter="50" strokeWidth="2"></mat-spinner>
         </div>

@@ -1,4 +1,6 @@
-<div *ngIf="{ rejectedFormRequests: rejectedFormRequests$ | async } as params">
+<div *ngIf="{ rejectedFormRequests: rejectedFormRequests$ | async,
+translations: translations$ | async
+} as params">
   <div
     class="mt-2"
     *ngIf="
@@ -10,12 +12,12 @@
       *ngFor="let rejectedFormRequest of params?.rejectedFormRequests"
     >
       <span class="text-warning">
-        {{ 'Request has been rejected' | translate }}
+        {{ params?.translations['Request has been rejected'] || 'Request has been rejected'}}
       </span>
       <span
         style="margin-left: 8px"
         (click)="setCurrentFormRequest($event, rejectedFormRequest)"
-        >{{ 'Why' | translate }}?</span
+        >{{ params?.translations['Why'] || 'Why' }}?</span
       >
     </div>
     <div

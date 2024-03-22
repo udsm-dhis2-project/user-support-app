@@ -1,4 +1,5 @@
-<div *ngIf="{ programsDetails: programsDetails$ | async } as params">
+<div *ngIf="{ programsDetails: programsDetails$ | async, 
+  translations: translations$ | async, } as params">
   <div class="w-100">
     <mat-form-field class="w-25">
       <mat-label>Search </mat-label>
@@ -10,10 +11,11 @@
     <table class="table table-striped table-bordered mat-elevation-z1">
       <thead class="custom-header-bg">
         <tr>
-          <th style="width: 20px">{{ 'SN' | translate }}</th>
-          <th>{{ 'Dataset' | translate }}</th>
-          <th>{{ 'Reporting Facilities' | translate }}</th>
-          <th>{{ 'Actions' | translate }}</th>
+          <th style="width: 20px">{{ params.translations['SN'] || 'SN' }}</th>
+          <th>{{ params?.translations['Dataset'] || 'Dataset' }}</th>
+
+          <th>{{ params?.translations['Reporting Facilities'] || 'Reporting Facilities' }}</th>
+          <th>{{ params?.translations['Actions'] || 'Actions' }}</th>
         </tr>
       </thead>
       <tbody>
@@ -59,8 +61,8 @@
                       class="action-btns"
                     >
                       {{
-                        (program?.hasPendingRequest ? 'View' : 'Request')
-                          | translate
+                        params?.translations[(program?.hasPendingRequest ? 'View' : 'Request')]
+                          || (program?.hasPendingRequest ? 'View' : 'Request')
                       }}
                     </button>
                   </div>
@@ -72,7 +74,7 @@
                         (click)="onCancelAll($event, program, false)"
                         *ngIf="program?.hasPendingRequest"
                       >
-                        {{ 'Cancel' | translate }}
+                        {{ params?.translations['Cancel'] || 'Cancel' }}
                       </button>
                     </div>
                     <!-- <div class="w-100" *ngIf="dataRow?.hasPendingRequest">
@@ -89,15 +91,14 @@
                       <div class="w-100">
                         <mat-form-field class="w-100">
                           <mat-label>{{
-                            'Provide reason for cancelling form request'
-                              | translate
+                            params?.translations['Provide reason for cancelling form request'] || 'Provide reason for cancelling form request'
                           }}</mat-label>
                           <textarea
                             [(ngModel)]="reasonForCancellingRequest"
                             required
                             matInput
-                            placeholder="{{ 'E.g' | translate }} {{
-                              'Nilituma kimakosa' | translate
+                            placeholder="{{ 'E.g' }} {{
+                              params?.translations['Nilituma kimakosa'] || 'Nilituma kimakosa'
                             }}"
                           ></textarea>
                         </mat-form-field>
@@ -109,7 +110,7 @@
                           mat-flat-button
                           class="ml-2"
                         >
-                          {{ 'Cancel' | translate }}
+                          {{ params?.translations['Cancel'] || 'Cancel' }}
                         </button>
                         <button
                           mat-stroked-button
@@ -117,7 +118,7 @@
                           class="ml-2 btn-success"
                           (click)="onCancelAll($event, currentProgram, true)"
                         >
-                          {{ 'Confirm' | translate }}
+                          {{ params?.translations['Confirm'] || 'Confirm' }}
                         </button>
                       </div>
                     </div>
