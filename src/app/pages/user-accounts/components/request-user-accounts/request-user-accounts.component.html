@@ -1,21 +1,22 @@
 <div 
 *ngIf="{
-  configurations: configurations$ | async
+  configurations: configurations$ | async,
+  translations: translations$ | async
 } as params"
 class="new-user-request-container">
   <div class="col-12 d-flex align-items-center mb-3">
     <button mat-flat-button color="primary" routerLink="/user-accounts/list">
       <mat-icon>arrow_back</mat-icon>
-      <span class="ml-2">{{ 'Back to Request List' | translate }}</span>
+      <span class="ml-2">{{ params?.translations['Back to Request List'] || 'Back to Request List' }}</span>
     </button>
     <div class="ml-3 h5 report-title">
-      {{ 'User Account Request' | translate }}
+      {{ params?.translations['User Account Request'] || 'User Account Request' }}
     </div>
   </div>
 
   <div class="loading-overlay" *ngIf="saving">
     <div class="text-center">
-      <div>{{ 'Sending request' | translate }}...</div>
+      <div>{{ params?.translations['Sending request'] || 'Sending request' }}...</div>
       <div class="mt-3 d-flex justify-content-center w-100">
         <mat-spinner diameter="50" strokeWidth="2"></mat-spinner>
       </div>
@@ -25,7 +26,7 @@ class="new-user-request-container">
     <div class="row" *ngIf="!readyToSend">
       <div class="col-md-4 col-sx-12">
         <div>
-          <div class="h5">{{ 'Demographic' | translate }}</div>
+          <div class="h5">{{ params?.translations['Demographic'] || 'Demographic' }}</div>
           <app-form
             *ngIf="formFields"
             [fields]="formFields"
@@ -37,7 +38,7 @@ class="new-user-request-container">
         <div class="row">
           <div class="col-md-6 col-sx-12">
             <div>
-              <div class="h5">{{ 'Data entry' | translate }}</div>
+              <div class="h5">{{ params?.translations['Data entry'] || 'Data entry' }}</div>
               <ngx-dhis2-org-unit-filter
                 *ngIf="showOrgUnit"
                 [orgUnitFilterConfig]="orgUnitFilterConfigForDataEntry"
@@ -49,7 +50,7 @@ class="new-user-request-container">
           </div>
           <div class="col-md-6 col-sx-12">
             <div>
-              <div class="h5">{{ 'Report' | translate }}</div>
+              <div class="h5">{{ params?.translations['Report'] || 'Report' }}</div>
               <ngx-dhis2-org-unit-filter
                 *ngIf="showOrgUnit"
                 [orgUnitFilterConfig]="orgUnitFilterConfigForReport"
@@ -62,7 +63,7 @@ class="new-user-request-container">
         </div>
         <div class="row">
           <div class="col-12 mt-4">
-            <div class="h5">{{ 'Access' | translate }}</div>
+            <div class="h5">{{ params?.translations['Access'] || 'Access' }}</div>
             <app-form
               [fields]="accessFormFields"
               [isFormHorizontal]="true"
@@ -76,13 +77,13 @@ class="new-user-request-container">
       <table class="table">
         <thead>
           <tr>
-            <th>{{ 'SN' | translate }}</th>
-            <th>{{ 'First name' | translate }}</th>
+            <th>{{ params?.translations['SN'] || 'SN' }}</th>
+            <th>{{ params?.translations['First name'] || 'First name' }}</th>
             <!-- <th>Middle name</th> -->
-            <th>{{ 'Last name' | translate }}</th>
-            <th>{{ 'Email' | translate }}</th>
-            <th>{{ 'Phone number' | translate }}</th>
-            <th>{{ 'Option' | translate }}</th>
+            <th>{{ params?.translations['Last name'] || 'Last name' }}</th>
+            <th>{{ params?.translations['Email'] || 'Email' }}</th>
+            <th>{{ params?.translations['Phone number'] || 'Phone number' }}</th>
+            <th>{{ params?.translations['Option'] || 'Option' }}</th>
           </tr>
         </thead>
         <tbody>
@@ -113,7 +114,7 @@ class="new-user-request-container">
               (click)="onEdit(user?.id)"
               class="ml-2"
             >
-              {{ 'Edit' | translate }}
+              {{ params?.translations['Edit'] || 'Edit' }}
             </button>
             </td>
           </tr>
@@ -121,7 +122,7 @@ class="new-user-request-container">
       </table>
     </div>
     <p class="text-right" *ngIf="shouldConfirm">
-      {{ 'Please confirm' | translate }}
+      {{ params?.translations['Please confirm'] || 'Please confirm' }}
     </p>
     <div class="row d-flex justify-content-end mt-2">
       <!-- [disabled]="!isDemographicFormValid || !isAccessControlFormValid" -->
@@ -147,7 +148,7 @@ class="new-user-request-container">
         class="ml-2"
         (click)="onNext($event)"
       >
-        {{ 'Add' | translate }}
+        {{ params?.translations['Add'] || 'Add' }}
     </button>
       <button
         *ngIf="onEditing"
@@ -156,7 +157,7 @@ class="new-user-request-container">
         class="ml-2"
         (click)="onSubmit($event)"
       >
-        {{ 'Save' | translate }}
+        {{ params?.translations['Save'] || 'Save' }}
     </button>
       <button
         *ngIf="!readyToSend"
@@ -166,7 +167,7 @@ class="new-user-request-container">
         class="ml-2"
         (click)="onFinish($event)"
       >
-        {{ 'Finish request' | translate }}
+        {{ params?.translations['Finish request'] || 'Finish request' }}
       </button>
       <button
         *ngIf="readyToSend"
@@ -174,12 +175,12 @@ class="new-user-request-container">
         color="primary"
         (click)="backtoRequest($event)"
       >
-        {{ 'Back to request' | translate }}
+        {{ params?.translations['Back to request'] || 'Back to request' }}
       </button>
     </div>
     <div class="row d-flex justify-content-end mt-2">
       <button *ngIf="!readyToSend" mat-stroked-button (click)="onClear($event)">
-        {{ 'Clear' | translate }}
+        {{ params?.translations['Clear'] || 'Clear' }}
       </button>
       <button
         *ngIf="readyToSend"
@@ -189,7 +190,7 @@ class="new-user-request-container">
         (click)="onSend($event, params?.configurations)"
         class="ml-2"
       >
-        {{ 'Send' | translate }}
+        {{ params?.translations['Send'] || 'Send' }}
       </button>
     </div>
   </div>
