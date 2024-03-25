@@ -1,7 +1,8 @@
 <div
   class="w-100"
   *ngIf="{
-    validationRulesRequests: validationRulesRequests$ | async
+    validationRulesRequests: validationRulesRequests$ | async,
+    translations: translations$ | async
   } as params"
 >
   <mat-progress-bar
@@ -13,9 +14,9 @@
     <table class="table table-striped table-bordered mat-elevation-z1">
       <thead>
         <tr>
-          <th style="width: 40px">{{ 'SN' | translate }}</th>
-          <th>{{ 'Request' | translate }}</th>
-          <th>{{ 'Actions' | translate }}</th>
+          <th style="width: 40px">{{ params?.translations['SN'] || 'SN' }}</th>
+          <th>{{ params?.translations['Request'] || 'Request' }}</th>
+          <th>{{ params?.translations['Actions'] || 'Actions' }}</th>
         </tr>
       </thead>
       <tbody>
@@ -35,7 +36,7 @@
                   mat-button
                   (click)="onViewDetails($event, validationRuleRequest)"
                 >
-                  {{ 'View details' | translate }}
+                  {{ params?.translations['View details'] || 'View details' }}
                 </button>
               </td>
             </tr>
@@ -60,7 +61,7 @@
                     currentUser?.keyedAuthorities['US_VALIDATION_RULE_APPROVE']
                   "
                 >
-                  {{ 'Approve' | translate }}
+                  {{ params?.translations['Approve'] || 'Approve' }}
                 </button>
               </td>
             </tr>
@@ -72,7 +73,7 @@
           <tr>
             <td colspan="100%">
               <div class="alert alert-info" role="alert">
-                {{ 'There is no validation rule request' | translate }}
+                {{ params?.translations['There is no validation rule request'] || 'There is no validation rule request' }}
               </div>
             </td>
           </tr>

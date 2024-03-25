@@ -1,4 +1,4 @@
-<div *ngIf="{ levels: levels$ | async } as params">
+<div *ngIf="{ levels: levels$ | async, translations: translations$ | async } as params">
   <mat-progress-bar
     mode="indeterminate"
     *ngIf="!params?.levels"
@@ -6,7 +6,7 @@
   <ng-container *ngIf="params?.levels">
     <div class="w-100" *ngIf="isFeedbackRecepient">
       <mat-tab-group>
-        <mat-tab label="{{ 'Requests' | translate }}">
+        <mat-tab label="{{ params?.translations['Requests'] || 'Requests'  }}">
           <ng-template matTabContent>
             <app-user-account-requests-home
               [configurations]="configurations"
@@ -16,7 +16,7 @@
           </ng-template>
         </mat-tab>
         <mat-tab
-          label="{{ 'Requesting' | translate }}"
+          label="{{ params?.translations['Requesting'] || 'Requesting' }}"
           *ngIf="
             currentUser?.keyedAuthorities['US_USER_ACCOUNT_REQUEST'] ||
             currentUser?.keyedAuthorities['ALL'] ||
@@ -27,7 +27,7 @@
             <div class="w-100">
               <mat-tab-group>
                 <mat-tab
-                  label="{{ 'Pending requests' | translate }}"
+                  label="{{ params?.translations['Pending requests'] || 'Pending requests' }}"
                   *ngIf="
                     currentUser?.keyedAuthorities['US_USER_ACCOUNT_REQUEST'] ||
                     currentUser?.keyedAuthorities['ALL'] ||
@@ -49,7 +49,7 @@
                   </ng-template>
                 </mat-tab>
                 <mat-tab
-                  label="{{ 'Users' | translate }}"
+                  label="{{ params?.translations['Users'] || 'Users' }}"
                   *ngIf="
                     currentUser?.keyedAuthorities['US_USER_ACCOUNT_REQUEST'] ||
                     currentUser?.keyedAuthorities['ALL'] ||
@@ -68,7 +68,7 @@
                 </mat-tab>
                 <mat-tab
                   *ngIf="isSecondTier"
-                  label="{{ 'Requests' | translate }}"
+                  label="{{ params?.translations['Requests'] || 'Requests' }}"
                 >
                   <ng-template matTabContent>
                     <app-user-account-requests-home
@@ -87,7 +87,7 @@
     <div class="w-100" *ngIf="!isFeedbackRecepient">
       <mat-tab-group>
         <mat-tab
-          label="{{ 'Pending requests' | translate }}"
+          label="{{ params?.translations['Pending requests'] || 'Pending requests' }}"
           *ngIf="
             currentUser?.keyedAuthorities['US_USER_ACCOUNT_REQUEST'] ||
             currentUser?.keyedAuthorities['ALL'] ||
@@ -104,7 +104,7 @@
           </ng-template>
         </mat-tab>
         <mat-tab
-          label="{{ 'Users' | translate }}"
+          label="{{ params?.translations['Users'] || 'Users' }}"
           *ngIf="
             currentUser?.keyedAuthorities['US_USER_ACCOUNT_REQUEST'] ||
             currentUser?.keyedAuthorities['ALL'] ||
@@ -119,7 +119,7 @@
           </ng-template>
         </mat-tab>
         <mat-tab
-          label="{{ 'Requests' | translate }}"
+          label="{{ params?.translations['Requests'] || 'Requests' }}"
           *ngIf="
             isSecondTier &&
             (currentUser?.keyedAuthorities['US_USER_ACCOUNT_APPROVE'] ||

@@ -43,7 +43,7 @@
                     routerLinkActive="active-menu-item"
                     [routerLink]="'reporting-tools/request'"
                     >{{
-                      params?.translations['Form requests'] && 'Form requests'
+                      params?.translations['Form requests'] || 'Form requests'
                     }}</mat-list-item
                   >
 
@@ -114,7 +114,7 @@
                     class="list-item"
                     routerLinkActive="active-menu-item"
                     [routerLink]="'statistics'"
-                    >{{ 'Statistics' | translate }}</mat-list-item
+                    >{{ 'Statistics' }}</mat-list-item
                   > -->
                   <mat-list-item
                     *ngIf="
@@ -183,7 +183,7 @@
                     class="list-item"
                     routerLinkActive="active-menu-item"
                     [routerLink]="'statistics'"
-                    >{{ 'Statistics' | translate }}</mat-list-item
+                    >{{ 'Statistics'  }}</mat-list-item
                   > -->
                   <!-- <mat-list-item
                     role="listitem"

@@ -1,10 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
 import { omit, flatten } from 'lodash';
 import { Observable } from 'rxjs';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
 import { UsersDataService } from 'src/app/core/services/users.service';
+import { State } from 'src/app/store/reducers';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-approve-user-accounts-modal',
@@ -18,17 +21,20 @@ export class ApproveUserAccountsModalComponent implements OnInit {
   isCurrentUsernameValid: boolean = false;
   currentUsername: string;
   validityCheckMessage: string;
+translations$: Observable<any>;
   constructor(
     private dialogRef: MatDialogRef<ApproveUserAccountsModalComponent>,
     @Inject(MAT_DIALOG_DATA) data,
     private dataStoreDataService: DataStoreDataService,
     private usersDataService: UsersDataService,
-    private messageAndDataStoreService: MessagesAndDatastoreService
+    private messageAndDataStoreService: MessagesAndDatastoreService,
+    private store: Store<State>
   ) {
     this.dialogData = data;
   }
 
   ngOnInit(): void {
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.getRequestInformation();
   }
 

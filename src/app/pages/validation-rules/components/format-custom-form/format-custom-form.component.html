@@ -4,7 +4,8 @@
   *ngIf="{
     expressionDescriptionLeft: expressionDescriptionLeft$ | async,
     expressionDescriptionRight: expressionDescriptionRight$ | async,
-    dataSets: dataSets$ | async
+    dataSets: dataSets$ | async,
+    translations: translations$ | async,
   } as params"
 >
   <div class="col-12">
@@ -25,10 +26,10 @@
       </mat-form-field> -->
 
       <mat-form-field class="w-100" appearance="fill">
-        <mat-label>{{ 'Datasets' | translate }}</mat-label>
+        <mat-label>{{ params?.translations['Datasets'] || 'Datasets'  }}</mat-label>
         <input
           type="text"
-          placeholder="{{ 'Search' | translate }}"
+          placeholder="{{ params?.translations['Search'] || 'Search' }}"
           [required]="true"
           matInput
           autocomplete="off"
@@ -61,7 +62,7 @@
           (selectedIndexChange)="selectedTab.setValue($event)"
         >
           <mat-tab
-            label="{{ 'Create' | translate }} / {{ 'Update' | translate }}"
+            label="{{ params?.translations['Create'] || 'Create' }} / {{ params?.translations['Update'] || 'Update' }}"
           >
             <div class="p-2" *ngIf="selectedTab.value === 0">
               <div class="w-100 mb-2 mt-2 d-flex justify-content-end">
@@ -70,7 +71,7 @@
                   (click)="onClear($event)"
                   class="mr-2"
                 >
-                  {{ 'Clear' | translate }}
+                  {{ params?.translations['Clear'] || 'Clear' }}
                 </button>
                 <button
                   [disabled]="
@@ -96,12 +97,12 @@
                     )
                   "
                 >
-                  {{ 'Send' | translate }}
+                  {{ params?.translations['Send'] || 'Send' }}
                 </button>
               </div>
               <div class="validation-rule-form-container rule-form-create">
                 <mat-form-field class="w-100">
-                  <mat-label>{{ 'Name' | translate }}</mat-label>
+                  <mat-label>{{ params?.translations['Name'] || 'Name' }}</mat-label>
                   <input
                     required
                     name="name"
@@ -112,26 +113,26 @@
                 </mat-form-field>
 
                 <mat-form-field class="w-100">
-                  <mat-label>{{ 'Short name' | translate }}</mat-label>
+                  <mat-label>{{ params?.translations['Short name'] || 'Short name' }}</mat-label>
                   <input
                     [(ngModel)]="shortName"
                     matInput
                     max="50"
-                    placeholder="{{ 'Short name' | translate }}*"
+                    placeholder="{{ params?.translations['Short name'] || 'Short name' }}*"
                   />
                 </mat-form-field>
                 <mat-form-field class="w-100">
-                  <mat-label>{{ 'Description' | translate }}</mat-label>
+                  <mat-label>{{ params?.translations['Description'] || 'Description' }}</mat-label>
                   <textarea [(ngModel)]="description" matInput></textarea>
                 </mat-form-field>
 
                 <mat-form-field class="w-100">
-                  <mat-label>{{ 'Instruction' | translate }}</mat-label>
+                  <mat-label>{{ params?.translations['Instruction'] || 'Instruction' }}</mat-label>
                   <textarea [(ngModel)]="instruction" matInput></textarea>
                 </mat-form-field>
 
                 <mat-form-field class="w-100">
-                  <mat-label>{{ 'Importance' | translate }}</mat-label>
+                  <mat-label>{{ params?.translations['Importance'] || 'Importance' }}</mat-label>
                   <mat-select [(ngModel)]="importance">
                     <mat-option
                       *ngFor="let option of importanceOptions"
@@ -142,7 +143,7 @@
                 </mat-form-field>
 
                 <mat-form-field class="w-100">
-                  <mat-label>{{ 'Period type' | translate }}</mat-label>
+                  <mat-label>{{ params?.translations['Period type'] || 'Period type' }}</mat-label>
                   <mat-select [(ngModel)]="periodType">
                     <mat-option
                       *ngFor="let option of periodTypes"
@@ -157,20 +158,20 @@
                   class="w-100"
                   style="background-color: #36e1f2; padding: 2px 5px"
                 >
-                  <h5>{{ 'Left side' | translate }}</h5>
+                  <h5>{{ params?.translations['Left side'] || 'Left side' }}</h5>
                 </div>
                 <div class="left-side">
                   <mat-form-field class="w-100">
-                    <mat-label>{{ 'Description' | translate }}</mat-label>
+                    <mat-label>{{ params?.translations['Description'] || 'Description' }}</mat-label>
                     <input
                       required
                       [(ngModel)]="leftSideDescription"
                       matInput
-                      placeholder="{{ 'Description' | translate }}"
+                      placeholder="{{ params?.translations['Description'] || 'Description' }}"
                     />
                   </mat-form-field>
                   <mat-form-field class="w-100">
-                    <mat-label>{{ 'Expression' | translate }}</mat-label>
+                    <mat-label>{{ params?.translations['Expression'] || 'Expression' }}</mat-label>
                     <textarea
                       required
                       id="left-side-expression"
@@ -232,7 +233,7 @@
                 <br />
 
                 <mat-form-field class="w-100">
-                  <mat-label>{{ 'Operator' | translate }}</mat-label>
+                  <mat-label>{{ params?.translations['Operator'] || 'Operator' }}</mat-label>
                   <mat-select required [(ngModel)]="operator">
                     <mat-option
                       *ngFor="let option of operators"
@@ -247,11 +248,11 @@
                   class="w-100"
                   style="background-color: #3667f2; padding: 2px 5px"
                 >
-                  <h5>{{ 'Right side' | translate }}</h5>
+                  <h5>{{ params?.translations['Right side'] || 'Right side' }}</h5>
                 </div>
                 <div class="right-side">
                   <mat-form-field class="w-100">
-                    <mat-label>{{ 'Description' | translate }}</mat-label>
+                    <mat-label>{{ params?.translations['Description'] || 'Description' }}</mat-label>
                     <input
                       required
                       [(ngModel)]="rightSideDescription"
@@ -261,7 +262,7 @@
                   </mat-form-field>
 
                   <mat-form-field class="w-100">
-                    <mat-label>{{ 'Expression' | translate }}</mat-label>
+                    <mat-label>{{ params?.translations['Expression'] || 'Expression' }}</mat-label>
                     <textarea
                       required
                       id="right-side-expression"
@@ -339,7 +340,7 @@
                       [checked]="true"
                       (change)="getSkipRuleOnFormValidation($event)"
                       >{{
-                        'Skip this rule during form validation' | translate
+                        params?.translations['Skip this rule during form validation'] || 'Skip this rule during form validation'
                       }}</mat-checkbox
                     >
                   </section>
@@ -351,7 +352,7 @@
                   (click)="onClear($event)"
                   class="mr-2"
                 >
-                  {{ 'Clear' | translate }}
+                  {{ params?.translations['Clear'] || 'Clear' }}
                 </button>
                 <button
                   [disabled]="
@@ -377,12 +378,12 @@
                     )
                   "
                 >
-                  {{ 'Send' | translate }}
+                  {{ params?.translations['Send'] || 'Send' }}
                 </button>
               </div>
             </div>
           </mat-tab>
-          <mat-tab label="{{ 'Validation rule' | translate }}">
+          <mat-tab label="{{ params?.translations['Validation rules'] || 'Validation rule' }}">
             <div class="p-2" *ngIf="selectedTab.value === 1">
               <app-validation-rules-list-container
                 (editValidationRule)="onEditValidationRule($event)"

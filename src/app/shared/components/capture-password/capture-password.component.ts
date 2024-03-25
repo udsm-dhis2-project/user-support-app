@@ -4,6 +4,10 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { State } from 'src/app/store/reducers';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-capture-password',
@@ -28,9 +32,13 @@ export class CapturePasswordComponent implements OnInit {
   hide = true;
   hideRepeat = true;
   password: string;
-  constructor() {}
+translations$: Observable<any>;
+  constructor(
+    private store: Store<State>
+  ) {}
 
   ngOnInit() {
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.password = this.configurations?.usersSettings?.defaultPassword;
     this.changePassword.get('password').setValue(this.password);
     this.changePassword.get('repeatPassword').setValue(this.password);

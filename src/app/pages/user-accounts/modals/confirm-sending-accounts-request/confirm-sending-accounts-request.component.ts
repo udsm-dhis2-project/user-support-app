@@ -1,5 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { State } from 'src/app/store/reducers';
 
 @Component({
   selector: 'app-confirm-sending-accounts-request',
@@ -7,12 +10,16 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./confirm-sending-accounts-request.component.css'],
 })
 export class ConfirmSendingAccountsRequestComponent implements OnInit {
+translations$: Observable<any>;
   constructor(
     private dialogRef: MatDialogRef<ConfirmSendingAccountsRequestComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private store: Store<State>
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(
+
+  ): void {}
 
   onConfirm(event: Event): void {
     event.stopPropagation();

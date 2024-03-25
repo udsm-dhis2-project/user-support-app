@@ -12,6 +12,10 @@ import { Textbox } from 'src/app/shared/modules/form/models/text-box.model';
 import { removeDuplicates } from '../../../../shared/helpers/util.helper';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmSendingAccountsRequestComponent } from '../../modals/confirm-sending-accounts-request/confirm-sending-accounts-request.component';
+import { Observable } from 'rxjs';
+import { State } from 'src/app/store/reducers';
+import { Store } from '@ngrx/store';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-request-user-accounts',
@@ -27,6 +31,7 @@ export class RequestUserAccountsComponent implements OnInit {
   formData: any = {};
   formDataToStoreLocally: any[] = [];
   onEditing: boolean = false;
+  translations$: Observable<any>;
 
   isDemographicFormValid: boolean = false;
   isAccessControlFormValid: boolean = false;
@@ -80,10 +85,12 @@ export class RequestUserAccountsComponent implements OnInit {
     private messageAndDataStoreService: MessagesAndDatastoreService,
     private _snackBar: MatSnackBar,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private store: Store<State>
   ) { }
 
   ngOnInit(): void {
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.configurations$ = this.dataStoreService.getUserSupportConfigurations();
 
     // const storedUsersData = localStorage.getItem('usersToCreate');

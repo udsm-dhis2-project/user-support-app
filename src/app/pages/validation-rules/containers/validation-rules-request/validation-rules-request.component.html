@@ -1,4 +1,8 @@
-<div class="w-100">
+<div class="w-100"
+*ngIf="{
+  translations: translations$ | async,
+} as params"
+>
   <div
     class="w-100"
     *ngIf="
@@ -9,7 +13,7 @@
   >
     <mat-tab-group>
       <mat-tab
-        label="{{ 'Requests' | translate }}"
+        label="{{ params?.translations['Requests'] || 'Requests'  }}"
         *ngIf="currentUser?.keyedAuthorities['ALL']"
       >
         <ng-template matTabContent>
@@ -19,7 +23,7 @@
         </ng-template>
       </mat-tab>
       <mat-tab
-        label="{{ 'Requesting' | translate }}"
+        label="{{ params?.translations['Requesting'] || 'Requesting' }}"
         *ngIf="currentUser?.keyedAuthorities['ALL']"
       >
         <ng-template matTabContent>
@@ -57,6 +61,6 @@
     role="alert"
     *ngIf="!canRequest && !canApprove"
   >
-    {{ 'You do not access to request or approve validation rules' | translate }}
+    {{ params?.translations['You do not access to request or approve validation rules'] || 'You do not access to request or approve validation rules' }}
   </div>
 </div>

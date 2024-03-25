@@ -14,6 +14,9 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatRadioChange } from '@angular/material/radio';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { flatten } from 'lodash';
+import { State } from 'src/app/store/reducers';
+import { Store } from '@ngrx/store';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-users-list',
@@ -38,17 +41,19 @@ export class UsersListComponent implements OnInit {
   filteredOptions: Observable<string[]>;
   selectedLevel: number;
   accountStatus: any;
-
+  translations$: Observable<any>;
   constructor(
     private usersDataService: UsersDataService,
     private dialog: MatDialog,
     private messageAndDataStoreService: MessagesAndDatastoreService,
     private _snackBar: MatSnackBar,
-    private dataStoreService: DataStoreDataService
+    private dataStoreService: DataStoreDataService,
+    private store: Store<State>
   ) {}
 
   ngOnInit(): void {
     this.options = this.levels;
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.configurations$ = this.dataStoreService.getUserSupportConfigurations();
     this.filteredOptions = this.ouLevelsControl.valueChanges.pipe(
       startWith(''),

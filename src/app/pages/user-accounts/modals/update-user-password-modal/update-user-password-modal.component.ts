@@ -5,6 +5,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { State } from 'src/app/store/reducers';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-update-user-password-modal',
@@ -27,12 +31,16 @@ export class UpdateUserPasswordModalComponent implements OnInit {
   hide = true;
   hideRepeat = true;
   password: string;
+translations$: Observable<any>;
   constructor(
     private matDialogRef: MatDialogRef<UpdateUserPasswordModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private store: Store<State>
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.translations$ = this.store.select(getCurrentTranslations);
+  }
 
   get passwordInput() {
     const pwd = this.changePassword.get('password')?.value;

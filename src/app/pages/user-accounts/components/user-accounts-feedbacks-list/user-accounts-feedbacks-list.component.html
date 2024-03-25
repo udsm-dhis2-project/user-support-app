@@ -1,6 +1,6 @@
 <div
   class="requests-list-container"
-  *ngIf="{ allDataForUserSupport: allDataForUserSupport$ | async } as params"
+  *ngIf="{ allDataForUserSupport: allDataForUserSupport$ | async, translations: translations$ | async } as params"
 >
   <mat-progress-bar
     mode="indeterminate"
@@ -9,7 +9,7 @@
   <div class="p-2">
     <div class="w-100 mt-2">
       <mat-form-field class="w-50">
-        <mat-label>{{ 'Search' | translate }} </mat-label>
+        <mat-label>{{ params?.translations['Search'] || 'Search' }} </mat-label>
         <mat-icon matPrefix>search</mat-icon>
         <input matInput [(ngModel)]="searchingText" />
       </mat-form-field>
@@ -18,10 +18,10 @@
       <table class="table table-striped table-bordered mat-elevation-z1 p-2">
         <thead class="custom-header-bg">
           <tr>
-            <th style="width: 15px">{{ 'SN' | translate }}</th>
-            <th>{{ 'Request' | translate }}</th>
-            <th>{{ 'Date' | translate }}</th>
-            <th style="width: 200px">{{ 'Actions' | translate }}</th>
+            <th style="width: 15px">{{ params?.translations['SN'] || 'SN' }}</th>
+            <th>{{ params?.translations['Request'] || 'Request' }}</th>
+            <th>{{ params?.translations['Date'] || 'Date' }}</th>
+            <th style="width: 200px">{{ params?.translations['Actions'] || 'Actions' }}</th>
           </tr>
         </thead>
         <tbody *ngIf="params?.allDataForUserSupport">
@@ -65,8 +65,8 @@
                     (click)="toggleViewMore($event, dataRow)"
                   >
                     {{
-                      (moreOpenedDetails[dataRow?.id] ? 'Back' : 'View Details')
-                        | translate
+                      (moreOpenedDetails[dataRow?.id] ? params?.translations['Back'] || 'Back' : params?.translations['View Details'] || 'View Details')
+                   
                     }}
                   </button>
                 </td>
@@ -109,7 +109,7 @@
                           mat-stroked-button
                           class="btn-success mt-5 ml-2"
                         >
-                          {{ 'Approve' | translate }}
+                          {{ params?.translations['Approve'] || 'Approve' }}
                         </button>
                         <button
                           (click)="onOpenRejectModal($event, dataRow)"
@@ -140,7 +140,7 @@
             <tr>
               <td colspan="100%">
                 <div class="alert alert-warning" role="alert">
-                  {{ 'No Request is available' | translate }}
+                  {{ params?.translations['No Request is available'] || 'No Request is available' }}
                 </div>
               </td>
             </tr>

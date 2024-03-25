@@ -1,8 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { UsersDataService } from 'src/app/core/services/users.service';
 import { FormValue } from 'src/app/shared/modules/form/models/form-value.model';
 import { Textbox } from 'src/app/shared/modules/form/models/text-box.model';
+import { State } from 'src/app/store/reducers';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-username-form-field',
@@ -22,9 +25,11 @@ export class UsernameFormFieldComponent implements OnInit {
   proposedUsername: string;
   usernameExist: boolean = false;
   hasEmptySpace: boolean = false;
-  constructor(private usersDataService: UsersDataService) {}
+  translations$: Observable<any>;
+  constructor(private usersDataService: UsersDataService, private store: Store<State>) {}
 
   ngOnInit(): void {
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.createUsernameField();
     this.potentialUsernames = [1, 2, 3].map((key) => {
       return {

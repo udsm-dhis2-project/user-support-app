@@ -13,6 +13,7 @@ export class RequestedValidationRulesComponent implements OnInit {
   @Input() currentUser: any;
   validationRulesRequests$: Observable<any[]>;
   detailedRequests: any = {};
+translations$: Observable<any>;
   constructor(
     private dataStoreService: DataStoreDataService,
     private dialog: MatDialog

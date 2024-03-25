@@ -156,7 +156,7 @@
     <div class="col-md-6 col-sm-12 col-sx-12">
       <mat-card class="mb-3">
         <mat-card-header>
-          <mat-card-title>User groups</mat-card-title>
+          <mat-card-title>{{params?.translations['User groups'] || 'User groups'}}</mat-card-title>
           <mat-card-subtitle></mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
@@ -197,7 +197,7 @@
                         mat-menu-item
                       >
                         <mat-icon>edit</mat-icon>
-                        Edit
+                        {{params?.translations['Edit'] || "Edit"}}
                       </button>
                       <button
                         mat-menu-item
@@ -206,7 +206,7 @@
                         "
                       >
                         <mat-icon>delete</mat-icon>
-                        Delete
+                        {{params?.translations['Delete'] || 'Delete'}}
                       </button>
                     </mat-menu>
                   </div>
@@ -238,7 +238,7 @@
 
       <mat-card class="mb-3">
         <mat-card-header class="mb-3">
-          <mat-card-title>Translations</mat-card-title>
+          <mat-card-title>{{params?.translations['Translations'] || 'Translations'}}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <div class="row">
@@ -246,7 +246,7 @@
               <div class="row">
                 <div class="col-md-8 col-sm-12 col-sx-12">
                   <mat-form-field>
-                    <mat-label>Languages</mat-label>
+                    <mat-label>{{params?.translations['Languages'] || 'Languages'}}</mat-label>
                     <mat-select
                       [value]="params?.configurations?.defaultLocale"
                       (selectionChange)="getSelectedLanguage($event)"
@@ -276,7 +276,7 @@
                           params?.selectedSettingsLanguageKey
                         )
                       "
-                      >Is default?</mat-checkbox
+                      >{{params?.translations['Is default?'] || 'Is default?'}}</mat-checkbox
                     >
                   </section>
                 </div>

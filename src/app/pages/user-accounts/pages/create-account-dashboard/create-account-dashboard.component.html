@@ -1,10 +1,12 @@
-<div class="row" *ngIf="{ configurations: configurations$ | async } as params">
+<div class="row" *ngIf="{ configurations: configurations$ | async,
+translations: translations$ | async
+} as params">
   <div class="col-12 d-flex align-items-center mb-3">
     <button mat-flat-button routerLink="/user-accounts/list">
       <mat-icon>arrow_back</mat-icon>
-      <span class="ml-2">{{ 'BACK TO USERS LIST' | translate }}</span>
+      <span class="ml-2">{{ params?.translations['BACK TO USERS LIST'] || 'BACK TO USERS LIST' }}</span>
     </button>
-    <div class="ml-3 report-title">{{ 'New User Request' | translate }}</div>
+    <div class="ml-3 report-title">{{ params?.translations['New User Request'] || 'New User Request' }}</div>
   </div>
   <hr />
   <mat-progress-bar

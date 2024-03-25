@@ -10,6 +10,8 @@ import { ValidationRulesService } from 'src/app/core/services/validation-rules.s
 import { DataelementsService } from 'src/app/core/services/dataelements.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { DataSetsService } from 'src/app/core/services/dataset.service';
+import { Store } from '@ngrx/store';
+import { State } from 'src/app/store/reducers';
 
 @Component({
   selector: 'app-format-custom-form',
@@ -94,6 +96,7 @@ export class FormatCustomFormComponent implements OnInit {
   curretOperatorId: string;
   selectedTab = new UntypedFormControl(0);
   currentuser$: Observable<any>;
+translations$: Observable<any>;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -101,7 +104,8 @@ export class FormatCustomFormComponent implements OnInit {
     private metadataExpressionDescriptionService: MetadataDescriptionService,
     private validationRuleService: ValidationRulesService,
     private dataElementService: DataelementsService,
-    private dataSetsService: DataSetsService
+    private dataSetsService: DataSetsService,
+    private store: Store<State>
   ) {}
 
   ngOnInit(): void {

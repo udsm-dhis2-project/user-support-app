@@ -1,5 +1,10 @@
+<div
+*ngIf="{
+  translations: translations$ | async,
+} as params"
+>
 <p>
-  {{ 'Proposed username' | translate }} <b>{{ proposedUsername }}</b>
+  {{ params?.translations['Proposed username'] || 'Proposed username' }} <b>{{ proposedUsername }}</b>
   <mat-progress-bar
     mode="indeterminate"
     *ngIf="!proposedUsername"
@@ -15,3 +20,4 @@
   [fields]="[usernameField]"
   (formUpdate)="onFormUpdate($event)"
 ></app-form>
+</div>

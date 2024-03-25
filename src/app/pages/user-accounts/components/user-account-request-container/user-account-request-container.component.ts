@@ -2,6 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { OrgUnitsProvisionalService } from 'src/app/core/services/organisationunits.service';
 import { orderBy } from 'lodash';
+import { Store } from '@ngrx/store';
+import { State } from 'src/app/store/reducers';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-user-account-request-container',
@@ -13,9 +16,13 @@ export class UserAccountRequestContainerComponent implements OnInit {
   @Input() systemConfigs: any;
   @Input() configurations: any;
   levels$: Observable<any>;
-  constructor(private orgUnitPrivisionalService: OrgUnitsProvisionalService) {}
+translations$: Observable<any>;
+  constructor(private orgUnitPrivisionalService: OrgUnitsProvisionalService,
+    private store: Store<State>
+    ) {}
 
   ngOnInit(): void {
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.levels$ = this.orgUnitPrivisionalService.getOrgUnitLevels(1).pipe(
       map((orgUnitLevels: any) => {
         return orderBy(orgUnitLevels, ['level'], ['asc']);

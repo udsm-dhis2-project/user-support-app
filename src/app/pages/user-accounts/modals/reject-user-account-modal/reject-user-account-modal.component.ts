@@ -2,11 +2,14 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
+import { Store } from '@ngrx/store';
 import { Observable, map, of, zip } from 'rxjs';
 import { ApproveFeedbackService } from 'src/app/core/services/approve-feedback.service';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
 import { UsersDataService } from 'src/app/core/services/users.service';
+import { State } from 'src/app/store/reducers';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-reject-user-account-modal',
@@ -23,13 +26,15 @@ export class RejectUserAccountModalComponent {
   missingKey: boolean = false;
   reasonForRejection: string = '';
   dataSetsCategoriesPayload$: Observable<any[]>;
+translations$: Observable<any>;
   constructor(
     private dialogRef: MatDialogRef<RejectUserAccountModalComponent>,
     @Inject(MAT_DIALOG_DATA) data,
     private messageAndDataStoreService: MessagesAndDatastoreService,
     private _snackBar: MatSnackBar,
     private dataStoreService: DataStoreDataService,
-    private usersDataService: UsersDataService
+    private usersDataService: UsersDataService,
+    private store: Store<State>
   ) {
     this.dialogData = data;
   }
@@ -39,6 +44,7 @@ export class RejectUserAccountModalComponent {
   }
 
   ngOnInit(): void {
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.messageConversation$ =
       this.messageAndDataStoreService.searchMessageConversationByTicketNumber(
         this.dialogData?.ticketNumber

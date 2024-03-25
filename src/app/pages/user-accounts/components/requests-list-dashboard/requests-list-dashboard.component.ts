@@ -1,11 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
+import { Store } from '@ngrx/store';
 import { Observable, zip } from 'rxjs';
 import { DataStoreDataService } from 'src/app/core/services/datastore.service';
 import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
 import { UsersDataService } from 'src/app/core/services/users.service';
 import { SharedConfirmationModalComponent } from 'src/app/shared/modals/shared-confirmation-modal/shared-confirmation-modal.component';
+import { State } from 'src/app/store/reducers';
+import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 
 @Component({
   selector: 'app-requests-list-dashboard',
@@ -25,15 +28,19 @@ export class RequestsListDashboardComponent implements OnInit {
   alertMessages: any = {};
   searchingText: string;
   deletingRequest: boolean = false;
+  translations$: Observable<any>;
+
   constructor(
     private dataStoreService: DataStoreDataService,
     private messageAndDataStoreService: MessagesAndDatastoreService,
     private dialog: MatDialog,
     private usersDataService: UsersDataService,
-    private httpClient: NgxDhis2HttpClientService
+    private httpClient: NgxDhis2HttpClientService,
+    private store: Store<State>
   ) {}
 
   ngOnInit(): void {
+    this.translations$ = this.store.select(getCurrentTranslations);
     this.getRequests();
   }
 

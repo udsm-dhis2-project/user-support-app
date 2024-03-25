@@ -5,6 +5,9 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { State } from 'src/app/store/reducers';
 
 @Component({
   selector: 'app-validation-rules-request',
@@ -17,7 +20,8 @@ export class ValidationRulesRequestComponent implements OnInit, OnChanges {
   @Input() systemConfigs: any;
   canRequest: boolean = false;
   canApprove: boolean = false;
-  constructor() {}
+translations$: Observable<any>;
+  constructor(private store: Store<State>) {}
 
   ngOnInit(): void {}
   ngOnChanges(changes: SimpleChanges): void {

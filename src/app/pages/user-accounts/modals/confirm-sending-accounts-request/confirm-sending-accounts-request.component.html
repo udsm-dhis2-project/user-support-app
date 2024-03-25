@@ -1,12 +1,17 @@
-<h2 mat-dialog-title color="primary">{{ data?.header | translate }}</h2>
+<div
+*ngIf="{
+  translations: translations$ | async,
+} as params"
+>
+<h2 mat-dialog-title color="primary">{{ params?.translations[data?.header] || data?.header }}</h2>
 <mat-dialog-content class="mat-typography">
   <p>
-    {{ data?.message | translate }}
+    {{ params?.translations[data?.message] || data?.message }}
   </p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-stroked-button mat-dialog-close>
-    {{ 'Cancel' | translate }}
+    {{ params?.translations['Cancel'] || 'Cancel' }}
   </button>
   <button
     mat-flat-button
@@ -15,6 +20,7 @@
     [mat-dialog-close]="true"
     (click)="onConfirm($event)"
   >
-    {{ 'Confirm' | translate }}
+    {{ params?.translations['Confirm'] || 'Confirm' }}
   </button>
 </mat-dialog-actions>
+</div>

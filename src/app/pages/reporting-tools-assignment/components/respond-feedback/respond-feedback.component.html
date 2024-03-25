@@ -127,7 +127,7 @@
       (click)="onClose($event)"
       *ngIf="params?.dataStoreInformation && params?.dataStoreInformation?.type"
     >
-      {{ 'Cancel' | translate }}
+      {{ 'Cancel' }}
     </button>
     <button
       *ngIf="params?.dataStoreInformation && params?.dataStoreInformation?.type"
@@ -136,7 +136,7 @@
       color="primary"
       (click)="onUpdateUser($event, params?.dataStoreInformation)"
     >
-      {{ 'Confirm' | translate }}
+      {{ 'Confirm' }}
     </button>
   </mat-dialog-actions> -->
 </ng-container>
