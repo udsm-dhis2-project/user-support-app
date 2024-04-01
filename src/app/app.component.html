@@ -20,7 +20,9 @@
                   <!-- TODO: Add loader before display found user display name -->
                   <mat-list-item role="listitem" class="welcome-user-item">
                     <button mat-icon-button class="current-user-name">
-                      <mat-icon style="margin-bottom: -6px" color="primary">person</mat-icon>
+                      <mat-icon style="margin-bottom: -6px" color="primary"
+                        >person</mat-icon
+                      >
                       {{ params?.currentUser?.displayName }}
                     </button>
                   </mat-list-item>
@@ -43,7 +45,10 @@
                     routerLinkActive="active-menu-item"
                     [routerLink]="'reporting-tools/request'"
                     >{{
-                      params?.translations['Form requests'] || 'Form requests'
+                      params?.translations &&
+                      params?.translations['Form requests']
+                        ? params?.translations['Form requests']
+                        : 'Form requests'
                     }}</mat-list-item
                   >
 
@@ -80,7 +85,10 @@
                     routerLinkActive="active-menu-item"
                     [routerLink]="'user-accounts'"
                     >{{
-                      params?.translations['User accounts'] || 'User accounts'
+                      params?.translations &&
+                      params?.translations['User accounts']
+                        ? params?.translations['User accounts']
+                        : 'User accounts'
                     }}</mat-list-item
                   >
 
@@ -127,7 +135,9 @@
                     routerLinkActive="active-menu-item"
                     [routerLink]="'settings'"
                     >{{
-                      params?.translations['Settings'] || 'Settings'
+                      params?.translations && params?.translations['Settings']
+                        ? params?.translations['Settings']
+                        : 'Settings'
                     }}</mat-list-item
                   >
                 </mat-list>
@@ -175,7 +185,10 @@
                     "
                     [routerLink]="'reporting-tools/request'"
                     >{{
-                      params?.translations['Form requests'] || 'Form requests'
+                      params?.translations &&
+                      params?.translations['Form requests']
+                        ? params?.translations['Form requests']
+                        : 'Form requests'
                     }}</mat-list-item
                   >
                   <!-- <mat-list-item
@@ -220,7 +233,10 @@
                     "
                     [routerLink]="'user-accounts'"
                     >{{
-                      params?.translations['User account'] || 'User account'
+                      params?.translations &&
+                      params?.translations['User account']
+                        ? params?.translations['User account']
+                        : 'User account'
                     }}</mat-list-item
                   >
                   <!-- <mat-list-item
@@ -255,7 +271,9 @@
                     routerLinkActive="active-menu-item"
                     [routerLink]="'settings'"
                     >{{
-                      params?.translations['Settings'] || 'Settings'
+                      params?.translations && params?.translations['Settings']
+                        ? params?.translations['Settings']
+                        : 'Settings'
                     }}</mat-list-item
                   >
                 </mat-list>

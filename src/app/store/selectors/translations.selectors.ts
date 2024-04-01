@@ -7,7 +7,7 @@ import {
 
 export const translationsState = createSelector(
   getRootState,
-  (state: State) => state.translations 
+  (state: State) => state.translations
 );
 
 export const {
