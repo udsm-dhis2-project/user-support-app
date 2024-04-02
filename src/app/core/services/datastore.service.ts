@@ -25,6 +25,7 @@ export class DataStoreDataService {
       datasetClosedDateAttribute: { id: 'wTO29uRscGn' },
       defaultToRequest: true,
       defaultLocale: 'en',
+      useTier2: false,
       keywordsKeys: {
         addMessageFormRequest: 'Please add the following datasets on org unit',
         removeMessageFormRequest:
@@ -140,6 +141,8 @@ export class DataStoreDataService {
         'Clear',
         'Confirming',
         'Validation Rules request',
+        'No potential duplicate',
+        'View potential duplicates',
       ],
       languages: [
         {
