@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Potential user accounts duplicates</h2>
+<mat-dialog-content class="mat-typography">
+  <table class="table mt-2">
+    <thead>
+      <tr>
+        <th style="width: 30px">SN</th>
+        <th>Names</th>
+        <th>Email</th>
+        <th>Phone number</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of data; let count = index">
+        <td>
+          {{ count + 1 }}
+        </td>
+        <td>
+          {{ user?.firstName }}
+          {{ user?.surname }}
+        </td>
+        <td>{{ user?.email }}</td>
+        <td>
+          {{ user?.phoneNumber }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

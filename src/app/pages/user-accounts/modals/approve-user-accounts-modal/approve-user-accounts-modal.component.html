@@ -98,19 +98,32 @@
                     "
                     mat-stroked-button
                     (click)="
-                      onTier2Approve($event, user, params?.dataStoreInformation)
+                      onAccountApprove(
+                        $event,
+                        user,
+                        params?.dataStoreInformation,
+                        dialogData?.configurations?.useTier2
+                      )
                     "
                   >
                     {{
-                      dialogData?.isFeedbackRecepient
+                      dialogData?.isFeedbackRecepient &&
+                      dialogData?.configurations?.useTier2
                         ? 'First confirmation'
+                        : !dialogData?.configurations?.useTier2
+                        ? 'Select'
                         : 'Confirm'
                     }}
                   </button>
                 </td>
               </tr>
               <tr
-                *ngIf="user?.status == 'APPROVED'"
+                *ngIf="
+                  ((user?.status == 'APPROVED' &&
+                    dialogData?.configurations?.useTier2) ||
+                    !dialogData?.configurations?.useTier2) &&
+                  selectedRequestForApproval?.referenceId === user?.referenceId
+                "
                 [ngClass]="{
                   'created-user': user?.status == 'CREATED',
                   'approved-user': user?.status == 'APPROVED'
@@ -126,21 +139,82 @@
                   ></app-username-form-field>
                 </td>
                 <td>
-                  <button
-                    *ngIf="dialogData?.isFeedbackRecepient"
-                    [disabled]="
-                      user?.status === 'CREATED' ||
-                      user?.status !== 'APPROVED' ||
-                      !isCurrentUsernameValid ||
-                      !currentUsername
-                    "
-                    mat-stroked-button
-                    (click)="
-                      onApprove($event, user, params?.dataStoreInformation)
+                  <mat-progress-bar
+                    mode="indeterminate"
+                    *ngIf="checkingForPotentialDuplicates"
+                  ></mat-progress-bar>
+                  <div class="d-flex justify-content-end">
+                    <button
+                      [disabled]="
+                        checkingForPotentialDuplicates ||
+                        (potentialDuplicatesByUserRequest[user?.referenceId] &&
+                          potentialDuplicatesByUserRequest[user?.referenceId]
+                            ?.length > 0)
+                      "
+                      mat-stroked-button
+                      (click)="onCheckPotentialDuplicate($event, user)"
+                    >
+                      Check duplicate
+                    </button>
+                    <button
+                      mat-stroked-button
+                      class="ml-2"
+                      (click)="
+                        onViewPotentialDuplicates(
+                          $event,
+                          potentialDuplicatesByUserRequest[user?.referenceId]
+                        )
+                      "
+                      *ngIf="
+                        potentialDuplicatesByUserRequest[user?.referenceId] &&
+                        potentialDuplicatesByUserRequest[user?.referenceId]
+                          ?.length > 0
+                      "
+                    >
+                      {{
+                        params?.translations &&
+                        params?.translations['View potential duplicates']
+                          ? params?.translations['View potential duplicates']
+                          : 'View potential duplicates'
+                      }}
+                    </button>
+                    <button
+                      class="ml-2"
+                      *ngIf="dialogData?.isFeedbackRecepient"
+                      [disabled]="
+                        checkingForPotentialDuplicates ||
+                        user?.status === 'CREATED' ||
+                        !isCurrentUsernameValid ||
+                        !currentUsername
+                      "
+                      mat-flat-button
+                      color="primary"
+                      (click)="
+                        onApprove($event, user, params?.dataStoreInformation)
+                      "
+                    >
+                      {{
+                        params?.translations && params?.translations['Confirm']
+                          ? params?.translations['Confirm']
+                          : 'Confirm'
+                      }}
+                    </button>
+                  </div>
+                  <div
+                    class="text-warning text-right"
+                    *ngIf="
+                      potentialDuplicatesByUserRequest[user?.referenceId] &&
+                      potentialDuplicatesByUserRequest[user?.referenceId]
+                        ?.length == 0
                     "
                   >
-                    Confirm
-                  </button>
+                    {{
+                      params?.translations &&
+                      params?.translations['No potential duplicate']
+                        ? params?.translations['No potential duplicate']
+                        : 'No potential duplicate'
+                    }}
+                  </div>
                   <div class="text-danger mt-2">
                     {{ validityCheckMessage }}
                   </div>

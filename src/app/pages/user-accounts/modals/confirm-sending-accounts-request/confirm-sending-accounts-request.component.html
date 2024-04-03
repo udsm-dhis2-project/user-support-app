@@ -1,26 +1,46 @@
 <div
-*ngIf="{
+  *ngIf="{
   translations: translations$ | async,
 } as params"
 >
-<h2 mat-dialog-title color="primary">{{ params?.translations[data?.header] || data?.header }}</h2>
-<mat-dialog-content class="mat-typography">
-  <p>
-    {{ params?.translations[data?.message] || data?.message }}
-  </p>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-stroked-button mat-dialog-close>
-    {{ params?.translations['Cancel'] || 'Cancel' }}
-  </button>
-  <button
-    mat-flat-button
-    class="ml-2"
-    color="primary"
-    [mat-dialog-close]="true"
-    (click)="onConfirm($event)"
-  >
-    {{ params?.translations['Confirm'] || 'Confirm' }}
-  </button>
-</mat-dialog-actions>
+  <h2 mat-dialog-title color="primary">
+    {{
+      params?.translations && data?.header && params?.translations[data?.header]
+        ? params?.translations[data?.header]
+        : data?.header
+    }}
+  </h2>
+  <mat-dialog-content class="mat-typography">
+    <p>
+      {{
+        params?.translations &&
+        data?.message &&
+        params?.translations[data?.message]
+          ? params?.translations[data?.message]
+          : data?.message
+      }}
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-stroked-button mat-dialog-close>
+      {{
+        params?.translations && params?.translations['Cancel']
+          ? params?.translations['Cancel']
+          : 'Cancel'
+      }}
+    </button>
+    <button
+      mat-flat-button
+      class="ml-2"
+      color="primary"
+      [mat-dialog-close]="true"
+      (click)="onConfirm($event)"
+    >
+      {{
+        params?.translations && params?.translations['Confirm']
+          ? params?.translations['Confirm']
+          : 'Confirm'
+      }}
+    </button>
+  </mat-dialog-actions>
 </div>

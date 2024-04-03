@@ -1,5 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+} from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { omit, flatten } from 'lodash';
 import { Observable } from 'rxjs';
@@ -8,6 +12,7 @@ import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-
 import { UsersDataService } from 'src/app/core/services/users.service';
 import { State } from 'src/app/store/reducers';
 import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
+import { DuplicateUserAccountsListModalComponent } from '../duplicate-user-accounts-list-modal/duplicate-user-accounts-list-modal.component';
 
 @Component({
   selector: 'app-approve-user-accounts-modal',
@@ -21,14 +26,18 @@ export class ApproveUserAccountsModalComponent implements OnInit {
   isCurrentUsernameValid: boolean = false;
   currentUsername: string;
   validityCheckMessage: string;
-translations$: Observable<any>;
+  translations$: Observable<any>;
+  selectedRequestForApproval: any;
+  checkingForPotentialDuplicates: boolean = false;
+  potentialDuplicatesByUserRequest: any = {};
   constructor(
     private dialogRef: MatDialogRef<ApproveUserAccountsModalComponent>,
     @Inject(MAT_DIALOG_DATA) data,
     private dataStoreDataService: DataStoreDataService,
     private usersDataService: UsersDataService,
     private messageAndDataStoreService: MessagesAndDatastoreService,
-    private store: Store<State>
+    private store: Store<State>,
+    private dialog: MatDialog
   ) {
     this.dialogData = data;
   }
@@ -49,100 +58,110 @@ translations$: Observable<any>;
     this.dialogRef.close();
   }
 
-  onTier2Approve(event: Event, userToApprove: any, request: any): void {
+  onAccountApprove(
+    event: Event,
+    userToApprove: any,
+    request: any,
+    shouldUseTier2: boolean
+  ): void {
     event.stopPropagation();
-    this.saving = true;
+    if (shouldUseTier2) {
+      this.saving = true;
 
-    this.messageAndDataStoreService
-      .searchMessageConversationByTicketNumber(
-        this.dialogData?.request?.ticketNumber
-      )
-      .subscribe((response) => {
-        if (response && response != 'none') {
-          const messageConversation = response;
-          const data = {
-            id: request?.id,
-            method: 'POST',
-            userPayload: null,
-            messageConversation: {
-              ...messageConversation,
-              approvalMessage: `I do confirm account for ${
-                userToApprove?.firstName + ' ' + userToApprove?.surname
-              } whose phone number is ${
-                userToApprove?.phoneNumber
-              } should be created`,
-            },
-            payload: {
-              ...this.dialogData?.request,
-              payload: request?.payload?.map((user) => {
-                if (user?.referenceId === userToApprove?.referenceId) {
-                  return {
-                    ...user,
-                    status: 'APPROVED',
-                    password:
-                      this.dialogData?.configurations?.usersSettings
-                        ?.defaultPassword,
-                  };
-                } else {
-                  return user;
-                }
-              }),
-            },
-          };
-
-          this.usersDataService.approveChanges(data).subscribe((response) => {
-            if (response) {
-              this.getRequestInformation();
-              this.saving = false;
-            }
-          });
-        } else {
-          const messageBody = {
-            subject: request?.message?.subject,
-            users: [
-              {
-                id: request?.user?.id,
-                username: request?.user?.username,
-                type: 'user',
+      this.messageAndDataStoreService
+        .searchMessageConversationByTicketNumber(
+          this.dialogData?.request?.ticketNumber
+        )
+        .subscribe((response) => {
+          if (response && response != 'none') {
+            const messageConversation = response;
+            const data = {
+              id: request?.id,
+              method: 'POST',
+              userPayload: null,
+              messageConversation: {
+                ...messageConversation,
+                approvalMessage: `I do confirm account for ${
+                  userToApprove?.firstName + ' ' + userToApprove?.surname
+                } whose phone number is ${
+                  userToApprove?.phoneNumber
+                } should be created`,
               },
-            ],
-            userGroups: [],
-            organisationUnits: [],
-            text: `Approval for a request account message sent from you \n\n ${request?.message?.message}`,
-            attachments: [],
-          };
+              payload: {
+                ...this.dialogData?.request,
+                payload: request?.payload?.map((user) => {
+                  if (user?.referenceId === userToApprove?.referenceId) {
+                    return {
+                      ...user,
+                      status: 'APPROVED',
+                      password:
+                        this.dialogData?.configurations?.usersSettings
+                          ?.defaultPassword,
+                    };
+                  } else {
+                    return user;
+                  }
+                }),
+              },
+            };
 
-          const data = {
-            id: request?.id,
-            method: 'POST',
-            userPayload: null,
-            messageBody: messageBody,
-            payload: {
-              ...this.dialogData?.request,
-              payload: request?.payload?.map((user) => {
-                if (user?.referenceId === userToApprove?.referenceId) {
-                  return {
-                    ...user,
-                    status: 'APPROVED',
-                    password:
-                      this.dialogData?.configurations?.usersSettings
-                        ?.defaultPassword,
-                  };
-                } else {
-                  return user;
-                }
-              }),
-            },
-          };
+            this.usersDataService.approveChanges(data).subscribe((response) => {
+              if (response) {
+                this.getRequestInformation();
+                this.saving = false;
+              }
+            });
+          } else {
+            const messageBody = {
+              subject: request?.message?.subject,
+              users: [
+                {
+                  id: request?.user?.id,
+                  username: request?.user?.username,
+                  type: 'user',
+                },
+              ],
+              userGroups: [],
+              organisationUnits: [],
+              text: `Approval for a request account message sent from you \n\n ${request?.message?.message}`,
+              attachments: [],
+            };
 
-          this.usersDataService.approveChanges(data).subscribe((response) => {
-            if (response) {
-              this.getRequestInformation();
-              this.saving = false;
-            }
-          });
-        }
-      });
+            const data = {
+              id: request?.id,
+              method: 'POST',
+              userPayload: null,
+              messageBody: messageBody,
+              payload: {
+                ...this.dialogData?.request,
+                payload: request?.payload?.map((user) => {
+                  if (user?.referenceId === userToApprove?.referenceId) {
+                    return {
+                      ...user,
+                      status: 'APPROVED',
+                      password:
+                        this.dialogData?.configurations?.usersSettings
+                          ?.defaultPassword,
+                    };
+                  } else {
+                    return user;
+                  }
+                }),
+              },
+            };
+
+            this.usersDataService.approveChanges(data).subscribe((response) => {
+              if (response) {
+                this.getRequestInformation();
+                this.saving = false;
+              }
+            });
+          }
+        });
+    } else {
+      // this.onApprove(null, userToApprove, request);
+      this.selectedRequestForApproval = userToApprove;
+    }
   }
 
   onUpdateUser(event: Event, request: any): void {
@@ -182,7 +201,9 @@ translations$: Observable<any>;
   }
 
   onApprove(event: Event, userToApprove: any, request: any): void {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
     this.saving = true;
     // Create potential usernames
     const countOfUsersRemainedToCreate = (
@@ -203,6 +224,7 @@ translations$: Observable<any>;
       .subscribe((response) => {
         if (response && response != 'none') {
           const messageConversation = response;
+          // console.log('messageConversation', messageConversation);
           const selectedUsername = this.currentUsername;
           if (this.currentUsername) {
             const data = {
@@ -335,7 +357,6 @@ translations$: Observable<any>;
                 }),
               },
             };
-
             this.usersDataService.approveChanges(data).subscribe((response) => {
               if (response) {
                 this.currentUsername = null;
@@ -490,7 +511,6 @@ translations$: Observable<any>;
                 }),
               },
             };
-
             this.usersDataService.approveChanges(data).subscribe((response) => {
               if (response) {
                 this.currentUsername = null;
@@ -528,5 +548,28 @@ translations$: Observable<any>;
 
   onGetvalidityCheckMessage(message: string): void {
     this.validityCheckMessage = message;
+  }
+
+  onCheckPotentialDuplicate(event: Event, userDetails: any): void {
+    event.stopPropagation();
+    this.checkingForPotentialDuplicates = true;
+    this.usersDataService
+      .getUsersByEmailAndPhoneNumber(
+        userDetails?.email,
+        userDetails?.phoneNumber
+      )
+      .subscribe((potentialDuplicates: any[]) => {
+        this.checkingForPotentialDuplicates = false;
+        this.potentialDuplicatesByUserRequest[userDetails?.referenceId] =
+          potentialDuplicates;
+      });
+  }
+
+  onViewPotentialDuplicates(event: Event, potentialDuplicates: any[]): void {
+    event.stopPropagation();
+    this.dialog.open(DuplicateUserAccountsListModalComponent, {
+      minWidth: '40%',
+      data: potentialDuplicates,
+    });
   }
 }
