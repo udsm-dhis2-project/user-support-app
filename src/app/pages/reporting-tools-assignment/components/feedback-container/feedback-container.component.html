@@ -1,85 +1,48 @@
-<div
-  class="feedback-container"
-  *ngIf="{
+<div class="feedback-container" *ngIf="{
     userSupportKeys: userSupportKeys$ | async,
     orgUnitLevels: orgUnitLevels$ | async,
     translations: translations$ | async
-  } as params"
->
-  <div
-    class="w-100"
-    *ngIf="configurations?.showToggleFeedbackAndRequests && isFeedbackRecepient"
-  >
-    <mat-slide-toggle
-      class="float-right"
-      [color]="color"
-      (click)="toggleSupport($event)"
-      [checked]="showRequest ? true : false"
-    >
+  } as params">
+  <div class="w-100" *ngIf="configurations?.showToggleFeedbackAndRequests && isFeedbackRecepient">
+    <mat-slide-toggle class="float-right" [color]="color" (click)="toggleSupport($event)"
+      [checked]="showRequest ? true : false">
       {{ params?.translations[(showRequest ? 'Feebacks' : 'Requests')] || (showRequest ? 'Feebacks' : 'Requests') }}
     </mat-slide-toggle>
   </div>
-  <div
-    *ngIf="
+  <div *ngIf="
       !isFeedbackRecepient && params?.userSupportKeys && params?.orgUnitLevels
-    "
-  >
-    <mat-tab-group
-      mat-align-tabs="start"
-      (selectedTabChange)="changeTab(selectedTab.value)"
-      [selectedIndex]="selectedTab.value"
-      (selectedIndexChange)="selectedTab.setValue($event)"
-    >
-      <mat-tab
-        label="{{ params?.translations['Organisation units'] || 'Organisation units' }}"
-        *ngIf="
+    ">
+    <mat-tab-group mat-align-tabs="start" (selectedTabChange)="changeTab(selectedTab.value)"
+      [selectedIndex]="selectedTab.value" (selectedIndexChange)="selectedTab.setValue($event)">
+      <mat-tab label="{{ params?.translations['Organisation units'] || 'Organisation units' }}" *ngIf="
           currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
           currentUser?.keyedAuthorities['ALL']
-        "
-      >
+        ">
         <div class="mt-2 p-3">
-          <app-facilities-list
-            [currentUser]="currentUser"
-            [configurations]="configurations"
-            [systemConfigs]="systemConfigs"
-            [orgUnitLevels]="params?.orgUnitLevels"
+          <app-facilities-list [currentUser]="currentUser" [configurations]="configurations"
+            [systemConfigs]="systemConfigs" [orgUnitLevels]="params?.orgUnitLevels"
             [userSupportKeys]="params?.userSupportKeys"
-            (dataStoreChanged)="onDataStoreChange($event)"
-          ></app-facilities-list>
+            (dataStoreChanged)="onDataStoreChange($event)"></app-facilities-list>
         </div>
       </mat-tab>
-      <mat-tab
-        label="{{ params?.translations['Datasets'] || 'Datasets' }}"
-        *ngIf="
+      <mat-tab label="{{ params?.translations['Datasets'] || 'Datasets' }}" *ngIf="
           currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
           currentUser?.keyedAuthorities['ALL']
-        "
-      >
+        ">
         <div class="mt-2">
-          <app-datasets-list
-            [currentUser]="currentUser"
-            [configurations]="configurations"
-            [systemConfigs]="systemConfigs"
-            [userSupportDataStoreKeys]="params?.userSupportKeys"
-            (dataStoreChanged)="onDataStoreChange($event, 'dataset', 2)"
-          ></app-datasets-list>
+          <app-datasets-list [currentUser]="currentUser" [configurations]="configurations"
+            [systemConfigs]="systemConfigs" [userSupportDataStoreKeys]="params?.userSupportKeys"
+            (dataStoreChanged)="onDataStoreChange($event, 'dataset', 2)"></app-datasets-list>
         </div>
       </mat-tab>
-      <mat-tab
-        label="{{ params?.translations['Programs'] || 'Programs' }}"
-        *ngIf="
+      <mat-tab label="{{ params?.translations['Programs'] || 'Programs' }}" *ngIf="
           currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
           currentUser?.keyedAuthorities['ALL']
-        "
-      >
+        ">
         <div class="mt-2">
-          <app-programs-list
-            [currentUser]="currentUser"
-            [configurations]="configurations"
-            [systemConfigs]="systemConfigs"
-            [userSupportDataStoreKeys]="params?.userSupportKeys"
-            (dataStoreChanged)="onDataStoreChange($event, 'program', 3)"
-          ></app-programs-list>
+          <app-programs-list [currentUser]="currentUser" [configurations]="configurations"
+            [systemConfigs]="systemConfigs" [userSupportDataStoreKeys]="params?.userSupportKeys"
+            (dataStoreChanged)="onDataStoreChange($event, 'program', 3)"></app-programs-list>
         </div>
       </mat-tab>
     </mat-tab-group>
@@ -87,22 +50,15 @@
 
   <div *ngIf="isFeedbackRecepient && params?.userSupportKeys">
     <mat-tab-group>
-      <mat-tab
-        label="{{ params?.translations['Feedbacks'] || 'Feebacks' }}"
-        *ngIf="
+      <mat-tab label="{{ params?.translations['Feedbacks'] || 'Feebacks' }}" *ngIf="
           currentUser?.keyedAuthorities['US_FORM_REQUESTS_VIEW'] ||
           currentUser?.keyedAuthorities['US_FORM_APPROVE'] ||
           currentUser?.keyedAuthorities['ALL']
-        "
-      >
+        ">
         <ng-template matTabContent>
           <div class="p-3">
-            <app-feedbacks-list
-              [currentUser]="currentUser"
-              [configurations]="configurations"
-              [systemConfigs]="systemConfigs"
-              [userSupportKeys]="params?.userSupportKeys"
-            >
+            <app-feedbacks-list [currentUser]="currentUser" [configurations]="configurations"
+              [systemConfigs]="systemConfigs" [userSupportKeys]="params?.userSupportKeys">
             </app-feedbacks-list>
           </div>
         </ng-template>
@@ -110,62 +66,37 @@
       <mat-tab label="{{ params.translations['Requesting'] || 'Requesting' }}">
         <ng-template matTabContent>
           <div class="p-3">
-            <mat-tab-group
-              mat-align-tabs="start"
-              (selectedTabChange)="changeTab(selectedTab.value)"
-              [selectedIndex]="selectedTab.value"
-              (selectedIndexChange)="selectedTab.setValue($event)"
-            >
-              <mat-tab
-                label="{{ params?.translations['Organisation units'] || 'Organisation units' }}"
-                *ngIf="
+            <mat-tab-group mat-align-tabs="start" (selectedTabChange)="changeTab(selectedTab.value)"
+              [selectedIndex]="selectedTab.value" (selectedIndexChange)="selectedTab.setValue($event)">
+              <mat-tab label="{{ params?.translations['Organisation units'] || 'Organisation units' }}" *ngIf="
                   currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
                   currentUser?.keyedAuthorities['ALL']
-                "
-              >
+                ">
                 <div class="mt-2 p-3">
-                  <app-facilities-list
-                    [currentUser]="currentUser"
-                    [configurations]="configurations"
-                    [systemConfigs]="systemConfigs"
-                    [orgUnitLevels]="params?.orgUnitLevels"
+                  <app-facilities-list [currentUser]="currentUser" [configurations]="configurations"
+                    [systemConfigs]="systemConfigs" [orgUnitLevels]="params?.orgUnitLevels"
                     [userSupportKeys]="params?.userSupportKeys"
-                    (dataStoreChanged)="onDataStoreChange($event)"
-                  ></app-facilities-list>
+                    (dataStoreChanged)="onDataStoreChange($event)"></app-facilities-list>
                 </div>
               </mat-tab>
-              <mat-tab
-                label="{{ params?.translations['Datasets'] || 'Datasets' }}"
-                *ngIf="
+              <mat-tab label="{{ params?.translations['Datasets'] || 'Datasets' }}" *ngIf="
                   currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
                   currentUser?.keyedAuthorities['ALL']
-                "
-              >
+                ">
                 <div class="mt-2">
-                  <app-datasets-list
-                    [currentUser]="currentUser"
-                    [configurations]="configurations"
-                    [systemConfigs]="systemConfigs"
-                    [userSupportDataStoreKeys]="params?.userSupportKeys"
-                    (dataStoreChanged)="onDataStoreChange($event, 'dataset', 2)"
-                  ></app-datasets-list>
+                  <app-datasets-list [currentUser]="currentUser" [configurations]="configurations"
+                    [systemConfigs]="systemConfigs" [userSupportDataStoreKeys]="params?.userSupportKeys"
+                    (dataStoreChanged)="onDataStoreChange($event, 'dataset', 2)"></app-datasets-list>
                 </div>
               </mat-tab>
-              <mat-tab
-                label="{{ params?.translations['Programs'] || 'Programs' }}"
-                *ngIf="
+              <mat-tab label="{{ params?.translations['Programs'] || 'Programs' }}" *ngIf="
                   currentUser?.keyedAuthorities['US_FORM_REQUEST'] ||
                   currentUser?.keyedAuthorities['ALL']
-                "
-              >
+                ">
                 <div class="mt-2">
-                  <app-programs-list
-                    [currentUser]="currentUser"
-                    [configurations]="configurations"
-                    [systemConfigs]="systemConfigs"
-                    [userSupportDataStoreKeys]="params?.userSupportKeys"
-                    (dataStoreChanged)="onDataStoreChange($event, 'program', 3)"
-                  ></app-programs-list>
+                  <app-programs-list [currentUser]="currentUser" [configurations]="configurations"
+                    [systemConfigs]="systemConfigs" [userSupportDataStoreKeys]="params?.userSupportKeys"
+                    (dataStoreChanged)="onDataStoreChange($event, 'program', 3)"></app-programs-list>
                 </div>
               </mat-tab>
             </mat-tab-group>
@@ -175,12 +106,9 @@
     </mat-tab-group>
   </div>
 
-  <mat-progress-bar
-    mode="indeterminate"
-    *ngIf="
+  <mat-progress-bar mode="indeterminate" *ngIf="
       !params?.userSupportKeys ||
       !params?.userSupportKeys ||
       !params?.orgUnitLevels
-    "
-  ></mat-progress-bar>
+    "></mat-progress-bar>
 </div>

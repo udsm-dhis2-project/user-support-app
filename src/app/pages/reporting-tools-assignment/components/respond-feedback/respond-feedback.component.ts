@@ -48,6 +48,10 @@ export class RespondFeedbackComponent implements OnInit {
   ngOnInit(): void {
     // console.log(this.dialogData);
     this.translations$ = this.store.select(getCurrentTranslations);
+    this.translations$.subscribe((translations) => {
+      console.log('translations', translations);
+    });
+
     this.messageConversation$ =
       this.messageAndDataStoreService.searchMessageConversationByTicketNumber(
         this.dialogData?.ticketNumber
