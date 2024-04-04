@@ -93,16 +93,14 @@ export class UsersDataService {
     email: string,
     phoneNumber?: string
   ): Observable<any> {
+    const fields: string =
+      'id,firstName,surname,email,phoneNumber,userCredentials,disabled,createdBy[name],lastUpdatedBy[name],username,lastLogin,passwordLastUpdated,organisationUnits[id,name],dataViewOrganisationUnits[id,name]';
     return zip(
       this.httpClient
-        .get(
-          `users.json?query=${email}&fields=id,firstName,surname,email,phoneNumber,userCredentials`
-        )
+        .get(`users.json?query=${email}&fields=${fields}`)
         .pipe(map((response: any) => response?.users)),
       this.httpClient
-        .get(
-          `users.json?phoneNumber=${phoneNumber}&fields=id,firstName,surname,email,phoneNumber,userCredentials`
-        )
+        .get(`users.json?phoneNumber=${phoneNumber}&fields=${fields}`)
         .pipe(map((response: any) => response?.users))
     ).pipe(
       map((responses: any[]) => {
@@ -277,6 +275,7 @@ export class UsersDataService {
           .pipe(
             map((response) => {
               return {
+                ...userNameData,
                 key: userNameData?.key,
                 username:
                   response?.users?.length > 0 ? null : userNameData?.username,

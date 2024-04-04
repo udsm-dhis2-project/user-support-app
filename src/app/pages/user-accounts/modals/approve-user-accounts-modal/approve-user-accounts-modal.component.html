@@ -53,6 +53,34 @@
               </th>
               <th>
                 {{
+                  params?.translations && params?.translations['Email']
+                    ? params?.translations['Email']
+                    : 'Email'
+                }}
+              </th>
+              <th>
+                {{
+                  params?.translations && params?.translations['Phone Number']
+                    ? params?.translations['Phone Number']
+                    : 'Phone Number'
+                }}
+              </th>
+              <th>
+                {{
+                  params?.translations && params?.translations['Email']
+                    ? params?.translations['Data entry']
+                    : 'Data entry'
+                }}
+              </th>
+              <th>
+                {{
+                  params?.translations && params?.translations['Email']
+                    ? params?.translations['Reports']
+                    : 'Reports'
+                }}
+              </th>
+              <th>
+                {{
                   params?.translations && params?.translations['Time']
                     ? params?.translations['Time']
                     : 'Time'
@@ -88,13 +116,33 @@
                   <span *ngIf="user?.username">({{ user?.username }})</span>
                 </td>
                 <td>
+                  {{ user?.email }}
+                </td>
+                <td>
+                  {{ user?.phoneNumber }}
+                </td>
+                <td>
+                  <span *ngFor="let orgUnit of user?.organisationUnits">
+                    {{ orgUnit?.name }},
+                  </span>
+                </td>
+
+                <td>
+                  <span *ngFor="let orgUnit of user?.dataViewOrganisationUnits">
+                    {{ orgUnit?.name }},
+                  </span>
+                </td>
+
+                <td>
                   {{ dialogData?.request?.timeSinceResponseSent }}
                 </td>
                 <td>
                   <button
                     class="ml-2"
                     [disabled]="
-                      user?.status === 'CREATED' || user?.status === 'APPROVED'
+                      user?.status === 'CREATED' ||
+                      (user?.status === 'APPROVED' &&
+                        dialogData?.configurations?.useTier2)
                     "
                     mat-stroked-button
                     (click)="
@@ -129,7 +177,7 @@
                   'approved-user': user?.status == 'APPROVED'
                 }"
               >
-                <td colspan="3">
+                <td colspan="5">
                   <app-username-form-field
                     [user]="user"
                     [count]="count"
@@ -138,7 +186,7 @@
                     (usernameValid)="onGetUsernameValidity($event)"
                   ></app-username-form-field>
                 </td>
-                <td>
+                <td colspan="3">
                   <mat-progress-bar
                     mode="indeterminate"
                     *ngIf="checkingForPotentialDuplicates"
