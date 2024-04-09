@@ -36,51 +36,60 @@ export class UsersDataService {
     pageSize: number,
     page: number,
     q?: string,
-    pathSection?: string,
+    organisationUnits?: any[],
     levels?: any[],
     selectedLevel?: number,
     accountStatus?: string
   ): Observable<any> {
-    return this.httpClient
-      .get(
-        `users.json?pageSize=${pageSize}&page=${page}${
-          q ? '&query=' + q : ''
-        }&fields=id,firstName,organisationUnits[id,level,name,code,path,parent[id,name,level,parent[id,name,level]]],surname,name,email,phoneNumber,userRoles,userGroups,userCredentials[username,lastlogin,disabled]&order=firstName~asc${
-          pathSection
-            ? '&filter=organisationUnits.path:ilike:' + pathSection
-            : ''
-        }${
-          selectedLevel
-            ? '&filter=organisationUnits.level:eq:' + selectedLevel
-            : ''
-        }${
-          accountStatus
-            ? '&filter=userCredentials.disabled:eq:' +
-              (accountStatus == 'active' ? false : true)
-            : ''
-        }`
-      )
-      .pipe(
-        map((response) => {
-          return {
-            ...response,
-            users: response?.users?.map((user: any) => {
+    return zip(
+      ...organisationUnits.map((orgUnit: any) =>
+        this.httpClient
+          .get(
+            `users.json?pageSize=${pageSize}&page=${page}${
+              q ? '&query=' + q : ''
+            }&fields=id,firstName,organisationUnits[id,level,name,code,path,parent[id,name,level,parent[id,name,level]]],surname,name,email,phoneNumber,userRoles,userGroups,userCredentials[username,lastlogin,disabled]&order=firstName~asc${
+              orgUnit?.id
+                ? '&filter=organisationUnits.path:ilike:' + orgUnit?.id
+                : ''
+            }${
+              selectedLevel
+                ? '&filter=organisationUnits.level:eq:' + selectedLevel
+                : ''
+            }${
+              accountStatus
+                ? '&filter=userCredentials.disabled:eq:' +
+                  (accountStatus == 'active' ? false : true)
+                : ''
+            }`
+          )
+          .pipe(
+            map((response) => {
               return {
-                ...user,
-                leveledOrgUnitsTree: keyBy(
-                  flatten(
-                    user?.organisationUnits?.map((orgUnit: any) => {
-                      return flattenToArrayGivenOrgUnits(orgUnit);
-                    })
-                  ),
-                  'level'
-                ),
+                ...response,
+                orgUnit,
+                users: response?.users?.map((user: any) => {
+                  return {
+                    ...user,
+                    leveledOrgUnitsTree: keyBy(
+                      flatten(
+                        user?.organisationUnits?.map((orgUnit: any) => {
+                          return flattenToArrayGivenOrgUnits(orgUnit);
+                        })
+                      ),
+                      'level'
+                    ),
+                  };
+                }),
               };
             }),
-          };
-        }),
-        catchError((error) => of(error))
-      );
+            catchError((error) => of(error))
+          )
+      )
+    ).pipe(
+      map((responses: any[]) => {
+        return responses;
+      })
+    );
   }
 
   getUserByUsername(username: string): Observable<boolean> {

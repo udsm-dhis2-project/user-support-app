@@ -1,7 +1,7 @@
 <div
   class="users-list-container"
   *ngIf="{
-    usersResponse: usersResponse$ | async,
+    usersResponses: usersResponses$ | async,
     configurations: configurations$ | async,
     translations: translations$ | async,
   } as params"
@@ -12,6 +12,7 @@
       <mat-icon matPrefix>search</mat-icon>
       <input matInput (keyup)="searchUser($event)" />
     </mat-form-field>
+
     <div class="w-75 d-flex justify-content-end">
       <div class="w-25">
         <section>
@@ -21,16 +22,21 @@
                 class="ml-1"
                 *ngIf="accountStatus && accountStatus === 'active'"
               >
-                [{{ params?.usersResponse?.pager?.total }}]
-              </span></mat-radio-button
-            >
+                <app-users-total-display
+                  *ngIf="params?.usersResponses"
+                  [usersResponses]="params?.usersResponses"
+                ></app-users-total-display> </span
+            ></mat-radio-button>
             <mat-radio-button value="disabled"
               >In-active
               <span
                 class="ml-1"
                 *ngIf="accountStatus && accountStatus === 'disabled'"
               >
-                [{{ params?.usersResponse?.pager?.total }}]
+                <app-users-total-display
+                  *ngIf="params?.usersResponses"
+                  [usersResponses]="params?.usersResponses"
+                ></app-users-total-display>
               </span>
             </mat-radio-button>
           </mat-radio-group>
@@ -59,185 +65,218 @@
     </div>
   </div>
 
-  <div *ngIf="params?.usersResponse" style="width: 100%; overflow: auto">
-    <table class="table table-striped table-bordered mat-elevation-z1">
-      <thead>
-        <tr>
-          <th style="width: 20px">{{ params?.translations['SN'] || 'SN' }}</th>
-          <th>{{ params?.translations['Name'] || 'Names' }}</th>
-          <th>{{ params?.translations['Username'] || 'Username' }}</th>
-          <th>{{ params?.translations['Email'] || 'Email' }}</th>
-          <th>{{ params?.translations['Phone number'] || 'Phone number' }}</th>
-          <ng-container *ngFor="let level of levels">
-            <th *ngIf="level?.level > 1">
-              {{ level?.name }}
-            </th>
-          </ng-container>
-          <th>{{ params?.translations['Last login'] || 'Last login' }}</th>
-          <th>{{ params?.translations['Status'] || 'Status' }}</th>
-          <th>{{ params?.translations['Action'] || 'Action' }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngIf="!params?.usersResponse?.message">
-          <tr
-            *ngFor="let user of params?.usersResponse?.users; let count = index"
-          >
-            <td>
-              {{ (page - 1) * pageSize + count + 1 }}
-            </td>
-            <td>
-              {{ user?.name }}
-            </td>
-            <td>
-              {{ user?.userCredentials?.username }}
-            </td>
-            <td>
-              {{ user?.email }}
-            </td>
-            <td>
-              {{ user?.phoneNumber }}
-            </td>
-
-            <ng-container *ngFor="let level of levels">
-              <td *ngIf="level?.level > 1">
-                {{ user?.leveledOrgUnitsTree[level?.level]?.name }}
-              </td>
-            </ng-container>
-            <td>
-              {{ user?.userCredentials?.lastLogin }}
-            </td>
-            <td>
-              <span *ngIf="user?.userCredentials?.disabled"
-                >Inactive(Disable)</span
-              >
-              <span *ngIf="!user?.userCredentials?.disabled">Active</span>
-            </td>
-            <td>
-              <button
-                class="float-right"
-                mat-icon-button
-                [matMenuTriggerFor]="menu"
-                (click)="$event.stopPropagation()"
-              >
-                <mat-icon>more_vert</mat-icon>
-              </button>
-              <mat-menu #menu="matMenu">
-                <button
-                  *ngIf="
-                    currentUser?.keyedAuthorities['ALL'] ||
-                    currentUser?.keyedAuthorities['US_ACTIVATE_ACCOUNT']
-                  "
-                  [disabled]="!user?.userCredentials?.disabled"
-                  mat-menu-item
-                  (click)="openUserActivateDialog($event, user)"
-                >
-                  <div class="d-flex align-items-center">
-                    <mat-icon inline>lock</mat-icon>
-                    <span
-                      >{{ params?.translations['Enable'] || 'Enable' }} ({{ params?.translations['Activate'] || 'Activate' }})
-                    </span>
-                  </div>
-                </button>
-                <button
-                  *ngIf="
-                    currentUser?.keyedAuthorities['ALL'] ||
-                    currentUser?.keyedAuthorities['US_DEACTIVATE_ACCOUNT']
-                  "
-                  [disabled]="user?.userCredentials?.disabled"
-                  mat-menu-item
-                  (click)="openUserActivateDialog($event, user)"
-                >
-                  <div class="d-flex align-items-center">
-                    <mat-icon inline>lock_open</mat-icon>
-                    <span
-                      >{{ params?.translations['Disable'] || 'Disable' }} ({{
-                        params?.translations['De-activate'] || 'De-activate'
-                      }})
-                    </span>
-                  </div>
-                </button>
-                <button
-                  mat-menu-item
-                  (click)="openUserPassResetDialog(user)"
-                  *ngIf="
-                    currentUser?.keyedAuthorities['ALL'] ||
-                    currentUser?.keyedAuthorities['US_PASSWORD_CHANGE']
-                  "
-                >
-                  <div class="d-flex align-items-center">
-                    <mat-icon inline>lock_reset</mat-icon>
-                    <span>{{ params?.translations['Password Reset'] || 'Password Reset' }}</span>
-                  </div>
-                </button>
-                <button
-                  *ngIf="currentUser?.keyedAuthorities['ALL']"
-                  mat-menu-item
-                  [disabled]="true"
-                  (click)="openUserOrgunitDialog()"
-                >
-                  <div class="d-flex align-items-center">
-                    <mat-icon inline>account_tree</mat-icon>
-                    <span>{{ params?.translations['Transfer'] || 'Transfer' }} </span>
-                  </div>
-                </button>
-                <button
-                  *ngIf="currentUser?.keyedAuthorities['ALL']"
-                  mat-menu-item
-                  [disabled]="false"
-                  (click)="openUserRoleDialog(user, params?.configurations)"
-                >
-                  <div class="d-flex align-items-center">
-                    <mat-icon inline>admin_panel_settings</mat-icon>
-                    <span>{{ params?.translations['Update User Access'] || 'Update User Access' }} </span>
-                  </div>
-                </button>
-              </mat-menu>
-            </td>
-          </tr>
-        </ng-container>
-        <ng-container *ngIf="params?.usersResponse?.users?.length === 0">
-          <tr>
-            <td colspan="100%">
-              <div class="alert alert-warning" role="alert">No users</div>
-            </td>
-          </tr>
-        </ng-container>
-        <ng-container *ngIf="params?.usersResponse?.message">
-          <tr>
-            <td colspan="100%">
-              <div class="alert alert-danger" role="alert">
-                <b>{{ params?.usersResponse?.statusText }}: </b>
-                {{ params?.usersResponse?.message }}
-              </div>
-            </td>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
-    <!-- {{ params?.usersResponse?.pager | json }} -->
-    <div
-      class="mt-2"
-      *ngIf="
-        !params?.usersResponse?.message && params?.usersResponse?.pager?.total
-      "
+  <mat-tab-group>
+    <mat-tab
+      label="{{ usersResponse?.orgUnit?.name }}"
+      *ngFor="let usersResponse of params?.usersResponses"
     >
-      <div class="row">
-        <div class="col-11 d-flex justify-content-end">
-          <mat-paginator
-            [length]="params?.usersResponse?.pager?.total"
-            aria-label="Select page"
-            [pageSize]="pageSize"
-            [pageIndex]="pageIndex"
-            [pageSizeOptions]="pageSizeOptions"
-            (page)="getUsers($event, params?.usersResponse?.pager)"
-          >
-          </mat-paginator>
-        </div>
-        <div class="col-1"></div>
-      </div>
+      <div class="mt-2 p-3">
+        <div style="width: 100%; overflow: auto">
+          <table class="table table-striped table-bordered mat-elevation-z1">
+            <thead>
+              <tr>
+                <th style="width: 20px">
+                  {{ params?.translations['SN'] || 'SN' }}
+                </th>
+                <th>{{ params?.translations['Name'] || 'Names' }}</th>
+                <th>{{ params?.translations['Username'] || 'Username' }}</th>
+                <th>{{ params?.translations['Email'] || 'Email' }}</th>
+                <th>
+                  {{ params?.translations['Phone number'] || 'Phone number' }}
+                </th>
+                <ng-container *ngFor="let level of levels">
+                  <th *ngIf="level?.level > 1">
+                    {{ level?.name }}
+                  </th>
+                </ng-container>
+                <th>
+                  {{ params?.translations['Last login'] || 'Last login' }}
+                </th>
+                <th>{{ params?.translations['Status'] || 'Status' }}</th>
+                <th>{{ params?.translations['Action'] || 'Action' }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngIf="!usersResponse?.message">
+                <tr
+                  *ngFor="let user of usersResponse?.users; let count = index"
+                >
+                  <td>
+                    {{ (page - 1) * pageSize + count + 1 }}
+                  </td>
+                  <td>
+                    {{ user?.name }}
+                  </td>
+                  <td>
+                    {{ user?.userCredentials?.username }}
+                  </td>
+                  <td>
+                    {{ user?.email }}
+                  </td>
+                  <td>
+                    {{ user?.phoneNumber }}
+                  </td>
 
-      <!-- <button
+                  <ng-container *ngFor="let level of levels">
+                    <td *ngIf="level?.level > 1">
+                      {{ user?.leveledOrgUnitsTree[level?.level]?.name }}
+                    </td>
+                  </ng-container>
+                  <td>
+                    {{ user?.userCredentials?.lastLogin }}
+                  </td>
+                  <td>
+                    <span *ngIf="user?.userCredentials?.disabled"
+                      >Inactive(Disable)</span
+                    >
+                    <span *ngIf="!user?.userCredentials?.disabled">Active</span>
+                  </td>
+                  <td>
+                    <button
+                      class="float-right"
+                      mat-icon-button
+                      [matMenuTriggerFor]="menu"
+                      (click)="$event.stopPropagation()"
+                    >
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <button
+                        *ngIf="
+                          currentUser?.keyedAuthorities['ALL'] ||
+                          currentUser?.keyedAuthorities['US_ACTIVATE_ACCOUNT']
+                        "
+                        [disabled]="!user?.userCredentials?.disabled"
+                        mat-menu-item
+                        (click)="openUserActivateDialog($event, user)"
+                      >
+                        <div class="d-flex align-items-center">
+                          <mat-icon inline>lock</mat-icon>
+                          <span
+                            >{{
+                              params?.translations['Enable'] || 'Enable'
+                            }}
+                            ({{
+                              params?.translations['Activate'] || 'Activate'
+                            }})
+                          </span>
+                        </div>
+                      </button>
+                      <button
+                        *ngIf="
+                          currentUser?.keyedAuthorities['ALL'] ||
+                          currentUser?.keyedAuthorities['US_DEACTIVATE_ACCOUNT']
+                        "
+                        [disabled]="user?.userCredentials?.disabled"
+                        mat-menu-item
+                        (click)="openUserActivateDialog($event, user)"
+                      >
+                        <div class="d-flex align-items-center">
+                          <mat-icon inline>lock_open</mat-icon>
+                          <span
+                            >{{
+                              params?.translations['Disable'] || 'Disable'
+                            }}
+                            ({{
+                              params?.translations['De-activate'] ||
+                                'De-activate'
+                            }})
+                          </span>
+                        </div>
+                      </button>
+                      <button
+                        mat-menu-item
+                        (click)="openUserPassResetDialog(user)"
+                        *ngIf="
+                          currentUser?.keyedAuthorities['ALL'] ||
+                          currentUser?.keyedAuthorities['US_PASSWORD_CHANGE']
+                        "
+                      >
+                        <div class="d-flex align-items-center">
+                          <mat-icon inline>lock_reset</mat-icon>
+                          <span>{{
+                            params?.translations['Password Reset'] ||
+                              'Password Reset'
+                          }}</span>
+                        </div>
+                      </button>
+                      <button
+                        *ngIf="currentUser?.keyedAuthorities['ALL']"
+                        mat-menu-item
+                        [disabled]="true"
+                        (click)="openUserOrgunitDialog()"
+                      >
+                        <div class="d-flex align-items-center">
+                          <mat-icon inline>account_tree</mat-icon>
+                          <span
+                            >{{
+                              params?.translations['Transfer'] || 'Transfer'
+                            }}
+                          </span>
+                        </div>
+                      </button>
+                      <button
+                        *ngIf="currentUser?.keyedAuthorities['ALL']"
+                        mat-menu-item
+                        [disabled]="false"
+                        (click)="
+                          openUserRoleDialog(user, params?.configurations)
+                        "
+                      >
+                        <div class="d-flex align-items-center">
+                          <mat-icon inline>admin_panel_settings</mat-icon>
+                          <span
+                            >{{
+                              params?.translations['Update User Access'] ||
+                                'Update User Access'
+                            }}
+                          </span>
+                        </div>
+                      </button>
+                    </mat-menu>
+                  </td>
+                </tr>
+              </ng-container>
+              <ng-container *ngIf="usersResponse?.users?.length === 0">
+                <tr>
+                  <td colspan="100%">
+                    <div class="alert alert-warning" role="alert">No users</div>
+                  </td>
+                </tr>
+              </ng-container>
+              <ng-container *ngIf="usersResponse?.message">
+                <tr>
+                  <td colspan="100%">
+                    <div class="alert alert-danger" role="alert">
+                      <b>{{ usersResponse?.statusText }}: </b>
+                      {{ usersResponse?.message }}
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+          <!-- {{ params?.usersResponse?.pager | json }} -->
+          <div
+            class="mt-2"
+            *ngIf="!usersResponse?.message && usersResponse?.pager?.total"
+          >
+            <div class="row">
+              <div class="col-11 d-flex justify-content-end">
+                <mat-paginator
+                  [length]="usersResponse?.pager?.total"
+                  aria-label="Select page"
+                  [pageSize]="pageSize"
+                  [pageIndex]="pageIndex"
+                  [pageSizeOptions]="pageSizeOptions"
+                  (page)="getUsers($event, usersResponse?.pager)"
+                >
+                </mat-paginator>
+              </div>
+              <div class="col-1"></div>
+            </div>
+
+            <!-- <button
         mat-stroked-button
         [disabled]="params?.usersResponse?.pager?.page === 1"
         (click)="getUsers($event, params?.usersResponse?.pager, 'prev')"
@@ -251,11 +290,14 @@
       >
         {{ 'Next' }}
       </button> -->
-    </div>
-  </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 
   <mat-progress-bar
-    *ngIf="!params?.usersResponse"
+    *ngIf="!params?.usersResponses"
     mode="indeterminate"
   ></mat-progress-bar>
 
