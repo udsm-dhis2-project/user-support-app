@@ -67,7 +67,9 @@
 
   <mat-tab-group>
     <mat-tab
-      label="{{ usersResponse?.orgUnit?.name }}"
+      label="{{ usersResponse?.orgUnit?.name }} [{{
+        usersResponse?.pager?.total
+      }}]"
       *ngFor="let usersResponse of params?.usersResponses"
     >
       <div class="mt-2 p-3">
