@@ -24,7 +24,7 @@ import { getCurrentTranslations } from 'src/app/store/selectors/translations.sel
   styleUrls: ['./users-list.component.css'],
 })
 export class UsersListComponent implements OnInit {
-  usersResponse$: Observable<any>;
+  usersResponses$: Observable<any>;
   configurations$: Observable<any>;
   pageSize: number = 10;
   page: number = 1;
@@ -88,11 +88,11 @@ export class UsersListComponent implements OnInit {
   }
 
   loadUsersList(): void {
-    this.usersResponse$ = this.usersDataService.getUsersList(
+    this.usersResponses$ = this.usersDataService.getUsersList(
       this.pageSize,
       this.page,
       this.searchingText,
-      this.currentUser?.organisationUnits[0]?.id,
+      this.currentUser?.organisationUnits,
       this.levels,
       this.selectedLevel,
       this.accountStatus
@@ -365,7 +365,7 @@ export class UsersListComponent implements OnInit {
           ];
 
           this.saving = true;
-        const dataStoreKey =
+          const dataStoreKey =
             'UA' +
             Date.now() +
             '_' +

@@ -1,23 +1,42 @@
 <div
-*ngIf="{
+  *ngIf="{
   translations: translations$ | async,
 } as params"
 >
-<p>
-  {{ params?.translations['Proposed username'] || 'Proposed username' }} <b>{{ proposedUsername }}</b>
-  <mat-progress-bar
-    mode="indeterminate"
-    *ngIf="!proposedUsername"
-  ></mat-progress-bar>
-  <!-- (
-  <span class="mr-2" *ngFor="let usernameData of potentialUsernames">
-    {{ usernameData?.username }},
-  </span>
-  ) -->
-</p>
-
-<app-form
-  [fields]="[usernameField]"
-  (formUpdate)="onFormUpdate($event)"
-></app-form>
+  <div class="row">
+    <div class="col-md-6 col-sm-12 col-sx-12">
+      <p>
+        {{
+          params?.translations && params?.translations['Proposed username']
+            ? params?.translations['Proposed username']
+            : 'Proposed username'
+        }}
+        <b>{{ proposedUsernameDetails?.username }}</b>
+        <span
+          class="ml-2 text-danger"
+          *ngIf="proposedUsernameDetails?.potentialDuplicate"
+          >[Potential duplicate]</span
+        >
+        <mat-progress-bar
+          mode="indeterminate"
+          *ngIf="!proposedUsernameDetails?.username"
+        ></mat-progress-bar>
+      </p>
+    </div>
+    <div class="col-md-6 col-sm-12 col-sx-12">
+      <section
+        class="example-section"
+        *ngIf="proposedUsernameDetails?.potentialDuplicate"
+      >
+        <mat-checkbox class="example-margin" (change)="onProceed($event)"
+          >Its confirmed not duplicate, proceed!</mat-checkbox
+        >
+      </section>
+    </div>
+  </div>
+  <app-form
+    *ngIf="proposedUsernameDetails?.username && itsNotDuplicate"
+    [fields]="[usernameField]"
+    (formUpdate)="onFormUpdate($event)"
+  ></app-form>
 </div>

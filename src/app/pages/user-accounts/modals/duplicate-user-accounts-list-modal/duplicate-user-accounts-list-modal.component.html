@@ -1,31 +1,114 @@
-<h2 mat-dialog-title>Potential user accounts duplicates</h2>
-<mat-dialog-content class="mat-typography">
-  <table class="table mt-2">
-    <thead>
-      <tr>
-        <th style="width: 30px">SN</th>
-        <th>Names</th>
-        <th>Email</th>
-        <th>Phone number</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of data; let count = index">
-        <td>
-          {{ count + 1 }}
-        </td>
-        <td>
-          {{ user?.firstName }}
-          {{ user?.surname }}
-        </td>
-        <td>{{ user?.email }}</td>
-        <td>
-          {{ user?.phoneNumber }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Close</button>
-</mat-dialog-actions>
+<ng-container *ngIf="{ translations: translations$ | async } as params">
+  <h2 mat-dialog-title>Potential user accounts duplicates</h2>
+  <mat-dialog-content class="mat-typography">
+    <table class="table mt-2">
+      <thead>
+        <tr>
+          <th style="width: 30px">
+            {{
+              params?.translations && params?.translations['SN']
+                ? params?.translations['SN']
+                : 'SN'
+            }}
+          </th>
+          <th>
+            {{
+              params?.translations && params?.translations['Names']
+                ? params?.translations['Names']
+                : 'Names'
+            }}
+          </th>
+          <th>
+            {{
+              params?.translations && params?.translations['Email']
+                ? params?.translations['Email']
+                : 'Email'
+            }}
+          </th>
+          <th>
+            {{
+              params?.translations && params?.translations['Phone Number']
+                ? params?.translations['Phone Number']
+                : 'Phone Number'
+            }}
+          </th>
+          <th>
+            {{
+              params?.translations && params?.translations['Data entry']
+                ? params?.translations['Data entry']
+                : 'Data entry'
+            }}
+          </th>
+          <th>
+            {{
+              params?.translations && params?.translations['Reports']
+                ? params?.translations['Reports']
+                : 'Reports'
+            }}
+          </th>
+          <th>
+            {{
+              params?.translations && params?.translations['Username']
+                ? params?.translations['Username']
+                : 'Username'
+            }}
+          </th>
+
+          <th>
+            {{
+              params?.translations && params?.translations['Last login']
+                ? params?.translations['Last login']
+                : 'Last login'
+            }}
+          </th>
+
+          <th>
+            {{
+              params?.translations &&
+              params?.translations['Password last updated']
+                ? params?.translations['Password last updated']
+                : 'Password last updated'
+            }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of data; let count = index">
+          <td>
+            {{ count + 1 }}
+          </td>
+          <td>{{ user?.firstName }} {{ user?.surname }}</td>
+          <td>
+            {{ user?.email }}
+          </td>
+          <td>
+            {{ user?.phoneNumber }}
+          </td>
+          <td>
+            <span *ngFor="let orgUnit of user?.organisationUnits">
+              {{ orgUnit?.name }},
+            </span>
+          </td>
+
+          <td>
+            <span *ngFor="let orgUnit of user?.dataViewOrganisationUnits">
+              {{ orgUnit?.name }},
+            </span>
+          </td>
+          <td>
+            {{ user?.username }}
+          </td>
+          <td>
+            {{ user?.lastLogin | date }}
+          </td>
+          <td>
+            {{ user?.passwordLastUpdated | date }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</ng-container>

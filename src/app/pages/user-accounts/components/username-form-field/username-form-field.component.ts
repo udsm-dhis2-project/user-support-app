@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { UsersDataService } from 'src/app/core/services/users.service';
@@ -22,34 +23,43 @@ export class UsernameFormFieldComponent implements OnInit {
     new EventEmitter<string>();
   key: string;
   potentialUsernames: any[];
-  proposedUsername: string;
+  proposedUsernameDetails: any = {};
   usernameExist: boolean = false;
   hasEmptySpace: boolean = false;
   translations$: Observable<any>;
-  constructor(private usersDataService: UsersDataService, private store: Store<State>) {}
+  itsNotDuplicate: boolean = true;
+  constructor(
+    private usersDataService: UsersDataService,
+    private store: Store<State>
+  ) {}
 
   ngOnInit(): void {
     this.translations$ = this.store.select(getCurrentTranslations);
     this.createUsernameField();
-    this.potentialUsernames = [1, 2, 3].map((key) => {
-      return {
-        key,
-        username: (
-          this.user?.firstName.trim().substring(0, key) +
-          this.user?.surname.trim()
-        )
-          .toLowerCase()
-          .trim(),
-      };
-    })
+    this.potentialUsernames = [1, 2, 3]
+      .map((key) => {
+        return {
+          key,
+          username: (
+            this.user?.firstName.trim().substring(0, key) +
+            this.user?.surname.trim()
+          )
+            .toLowerCase()
+            .trim(),
+          potentialDuplicate: key > 1 ? true : false,
+        };
+      })
       .filter((item) => item.username.length >= 5);
 
     this.usersDataService
       .checkForUserNamesAvailability(this.potentialUsernames)
       .subscribe((response) => {
         if (response) {
-          this.proposedUsername = (response?.filter((data) => data?.username) ||
-            [])[0]?.username;
+          this.proposedUsernameDetails = (response?.filter(
+            (data) => data?.username
+          ) || [])[0];
+          this.itsNotDuplicate =
+            !this.proposedUsernameDetails?.potentialDuplicate;
         }
       });
   }
@@ -80,10 +90,10 @@ export class UsernameFormFieldComponent implements OnInit {
       );
     } else if (this.containsOnlySpecialCharacters(username)) {
       this.usernameValid.emit(false);
-      this.validityCheckMessage.emit('Username can not have special characters only');
-      
-    }
-    else {
+      this.validityCheckMessage.emit(
+        'Username can not have special characters only'
+      );
+    } else {
       this.usersDataService.verifyUsername(username).subscribe((response) => {
         if (response?.length > 0) {
           this.usernameExist = true;
@@ -104,9 +114,41 @@ export class UsernameFormFieldComponent implements OnInit {
 
   containsOnlySpecialCharacters(input: string): boolean {
     // Define special characters
-    const specialCharacters = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~'];
+    const specialCharacters = [
+      '!',
+      '"',
+      '#',
+      '$',
+      '%',
+      '&',
+      "'",
+      '(',
+      ')',
+      '*',
+      '+',
+      ',',
+      '-',
+      '.',
+      '/',
+      ':',
+      ';',
+      '<',
+      '=',
+      '>',
+      '?',
+      '@',
+      '[',
+      '\\',
+      ']',
+      '^',
+      '_',
+      '`',
+      '{',
+      '|',
+      '}',
+      '~',
+    ];
 
-  
     // Iterate over each character in the input string
     for (const char of input) {
       // Check if the character is not a special character
@@ -115,5 +157,13 @@ export class UsernameFormFieldComponent implements OnInit {
       }
     }
     return true; // Return true if all characters are special characters
+  }
+
+  onProceed(event: MatCheckboxChange): void {
+    if (event.checked) {
+      this.itsNotDuplicate = true;
+    } else {
+      this.itsNotDuplicate = false;
+    }
   }
 }
