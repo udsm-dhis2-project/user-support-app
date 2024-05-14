@@ -14,7 +14,19 @@
     translations: translations$ | async
   } as params"
 >
-  <h2 mat-dialog-title>{{ params?.translations['Reporting Tool Approval'] || 'Reporting Tool Approval' }}</h2>
+  <h2
+    mat-dialog-title
+    [ngClass]="{
+      rejection: dialogData?.actionType !== 'APPROVE',
+      approve: dialogData?.actionType === 'APPROVE'
+    }"
+  >
+    {{
+      params?.translations['Reporting Tool Approval'] ||
+        'Reporting Tool Approval'
+    }}
+    - {{ dialogData?.actionType }}
+  </h2>
   <mat-dialog-content class="mat-typography">
     <div
       class="approve-container"
@@ -73,14 +85,19 @@
             class="text-warning mt-2"
             *ngIf="reasonForRejection && reasonForRejection.length < 8"
           >
-            {{ params?.translations['Not a valid reason'] || 'Not a valid reason' }}
+            {{
+              params?.translations['Not a valid reason'] || 'Not a valid reason'
+            }}
           </p>
           <div mat-dialog-actions class="d-flex justify-content-end">
             <button mat-button (click)="onClose($event)">
-              {{ successfullyApproved ?  'Done' :'Close'  }} 
+              {{ successfullyApproved ? 'Done' : 'Close' }}
             </button>
             <button
-              mat-stroked-button
+              mat-flat-button
+              [color]="
+                dialogData?.actionType === 'APPROVE' ? 'primary' : 'warn'
+              "
               [disabled]="
                 successfullyApproved ||
                 (dilogData?.actionType === 'REJECTED' &&
@@ -107,18 +124,27 @@
       class="w-100 success-message"
       *ngIf="savedData && !missingKey && dialogData?.actionType === 'APPROVE'"
     >
-      <p>{{ params?.translations['Successfully updated'] || 'Successfully updated' }}!</p>
+      <p>
+        {{
+          params?.translations['Successfully updated'] ||
+            'Successfully updated'
+        }}!
+      </p>
     </div>
 
     <div
       class="w-100 success-message"
       *ngIf="savedData && !missingKey && dialogData?.actionType === 'REJECTED'"
     >
-      <p>{{ params?.translations['Successfully sent'] || 'Successfully sent' }}!</p>
+      <p>
+        {{ params?.translations['Successfully sent'] || 'Successfully sent' }}!
+      </p>
     </div>
 
     <div *ngIf="missingKey">
-      <p>{{ params?.translations['Already attended'] || 'Already attended' }}!</p>
+      <p>
+        {{ params?.translations['Already attended'] || 'Already attended' }}!
+      </p>
     </div>
   </mat-dialog-content>
   <!-- <mat-dialog-actions align="end">

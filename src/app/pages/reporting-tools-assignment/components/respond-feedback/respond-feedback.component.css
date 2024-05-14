@@ -9,3 +9,11 @@ button:hover {
 .success-message {
   color: #155724;
 }
+
+.rejection {
+  color: red !important;
+}
+
+.approve {
+  color: #155724 !important;
+}
