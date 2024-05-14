@@ -139,11 +139,6 @@
                 <td>
                   <button
                     class="ml-2"
-                    [disabled]="
-                      user?.status === 'CREATED' ||
-                      (user?.status === 'APPROVED' &&
-                        dialogData?.configurations?.useTier2)
-                    "
                     mat-stroked-button
                     (click)="
                       onAccountApprove(
@@ -159,12 +154,29 @@
                       dialogData?.configurations?.useTier2
                         ? 'First confirmation'
                         : !dialogData?.configurations?.useTier2
-                        ? 'Select'
+                        ? user?.status === 'CREATED' ||
+                          (user?.status === 'APPROVED' &&
+                            dialogData?.configurations?.useTier2)
+                          ? 'View'
+                          : 'Select'
                         : 'Confirm'
                     }}
                   </button>
                 </td>
               </tr>
+              <ng-container
+                *ngIf="
+                  user?.status === 'CREATED' ||
+                  (user?.status === 'APPROVED' &&
+                    dialogData?.configurations?.useTier2)
+                "
+              >
+                <tr>
+                  <td colspan="100%">
+                    {{ user | json }}
+                  </td>
+                </tr></ng-container
+              >
               <ng-container *ngIf="user?.status !== 'CREATED'">
                 <tr
                   *ngIf="
@@ -242,7 +254,12 @@
                         mat-flat-button
                         color="primary"
                         (click)="
-                          onApprove($event, user, params?.dataStoreInformation)
+                          onApprove(
+                            $event,
+                            user,
+                            params?.dataStoreInformation,
+                            'approve'
+                          )
                         "
                       >
                         {{
@@ -250,6 +267,30 @@
                           params?.translations['Confirm']
                             ? params?.translations['Confirm']
                             : 'Confirm'
+                        }}
+                      </button>
+                      <button
+                        class="ml-2"
+                        *ngIf="dialogData?.isFeedbackRecepient"
+                        [disabled]="
+                          checkingForPotentialDuplicates ||
+                          user?.status === 'CREATED'
+                        "
+                        mat-flat-button
+                        color="warn"
+                        (click)="
+                          onApprove(
+                            $event,
+                            user,
+                            params?.dataStoreInformation,
+                            'reject'
+                          )
+                        "
+                      >
+                        {{
+                          params?.translations && params?.translations['Reject']
+                            ? params?.translations['Reject']
+                            : 'Reject'
                         }}
                       </button>
                     </div>

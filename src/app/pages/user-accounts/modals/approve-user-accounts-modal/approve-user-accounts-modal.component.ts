@@ -13,6 +13,7 @@ import { UsersDataService } from 'src/app/core/services/users.service';
 import { State } from 'src/app/store/reducers';
 import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 import { DuplicateUserAccountsListModalComponent } from '../duplicate-user-accounts-list-modal/duplicate-user-accounts-list-modal.component';
+import { SharedConfirmationModalComponent } from 'src/app/shared/modals/shared-confirmation-modal/shared-confirmation-modal.component';
 
 @Component({
   selector: 'app-approve-user-accounts-modal',
@@ -200,341 +201,483 @@ export class ApproveUserAccountsModalComponent implements OnInit {
       });
   }
 
-  onApprove(event: Event, userToApprove: any, request: any): void {
+  onApprove(
+    event: Event,
+    userToApprove: any,
+    request: any,
+    actionType?: string
+  ): void {
     if (event) {
       event.stopPropagation();
     }
-    this.saving = true;
-    // Create potential usernames
-    const countOfUsersRemainedToCreate = (
-      request?.payload?.filter((user) => user?.status !== 'CREATED') || []
-    )?.length;
-    const potentialUserNames = [1, 2, 3].map((key) => {
-      return {
-        key,
-        username: (
-          userToApprove?.firstName.substring(0, key) + userToApprove?.surname
-        ).toLowerCase(),
-      };
-    });
-    this.messageAndDataStoreService
-      .searchMessageConversationByTicketNumber(
-        this.dialogData?.request?.ticketNumber
-      )
-      .subscribe((response) => {
-        if (response && response != 'none') {
-          const messageConversation = response;
-          // console.log('messageConversation', messageConversation);
-          const selectedUsername = this.currentUsername;
-          if (this.currentUsername) {
-            const data = {
-              id: request?.id,
-              method: 'POST',
-              userPayload: omit(
-                {
-                  ...userToApprove,
-                  userCredentials: {
-                    ...userToApprove?.userCredentials,
-                    password:
-                      this.dialogData?.configurations?.usersSettings
-                        ?.defaultPassword,
-                    username: selectedUsername,
-                    userRoles:
-                      (
-                        flatten(
-                          (
-                            userToApprove?.userCredentials?.userRoles?.filter(
-                              (role) => role?.id != ''
-                            ) || []
-                          )?.map((userRole: any) => {
-                            return flatten(
+    this.dialog
+      .open(SharedConfirmationModalComponent, {
+        minWidth: '20%',
+        data: {
+          title: `Confirm ${actionType} of the request`,
+          message: `Are you sure to confirm ${actionType.toLowerCase()} of this request? ${
+            actionType !== 'APPROVE'
+              ? 'If yes, provide reason for rejection'
+              : ''
+          }`,
+          color: actionType === 'APPROVE' ? 'primary' : 'warn',
+          captureReason: actionType !== 'APPROVE' ? true : false,
+        },
+      })
+      .afterClosed()
+      .subscribe((dialogResponse: any) => {
+        if (dialogResponse?.confirmed || dialogResponse === true) {
+          this.saving = true;
+          // Create potential usernames
+          const countOfUsersRemainedToCreate = (
+            request?.payload?.filter((user) => user?.status !== 'CREATED') || []
+          )?.length;
+          // const potentialUserNames = [1, 2, 3].map((key) => {
+          //   return {
+          //     key,
+          //     username: (
+          //       userToApprove?.firstName.substring(0, key) + userToApprove?.surname
+          //     ).toLowerCase(),
+          //   };
+          // });
+          this.messageAndDataStoreService
+            .searchMessageConversationByTicketNumber(
+              this.dialogData?.request?.ticketNumber
+            )
+            .subscribe((response) => {
+              if (response && response != 'none') {
+                const messageConversation = response;
+                if (actionType === 'approve') {
+                  // console.log('messageConversation', messageConversation);
+                  const selectedUsername = this.currentUsername;
+                  if (this.currentUsername) {
+                    let usersCount = 1;
+                    const data = {
+                      id: request?.id,
+                      method: 'POST',
+                      userPayload: omit(
+                        {
+                          ...userToApprove,
+                          userCredentials: {
+                            ...userToApprove?.userCredentials,
+                            password:
+                              this.dialogData?.configurations?.usersSettings
+                                ?.defaultPassword,
+                            username: selectedUsername,
+                            userRoles:
                               (
-                                this.dialogData?.configurations?.allowedUserRolesForRequest?.filter(
-                                  (role: any) => role?.id === userRole?.id
+                                flatten(
+                                  (
+                                    userToApprove?.userCredentials?.userRoles?.filter(
+                                      (role) => role?.id != ''
+                                    ) || []
+                                  )?.map((userRole: any) => {
+                                    return flatten(
+                                      (
+                                        this.dialogData?.configurations?.allowedUserRolesForRequest?.filter(
+                                          (role: any) =>
+                                            role?.id === userRole?.id
+                                        ) || []
+                                      )?.map(
+                                        (configuredRole: any) =>
+                                          configuredRole?.associatedRoles || []
+                                      ) || []
+                                    );
+                                  })
                                 ) || []
-                              )?.map(
-                                (configuredRole: any) =>
-                                  configuredRole?.associatedRoles || []
+                              )?.map((role: any) => {
+                                return {
+                                  id: role?.id,
+                                };
+                              }) || [],
+                          },
+                          userGroups:
+                            (
+                              flatten(
+                                (
+                                  userToApprove?.userGroups?.filter(
+                                    (group) => group?.id != ''
+                                  ) || []
+                                )?.map((userGroup: any) => {
+                                  return flatten(
+                                    (
+                                      this.dialogData?.configurations?.allowedUserGroupsForRequest?.filter(
+                                        (group: any) =>
+                                          group?.id === userGroup?.id
+                                      ) || []
+                                    )?.map(
+                                      (configuredGroup: any) =>
+                                        configuredGroup?.associatedGroups || []
+                                    ) || []
+                                  );
+                                })
                               ) || []
+                            )?.map((group: any) => {
+                              return {
+                                id: group?.id,
+                              };
+                            }) || [],
+                          dataViewOrganisationUnits:
+                            userToApprove?.dataViewOrganisationUnits?.length > 0
+                              ? userToApprove?.dataViewOrganisationUnits?.map(
+                                  (ou) => {
+                                    return {
+                                      id: ou?.id,
+                                    };
+                                  }
+                                )
+                              : [
+                                  {
+                                    id: request?.user?.organisationUnits[0]?.id,
+                                  },
+                                ],
+                          organisationUnits:
+                            userToApprove?.organisationUnits?.length > 0
+                              ? userToApprove?.organisationUnits?.map((ou) => {
+                                  return {
+                                    id: ou?.id,
+                                  };
+                                })
+                              : [
+                                  {
+                                    id: request?.user?.organisationUnits[0]?.id,
+                                  },
+                                ],
+                        },
+                        ['referenceId', 'status', 'username', 'password']
+                      ),
+                      messageConversation: {
+                        ...messageConversation,
+                        approvalMessage: `The following are the accounts created \n\n ${usersCount}. ${
+                          userToApprove?.firstName +
+                          ' ' +
+                          userToApprove?.surname +
+                          '  - ' +
+                          userToApprove?.phoneNumber
+                        }  is: username=  ${selectedUsername} and password = ${
+                          this.dialogData?.configurations?.usersSettings
+                            ?.defaultPassword
+                        }\n ${(
+                          request?.payload?.filter((user) => user?.username) ||
+                          []
+                        )
+                          ?.map((userPayload, index) => {
+                            usersCount = usersCount + 1;
+                            return (
+                              usersCount +
+                              '. ' +
+                              userPayload?.firstName +
+                              ' ' +
+                              userPayload?.surname +
+                              ' - ' +
+                              userPayload?.phoneNumber +
+                              ' is ' +
+                              userPayload?.username +
+                              ' and password is ' +
+                              userPayload?.password
                             );
                           })
+                          .join('\n')}`,
+                      },
+                      payload: {
+                        ...this.dialogData?.request,
+                        payload: request?.payload?.map((user) => {
+                          if (
+                            user?.referenceId === userToApprove?.referenceId
+                          ) {
+                            return {
+                              ...user,
+                              status: 'CREATED',
+                              username: selectedUsername,
+                              password:
+                                this.dialogData?.configurations?.usersSettings
+                                  ?.defaultPassword,
+                            };
+                          } else {
+                            return user;
+                          }
+                        }),
+                      },
+                    };
+                    this.usersDataService
+                      .approveChanges(data)
+                      .subscribe((response) => {
+                        if (response) {
+                          this.currentUsername = null;
+                          // If datastore key is complete please delete
+                          if (countOfUsersRemainedToCreate == 1) {
+                            // delete first
+                            this.dataStoreDataService
+                              .deleteDataStoreKey(request?.id)
+                              .subscribe((response) => {
+                                this.getRequestInformation();
+                                this.saving = false;
+                                setTimeout(() => {
+                                  this.dialogRef.close(true);
+                                });
+                              });
+                          } else {
+                            this.getRequestInformation();
+                            this.saving = false;
+                          }
+                        }
+                      });
+                  } else {
+                    this.saving = false;
+                  }
+                } else {
+                  // Reject user
+                  let usersCount = 0;
+                  const data = {
+                    id: request?.id,
+                    method: 'POST',
+                    userPayload: null,
+                    messageConversation: {
+                      ...messageConversation,
+                      approvalMessage: `The account ${
+                        userToApprove?.firstName +
+                        ' ' +
+                        userToApprove?.surname +
+                        '  - ' +
+                        userToApprove?.phoneNumber
+                      } (${
+                        userToApprove?.username
+                      }) was confirmed to be a rejected by reason ${
+                        dialogResponse?.reason
+                      } among the following created accounts \n\n \n ${(
+                        request?.payload?.filter(
+                          (userRequest: any) =>
+                            userRequest?.username !== userToApprove?.username
                         ) || []
-                      )?.map((role: any) => {
-                        return {
-                          id: role?.id,
-                        };
-                      }) || [],
-                  },
-                  userGroups:
-                    (
-                      flatten(
-                        (
-                          userToApprove?.userGroups?.filter(
-                            (group) => group?.id != ''
-                          ) || []
-                        )?.map((userGroup: any) => {
-                          return flatten(
-                            (
-                              this.dialogData?.configurations?.allowedUserGroupsForRequest?.filter(
-                                (group: any) => group?.id === userGroup?.id
-                              ) || []
-                            )?.map(
-                              (configuredGroup: any) =>
-                                configuredGroup?.associatedGroups || []
-                            ) || []
+                      )
+                        ?.map((userPayload, index) => {
+                          usersCount = usersCount + 1;
+                          return (
+                            usersCount +
+                            '. ' +
+                            userPayload?.firstName +
+                            ' ' +
+                            userPayload?.surname +
+                            ' - ' +
+                            userPayload?.phoneNumber +
+                            ' is ' +
+                            userPayload?.username +
+                            ' and password is ' +
+                            userPayload?.password
                           );
                         })
-                      ) || []
-                    )?.map((group: any) => {
-                      return {
-                        id: group?.id,
-                      };
-                    }) || [],
-                  dataViewOrganisationUnits:
-                    userToApprove?.dataViewOrganisationUnits?.length > 0
-                      ? userToApprove?.dataViewOrganisationUnits?.map((ou) => {
-                          return {
-                            id: ou?.id,
-                          };
-                        })
-                      : [{ id: request?.user?.organisationUnits[0]?.id }],
-                  organisationUnits:
-                    userToApprove?.organisationUnits?.length > 0
-                      ? userToApprove?.organisationUnits?.map((ou) => {
-                          return {
-                            id: ou?.id,
-                          };
-                        })
-                      : [{ id: request?.user?.organisationUnits[0]?.id }],
-                },
-                ['referenceId', 'status', 'username', 'password']
-              ),
-              messageConversation: {
-                ...messageConversation,
-                approvalMessage: `The following are the accounts created \n\n 0. ${
-                  userToApprove?.firstName +
-                  ' ' +
-                  userToApprove?.surname +
-                  '  - ' +
-                  userToApprove?.phoneNumber
-                }  is: username=  ${selectedUsername} and password = ${
-                  this.dialogData?.configurations?.usersSettings
-                    ?.defaultPassword
-                }\n ${(request?.payload?.filter((user) => user?.username) || [])
-                  ?.map((userPayload, index) => {
-                    return (
-                      index +
-                      1 +
-                      '. ' +
-                      userPayload?.firstName +
-                      ' ' +
-                      userPayload?.surname +
-                      ' - ' +
-                      userPayload?.phoneNumber +
-                      ' is ' +
-                      userPayload?.username +
-                      ' and password is ' +
-                      userPayload?.password
-                    );
-                  })
-                  .join('\n')}`,
-              },
-              payload: {
-                ...this.dialogData?.request,
-                payload: request?.payload?.map((user) => {
-                  if (user?.referenceId === userToApprove?.referenceId) {
-                    return {
-                      ...user,
-                      status: 'CREATED',
-                      username: selectedUsername,
-                      password:
-                        this.dialogData?.configurations?.usersSettings
-                          ?.defaultPassword,
-                    };
-                  } else {
-                    return user;
-                  }
-                }),
-              },
-            };
-            this.usersDataService.approveChanges(data).subscribe((response) => {
-              if (response) {
-                this.currentUsername = null;
-                // If datastore key is complete please delete
-                if (countOfUsersRemainedToCreate == 1) {
-                  // delete first
-                  this.dataStoreDataService
-                    .deleteDataStoreKey(request?.id)
-                    .subscribe((response) => {
-                      this.getRequestInformation();
-                      this.saving = false;
-                      setTimeout(() => {
-                        this.dialogRef.close(true);
-                      });
-                    });
-                } else {
-                  this.getRequestInformation();
-                  this.saving = false;
-                }
-              }
-            });
-          } else {
-            this.saving = false;
-          }
-        } else {
-          const selectedUsername = this.currentUsername;
-          if (selectedUsername) {
-            const messageBody = {
-              subject: request?.message?.subject,
-              users: [
-                {
-                  id: request?.user?.id,
-                  username: request?.user?.username,
-                  type: 'user',
-                },
-              ],
-              userGroups: [],
-              organisationUnits: [],
-              text: `The following are the accounts created \n\n 0. ${
-                userToApprove?.firstName +
-                ' ' +
-                userToApprove?.surname +
-                '  - Phone No.: ' +
-                userToApprove?.phoneNumber +
-                'and Email address: ' +
-                userToApprove?.email
-              }  is: username=  ${selectedUsername} and password = ${
-                this.dialogData?.configurations?.usersSettings?.defaultPassword
-              }\n ${(request?.payload?.filter((user) => user?.username) || [])
-                ?.map((userPayload, index) => {
-                  return (
-                    index +
-                    1 +
-                    '. ' +
-                    userPayload?.firstName +
-                    ' ' +
-                    userPayload?.surname +
-                    ' - Phone No.: ' +
-                    userPayload?.phoneNumber +
-                    ' and Email address ' +
-                    userPayload?.email +
-                    ' is ' +
-                    userPayload?.username +
-                    ' and password is ' +
-                    userPayload?.password
-                  );
-                })
-                .join('\n')}`,
-              attachments: [],
-            };
-            const data = {
-              id: request?.id,
-              method: 'POST',
-              userPayload: omit(
-                {
-                  ...userToApprove,
-                  userCredentials: {
-                    ...userToApprove?.userCredentials,
-                    password:
-                      this.dialogData?.configurations?.usersSettings
-                        ?.defaultPassword,
-                    username: selectedUsername,
-                    userRoles:
-                      userToApprove?.userCredentials?.userRoles?.filter(
-                        (role) => role?.id != ''
-                      ) || [
-                        {
-                          id: 'ZI4hVQsL7Dq',
-                        },
-                      ],
-                  },
-                  userGroups: [
-                    ...userToApprove?.userGroups,
-                    ...flatten(
-                      (
-                        this.dialogData?.configurations?.allowedUserGroupsForRequest?.filter(
-                          (group) =>
-                            userToApprove?.userGroups[0] &&
-                            userToApprove?.userGroups[0]?.id === group?.id
-                        ) || []
-                      )?.map((userGroup) => {
-                        return userGroup?.associatedGroups &&
-                          userGroup?.associatedGroups?.length > 0
-                          ? userGroup?.associatedGroups.map((group) => {
-                              return !group?.id
-                                ? null
-                                : {
-                                    id: group?.id,
-                                  };
-                            })
-                          : [];
-                      })
-                    ),
-                  ]?.filter((group) => group && group?.id != '') || [
-                    {
-                      id: 'zk2Zubvm2kP',
+                        .join('\n')}`,
                     },
-                  ],
-                  dataViewOrganisationUnits:
-                    userToApprove?.dataViewOrganisationUnits?.length > 0
-                      ? userToApprove?.dataViewOrganisationUnits?.map((ou) => {
+                    payload: {
+                      ...this.dialogData?.request,
+                      payload: request?.payload?.map((user) => {
+                        if (user?.referenceId === userToApprove?.referenceId) {
                           return {
-                            id: ou?.id,
+                            ...user,
+                            status: 'REJECTED',
+                            reason: 'Confirmed duplicate account',
+                            username: null,
+                            password:
+                              this.dialogData?.configurations?.usersSettings
+                                ?.defaultPassword,
                           };
-                        })
-                      : [{ id: request?.user?.organisationUnits[0]?.id }],
-                  organisationUnits:
-                    userToApprove?.organisationUnits?.length > 0
-                      ? userToApprove?.organisationUnits?.map((ou) => {
-                          return {
-                            id: ou?.id,
-                          };
-                        })
-                      : [{ id: request?.user?.organisationUnits[0]?.id }],
-                },
-                ['referenceId', 'status', 'username', 'password']
-              ),
-              messageBody,
-              payload: {
-                ...this.dialogData?.request,
-                payload: request?.payload?.map((user) => {
-                  if (user?.referenceId === userToApprove?.referenceId) {
-                    return {
-                      ...user,
-                      status: 'CREATED',
-                      username: selectedUsername,
-                      password: userToApprove?.userCredentials?.password,
-                    };
-                  } else {
-                    return user;
-                  }
-                }),
-              },
-            };
-            this.usersDataService.approveChanges(data).subscribe((response) => {
-              if (response) {
-                this.currentUsername = null;
-                // If datastore key is complete please delete
-                if (countOfUsersRemainedToCreate == 1) {
-                  // delete first
-                  this.dataStoreDataService
-                    .deleteDataStoreKey(request?.id)
+                        } else {
+                          return user;
+                        }
+                      }),
+                    },
+                  };
+                  this.usersDataService
+                    .approveChanges(data)
                     .subscribe((response) => {
-                      this.getRequestInformation();
-                      this.saving = false;
-                      setTimeout(() => {
-                        this.dialogRef.close(true);
-                      });
+                      if (response) {
+                        this.currentUsername = null;
+                        // If datastore key is complete please delete
+                        if (countOfUsersRemainedToCreate == 1) {
+                          // delete first
+                          this.dataStoreDataService
+                            .deleteDataStoreKey(request?.id)
+                            .subscribe((response) => {
+                              this.getRequestInformation();
+                              this.saving = false;
+                              setTimeout(() => {
+                                this.dialogRef.close(true);
+                              });
+                            });
+                        } else {
+                          this.getRequestInformation();
+                          this.saving = false;
+                        }
+                      }
+                    });
+                }
+              } else {
+                const selectedUsername = this.currentUsername;
+                if (selectedUsername) {
+                  let usersCount = 1;
+                  const messageBody = {
+                    subject: request?.message?.subject,
+                    users: [
+                      {
+                        id: request?.user?.id,
+                        username: request?.user?.username,
+                        type: 'user',
+                      },
+                    ],
+                    userGroups: [],
+                    organisationUnits: [],
+                    text: `The following are the accounts created \n\n ${usersCount}. ${
+                      userToApprove?.firstName +
+                      ' ' +
+                      userToApprove?.surname +
+                      '  - Phone No.: ' +
+                      userToApprove?.phoneNumber +
+                      'and Email address: ' +
+                      userToApprove?.email
+                    }  is: username=  ${selectedUsername} and password = ${
+                      this.dialogData?.configurations?.usersSettings
+                        ?.defaultPassword
+                    }\n ${(
+                      request?.payload?.filter((user) => user?.username) || []
+                    )
+                      ?.map((userPayload, index) => {
+                        usersCount = usersCount + 1;
+                        return (
+                          usersCount +
+                          '. ' +
+                          userPayload?.firstName +
+                          ' ' +
+                          userPayload?.surname +
+                          ' - Phone No.: ' +
+                          userPayload?.phoneNumber +
+                          ' and Email address ' +
+                          userPayload?.email +
+                          ' is ' +
+                          userPayload?.username +
+                          ' and password is ' +
+                          userPayload?.password
+                        );
+                      })
+                      .join('\n')}`,
+                    attachments: [],
+                  };
+                  const data = {
+                    id: request?.id,
+                    method: 'POST',
+                    userPayload: omit(
+                      {
+                        ...userToApprove,
+                        userCredentials: {
+                          ...userToApprove?.userCredentials,
+                          password:
+                            this.dialogData?.configurations?.usersSettings
+                              ?.defaultPassword,
+                          username: selectedUsername,
+                          userRoles:
+                            userToApprove?.userCredentials?.userRoles?.filter(
+                              (role) => role?.id != ''
+                            ) || [
+                              {
+                                id: 'ZI4hVQsL7Dq',
+                              },
+                            ],
+                        },
+                        userGroups: [
+                          ...userToApprove?.userGroups,
+                          ...flatten(
+                            (
+                              this.dialogData?.configurations?.allowedUserGroupsForRequest?.filter(
+                                (group) =>
+                                  userToApprove?.userGroups[0] &&
+                                  userToApprove?.userGroups[0]?.id === group?.id
+                              ) || []
+                            )?.map((userGroup) => {
+                              return userGroup?.associatedGroups &&
+                                userGroup?.associatedGroups?.length > 0
+                                ? userGroup?.associatedGroups.map((group) => {
+                                    return !group?.id
+                                      ? null
+                                      : {
+                                          id: group?.id,
+                                        };
+                                  })
+                                : [];
+                            })
+                          ),
+                        ]?.filter((group) => group && group?.id != '') || [
+                          {
+                            id: 'zk2Zubvm2kP',
+                          },
+                        ],
+                        dataViewOrganisationUnits:
+                          userToApprove?.dataViewOrganisationUnits?.length > 0
+                            ? userToApprove?.dataViewOrganisationUnits?.map(
+                                (ou) => {
+                                  return {
+                                    id: ou?.id,
+                                  };
+                                }
+                              )
+                            : [{ id: request?.user?.organisationUnits[0]?.id }],
+                        organisationUnits:
+                          userToApprove?.organisationUnits?.length > 0
+                            ? userToApprove?.organisationUnits?.map((ou) => {
+                                return {
+                                  id: ou?.id,
+                                };
+                              })
+                            : [{ id: request?.user?.organisationUnits[0]?.id }],
+                      },
+                      ['referenceId', 'status', 'username', 'password']
+                    ),
+                    messageBody,
+                    payload: {
+                      ...this.dialogData?.request,
+                      payload: request?.payload?.map((user) => {
+                        if (user?.referenceId === userToApprove?.referenceId) {
+                          return {
+                            ...user,
+                            status: 'CREATED',
+                            username: selectedUsername,
+                            password: userToApprove?.userCredentials?.password,
+                          };
+                        } else {
+                          return user;
+                        }
+                      }),
+                    },
+                  };
+                  this.usersDataService
+                    .approveChanges(data)
+                    .subscribe((response) => {
+                      if (response) {
+                        this.currentUsername = null;
+                        // If datastore key is complete please delete
+                        if (countOfUsersRemainedToCreate == 1) {
+                          // delete first
+                          this.dataStoreDataService
+                            .deleteDataStoreKey(request?.id)
+                            .subscribe((response) => {
+                              this.getRequestInformation();
+                              this.saving = false;
+                              setTimeout(() => {
+                                this.dialogRef.close(true);
+                              });
+                            });
+                        } else {
+                          this.getRequestInformation();
+                          this.saving = false;
+                        }
+                      }
                     });
                 } else {
-                  this.getRequestInformation();
                   this.saving = false;
                 }
               }
             });
-          } else {
-            this.saving = false;
-          }
+        } else {
+          // Cancelled
+          this.getRequestInformation();
         }
       });
   }
