@@ -5,3 +5,7 @@
 .approved-user {
   background-color: #e5cd54;
 }
+
+.rejected-user {
+  color: red;
+}

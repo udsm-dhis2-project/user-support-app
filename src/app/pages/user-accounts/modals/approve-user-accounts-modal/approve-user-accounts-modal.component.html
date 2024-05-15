@@ -1,7 +1,9 @@
 <div
   *ngIf="{
-  translations: translations$ | async,
-} as params"
+    translations: translations$ | async,
+    dataStoreInformation: dataStoreInformation$ | async,
+    systemSettings: systemSettings$ | async
+  } as params"
 >
   <div class="loading-overlay" *ngIf="saving">
     <div class="text-center">
@@ -12,12 +14,10 @@
     </div>
   </div>
 
-  <ng-container
-    *ngIf="{ dataStoreInformation: dataStoreInformation$ | async } as params"
-  >
+  <ng-container>
     <mat-progress-bar
       mode="indeterminate"
-      *ngIf="!params?.dataStoreInformation"
+      *ngIf="!params?.dataStoreInformation || !params?.systemSettings"
     ></mat-progress-bar>
 
     <h2 mat-dialog-title>
@@ -105,7 +105,8 @@
               <tr
                 [ngClass]="{
                   'created-user': user?.status == 'CREATED',
-                  'approved-user': user?.status == 'APPROVED'
+                  'approved-user': user?.status == 'APPROVED',
+                  'rejected-user': user?.status === 'REJECTED'
                 }"
               >
                 <td>
@@ -166,18 +167,31 @@
               </tr>
               <ng-container
                 *ngIf="
-                  user?.status === 'CREATED' ||
-                  (user?.status === 'APPROVED' &&
-                    dialogData?.configurations?.useTier2)
+                  user?.status === 'REJECTED' &&
+                  selectedRequestForApproval?.referenceId === user?.referenceId
                 "
               >
                 <tr>
                   <td colspan="100%">
-                    {{ user | json }}
+                    <div>
+                      <p>
+                        Status: <b>{{ user?.status }}</b>
+                      </p>
+                      <p>
+                        Reason:
+                        <b>
+                          {{ user?.reason }}
+                        </b>
+                      </p>
+                    </div>
                   </td>
                 </tr></ng-container
               >
-              <ng-container *ngIf="user?.status !== 'CREATED'">
+              <ng-container
+                *ngIf="
+                  user?.status !== 'CREATED' && user?.status !== 'REJECTED'
+                "
+              >
                 <tr
                   *ngIf="
                     ((user?.status == 'APPROVED' &&
@@ -249,7 +263,8 @@
                           checkingForPotentialDuplicates ||
                           user?.status === 'CREATED' ||
                           !isCurrentUsernameValid ||
-                          !currentUsername
+                          !currentUsername ||
+                          !params?.systemSettings
                         "
                         mat-flat-button
                         color="primary"
@@ -258,7 +273,8 @@
                             $event,
                             user,
                             params?.dataStoreInformation,
-                            'approve'
+                            'approve',
+                            params?.systemSettings
                           )
                         "
                       >
@@ -274,7 +290,8 @@
                         *ngIf="dialogData?.isFeedbackRecepient"
                         [disabled]="
                           checkingForPotentialDuplicates ||
-                          user?.status === 'CREATED'
+                          user?.status === 'CREATED' ||
+                          !params?.systemSettings
                         "
                         mat-flat-button
                         color="warn"
@@ -283,7 +300,8 @@
                             $event,
                             user,
                             params?.dataStoreInformation,
-                            'reject'
+                            'reject',
+                            params?.systemSettings
                           )
                         "
                       >

@@ -14,6 +14,7 @@ import { State } from 'src/app/store/reducers';
 import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
 import { DuplicateUserAccountsListModalComponent } from '../duplicate-user-accounts-list-modal/duplicate-user-accounts-list-modal.component';
 import { SharedConfirmationModalComponent } from 'src/app/shared/modals/shared-confirmation-modal/shared-confirmation-modal.component';
+import { getSystemConfigs } from 'src/app/store/selectors/system-configurations.selectors';
 
 @Component({
   selector: 'app-approve-user-accounts-modal',
@@ -31,6 +32,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
   selectedRequestForApproval: any;
   checkingForPotentialDuplicates: boolean = false;
   potentialDuplicatesByUserRequest: any = {};
+  systemSettings$: Observable<any>;
   constructor(
     private dialogRef: MatDialogRef<ApproveUserAccountsModalComponent>,
     @Inject(MAT_DIALOG_DATA) data,
@@ -44,6 +46,9 @@ export class ApproveUserAccountsModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // console.log(this.dialogData);
+
+    this.systemSettings$ = this.store.select(getSystemConfigs);
     this.translations$ = this.store.select(getCurrentTranslations);
     this.getRequestInformation();
   }
@@ -205,11 +210,13 @@ export class ApproveUserAccountsModalComponent implements OnInit {
     event: Event,
     userToApprove: any,
     request: any,
-    actionType?: string
+    actionType: string,
+    systemSettings: any
   ): void {
     if (event) {
       event.stopPropagation();
     }
+    // console.log('systemSettings', systemSettings);
     this.dialog
       .open(SharedConfirmationModalComponent, {
         minWidth: '20%',
@@ -232,26 +239,68 @@ export class ApproveUserAccountsModalComponent implements OnInit {
           const countOfUsersRemainedToCreate = (
             request?.payload?.filter((user) => user?.status !== 'CREATED') || []
           )?.length;
-          // const potentialUserNames = [1, 2, 3].map((key) => {
-          //   return {
-          //     key,
-          //     username: (
-          //       userToApprove?.firstName.substring(0, key) + userToApprove?.surname
-          //     ).toLowerCase(),
-          //   };
-          // });
+
           this.messageAndDataStoreService
             .searchMessageConversationByTicketNumber(
               this.dialogData?.request?.ticketNumber
             )
             .subscribe((response) => {
-              if (response && response != 'none') {
+              if (response) {
                 const messageConversation = response;
                 if (actionType === 'approve') {
                   // console.log('messageConversation', messageConversation);
+                  let usersCount = 1;
                   const selectedUsername = this.currentUsername;
+                  const message = {
+                    subject: this.dialogData?.request?.message?.subject,
+                    messageType: 'TICKET',
+                    users: [
+                      {
+                        id: this.dialogData?.request?.user?.id,
+                        username: this.dialogData?.request?.user?.username,
+                        type: 'user',
+                      },
+                    ],
+                    userGroups: [
+                      {
+                        id: systemSettings?.feedbackRecipients?.id,
+                      },
+                    ],
+                    organisationUnits: [],
+                    text: `The following are the accounts created \n\n ${usersCount}. ${
+                      userToApprove?.firstName +
+                      ' ' +
+                      userToApprove?.surname +
+                      '  - ' +
+                      userToApprove?.phoneNumber
+                    }  is: username=  ${selectedUsername} and password = ${
+                      this.dialogData?.configurations?.usersSettings
+                        ?.defaultPassword
+                    }\n ${(
+                      request?.payload?.filter((user) => user?.username) || []
+                    )
+                      ?.map((userPayload, index) => {
+                        usersCount = usersCount + 1;
+                        return (
+                          usersCount +
+                          '. ' +
+                          userPayload?.firstName +
+                          ' ' +
+                          userPayload?.surname +
+                          ' - ' +
+                          userPayload?.phoneNumber +
+                          (userPayload?.username && userPayload?.password
+                            ? ' is ' +
+                              userPayload?.username +
+                              ' and password is ' +
+                              userPayload?.password
+                            : '')
+                        );
+                      })
+                      .join('\n')}`,
+                    attachments: [],
+                  };
                   if (this.currentUsername) {
-                    let usersCount = 1;
                     const data = {
                       id: request?.id,
                       method: 'POST',
@@ -346,39 +395,44 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                         },
                         ['referenceId', 'status', 'username', 'password']
                       ),
-                      messageConversation: {
-                        ...messageConversation,
-                        approvalMessage: `The following are the accounts created \n\n ${usersCount}. ${
-                          userToApprove?.firstName +
-                          ' ' +
-                          userToApprove?.surname +
-                          '  - ' +
-                          userToApprove?.phoneNumber
-                        }  is: username=  ${selectedUsername} and password = ${
-                          this.dialogData?.configurations?.usersSettings
-                            ?.defaultPassword
-                        }\n ${(
-                          request?.payload?.filter((user) => user?.username) ||
-                          []
-                        )
-                          ?.map((userPayload, index) => {
-                            usersCount = usersCount + 1;
-                            return (
-                              usersCount +
-                              '. ' +
-                              userPayload?.firstName +
-                              ' ' +
-                              userPayload?.surname +
-                              ' - ' +
-                              userPayload?.phoneNumber +
-                              ' is ' +
-                              userPayload?.username +
-                              ' and password is ' +
-                              userPayload?.password
-                            );
-                          })
-                          .join('\n')}`,
-                      },
+                      messageConversation:
+                        response != 'none'
+                          ? {
+                              ...messageConversation,
+                              approvalMessage: `The following are the accounts created \n\n ${usersCount}. ${
+                                userToApprove?.firstName +
+                                ' ' +
+                                userToApprove?.surname +
+                                '  - ' +
+                                userToApprove?.phoneNumber
+                              }  is: username=  ${selectedUsername} and password = ${
+                                this.dialogData?.configurations?.usersSettings
+                                  ?.defaultPassword
+                              }\n ${(
+                                request?.payload?.filter(
+                                  (user) => user?.username
+                                ) || []
+                              )
+                                ?.map((userPayload, index) => {
+                                  usersCount = usersCount + 1;
+                                  return (
+                                    usersCount +
+                                    '. ' +
+                                    userPayload?.firstName +
+                                    ' ' +
+                                    userPayload?.surname +
+                                    ' - ' +
+                                    userPayload?.phoneNumber +
+                                    ' is ' +
+                                    userPayload?.username +
+                                    ' and password is ' +
+                                    userPayload?.password
+                                  );
+                                })
+                                .join('\n')}`,
+                            }
+                          : null,
+                      messageBody: message,
                       payload: {
                         ...this.dialogData?.request,
                         payload: request?.payload?.map((user) => {
@@ -427,50 +481,111 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                   }
                 } else {
                   // Reject user
+                  const message = {
+                    subject: this.dialogData?.request?.message?.subject,
+                    messageType: 'TICKET',
+                    users: [
+                      {
+                        id: this.dialogData?.request?.user?.id,
+                        username: this.dialogData?.request?.user?.username,
+                        type: 'user',
+                      },
+                    ],
+                    userGroups: [
+                      {
+                        id: systemSettings?.feedbackRecipients?.id,
+                      },
+                    ],
+                    organisationUnits: [],
+                    text: `The account ${
+                      userToApprove?.firstName +
+                      ' ' +
+                      userToApprove?.surname +
+                      '  - ' +
+                      userToApprove?.phoneNumber
+                    } ${
+                      userToApprove?.email
+                        ? '(' + userToApprove?.email + ')'
+                        : ''
+                    }) was confirmed to be rejected by reason: ${
+                      dialogResponse?.reason
+                    }  \n\n \n ${(
+                      request?.payload?.filter(
+                        (userRequest: any) =>
+                          userRequest?.referenceId !==
+                          userToApprove?.referenceId
+                      ) || []
+                    )
+                      ?.map((userPayload, index) => {
+                        return (
+                          index +
+                          1 +
+                          '. ' +
+                          userPayload?.firstName +
+                          ' ' +
+                          userPayload?.surname +
+                          ' - ' +
+                          userPayload?.phoneNumber +
+                          (userPayload?.username && userPayload?.password
+                            ? ' is ' +
+                              userPayload?.username +
+                              ' and password is ' +
+                              userPayload?.password
+                            : '')
+                        );
+                      })
+                      .join('\n')}`,
+                    attachments: [],
+                  };
                   let usersCount = 0;
+                  // console.log('RESPONSE TEST', response);
                   const data = {
                     id: request?.id,
                     method: 'POST',
                     userPayload: null,
-                    messageConversation: {
-                      ...messageConversation,
-                      approvalMessage: `The account ${
-                        userToApprove?.firstName +
-                        ' ' +
-                        userToApprove?.surname +
-                        '  - ' +
-                        userToApprove?.phoneNumber
-                      } ${
-                        userToApprove?.email
-                          ? '(' + userToApprove?.email + ')'
-                          : ''
-                      }) was confirmed to be rejected by reason: ${
-                        dialogResponse?.reason
-                      }  \n\n \n ${(
-                        request?.payload?.filter(
-                          (userRequest: any) =>
-                            userRequest?.referenceId !==
-                            userToApprove?.referenceId
-                        ) || []
-                      )
-                        ?.map((userPayload, index) => {
-                          usersCount = usersCount + 1;
-                          return (
-                            usersCount +
-                            '. ' +
-                            userPayload?.firstName +
-                            ' ' +
-                            userPayload?.surname +
-                            ' - ' +
-                            userPayload?.phoneNumber +
-                            ' is ' +
-                            userPayload?.username +
-                            ' and password is ' +
-                            userPayload?.password
-                          );
-                        })
-                        .join('\n')}`,
-                    },
+                    messageConversation:
+                      response != 'none'
+                        ? {
+                            ...messageConversation,
+                            approvalMessage: `The account ${
+                              userToApprove?.firstName +
+                              ' ' +
+                              userToApprove?.surname +
+                              '  - ' +
+                              userToApprove?.phoneNumber
+                            } ${
+                              userToApprove?.email
+                                ? '(' + userToApprove?.email + ')'
+                                : ''
+                            }) was confirmed to be rejected by reason: ${
+                              dialogResponse?.reason
+                            }  \n\n \n ${(
+                              request?.payload?.filter(
+                                (userRequest: any) =>
+                                  userRequest?.referenceId !==
+                                  userToApprove?.referenceId
+                              ) || []
+                            )
+                              ?.map((userPayload, index) => {
+                                usersCount = usersCount + 1;
+                                return (
+                                  usersCount +
+                                  '. ' +
+                                  userPayload?.firstName +
+                                  ' ' +
+                                  userPayload?.surname +
+                                  ' - ' +
+                                  userPayload?.phoneNumber +
+                                  ' is ' +
+                                  userPayload?.username +
+                                  ' and password is ' +
+                                  userPayload?.password
+                                );
+                              })
+                              .join('\n')}`,
+                          }
+                        : null,
+                    messageBody: message,
                     payload: {
                       ...this.dialogData?.request,
                       payload: request?.payload?.map((user) => {
@@ -478,11 +593,9 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                           return {
                             ...user,
                             status: 'REJECTED',
-                            reason: 'Confirmed duplicate account',
+                            reason: dialogResponse?.reason,
                             username: null,
-                            password:
-                              this.dialogData?.configurations?.usersSettings
-                                ?.defaultPassword,
+                            password: null,
                           };
                         } else {
                           return user;

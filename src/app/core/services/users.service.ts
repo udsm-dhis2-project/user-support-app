@@ -145,8 +145,6 @@ export class UsersDataService {
             : this.httpClient.post(`messageConversations`, data?.messageBody)
         ).pipe(
           switchMap((responses: any[]) => {
-            console.log('responses:::', responses);
-            console.log('DATA:::', data);
             const userResponse: any = responses[0];
             return userResponse
               ? this.httpClient.post(`messageConversations`, {
