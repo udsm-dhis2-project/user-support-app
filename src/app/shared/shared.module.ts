@@ -11,6 +11,7 @@ import { FilterFormRequestsPipe } from './pipes/filter-requests.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 import { FilterItemsPipe } from './pipes/filter-items.pipe';
 import { modals } from './modals';
+import { FilterRequestsByStatusPipe } from './pipes/filter-requests-by-status.pipe';
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { modals } from './modals';
     NgxDhis2PeriodFilterModule,
     SearchItemPipe,
     FilterFormRequestsPipe,
+    FilterRequestsByStatusPipe,
     FilterItemsPipe,
     TranslateModule,
   ],
@@ -43,6 +45,7 @@ import { modals } from './modals';
     ...modals,
     SearchItemPipe,
     FilterFormRequestsPipe,
+    FilterRequestsByStatusPipe,
     FilterItemsPipe,
   ],
 })
