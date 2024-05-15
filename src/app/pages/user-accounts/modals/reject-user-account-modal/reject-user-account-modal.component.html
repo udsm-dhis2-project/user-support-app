@@ -14,7 +14,13 @@
     translations: translations$ | async
   } as params"
 >
-  <h2 mat-dialog-title>{{ params?.translations['User Account Rejection'] || 'User Account Rejection' }}</h2>
+  <h2 mat-dialog-title>
+    {{
+      params?.translations && params?.translations['User Account Rejection']
+        ? params?.translations['User Account Rejection']
+        : 'User Account Rejection'
+    }}
+  </h2>
   <mat-dialog-content class="mat-typography">
     <div
       class="approve-container"
@@ -28,9 +34,7 @@
       >
         <mat-progress-bar
           mode="indeterminate"
-          *ngIf="
-            !params?.messageConversation
-          "
+          *ngIf="!params?.messageConversation"
         ></mat-progress-bar>
         <div class="w-100" *ngIf="params?.messageConversation">
           <div class="w-100" *ngIf="dataRow?.user">
@@ -73,30 +77,41 @@
             class="text-warning mt-2"
             *ngIf="reasonForRejection && reasonForRejection.length < 8"
           >
-            {{ params?.translations['Not a valid reason'] || 'Not a valid reason' }}
+            {{
+              params?.translations && params?.translations['Not a valid reason']
+                ? params?.translations['Not a valid reason']
+                : 'Not a valid reason'
+            }}
           </p>
           <div mat-dialog-actions class="d-flex justify-content-end">
-            <button mat-button (click)="onClose($event)">
-              {{ params?.translations[(successfullyApproved ? 'Done' : 'Close')] || (successfullyApproved ? 'Done' : 'Close') }}
+            <button mat-stroked-button (click)="onClose($event)">
+              {{
+                params?.translations &&
+                params?.translations[successfullyApproved ? 'Done' : 'Close']
+                  ? params?.translations[
+                      successfullyApproved ? 'Done' : 'Close'
+                    ]
+                  : successfullyApproved
+                  ? 'Done'
+                  : 'Close'
+              }}
             </button>
             <button
-              mat-stroked-button
+              mat-flat-button
               [disabled]="
                 successfullyApproved ||
                 (dilogData?.actionType === 'REJECTED' &&
                   (!reasonForRejection || reasonForRejection?.length < 8))
               "
+              color="warn"
               class="ml-2"
-              (click)="
-                onSave(
-                  $event,
-                  dialogData,
-                  params?.messageConversation,
-                  params?.dataSetsCategoriesPayload
-                )
-              "
+              (click)="onSave($event, dialogData, params?.messageConversation)"
             >
-              {{ params?.translations['Confirm'] || 'Confirm' }}
+              {{
+                params?.translations && params?.translations['Confirm']
+                  ? params?.translations['Confirm']
+                  : 'Confirm'
+              }}
             </button>
           </div>
         </div>
@@ -107,18 +122,36 @@
       class="w-100 success-message"
       *ngIf="savedData && !missingKey && dialogData?.actionType === 'APPROVE'"
     >
-      <p>{{ params?.translations['Successfully updated'] || 'Successfully updated' }}!</p>
+      <p>
+        {{
+          params?.translations && params?.translations['Successfully updated']
+            ? params?.translations['Successfully updated']
+            : 'Successfully updated'
+        }}!
+      </p>
     </div>
 
     <div
       class="w-100 success-message"
       *ngIf="savedData && !missingKey && dialogData?.actionType === 'REJECTED'"
     >
-      <p>{{ params?.translations['Successfully sent'] || 'Successfully sent' }}!</p>
+      <p>
+        {{
+          params?.translations && params?.translations['Successfully sent']
+            ? params?.translations['Successfully sent']
+            : 'Successfully sent'
+        }}!
+      </p>
     </div>
 
     <div *ngIf="missingKey">
-      <p>{{ params?.translations['Already attended'] || 'Already attended' }}!</p>
+      <p>
+        {{
+          params?.translations && params?.translations['Already attended']
+            ? params?.translations['Already attended']
+            : 'Already attended'
+        }}!
+      </p>
     </div>
   </mat-dialog-content>
   <!-- <mat-dialog-actions align="end">

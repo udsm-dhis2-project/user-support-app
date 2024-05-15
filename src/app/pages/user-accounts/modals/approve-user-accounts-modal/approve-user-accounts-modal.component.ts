@@ -440,14 +440,17 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                         userToApprove?.surname +
                         '  - ' +
                         userToApprove?.phoneNumber
-                      } (${
-                        userToApprove?.username
-                      }) was confirmed to be a rejected by reason ${
+                      } ${
+                        userToApprove?.email
+                          ? '(' + userToApprove?.email + ')'
+                          : ''
+                      }) was confirmed to be rejected by reason: ${
                         dialogResponse?.reason
-                      } among the following created accounts \n\n \n ${(
+                      }  \n\n \n ${(
                         request?.payload?.filter(
                           (userRequest: any) =>
-                            userRequest?.username !== userToApprove?.username
+                            userRequest?.referenceId !==
+                            userToApprove?.referenceId
                         ) || []
                       )
                         ?.map((userPayload, index) => {
@@ -677,7 +680,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
             });
         } else {
           // Cancelled
-          this.getRequestInformation();
+          // this.getRequestInformation();
         }
       });
   }
