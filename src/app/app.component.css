@@ -1,132 +1,27 @@
-.header-bar {
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  z-index: 1400;
-  height: 48px;
-}
-.application-content {
-  margin-top: 50px;
-  background-color: #fafafa !important;
-}
-
-.user-accounts-container {
-  width: 500px;
-  height: calc(100vh - 80px);
-}
-
-.example-sidenav-content {
+/**
+ * Copyright 2024 UDSM DHIS2 Lab. All rights reserved.
+ * Use of this source code is governed by a BSD-style
+ * license that can be found in the LICENSE file.
+ */
+.app-container {
+  position: relative;
   display: flex;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
+}
+.app-side-bar {
+  position: sticky;
+  width: 220px;
+  height: calc(100vh - 48px);
+  background-color: #f2f5f7;
 }
 
-.top-menu {
-  display: none;
-  width: 100% !important;
-  background-color: #fafafa !important;
+::ng-deep .side-bar-item {
+  background-color: #f2f5f7 !important;
 }
 
-.list-item {
-  cursor: pointer !important;
-  display: flex;
-  -webkit-box-align: stretch;
-  align-items: stretch;
-  padding: 0px;
-  padding-left: 8px;
-  list-style: none;
-  transition: background-color 150ms ease-in-out 0s;
-  color: rgb(33, 41, 52);
-  fill: rgb(33, 41, 52);
-  font-size: 15px;
-  line-height: 18px;
-  user-select: none;
-  margin-bottom: 5px;
-  background-color: transparent;
+::ng-deep .side-bar-item:hover {
+  background-color: rgb(232, 237, 242) !important;
 }
 
-.list-item:hover {
-  background-color: #edf2f6;
-  border-radius: 0 20px 20px 0;
-}
-
-.active-menu-item {
-  background-color: #edf2f6;
-  border-radius: 0 20px 20px 0;
-}
-
-.menu-list-item {
-  height: 100%;
-  border-right: solid 1px #eee;
-}
-
-.side-navigation-menu {
-  width: 15%;
-  height: calc(100vh - 80px);
-  border-radius: 5px !important;
-  display: inline-block;
-  padding: 4px 0px;
-  background-color: #fafafa !important;
-}
-
-.drawer-contents-container {
-  height: auto;
-  margin-top: 5px;
-  background-color: transparent;
-}
-
-@media screen and (max-width: 780px) {
-  .side-navigation-menu {
-    display: none;
-  }
-  .top-menu {
-    display: block;
-  }
-
-  .contents-container {
-    padding: 4px 16px;
-  }
-  .list-item {
-    border-radius: 0 !important;
-  }
-}
-
-::ng-deep .mat-drawer-side {
-  border-right: solid 1px #f4f8fd !important;
-}
-
-.welcome-user-item {
-  border: none;
-}
-
-.welcome-user-item:hover {
-  background-color: rgb(243, 243, 243) !important;
-  border-radius: none !important;
-}
-
-.meu-list {
-  padding: 5px;
-}
-
-.new-message-button {
-  border-radius: 25px;
-  cursor: pointer;
-  box-shadow: 0 1px 3px #0003, 0 1px 1px #00000024, 0 1px 3px #0000001f;
-}
-
-.new-message-button:hover {
-  background-color: rgb(243, 243, 243) !important;
-}
-
-.current-user-name {
-  color: #276696;
-  font-weight: 500;
-  font-size: 1rem;
-}
-
-#locale-selection {
-  border-radius: 4px;
-  border: solid 1px #838383;
+::ng-deep .active {
+  background-color: #d4dde5 !important;
 }

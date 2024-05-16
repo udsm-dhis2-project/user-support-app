@@ -16,13 +16,15 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { environment } from '../environments/environment';
-import { AppComponent } from './app.component';
 import { RoutingModule } from './app.routes';
 import { CoreModule, RouteSerializer } from './core';
 import { effects } from './store/effects';
 import { metaReducers, reducers } from './store/reducers';
 import { materialModules } from './shared/materials.module';
-import { HeaderBarModule } from '@iapps/ng-dhis2-ui';
+import { HeaderBarModule, ReactWrapperModule } from '@iapps/ng-dhis2-ui';
+import { AppShellModule } from '@iapps/ng-dhis2-shell';
+import { AppWrapper } from './app-wrapper';
+import { AppComponentContent } from './app.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -30,11 +32,12 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppWrapper, AppComponentContent],
   imports: [
     BrowserModule,
     HttpClientModule,
     RoutingModule,
+    ReactWrapperModule,
     CoreModule,
     HeaderBarModule,
     ...materialModules,
@@ -50,11 +53,10 @@ export function HttpLoaderFactory(http: HttpClient) {
         organisationUnitGroups: 'id',
       },
     }),
-    /**
-     * Menu  module
-     */
-    // NgxDhis2MenuModule,
-
+    AppShellModule.forRoot({
+      pwaEnabled: false,
+      isDevMode: !environment.production,
+    }),
     /**
      Translation module
     */
@@ -79,6 +81,6 @@ export function HttpLoaderFactory(http: HttpClient) {
       : [],
   ],
   providers: [{ provide: RouterStateSerializer, useClass: RouteSerializer }],
-  bootstrap: [AppComponent],
+  bootstrap: [AppWrapper],
 })
 export class AppModule {}
