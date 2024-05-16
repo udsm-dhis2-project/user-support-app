@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatRadioChange } from '@angular/material/radio';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Store } from '@ngrx/store';
 import { Observable, zip } from 'rxjs';
@@ -29,6 +30,7 @@ export class RequestsListDashboardComponent implements OnInit {
   searchingText: string;
   deletingRequest: boolean = false;
   translations$: Observable<any>;
+  currentRequestCategory: string = 'pending';
 
   constructor(
     private dataStoreService: DataStoreDataService,
@@ -55,6 +57,10 @@ export class RequestsListDashboardComponent implements OnInit {
         organisationUnitId: this.currentUser?.organisationUnits[0]?.id,
       }
     );
+  }
+
+  getRequestCategory(event: MatRadioChange): void {
+    this.currentRequestCategory = event?.value;
   }
 
   onToggleDetails(event: Event, data: any) {

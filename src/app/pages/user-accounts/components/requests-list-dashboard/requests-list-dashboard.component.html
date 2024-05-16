@@ -25,450 +25,254 @@
     *ngIf="!params?.allDataForUserSupport"
   ></mat-progress-bar>
   <!-- {{ params?.allDataForUserSupport?.data | json }} -->
-  <div class="w-100">
-    <mat-tab-group mat-align-tabs="start">
-      <mat-tab label="Requests being processed">
-        <div class="mt-2 p-3">
-          <div class="w-100 p-3" style="overflow: auto">
-            <table class="table table-striped table-bordered mat-elevation-z1">
-              <thead class="custom-header-bg">
-                <tr>
-                  <th style="width: 15px">
-                    {{ params?.translations['SN'] || 'SN' }}
-                  </th>
-                  <th>{{ params?.translations['Message'] || 'Request' }}</th>
-                  <th>{{ params?.translations['Date'] || 'Date' }}</th>
-                  <th style="width: 300px">
-                    {{ params?.translations['Actions'] || 'Actions' }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody *ngIf="params?.allDataForUserSupport">
-                <ng-container
-                  *ngIf="
-                    (
-                      params?.allDataForUserSupport?.data
-                      | FilterFormRequests
-                        : 'status'
-                        : 'REJECTED'
-                        : currentUser?.id
-                    )?.length > 0
-                  "
-                >
-                  <ng-container
-                    *ngFor="
-                      let dataRow of params?.allDataForUserSupport?.data
-                        | FilterFormRequests
-                          : 'status'
-                          : 'REJECTED'
-                          : currentUser?.id;
-                      let count = index
-                    "
-                  >
-                    <tr>
-                      <td>
-                        {{ count + 1 }}
-                      </td>
-                      <td>
-                        <div [innerHTML]="dataRow?.message?.message"></div>
-                      </td>
-                      <td>
-                        {{ dataRow?.timeSinceResponseSent }}
-                      </td>
-                      <td>
-                        <div class="w-100 d-flext justify-content-end">
-                          <button
-                            *ngIf="!dataRow?.type"
-                            mat-flat-button
-                            (click)="onToggleDetails($event, dataRow)"
-                          >
-                            {{
-                              params?.translations['View details'] ||
-                                'View details'
-                            }}
-                          </button>
-                          <!-- <button mat-button class="ml-2">
+  <div class="w-100 mt-2">
+    <mat-radio-group
+      (change)="getRequestCategory($event)"
+      color="primary"
+      aria-label="Select an option"
+    >
+      <mat-radio-button
+        [checked]="currentRequestCategory === 'pending'"
+        value="pending"
+        >Pending requests</mat-radio-button
+      >
+      <mat-radio-button
+        [checked]="currentRequestCategory === 'rejected'"
+        value="rejected"
+        >Rejected requests</mat-radio-button
+      >
+    </mat-radio-group>
+    <div class="w-100 p-3" style="overflow: auto">
+      <table class="table table-striped table-bordered mat-elevation-z1">
+        <thead class="custom-header-bg">
+          <tr>
+            <th style="width: 15px">
+              {{ params?.translations['SN'] || 'SN' }}
+            </th>
+            <th>{{ params?.translations['Message'] || 'Request' }}</th>
+            <th *ngIf="currentRequestCategory === 'rejected'">
+              {{
+                params?.translations &&
+                params?.translations['Rejection comment']
+                  ? params?.translations['Rejection comment']
+                  : 'Rejection comment'
+              }}
+            </th>
+            <th>{{ params?.translations['Date'] || 'Date' }}</th>
+            <th style="width: 300px">
+              {{ params?.translations['Actions'] || 'Actions' }}
+            </th>
+          </tr>
+        </thead>
+        <tbody *ngIf="params?.allDataForUserSupport">
+          <ng-container
+            *ngIf="
+              (currentRequestCategory === 'pending'
+                ? (params?.allDataForUserSupport?.data
+                  | FilterFormRequests
+                    : 'status'
+                    : 'REJECTED'
+                    : currentUser?.id)
+                : (params?.allDataForUserSupport?.data
+                  | FilterFormRequests : currentUser?.id
+                  | filterRequestsByStatus : 'REJECTED')
+              )?.length > 0
+            "
+          >
+            <ng-container
+              *ngFor="
+                let dataRow of currentRequestCategory === 'pending'
+                  ? (params?.allDataForUserSupport?.data
+                    | FilterFormRequests
+                      : 'status'
+                      : 'REJECTED'
+                      : currentUser?.id)
+                  : (params?.allDataForUserSupport?.data
+                    | FilterFormRequests : currentUser?.id
+                    | filterRequestsByStatus : 'REJECTED');
+                let count = index
+              "
+            >
+              <tr>
+                <td>
+                  {{ count + 1 }}
+                </td>
+                <td>
+                  <div [innerHTML]="dataRow?.message?.message"></div>
+                </td>
+                <td *ngIf="currentRequestCategory === 'rejected'">
+                  {{ dataRow?.rejectionReasonMessage }}
+                </td>
+                <td>
+                  {{ dataRow?.timeSinceResponseSent }}
+                </td>
+                <td>
+                  <div class="w-100 d-flext justify-content-end">
+                    <button
+                      *ngIf="!dataRow?.type"
+                      mat-flat-button
+                      (click)="onToggleDetails($event, dataRow)"
+                    >
+                      {{
+                        params?.translations &&
+                        params?.translations['View details']
+                          ? params?.translations['View details']
+                          : 'View details'
+                      }}
+                    </button>
+                    <!-- <button mat-button class="ml-2">
                   <mat-icon title="Delete Request">delete</mat-icon>
                 </button> -->
 
-                          <button
-                            *ngIf="currentUser?.id === dataRow?.user?.id"
-                            mat-flat-button
-                            (click)="onDeleteRequest($event, dataRow)"
-                            color="warn"
-                          >
-                            {{ params?.translations['Delete'] || 'Delete' }}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr *ngIf="viewMoreDetails[dataRow?.id]">
-                      <td colspan="100%">
-                        <table class="table ml-4 mr-5">
-                          <thead>
-                            <tr>
-                              <th>{{ params?.translations['SN'] || 'SN' }}</th>
-                              <th>
-                                {{ params?.translations['Name'] || 'Names' }}
-                              </th>
-                              <th>
-                                {{ params?.translations['Phone'] || 'Phone' }}
-                              </th>
-                              <th>
-                                {{
-                                  params?.translations['Username'] || 'Username'
-                                }}
-                              </th>
-                              <th>
-                                {{
-                                  params?.translations['Password'] || 'Password'
-                                }}
-                              </th>
-                              <th>
-                                {{ params?.translations['Status'] || 'Status' }}
-                              </th>
-                              <th>
-                                {{
-                                  params?.translations &&
-                                  params?.translations['Remarks']
-                                    ? params?.translations['Remarks']
-                                    : 'Status'
-                                }}
-                              </th>
-                              <th></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <ng-container
-                              *ngFor="
-                                let user of dataRow?.payload;
-                                let count = index
-                              "
-                            >
-                              <tr
-                                [ngClass]="{
-                                  'created-user': user?.status == 'CREATED',
-                                  'approved-user': user?.status == 'APPROVED'
-                                }"
-                              >
-                                <td>
-                                  {{ count + 1 }}
-                                </td>
-                                <td>
-                                  {{ user?.firstName + ' ' + user?.surname }}
-                                </td>
-                                <td>
-                                  {{ user?.phoneNumber }}
-                                </td>
-                                <td>
-                                  {{ user?.username ? user?.username : '-' }}
-                                </td>
-                                <td>
-                                  {{ user?.password ? user?.username : '-' }}
-                                </td>
-                                <td>
-                                  {{ user?.status }}
-                                </td>
-                                <td>
-                                  {{
-                                    user?.reason
-                                      ? user?.reason
-                                      : user?.remarks
-                                      ? user?.remarks
-                                      : ''
-                                  }}
-                                </td>
-                                <td>
-                                  <button
-                                    mat-stroked-button
-                                    [disabled]="user?.status"
-                                    (click)="
-                                      onRemoveUser(
-                                        $event,
-                                        user,
-                                        dataRow,
-                                        itemsToConfirm[user?.referenceId] ===
-                                          user?.referenceId
-                                          ? true
-                                          : false
-                                      )
-                                    "
-                                  >
-                                    <mat-icon
-                                      *ngIf="!itemsToConfirm[user?.referenceId]"
-                                      title="Remove this user"
-                                      >delete</mat-icon
-                                    >
-                                    <span
-                                      *ngIf="itemsToConfirm[user?.referenceId]"
-                                      >{{
-                                        params?.translations['Confirm'] ||
-                                          'Confirm'
-                                      }}</span
-                                    >
-                                  </button>
-                                </td>
-                              </tr>
-                            </ng-container>
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                  </ng-container>
-                </ng-container>
-                <ng-container
-                  *ngIf="
-                    (
-                      params?.allDataForUserSupport?.data
-                      | FilterFormRequests
-                        : 'status'
-                        : 'REJECTED'
-                        : currentUser?.id
-                    )?.length == 0
-                  "
-                >
-                  <tr>
-                    <td colspan="100%">
-                      <div class="alert alert-warning" role="alert">
-                        {{
-                          params?.translations['No request available'] ||
-                            'No request available'
-                        }}
-                      </div>
-                    </td>
-                  </tr>
-                </ng-container>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </mat-tab>
-      <mat-tab label="Rejected requests">
-        <div class="mt-2 p-3">
-          <div class="w-100 p-3" style="overflow: auto">
-            <table class="table table-striped table-bordered mat-elevation-z1">
-              <thead class="custom-header-bg">
-                <tr>
-                  <th style="width: 15px">
-                    {{ params?.translations['SN'] || 'SN' }}
-                  </th>
-                  <th>{{ params?.translations['Message'] || 'Request' }}</th>
-                  <th>
-                    {{
-                      params?.translations &&
-                      params?.translations['Rejection comment']
-                        ? params?.translations['Rejection comment']
-                        : 'Rejection comment'
-                    }}
-                  </th>
-                  <th>{{ params?.translations['Date'] || 'Date' }}</th>
-                  <th style="width: 300px">
-                    {{ params?.translations['Actions'] || 'Actions' }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody *ngIf="params?.allDataForUserSupport">
-                <ng-container
-                  *ngIf="
-                    (
-                      params?.allDataForUserSupport?.data
-                      | FilterFormRequests : currentUser?.id
-                      | filterRequestsByStatus : 'REJECTED'
-                    )?.length > 0
-                  "
-                >
-                  <ng-container
-                    *ngFor="
-                      let dataRow of params?.allDataForUserSupport?.data
-                        | FilterFormRequests : currentUser?.id
-                        | filterRequestsByStatus : 'REJECTED';
-                      let count = index
-                    "
-                  >
-                    <tr>
-                      <td>
-                        {{ count + 1 }}
-                      </td>
-                      <td>
-                        <div [innerHTML]="dataRow?.message?.message"></div>
-                      </td>
-                      <td>
-                        {{ dataRow?.rejectionReasonMessage }}
-                      </td>
-                      <td>
-                        {{ dataRow?.timeSinceResponseSent }}
-                      </td>
-                      <td>
-                        <div class="w-100 d-flext justify-content-end">
-                          <button
-                            *ngIf="!dataRow?.type"
-                            mat-flat-button
-                            (click)="onToggleDetails($event, dataRow)"
-                          >
+                    <button
+                      *ngIf="currentUser?.id === dataRow?.user?.id"
+                      mat-flat-button
+                      (click)="onDeleteRequest($event, dataRow)"
+                      color="warn"
+                    >
+                      {{
+                        params?.translations && params?.translations['Delete']
+                          ? params?.translations['Delete']
+                          : 'Delete'
+                      }}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="viewMoreDetails[dataRow?.id]">
+                <td colspan="100%">
+                  <table class="table ml-4 mr-5">
+                    <thead>
+                      <tr>
+                        <th>{{ params?.translations['SN'] || 'SN' }}</th>
+                        <th>
+                          {{ params?.translations['Name'] || 'Names' }}
+                        </th>
+                        <th>
+                          {{ params?.translations['Phone'] || 'Phone' }}
+                        </th>
+                        <th>
+                          {{ params?.translations['Username'] || 'Username' }}
+                        </th>
+                        <th>
+                          {{ params?.translations['Password'] || 'Password' }}
+                        </th>
+                        <th>
+                          {{ params?.translations['Status'] || 'Status' }}
+                        </th>
+                        <th>
+                          {{
+                            params?.translations &&
+                            params?.translations['Remarks']
+                              ? params?.translations['Remarks']
+                              : 'Status'
+                          }}
+                        </th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container
+                        *ngFor="let user of dataRow?.payload; let count = index"
+                      >
+                        <tr
+                          [ngClass]="{
+                            'created-user': user?.status == 'CREATED',
+                            'approved-user': user?.status == 'APPROVED',
+                            'rejected-user': user?.status == 'REJECTED'
+                          }"
+                        >
+                          <td>
+                            {{ count + 1 }}
+                          </td>
+                          <td>
+                            {{ user?.firstName + ' ' + user?.surname }}
+                          </td>
+                          <td>
+                            {{ user?.phoneNumber }}
+                          </td>
+                          <td>
+                            {{ user?.username ? user?.username : '-' }}
+                          </td>
+                          <td>
+                            {{ user?.password ? user?.username : '-' }}
+                          </td>
+                          <td>
+                            {{ user?.status }}
+                          </td>
+                          <td>
                             {{
-                              params?.translations['View details'] ||
-                                'View details'
+                              user?.reason
+                                ? user?.reason
+                                : user?.remarks
+                                ? user?.remarks
+                                : ''
                             }}
-                          </button>
-                          <!-- <button mat-button class="ml-2">
-                  <mat-icon title="Delete Request">delete</mat-icon>
-                </button> -->
-
-                          <button
-                            *ngIf="currentUser?.id === dataRow?.user?.id"
-                            mat-flat-button
-                            (click)="onDeleteRequest($event, dataRow)"
-                            color="warn"
-                          >
-                            {{ params?.translations['Delete'] || 'Delete' }}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr *ngIf="viewMoreDetails[dataRow?.id]">
-                      <td colspan="100%">
-                        <table class="table ml-4 mr-5">
-                          <thead>
-                            <tr>
-                              <th>{{ params?.translations['SN'] || 'SN' }}</th>
-                              <th>
-                                {{ params?.translations['Name'] || 'Names' }}
-                              </th>
-                              <th>
-                                {{ params?.translations['Phone'] || 'Phone' }}
-                              </th>
-                              <th>
-                                {{
-                                  params?.translations['Username'] || 'Username'
-                                }}
-                              </th>
-                              <th>
-                                {{
-                                  params?.translations['Password'] || 'Password'
-                                }}
-                              </th>
-                              <th>
-                                {{ params?.translations['Status'] || 'Status' }}
-                              </th>
-                              <th>
-                                {{
-                                  params?.translations &&
-                                  params?.translations['Remarks']
-                                    ? params?.translations['Remarks']
-                                    : 'Status'
-                                }}
-                              </th>
-                              <th></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <ng-container
-                              *ngFor="
-                                let user of dataRow?.payload;
-                                let count = index
+                          </td>
+                          <td>
+                            <button
+                              mat-stroked-button
+                              [disabled]="user?.status"
+                              (click)="
+                                onRemoveUser(
+                                  $event,
+                                  user,
+                                  dataRow,
+                                  itemsToConfirm[user?.referenceId] ===
+                                    user?.referenceId
+                                    ? true
+                                    : false
+                                )
                               "
                             >
-                              <tr
-                                [ngClass]="{
-                                  'created-user': user?.status == 'CREATED',
-                                  'approved-user': user?.status == 'APPROVED'
-                                }"
+                              <mat-icon
+                                *ngIf="!itemsToConfirm[user?.referenceId]"
+                                title="Remove this user"
+                                >delete</mat-icon
                               >
-                                <td>
-                                  {{ count + 1 }}
-                                </td>
-                                <td>
-                                  {{ user?.firstName + ' ' + user?.surname }}
-                                </td>
-                                <td>
-                                  {{ user?.phoneNumber }}
-                                </td>
-                                <td>
-                                  {{ user?.username ? user?.username : '-' }}
-                                </td>
-                                <td>
-                                  {{ user?.password ? user?.username : '-' }}
-                                </td>
-                                <td>
-                                  {{ user?.status }}
-                                </td>
-                                <td>
-                                  {{
-                                    user?.reason
-                                      ? user?.reason
-                                      : user?.remarks
-                                      ? user?.remarks
-                                      : ''
-                                  }}
-                                </td>
-                                <td>
-                                  <button
-                                    mat-stroked-button
-                                    [disabled]="user?.status"
-                                    (click)="
-                                      onRemoveUser(
-                                        $event,
-                                        user,
-                                        dataRow,
-                                        itemsToConfirm[user?.referenceId] ===
-                                          user?.referenceId
-                                          ? true
-                                          : false
-                                      )
-                                    "
-                                  >
-                                    <mat-icon
-                                      *ngIf="!itemsToConfirm[user?.referenceId]"
-                                      title="Remove this user"
-                                      >delete</mat-icon
-                                    >
-                                    <span
-                                      *ngIf="itemsToConfirm[user?.referenceId]"
-                                      >{{
-                                        params?.translations['Confirm'] ||
-                                          'Confirm'
-                                      }}</span
-                                    >
-                                  </button>
-                                </td>
-                              </tr>
-                            </ng-container>
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                  </ng-container>
-                </ng-container>
-                <ng-container
-                  *ngIf="
-                    (
-                      params?.allDataForUserSupport?.data
-                      | FilterFormRequests : currentUser?.id
-                      | filterRequestsByStatus : 'REJECTED'
-                    )?.length === 0
-                  "
-                >
-                  <tr>
-                    <td colspan="100%">
-                      <div class="alert alert-warning" role="alert">
-                        {{
-                          params?.translations &&
-                          params?.translations['No rejected request available']
-                            ? params?.translations[
-                                'No rejected request available'
-                              ]
-                            : 'No rejected request available'
-                        }}
-                      </div>
-                    </td>
-                  </tr>
-                </ng-container>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </mat-tab>
-    </mat-tab-group>
+                              <span *ngIf="itemsToConfirm[user?.referenceId]">{{
+                                params?.translations['Confirm'] || 'Confirm'
+                              }}</span>
+                            </button>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+          <ng-container
+            *ngIf="
+              (currentRequestCategory === 'pending'
+                ? (params?.allDataForUserSupport?.data
+                  | FilterFormRequests
+                    : 'status'
+                    : 'REJECTED'
+                    : currentUser?.id)
+                : (params?.allDataForUserSupport?.data
+                  | FilterFormRequests : currentUser?.id
+                  | filterRequestsByStatus : 'REJECTED')
+              )?.length === 0
+            "
+          >
+            <tr>
+              <td colspan="100%">
+                <div class="alert alert-warning" role="alert">
+                  {{
+                    params?.translations &&
+                    params?.translations['No request for this category']
+                      ? params?.translations['No request for this category']
+                      : 'No request for this category'
+                  }}
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
   </div>
   <div
     mat-dialog-actions
