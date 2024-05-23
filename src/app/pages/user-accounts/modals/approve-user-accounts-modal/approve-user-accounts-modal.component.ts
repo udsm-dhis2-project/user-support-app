@@ -216,19 +216,18 @@ export class ApproveUserAccountsModalComponent implements OnInit {
     if (event) {
       event.stopPropagation();
     }
-    // console.log('systemSettings', systemSettings);
     this.dialog
       .open(SharedConfirmationModalComponent, {
         minWidth: '20%',
         data: {
           title: `Confirm ${actionType} of the request`,
           message: `Are you sure to confirm ${actionType.toLowerCase()} of this request? ${
-            actionType !== 'APPROVE'
+            actionType?.toLowerCase() !== 'approve'
               ? 'If yes, provide reason for rejection'
               : ''
           }`,
-          color: actionType === 'APPROVE' ? 'primary' : 'warn',
-          captureReason: actionType !== 'APPROVE' ? true : false,
+          color: actionType?.toLowerCase() === 'approve' ? 'primary' : 'warn',
+          captureReason: actionType?.toLowerCase() !== 'approve' ? true : false,
         },
       })
       .afterClosed()
