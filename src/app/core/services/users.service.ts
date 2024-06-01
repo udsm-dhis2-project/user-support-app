@@ -285,7 +285,7 @@ export class UsersDataService {
                 ...userNameData,
                 key: userNameData?.key,
                 username:
-                  response?.users?.length > 0 ? null : userNameData?.username,
+                  response?.users?.length > 0 ? null : userNameData?.username?.replace(/\s+/g, ''),
               };
             })
           );

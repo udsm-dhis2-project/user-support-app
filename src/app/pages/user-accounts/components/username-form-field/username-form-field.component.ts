@@ -56,11 +56,7 @@ export class UsernameFormFieldComponent implements OnInit {
       .subscribe((response) => {
         if (response) {
           this.proposedUsernameDetails = (response?.filter(
-            function (data) {
-              if (data.username) {
-                return data?.username.trim();
-              }
-          }
+            (data) => data?.username
           ) || [])[0];
           this.itsNotDuplicate =
             !this.proposedUsernameDetails?.potentialDuplicate;
