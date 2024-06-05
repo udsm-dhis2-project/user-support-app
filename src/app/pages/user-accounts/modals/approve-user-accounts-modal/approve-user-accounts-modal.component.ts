@@ -224,7 +224,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
           title: `Confirm ${actionType} of the request`,
           message: `Are you sure to confirm ${actionType.toLowerCase()} of this request? ${
             actionType !== 'APPROVE'
-              ? 'If yes, provide reason for rejection'
+              ? `If yes, provide reason for ${actionType.toLowerCase()}`
               : ''
           }`,
           color: actionType === 'APPROVE' ? 'primary' : 'warn',
