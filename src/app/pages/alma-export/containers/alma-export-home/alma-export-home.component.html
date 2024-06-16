@@ -1,0 +1,66 @@
+<div
+  class="w-100"
+  *ngIf="{
+    organisationUnitsLevels: organisationUnitsLevels$ | async,
+    indicatorGroups: indicatorGroups$ | async,
+    indicators: indicators$ | async
+  } as params"
+>
+  <div class="loading-overlay" *ngIf="downloading">
+    <div class="text-center">
+      <div>Downloading requested metadata....</div>
+      <div class="mt-3 d-flex justify-content-center w-100">
+        <mat-spinner diameter="50" strokeWidth="2"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="!params?.organisationUnitsLevels || !params?.indicatorGroups"
+  ></mat-progress-bar>
+  <div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-sx-12">
+      <app-selection-filter
+        *ngIf="params?.organisationUnitsLevels"
+        [itemsList]="params?.organisationUnitsLevels"
+        [label]="'Org Units levels'"
+        (selectedItem)="onGetSelectedOuLevel($event)"
+      ></app-selection-filter>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12 col-sx-12">
+      <app-selection-filter
+        *ngIf="params?.indicatorGroups"
+        [itemsList]="params?.indicatorGroups"
+        [label]="'Inidcator groups'"
+        (selectedItem)="onGetSelectedIndicatorGroup($event)"
+      ></app-selection-filter>
+    </div>
+    <div class="col-md-12" *ngIf="selectedIndcicatorGroup">
+      <div class="w-100">
+        <mat-progress-bar
+          mode="indeterminate"
+          *ngIf="!params?.indicators"
+        ></mat-progress-bar>
+        <div class="w-100" *ngIf="params?.indicators">
+          <app-multiple-items-selection
+            [loadedItemsList]="params?.indicators"
+            [selectedItems]="selectedIndicators"
+            [useLoadedList]="true"
+            (selectedItemsList)="onGetSelectedIndicators($event)"
+          ></app-multiple-items-selection>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 d-flex justify-content-left">
+      <button
+        (click)="onExport($event)"
+        [disabled]="selectedIndicators?.length === 0 && !selectedOuLevel"
+        mat-flat-button
+        color="primary"
+      >
+        Export
+      </button>
+    </div>
+  </div>
+</div>
