@@ -10,7 +10,9 @@ export class IndicatorsService {
 
   getIndicatorGroups(parameters?: string[]): Observable<any> {
     return this.httpClient
-      .get(`indicatorGroups.json${parameters ? parameters?.join('&') : ''}`)
+      .get(
+        `indicatorGroups.json${parameters ? '?' + parameters?.join('&') : ''}`
+      )
       .pipe(
         map((response) => {
           return (response?.indicatorGroups || [])?.map(
