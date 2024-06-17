@@ -80,4 +80,16 @@ export class MultipleItemsSelectionComponent implements OnInit {
     }
     this.selectedItemsList.emit(this.selectedItems);
   }
+
+  onSelectAll(event: Event, items: any[]): void {
+    event.stopPropagation();
+    this.selectedItems = items;
+    this.selectedItemsList.emit(this.selectedItems);
+  }
+
+  onDeselectSelectAll(event: Event): void {
+    event.stopPropagation();
+    this.selectedItems = [];
+    this.selectedItemsList.emit(this.selectedItems);
+  }
 }

@@ -7,8 +7,8 @@
     <tbody>
       <tr>
         <td class="w-50">
+          <div class="items-list-header text-muted">Available items</div>
           <div class="items-container">
-            <div class="items-list-header">Available items</div>
             <div
               class="list-item text-left"
               *ngFor="
@@ -19,10 +19,15 @@
               {{ available?.name }}
             </div>
           </div>
+          <div class="w-100 d-flex justify-content-center">
+            <button mat-button (click)="onSelectAll($event, params?.resources)">
+              Select all
+            </button>
+          </div>
         </td>
         <td class="w-50">
+          <div class="items-list-header text-muted">Selected items</div>
           <div class="items-container">
-            <div class="items-list-header">selected items</div>
             <div
               class="list-item text-left"
               *ngFor="let item of selectedItems"
@@ -30,6 +35,12 @@
             >
               {{ item?.name }}
             </div>
+          </div>
+
+          <div class="w-100 d-flex justify-content-center">
+            <button mat-button (click)="onDeselectSelectAll($event)">
+              Remove all
+            </button>
           </div>
         </td>
       </tr>
