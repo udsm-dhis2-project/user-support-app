@@ -134,7 +134,7 @@ export class UsersDataService {
           data?.messageConversation
             ? this.httpClient.post(
                 `messageConversations/${data?.messageConversation?.id}`,
-                data?.messageConversation?.approvalMessage
+                data?.messageConversation?.approvalMessage.toString()
               )
             : of(null),
           data?.messageConversation
