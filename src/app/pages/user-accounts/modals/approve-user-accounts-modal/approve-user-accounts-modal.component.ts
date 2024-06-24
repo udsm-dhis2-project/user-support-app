@@ -221,14 +221,14 @@ export class ApproveUserAccountsModalComponent implements OnInit {
       .open(SharedConfirmationModalComponent, {
         minWidth: '20%',
         data: {
-          title: `Confirm ${actionType} of the request`,
+          title: `Confirm ${actionType.toLowerCase()} of the request`,
           message: `Are you sure to confirm ${actionType.toLowerCase()} of this request? ${
             actionType !== 'APPROVE'
               ? `If yes, provide reason for ${actionType.toLowerCase()}`
               : ''
           }`,
           color: actionType === 'APPROVE' ? 'primary' : 'warn',
-          captureReason: actionType !== 'APPROVE' ? true : false,
+          captureReason: actionType === 'APPROVE' ? false : true,
         },
       })
       .afterClosed()
@@ -247,7 +247,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
             .subscribe((response) => {
               if (response) {
                 const messageConversation = response;
-                if (actionType === 'approve') {
+                if (actionType === 'APPROVE') {
                   // console.log('messageConversation', messageConversation);
                   let usersCount = 1;
                   const selectedUsername = this.currentUsername;
