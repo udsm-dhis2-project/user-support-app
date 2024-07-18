@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AccountabilityService } from '../../services/accountability.service';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { orderBy, sortBy } from 'lodash';
 import { MatSelectChange } from '@angular/material/select';
 import {
@@ -20,6 +20,7 @@ export class AccountabilityListComponent implements OnInit {
   selectedPeriod: any;
   years: number[];
   selectedYear: number = new Date().getFullYear();
+  selectedQuarter: string;
 
   constructor(private accountabilityService: AccountabilityService) {}
 
@@ -27,25 +28,31 @@ export class AccountabilityListComponent implements OnInit {
     this.years = getYears(2012);
   }
 
-  getAccountabilityData(): void {
+  getAccountabilityData(selectedPeriod: any): void {
+    this.responsibilityPayload$ = of(null);
     this.responsibilityPayload$ = this.accountabilityService
-      .getUsersAndMessageConversations(this.userGroup?.id, this.selectedPeriod)
+      .getUsersAndMessageConversations(this.userGroup?.id, selectedPeriod)
       .pipe(map((response: any) => orderBy(response, ['count'], ['desc'])));
   }
 
   onYearChange(event: MatSelectChange): void {
     this.selectedYear = event.value;
-    if (this.selectedPeriod) {
-      this.getAccountabilityData();
+
+    if (this.selectedQuarter) {
+      this.selectedPeriod = getStartAndEndDatesUsingQuarter(
+        this.selectedQuarter,
+        this.selectedYear
+      );
+      this.getAccountabilityData(this.selectedPeriod);
     }
   }
 
   onPeriodChange(event: MatSelectChange): void {
-    const quarter = event.value;
+    this.selectedQuarter = event.value;
     this.selectedPeriod = getStartAndEndDatesUsingQuarter(
-      quarter,
+      this.selectedQuarter,
       this.selectedYear
     );
-    this.getAccountabilityData();
+    this.getAccountabilityData(this.selectedPeriod);
   }
 }

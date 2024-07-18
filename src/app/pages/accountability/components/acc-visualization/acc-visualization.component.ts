@@ -45,16 +45,13 @@ export class AccVisualizationComponent implements OnInit {
         ? staffData?.formattedAccPayload[2]?.count
         : 0
     );
-    console.log(accRequests);
-    console.log(formRequests);
-    console.log(indUpdates);
     const chart = (Highcharts as any).chart('vis-chart', {
       chart: {
         type: 'column',
       },
       title: {
-        text: 'Accountability status',
-        align: 'left',
+        text: 'Support accountability status',
+        align: 'center',
       },
       xAxis: {
         categories: this.responsibilityPayload?.map(
@@ -71,15 +68,15 @@ export class AccVisualizationComponent implements OnInit {
         },
       },
       legend: {
-        align: 'left',
-        x: 70,
+        align: 'right',
+        x: 0,
         verticalAlign: 'top',
-        y: 70,
+        y: 25,
         floating: true,
         backgroundColor:
           Highcharts.defaultOptions.legend.backgroundColor || 'white',
-        borderColor: '#CCC',
-        borderWidth: 1,
+        // borderColor: '#CCC',
+        // borderWidth: 1,
         shadow: false,
       },
       tooltip: {
@@ -87,6 +84,11 @@ export class AccVisualizationComponent implements OnInit {
         pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}',
       },
       colors: this.getChartColors(),
+      buttons: {
+        contextButton: {
+          enabled: false,
+        },
+      },
       plotOptions: {
         column: {
           stacking: 'normal',
@@ -97,11 +99,11 @@ export class AccVisualizationComponent implements OnInit {
       },
       series: [
         {
-          name: 'Acc requests',
+          name: 'Accounts Requests',
           data: accRequests,
         },
         {
-          name: 'Form requests',
+          name: 'Datasets/Programs requests',
           data: formRequests,
         },
         {
