@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Observable, of, zip } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { omit, uniqBy } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApproveFeedbackService {
+  shortName: string;
   constructor(private httpClient: NgxDhis2HttpClientService) {}
 
   approveChanges(data: any): Observable<any> {
@@ -33,13 +34,21 @@ export class ApproveFeedbackService {
           : this.httpClient.post(`messageConversations`, data?.messageBody),
         data?.dataSetsCategoriesPayload?.length > 0
           ? zip(
-              ...data?.dataSetsCategoriesPayload?.map((categoryPayload) => {
-                return this.httpClient.put(
-                  `categoryOptions/${categoryPayload?.id}?mergeMode=REPLACE`,
-                  categoryPayload
-                );
-              })
-            ).pipe(map((responses) => responses))
+            ...data?.dataSetsCategoriesPayload?.map((categoryPayload) => {
+              return this.httpClient.get(
+                `categoryOptions/${categoryPayload?.id}.json?fields=shortName`
+              ).pipe(
+                switchMap((response) => {
+                  categoryPayload.shortName = response?.shortName;
+                  return this.httpClient.put(
+                    `categoryOptions/${categoryPayload?.id}?mergeMode=REPLACE`,
+                    categoryPayload
+                  );
+                })
+              );
+            })
+          )
+         .pipe(map((responses) => responses))
           : of(null),
         data?.messageConversation
           ? this.httpClient.post(
@@ -75,6 +84,21 @@ export class ApproveFeedbackService {
     ).pipe(
       map((response) => response),
       catchError((error) => error)
+    );
+  }
+
+  getCategoryShortName(categoryPayload: any): Observable<any> {
+    const url = `categoryOptions/${categoryPayload?.id}.json?fields=shortName`;
+    return this.httpClient.get(url).pipe(
+      map((response: any) => {
+        categoryPayload.shortName = response?.shortName || '';
+        return categoryPayload;
+      }),
+      catchError((error) => {
+        console.error('Error fetching shortName', error);
+        // Return the categoryPayload without modification in case of error
+        return of(categoryPayload);
+      })
     );
   }
 }

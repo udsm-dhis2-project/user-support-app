@@ -1,0 +1,58 @@
+<div
+  *ngIf="{ responsibilityPayload: responsibilityPayload$ | async } as params"
+>
+  <!-- {{ params?.responsibilityPayload }} -->
+  <mat-form-field class="w-25" appearance="outline">
+    <mat-label>Period</mat-label>
+    <mat-select (selectionChange)="onPeriodChange($event)">
+      <mat-option value="Q1">Jan-March</mat-option>
+      <mat-option value="Q2">April-June</mat-option>
+      <mat-option value="Q3">July-Sept</mat-option>
+      <mat-option value="Q4">Oct-Dec</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="selectedPeriod && !params?.responsibilityPayload"
+  >
+  </mat-progress-bar>
+  <app-acc-visualization
+    *ngIf="params?.responsibilityPayload && selectedPeriod"
+    [responsibilityPayload]="params?.responsibilityPayload"
+  ></app-acc-visualization>
+  <table class="table mt-2" *ngIf="selectedPeriod">
+    <thead>
+      <tr>
+        <th>SN</th>
+        <th>Staff names</th>
+        <th>Account Requests</th>
+        <th>Form Requests</th>
+        <th>Indicators Updates</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="
+          let userAccountability of params?.responsibilityPayload;
+          let count = index
+        "
+      >
+        <td>
+          {{ count + 1 }}
+        </td>
+        <td>
+          {{ userAccountability?.user?.name }}
+        </td>
+        <td>
+          {{ userAccountability?.formattedAccPayload[0]?.count }}
+        </td>
+        <td>
+          {{ userAccountability?.formattedAccPayload[1]?.count }}
+        </td>
+        <td>
+          {{ userAccountability?.formattedAccPayload[2]?.count }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

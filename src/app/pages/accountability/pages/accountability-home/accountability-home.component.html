@@ -1,0 +1,54 @@
+<div
+  class="w-100 p-3"
+  *ngIf="{
+    systemConfigs: systemConfigs$ | async,
+    configurations: configurations$ | async,
+    currentUser: currentUser$ | async
+  } as params"
+>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="
+      !params?.systemConfigs || !params?.configurations || !params?.currentUser
+    "
+  >
+  </mat-progress-bar>
+  <ng-container
+    *ngIf="
+      params?.systemConfigs &&
+      params?.configurations &&
+      params?.currentUser &&
+      params?.configurations?.userGroupsToTrackAccountability
+    "
+  >
+    <mat-tab-group>
+      <mat-tab
+        label="{{ userGroup?.name }}"
+        *ngFor="
+          let userGroup of params?.configurations
+            ?.userGroupsToTrackAccountability
+        "
+      >
+        <ng-template matTabContent>
+          <div class="p-3">
+            <app-accountability-list
+              [userGroup]="userGroup"
+              [currentUser]="params?.currentUser"
+            ></app-accountability-list>
+          </div>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-container>
+  <ng-container
+    *ngIf="
+      params?.configurations &&
+      (!params?.configurations?.userGroupsToTrackAccountability ||
+        params?.configurations?.userGroupsToTrackAccountability?.length === 0)
+    "
+  >
+    <div class="alert alert-warning" role="alert">
+      No group has been set up for accountability tracking
+    </div>
+  </ng-container>
+</div>

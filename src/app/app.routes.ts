@@ -41,9 +41,23 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'alma-export',
+    loadChildren: () =>
+      import('./pages/alma-export/alma-export.module').then(
+        (m) => m.ALMAExportModule
+      ),
+  },
+  {
     path: 'settings',
     loadChildren: () =>
       import('./pages/settings/settings.module').then((m) => m.SettingsModule),
+  },
+  {
+    path: 'accountability',
+    loadChildren: () =>
+      import('./pages/accountability/accountability.module').then(
+        (m) => m.AccountabilityModule
+      ),
   },
 ];
 

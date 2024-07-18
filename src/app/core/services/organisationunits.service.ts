@@ -25,4 +25,15 @@ export class OrgUnitsProvisionalService {
         catchError((error) => of(error))
       );
   }
+
+  getOrganisationUnitsDetails(parameters: string[]): Observable<any> {
+    return this.httpClient
+      .get(`organisationUnits.json?${parameters.join('&')}`)
+      .pipe(
+        map((response: any) => {
+          return response;
+        }),
+        catchError((error) => of(error))
+      );
+  }
 }

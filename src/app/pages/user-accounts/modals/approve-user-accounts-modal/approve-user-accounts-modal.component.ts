@@ -33,6 +33,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
   checkingForPotentialDuplicates: boolean = false;
   potentialDuplicatesByUserRequest: any = {};
   systemSettings$: Observable<any>;
+  canDelete: boolean;
   constructor(
     private dialogRef: MatDialogRef<ApproveUserAccountsModalComponent>,
     @Inject(MAT_DIALOG_DATA) data,
@@ -57,6 +58,18 @@ export class ApproveUserAccountsModalComponent implements OnInit {
     this.dataStoreInformation$ = this.dataStoreDataService.getKeyData(
       this.dialogData?.request?.id
     );
+
+    this.dataStoreInformation$.subscribe((response) => {
+      const countOfUsersRemainedToCreate = (
+        response?.payload?.filter(function (user) {
+          return user?.status !== 'REJECTED' && user?.status !== 'CREATED';
+        }) || []
+      )?.length;
+      this.canDelete = countOfUsersRemainedToCreate === 0;
+      if (this.canDelete) {
+        this.deleteDataStoreKey(response?.id);
+      }
+    });
   }
 
   onClose(event: Event): void {
@@ -220,14 +233,14 @@ export class ApproveUserAccountsModalComponent implements OnInit {
       .open(SharedConfirmationModalComponent, {
         minWidth: '20%',
         data: {
-          title: `Confirm ${actionType} of the request`,
+          title: `Confirm ${actionType.toLowerCase()} of the request`,
           message: `Are you sure to confirm ${actionType.toLowerCase()} of this request? ${
-            actionType?.toLowerCase() !== 'approve'
-              ? 'If yes, provide reason for rejection'
+            actionType !== 'APPROVE'
+              ? `If yes, provide reason for ${actionType.toLowerCase()}`
               : ''
           }`,
-          color: actionType?.toLowerCase() === 'approve' ? 'primary' : 'warn',
-          captureReason: actionType?.toLowerCase() !== 'approve' ? true : false,
+          color: actionType === 'APPROVE' ? 'primary' : 'warn',
+          captureReason: actionType === 'APPROVE' ? false : true,
         },
       })
       .afterClosed()
@@ -236,7 +249,10 @@ export class ApproveUserAccountsModalComponent implements OnInit {
           this.saving = true;
           // Create potential usernames
           const countOfUsersRemainedToCreate = (
-            request?.payload?.filter((user) => user?.status !== 'CREATED') || []
+            request?.payload?.filter(
+              (user) =>
+                user?.status !== 'CREATED' || user?.status !== 'REJECTED'
+            ) || []
           )?.length;
 
           this.messageAndDataStoreService
@@ -246,7 +262,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
             .subscribe((response) => {
               if (response) {
                 const messageConversation = response;
-                if (actionType === 'approve') {
+                if (actionType === 'APPROVE') {
                   // console.log('messageConversation', messageConversation);
                   let usersCount = 1;
                   const selectedUsername = this.currentUsername;
@@ -460,15 +476,8 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                           // If datastore key is complete please delete
                           if (countOfUsersRemainedToCreate == 1) {
                             // delete first
-                            this.dataStoreDataService
-                              .deleteDataStoreKey(request?.id)
-                              .subscribe((response) => {
-                                this.getRequestInformation();
-                                this.saving = false;
-                                setTimeout(() => {
-                                  this.dialogRef.close(true);
-                                });
-                              });
+                            // Example usage
+                            this.deleteDataStoreKey(request?.id);
                           } else {
                             this.getRequestInformation();
                             this.saving = false;
@@ -610,15 +619,8 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                         // If datastore key is complete please delete
                         if (countOfUsersRemainedToCreate == 1) {
                           // delete first
-                          this.dataStoreDataService
-                            .deleteDataStoreKey(request?.id)
-                            .subscribe((response) => {
-                              this.getRequestInformation();
-                              this.saving = false;
-                              setTimeout(() => {
-                                this.dialogRef.close(true);
-                              });
-                            });
+                          // Example usage
+                          this.deleteDataStoreKey(request?.id);
                         } else {
                           this.getRequestInformation();
                           this.saving = false;
@@ -770,15 +772,8 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                         // If datastore key is complete please delete
                         if (countOfUsersRemainedToCreate == 1) {
                           // delete first
-                          this.dataStoreDataService
-                            .deleteDataStoreKey(request?.id)
-                            .subscribe((response) => {
-                              this.getRequestInformation();
-                              this.saving = false;
-                              setTimeout(() => {
-                                this.dialogRef.close(true);
-                              });
-                            });
+                          // Example usage
+                          this.deleteDataStoreKey(request?.id);
                         } else {
                           this.getRequestInformation();
                           this.saving = false;
@@ -808,6 +803,23 @@ export class ApproveUserAccountsModalComponent implements OnInit {
     this.validityCheckMessage = message;
   }
 
+  deleteDataStoreKey(requestId: string): void {
+    this.saving = true; // Set saving to true to indicate a save operation is in progress
+    this.dataStoreDataService.deleteDataStoreKey(requestId).subscribe(
+      (response) => {
+        this.getRequestInformation();
+        this.saving = false;
+        setTimeout(() => {
+          this.dialogRef.close(true);
+        });
+      },
+      (error) => {
+        this.saving = false;
+        // Handle error if needed
+      }
+    );
+  }
+
   onCheckPotentialDuplicate(event: Event, userDetails: any): void {
     event.stopPropagation();
     this.checkingForPotentialDuplicates = true;
@@ -829,5 +841,9 @@ export class ApproveUserAccountsModalComponent implements OnInit {
       minWidth: '40%',
       data: potentialDuplicates,
     });
+  }
+
+  onDelete(request: any): void {
+    this.deleteDataStoreKey(request?.id);
   }
 }

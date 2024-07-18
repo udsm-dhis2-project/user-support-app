@@ -134,7 +134,7 @@ export class UsersDataService {
           data?.messageConversation
             ? this.httpClient.post(
                 `messageConversations/${data?.messageConversation?.id}`,
-                data?.messageConversation?.approvalMessage
+                data?.messageConversation?.approvalMessage.toString()
               )
             : of(null),
           data?.messageConversation
@@ -285,7 +285,7 @@ export class UsersDataService {
                 ...userNameData,
                 key: userNameData?.key,
                 username:
-                  response?.users?.length > 0 ? null : userNameData?.username,
+                  response?.users?.length > 0 ? null : userNameData?.username?.replace(/\s+/g, ''),
               };
             })
           );

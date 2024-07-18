@@ -76,7 +76,6 @@ translations$: Observable<any>;
   ): void {
     event.stopPropagation();
     this.mergedReportingTools = mergedReportingTools.map((dataSet) => {
-      // console.log('DATASET', dataSet);
       return {
         ...dataSet,
         assigned:

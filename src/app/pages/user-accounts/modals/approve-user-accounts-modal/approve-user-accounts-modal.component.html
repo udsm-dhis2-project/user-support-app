@@ -273,7 +273,7 @@
                             $event,
                             user,
                             params?.dataStoreInformation,
-                            'approve',
+                            'APPROVE',
                             params?.systemSettings
                           )
                         "
@@ -347,27 +347,18 @@
         </div>
       </div>
     </mat-dialog-content>
-    <mat-dialog-actions
-      align="end"
-      *ngIf="params?.dataStoreInformation && params?.dataStoreInformation?.type"
-    >
-      <button mat-button (click)="onClose($event)">
-        {{
-          params?.translations && params?.translations['Cancel']
-            ? params?.translations['Cancel']
-            : 'Cancel'
-        }}
-      </button>
+    <mat-dialog-actions align="end">
       <button
+        *ngIf="canDelete && !saving"
         class="ml-2"
         mat-flat-button
-        color="primary"
-        (click)="onUpdateUser($event, params?.dataStoreInformation)"
+        color="warn"
+        (click)="onDelete(params?.dataStoreInformation)"
       >
         {{
-          params?.translations && params?.translations['Confirm']
-            ? params?.translations['Confirm']
-            : 'Confirm'
+          params?.translations && params?.translations['Delete']
+            ? params?.translations['Delete']
+            : 'Delete'
         }}
       </button>
     </mat-dialog-actions>
