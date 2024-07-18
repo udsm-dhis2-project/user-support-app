@@ -1,9 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AccountabilityService } from '../../services/accountability.service';
 import { map, Observable } from 'rxjs';
-import { orderBy } from 'lodash';
+import { orderBy, sortBy } from 'lodash';
 import { MatSelectChange } from '@angular/material/select';
-import { getStartAndEndDatesUsingQuarter } from 'src/app/core/helpers/format-dates.helper';
+import {
+  getStartAndEndDatesUsingQuarter,
+  getYears,
+} from 'src/app/core/helpers/format-dates.helper';
 
 @Component({
   selector: 'app-accountability-list',
@@ -15,10 +18,14 @@ export class AccountabilityListComponent implements OnInit {
   @Input() currentUser: any;
   responsibilityPayload$: Observable<any>;
   selectedPeriod: any;
+  years: number[];
+  selectedYear: number = new Date().getFullYear();
 
   constructor(private accountabilityService: AccountabilityService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.years = getYears(2012);
+  }
 
   getAccountabilityData(): void {
     this.responsibilityPayload$ = this.accountabilityService
@@ -26,11 +33,18 @@ export class AccountabilityListComponent implements OnInit {
       .pipe(map((response: any) => orderBy(response, ['count'], ['desc'])));
   }
 
+  onYearChange(event: MatSelectChange): void {
+    this.selectedYear = event.value;
+    if (this.selectedPeriod) {
+      this.getAccountabilityData();
+    }
+  }
+
   onPeriodChange(event: MatSelectChange): void {
     const quarter = event.value;
     this.selectedPeriod = getStartAndEndDatesUsingQuarter(
       quarter,
-      new Date().getFullYear()
+      this.selectedYear
     );
     this.getAccountabilityData();
   }

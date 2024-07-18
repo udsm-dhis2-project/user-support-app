@@ -144,7 +144,11 @@
                   >
 
                   <mat-list-item
-                    *ngIf="params?.currentUser?.keyedAuthorities['ALL']"
+                    *ngIf="
+                      params?.configurations.usersToAccessAccountability[
+                        params?.currentUser?.id
+                      ]
+                    "
                     role="listitem"
                     class="list-item"
                     routerLinkActive="active-menu-item"
@@ -306,7 +310,11 @@
                   >
 
                   <mat-list-item
-                    *ngIf="params?.currentUser?.keyedAuthorities['ALL']"
+                    *ngIf="
+                      params?.configurations.usersToAccessAccountability[
+                        params?.currentUser?.id
+                      ]
+                    "
                     role="listitem"
                     class="list-item"
                     routerLinkActive="active-menu-item"

@@ -86,6 +86,7 @@ export class AccVisualizationComponent implements OnInit {
         headerFormat: '<b>{point.x}</b><br/>',
         pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}',
       },
+      colors: this.getChartColors(),
       plotOptions: {
         column: {
           stacking: 'normal',
@@ -109,5 +110,28 @@ export class AccVisualizationComponent implements OnInit {
         },
       ],
     });
+  }
+
+  getChartColors(): any[] {
+    return [
+      '#A9BE3B',
+      '#558CC0',
+      '#4FBDAE',
+      '#B78040',
+      '#FF9F3A',
+      '#968F8F',
+      '#B7409F',
+      '#D34957',
+      '#FFDA64',
+      '#4FBDAE',
+      '#B78040',
+      '#676767',
+      '#6A33CF',
+      '#4A7833',
+      '#434348',
+      '#7CB5EC',
+      '#F7A35C',
+      '#F15C80',
+    ];
   }
 }

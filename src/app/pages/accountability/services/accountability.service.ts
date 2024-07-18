@@ -32,9 +32,29 @@ export class AccountabilityService {
                   `messageConversations?fields=id,name,subjec,messageType,messageCount,createdBy&queryString=${user?.username}` +
                     `&filter=created:lt:${endDate}&filter=created:gt:${startDate}&filter=subject:ilike:ACCOUNT REQUEST`
                 ),
-                this.httpClientService.get(
-                  `messageConversations?fields=id,name,subjec,messageType,messageCount,createdBy&queryString=${user?.username}` +
-                    `&filter=created:lt:${endDate}&filter=created:gt:${startDate}&filter=subject:ilike:FORM REQUEST`
+                zip(
+                  this.httpClientService.get(
+                    `messageConversations?fields=id,name,subjec,messageType,messageCount,createdBy&queryString=${user?.username}` +
+                      `&filter=created:lt:${endDate}&filter=created:gt:${startDate}&filter=subject:ilike:FORM REQUEST`
+                  ),
+                  this.httpClientService.get(
+                    `messageConversations?fields=id,name,subjec,messageType,messageCount,createdBy&queryString=${user?.username}` +
+                      `&filter=created:lt:${endDate}&filter=created:gt:${startDate}&filter=subject:ilike:MAOMBI YA FOMU`
+                  )
+                ).pipe(
+                  map((responses: any[]) => {
+                    return {
+                      pager: {
+                        total:
+                          responses[0]?.pager?.total +
+                          responses[1]?.pager?.total,
+                      },
+                      messageConversations: [
+                        ...responses[0]?.messageConversations,
+                        ...responses[1]?.messageConversations,
+                      ],
+                    };
+                  })
                 ),
                 this.httpClientService.get(
                   `indicators?fields=id,name,lastUpdatedBy,lastUpdated&filter=lastUpdatedBy.username:eq:${user?.username}` +

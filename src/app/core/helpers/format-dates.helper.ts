@@ -23,3 +23,12 @@ export function getStartAndEndDatesUsingQuarter(quarter: string, year: number) {
     return {};
   }
 }
+
+export function getYears(startYear: number): number[] {
+  const countOfYears = new Date().getFullYear() - startYear;
+  let years = [];
+  for (let count = 0; count < countOfYears; count++) {
+    years = [...years, new Date().getFullYear() - count];
+  }
+  return years;
+}
