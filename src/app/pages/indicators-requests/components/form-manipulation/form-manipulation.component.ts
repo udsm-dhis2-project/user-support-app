@@ -125,10 +125,6 @@ export class FormManipulationComponent implements OnInit {
           if (event.target.name == 'entryfield') {
             document.getElementById(event.target.id).style.backgroundColor =
               self.isNumSet ? '#36e1f2' : self.isDenSet ? '#3667f2' : '';
-            console.log(
-              "event.target.id.split('-').join('.').replace('.val', '') ",
-              event.target.id.split('-').join('.').replace('.val', '')
-            );
             if (self.isNumSet) {
               self.indicatorNumExpression =
                 (self.indicatorNumExpression
@@ -320,27 +316,33 @@ export class FormManipulationComponent implements OnInit {
         'id,name,shortName,code,decimals,indicatorType[id,name,factor],numerator,denominator,numeratorDescription,denominatorDescription,description,annualized'
       )
       .subscribe((response: any) => {
-        // console.log(response);
-        this.indicatorDenExpression = response?.denominator;
-        this.indicatorNumExpression = response?.numerator;
-        this.indicatorType = response?.indicatorType;
-        // console.log(this.indicatorType);
-        this.denDescription = response?.denominatorDescription;
-        this.numDescription = response?.numeratorDescription;
-        this.code = response?.code;
-        this.decimals = response?.decimals;
-        this.name = response?.name;
-        this.shortName = response?.shortName;
-        this.description = response?.description;
-        this.annualized = response?.annualized;
-        this.expressionDescriptionDen$ =
-          this.metadataExpressionDescriptionService.getMetadataExpressionDescription(
+        if (response) {
+          // console.log(response);
+          this.indicatorDenExpression = response?.denominator;
+          this.indicatorNumExpression = response?.numerator;
+          this.indicatorType = response?.indicatorType;
+          // console.log(this.indicatorType);
+          this.denDescription = response?.denominatorDescription;
+          this.numDescription = response?.numeratorDescription;
+          this.code = response?.code;
+          this.decimals = response?.decimals;
+          this.name = response?.name;
+          this.shortName = response?.shortName;
+          this.description = response?.description;
+          this.annualized = response?.annualized;
+          this.expressionDescriptionDen$ =
+            this.metadataExpressionDescriptionService.getMetadataExpressionDescription(
+              this.indicatorDenExpression
+            );
+          this.expressionDescriptionNum$ =
+            this.metadataExpressionDescriptionService.getMetadataExpressionDescription(
+              this.indicatorNumExpression
+            );
+          this.setColorsToElementsInExpressions(
+            this.indicatorNumExpression,
             this.indicatorDenExpression
           );
-        this.expressionDescriptionNum$ =
-          this.metadataExpressionDescriptionService.getMetadataExpressionDescription(
-            this.indicatorNumExpression
-          );
+        }
       });
   }
 

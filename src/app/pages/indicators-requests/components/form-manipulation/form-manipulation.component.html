@@ -181,7 +181,9 @@
                     >
                   </mat-select>
                 </mat-form-field>
-                Indicator type: {{ indicatorType?.name }}
+                <p *ngIf="indicatorType">
+                  Indicator type: {{ indicatorType?.name }}
+                </p>
                 <br />
                 <p>Numerator</p>
                 <div class="numetator">
