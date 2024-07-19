@@ -59,6 +59,13 @@ export const routes: Routes = [
         (m) => m.AccountabilityModule
       ),
   },
+  {
+    path: 'indicators',
+    loadChildren: () =>
+      import('./pages/indicators-requests/indicators-requests.module').then(
+        (m) => m.IndicatorsModule
+      ),
+  },
 ];
 
 @NgModule({

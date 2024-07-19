@@ -38,4 +38,24 @@ export class IndicatorsService {
         catchError((error) => of(error))
       );
   }
+
+  getIndicatorTypes(): Observable<any> {
+    return this.httpClient
+      .get(`indicatorTypes.json?fields=id,name,factor&paging=false`)
+      .pipe(
+        map((response) => {
+          return response?.indicatorTypes || [];
+        }),
+        catchError((error) => of(error))
+      );
+  }
+
+  getIndicatorDetails(id: string, fields: string): Observable<any> {
+    return this.httpClient.get(`indicators/${id}.json?fields=${fields}`).pipe(
+      map((response) => {
+        return response || [];
+      }),
+      catchError((error) => of(error))
+    );
+  }
 }

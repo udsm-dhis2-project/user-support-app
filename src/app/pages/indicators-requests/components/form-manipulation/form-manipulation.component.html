@@ -1,0 +1,409 @@
+<div
+  class="custom-form"
+  class="row"
+  *ngIf="{
+    expressionDescriptionDen: expressionDescriptionDen$ | async,
+    expressionDescriptionNum: expressionDescriptionNum$ | async,
+    dataSets: dataSets$ | async,
+    translations: translations$ | async,
+  } as params"
+>
+  <div class="col-12">
+    <div>
+      <mat-form-field class="w-100" appearance="fill">
+        <mat-label>{{
+          params?.translations && params?.translations['Datasets']
+            ? params?.translations['Datasets']
+            : 'Datasets'
+        }}</mat-label>
+        <input
+          type="text"
+          placeholder="{{
+            params?.translations && params?.translations['Search']
+              ? params?.translations['Search']
+              : 'Search'
+          }}"
+          [required]="true"
+          matInput
+          autocomplete="off"
+          (keyup)="searchItem($event)"
+          [matAutocomplete]="auto"
+        />
+        <mat-autocomplete
+          autoActiveFirstOption
+          #auto="matAutocomplete"
+          (optionSelected)="getSelectedItemFromOption($event)"
+          [displayWith]="displayFunction.bind(this)"
+        >
+          <mat-option *ngFor="let option of params?.dataSets" [value]="option">
+            {{ option?.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <!-- <mat-form-field>
+        <mat-label>{{
+          params?.translations && params?.translations['Datasets']
+            ? params?.translations['Datasets']
+            : 'Datasets'
+        }}</mat-label>
+        <mat-select
+          (selectionChange)="getSelectedItemFromOption($event)"
+          multiple
+        >
+          @for (dataSet of params?.dataSets; track dataSet) {
+          <mat-option [value]="dataSet">{{ dataSet?.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field> -->
+    </div>
+    <div class="row" *ngIf="_htmlMarkup">
+      <div class="col-md-8 html-form">
+        <div
+          style="width: 100%; height: 80vh; overflow: auto"
+          [innerHtml]="_htmlMarkup"
+        ></div>
+      </div>
+      <di class="col-md-4" style="border-left: solid 1px #eee">
+        <mat-tab-group
+          (selectedTabChange)="changeTab(selectedTab.value)"
+          [selectedIndex]="selectedTab.value"
+          (selectedIndexChange)="selectedTab.setValue($event)"
+        >
+          <mat-tab
+            label="{{
+              params?.translations && params?.translations['Create']
+                ? params?.translations['Create']
+                : 'Create'
+            }} / {{
+              params?.translations && params?.translations['Update']
+                ? params?.translations['Update']
+                : 'Update'
+            }}"
+          >
+            <div class="p-2" *ngIf="selectedTab.value === 0">
+              <div class="w-100 mb-2 mt-2 d-flex justify-content-end">
+                <button
+                  mat-stroked-button
+                  (click)="onClear($event)"
+                  class="mr-2"
+                >
+                  {{
+                    params?.translations && params?.translations['Clear']
+                      ? params?.translations['Clear']
+                      : 'Clear'
+                  }}
+                </button>
+                <button
+                  [disabled]="
+                    !name ||
+                    !shortName ||
+                    !indicatorNumExpression ||
+                    !indicatorDenExpression ||
+                    !params?.expressionDescriptionNum ||
+                    !params?.expressionDescriptionDen
+                  "
+                  class="mr-2"
+                  mat-stroked-button
+                  (click)="
+                    onRequestIndicator(
+                      $event,
+                      params?.expressionDescriptionNum?.description,
+                      params?.expressionDescriptionDen?.description
+                    )
+                  "
+                >
+                  {{
+                    params?.translations && params?.translations['Send']
+                      ? params?.translations['Send']
+                      : 'Send'
+                  }}
+                </button>
+              </div>
+              <div class="indicator-container indicator-create">
+                <mat-form-field class="w-100">
+                  <mat-label>{{
+                    params?.translations && params?.translations['Name']
+                      ? params?.translations['Name']
+                      : 'Name'
+                  }}</mat-label>
+                  <input
+                    required
+                    name="name"
+                    [(ngModel)]="name"
+                    matInput
+                    placeholder="Name*"
+                  />
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                  <mat-label>{{
+                    params?.translations && params?.translations['Short name']
+                      ? params?.translations['Short name']
+                      : 'Short name'
+                  }}</mat-label>
+                  <input
+                    required
+                    [(ngModel)]="shortName"
+                    matInput
+                    max="50"
+                    placeholder="{{
+                      params?.translations && params?.translations['Short name']
+                        ? params?.translations['Short name']
+                        : 'Short name'
+                    }}*"
+                  />
+                </mat-form-field>
+                <mat-form-field class="w-100">
+                  <mat-label>{{
+                    params?.translations && params?.translations['Description']
+                      ? params?.translations['Description']
+                      : 'Description'
+                  }}</mat-label>
+                  <textarea [(ngModel)]="description" matInput></textarea>
+                </mat-form-field>
+                <mat-form-field
+                  class="w-100"
+                  appearance="outline"
+                  *ngIf="!indicatorId"
+                >
+                  <mat-label>{{
+                    params?.translations &&
+                    params?.translations['Indicator type']
+                      ? params?.translations['Indicator type']
+                      : 'Indicator type'
+                  }}</mat-label>
+                  <mat-select [(ngModel)]="indicatorType">
+                    <mat-option
+                      *ngFor="let option of indicatorTypes"
+                      [value]="option"
+                      >{{ option?.name }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+                Indicator type: {{ indicatorType?.name }}
+                <br />
+                <p>Numerator</p>
+                <div class="numetator">
+                  <mat-form-field class="w-100">
+                    <mat-label>{{
+                      params?.translations &&
+                      params?.translations['Description']
+                        ? params?.translations['Description']
+                        : 'Description'
+                    }}</mat-label>
+                    <input
+                      required
+                      [(ngModel)]="numDescription"
+                      matInput
+                      placeholder="{{
+                        params?.translations &&
+                        params?.translations['Description']
+                          ? params?.translations['Description']
+                          : 'Description'
+                      }}"
+                    />
+                  </mat-form-field>
+                  <mat-form-field class="w-100">
+                    <mat-label>{{
+                      params?.translations && params?.translations['Expression']
+                        ? params?.translations['Expression']
+                        : 'Expression'
+                    }}</mat-label>
+                    <textarea
+                      required
+                      id="num-expression"
+                      (click)="setActiveExpressionArea($event, 'NUM')"
+                      matInput
+                      rows="2"
+                      [(ngModel)]="indicatorNumExpression"
+                      (change)="getExpressionDefinition($event)"
+                    ></textarea>
+                  </mat-form-field>
+                  <div
+                    class="w-100 d-flex justify-content-left sign-btns-container"
+                  >
+                    <button
+                      (click)="
+                        getSignValue($event, '+', 'NUM', indicatorNumExpression)
+                      "
+                      class="sign-btns"
+                    >
+                      <img
+                        height="20"
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAAWklEQVRoge3XsQ2AMAwAwcD+O0NPA02sF7obwMkrjbMWALCOzfOvqfPOXYOnCakRUiOkRkiNkBohNV+30ecWO+31nr95ESE1fog1QmqE1AipEVIjpEYIABB0A2/0Az6X8bpXAAAAAElFTkSuQmCC"
+                      />
+                    </button>
+                    <button
+                      (click)="
+                        getSignValue($event, '-', 'NUM', indicatorNumExpression)
+                      "
+                      class="sign-btns"
+                    >
+                      <img
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAAJUlEQVRIiWNgGAWjYBSMAoKAEY3/n9rmMlHJwFEwCkbBKKAEAAD0EQEED0po+gAAAABJRU5ErkJggg=="
+                      />
+                    </button>
+                  </div>
+                  <p
+                    [ngClass]="{
+                      'text-danger':
+                        params?.expressionDescriptionNum?.status === 'ERROR'
+                    }"
+                  >
+                    {{
+                      params?.expressionDescriptionNum?.status === 'OK'
+                        ? params?.expressionDescriptionNum?.description
+                        : params?.expressionDescriptionNum?.message
+                    }}
+                  </p>
+                  <p>
+                    <mat-progress-bar
+                      *ngIf="
+                        !params?.expressionDescriptionNum &&
+                        indicatorNumExpression
+                      "
+                      mode="indeterminate"
+                    ></mat-progress-bar>
+                  </p>
+                </div>
+                <br />
+                <p>Denominator</p>
+                <div class="denominator">
+                  <mat-form-field class="w-100">
+                    <mat-label>{{
+                      params?.translations &&
+                      params?.translations['Description']
+                        ? params?.translations['Description']
+                        : 'Description'
+                    }}</mat-label>
+                    <input
+                      required
+                      [(ngModel)]="denDescription"
+                      matInput
+                      placeholder="{{
+                        params?.translations &&
+                        params?.translations['Description']
+                          ? params?.translations['Description']
+                          : 'Description'
+                      }}"
+                    />
+                  </mat-form-field>
+                  <mat-form-field class="w-100">
+                    <mat-label>{{
+                      params?.translations && params?.translations['Expression']
+                        ? params?.translations['Expression']
+                        : 'Expression'
+                    }}</mat-label>
+                    <textarea
+                      required
+                      id="den-expression"
+                      (click)="setActiveExpressionArea($event, 'DEN')"
+                      matInput
+                      rows="2"
+                      [(ngModel)]="indicatorDenExpression"
+                      (change)="getExpressionDefinition($event)"
+                    ></textarea>
+                  </mat-form-field>
+                  <div
+                    class="w-100 d-flex justify-content-left sign-btns-container"
+                  >
+                    <button
+                      (click)="
+                        getSignValue($event, '+', 'DEN', indicatorDenExpression)
+                      "
+                      class="sign-btns"
+                    >
+                      <img
+                        height="20"
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAAWklEQVRoge3XsQ2AMAwAwcD+O0NPA02sF7obwMkrjbMWALCOzfOvqfPOXYOnCakRUiOkRkiNkBohNV+30ecWO+31nr95ESE1fog1QmqE1AipEVIjpEYIABB0A2/0Az6X8bpXAAAAAElFTkSuQmCC"
+                      />
+                    </button>
+                    <button
+                      (click)="
+                        getSignValue($event, '-', 'DEN', indicatorDenExpression)
+                      "
+                      class="sign-btns"
+                    >
+                      <img
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAAJUlEQVRIiWNgGAWjYBSMAoKAEY3/n9rmMlHJwFEwCkbBKKAEAAD0EQEED0po+gAAAABJRU5ErkJggg=="
+                      />
+                    </button>
+                  </div>
+                  <p
+                    [ngClass]="{
+                      'text-danger':
+                        params?.expressionDescriptionDen?.status === 'ERROR'
+                    }"
+                  >
+                    {{
+                      params?.expressionDescriptionDen?.status === 'OK'
+                        ? params?.expressionDescriptionDen?.description
+                        : params?.expressionDescriptionDen?.message
+                    }}
+                  </p>
+                  <p>
+                    <mat-progress-bar
+                      *ngIf="
+                        !params?.expressionDescriptionDen &&
+                        indicatorDenExpression
+                      "
+                      mode="indeterminate"
+                    ></mat-progress-bar>
+                  </p>
+                </div>
+              </div>
+              <div class="d-flex justify-content-end">
+                <button
+                  mat-stroked-button
+                  (click)="onClear($event)"
+                  class="mr-2"
+                >
+                  {{
+                    params?.translations && params?.translations['Clear']
+                      ? params?.translations['Clear']
+                      : 'Clear'
+                  }}
+                </button>
+                <button
+                  [disabled]="!name || !shortName || !indicatorNumExpression"
+                  class="mr-2"
+                  mat-stroked-button
+                  (click)="
+                    onRequestIndicator(
+                      $event,
+                      params?.expressionDescriptionNum?.description,
+                      params?.expressionDescriptionDen?.description
+                    )
+                  "
+                >
+                  {{
+                    params?.translations && params?.translations['Send']
+                      ? params?.translations['Send']
+                      : 'Send'
+                  }}
+                </button>
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab
+            label="{{
+              params?.translations && params?.translations['Indicators list']
+                ? params?.translations['Indicators list']
+                : 'Indicators list'
+            }}"
+          >
+            <div class="p-2" *ngIf="selectedTab.value === 1">
+              <app-indicators-list
+                [systemConfigs]="systemConfigs"
+                [configurations]="configurations"
+                [currentUser]="currentUser"
+                (indicatorToEdit)="onEditIndicator($event)"
+              ></app-indicators-list>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </di>
+    </div>
+  </div>
+</div>

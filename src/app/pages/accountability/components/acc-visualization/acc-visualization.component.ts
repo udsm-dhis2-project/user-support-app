@@ -24,7 +24,7 @@ const HighchartsGroupedCategories = require('highcharts-grouped-categories')(
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccVisualizationComponent implements OnInit {
-  chartHeight: '350px';
+  chartHeight: '450px';
   @Input() responsibilityPayload: any;
   ngOnInit(): void {
     this.responsibilityPayload = this.responsibilityPayload?.filter(

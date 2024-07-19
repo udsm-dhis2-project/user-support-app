@@ -124,6 +124,25 @@
                     [routerLink]="'statistics'"
                     >{{ 'Statistics' }}</mat-list-item
                   > -->
+                  <mat-list-item
+                    *ngIf="
+                      params?.currentUser &&
+                      (params?.currentUser?.keyedAuthorities['ALL'] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_INDICATOR_REQUEST'
+                        ])
+                    "
+                    role="listitem"
+                    class="list-item"
+                    routerLinkActive="active-menu-item"
+                    [routerLink]="'indicators'"
+                    >{{
+                      params?.translations &&
+                      params?.translations['Indicators request']
+                        ? params?.translations['Indicators request']
+                        : 'Indicators request'
+                    }}</mat-list-item
+                  >
 
                   <mat-list-item
                     *ngIf="
@@ -145,6 +164,7 @@
 
                   <mat-list-item
                     *ngIf="
+                      params?.configurations?.usersToAccessAccountability &&
                       params?.configurations?.usersToAccessAccountability[
                         params?.currentUser?.id
                       ]
@@ -290,7 +310,25 @@
                         'Validation Rules request'
                     }}</mat-list-item
                   > -->
-
+                  <mat-list-item
+                    *ngIf="
+                      params?.currentUser &&
+                      (params?.currentUser?.keyedAuthorities['ALL'] ||
+                        params?.currentUser?.keyedAuthorities[
+                          'US_INDICATOR_REQUEST'
+                        ])
+                    "
+                    role="listitem"
+                    class="list-item"
+                    routerLinkActive="active-menu-item"
+                    [routerLink]="'indicators'"
+                    >{{
+                      params?.translations &&
+                      params?.translations['Indicators request']
+                        ? params?.translations['Indicators request']
+                        : 'Indicators request'
+                    }}</mat-list-item
+                  >
                   <mat-list-item
                     *ngIf="
                       params?.currentUser &&
@@ -311,6 +349,7 @@
 
                   <mat-list-item
                     *ngIf="
+                      params?.configurations?.usersToAccessAccountability &&
                       params?.configurations?.usersToAccessAccountability[
                         params?.currentUser?.id
                       ]

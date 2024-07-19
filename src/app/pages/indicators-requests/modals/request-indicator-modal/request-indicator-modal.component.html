@@ -1,0 +1,31 @@
+<div class="loading-overlay" *ngIf="requesting">
+  <div class="text-center">
+    <div>Requesting...</div>
+    <div class="mt-3 d-flex justify-content-center w-100">
+      <mat-spinner diameter="50" strokeWidth="2"></mat-spinner>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="!requesting">
+  <ng-container>
+    <h3 mat-dialog-title>Confirm requesting indicator</h3>
+    <mat-dialog-content
+      >Are you sure to request
+      <b>
+        {{ data?.indicator?.name }}
+      </b>
+      <p class="text-success" *ngIf="created">Successfully sent request</p>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button
+        color="primary"
+        mat-flat-button
+        (click)="onConfirm($event, indicator)"
+      >
+        {{ 'Yes' }}
+      </button>
+    </mat-dialog-actions>
+  </ng-container>
+</ng-container>
