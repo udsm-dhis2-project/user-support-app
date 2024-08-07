@@ -178,6 +178,7 @@ export class UsersDataService {
         );
       } else if (data?.method === 'POST') {
         return zip(
+
           data?.payload
             ? this.httpClientService.post(
                 `../../../api/${data?.url}`,
@@ -196,7 +197,7 @@ export class UsersDataService {
                 `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
                 null
               )
-            : this.httpClient.post(`messageConversations`, data?.messageBody)
+            : this.httpClient.post(`messageConversations`, data?.messageBody || data?.replyMessage)
         ).pipe(
           map((response) => response),
           catchError((error) => of(error))

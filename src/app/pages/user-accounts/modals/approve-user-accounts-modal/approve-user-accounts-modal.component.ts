@@ -59,6 +59,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
       this.dialogData?.request?.id
     );
 
+
     this.dataStoreInformation$.subscribe((response) => {
       const countOfUsersRemainedToCreate = (
         response?.payload?.filter(function (user) {
@@ -69,7 +70,8 @@ export class ApproveUserAccountsModalComponent implements OnInit {
       if (this.canDelete) {
         this.deleteDataStoreKey(response?.id);
       }
-    });
+    })
+
   }
 
   onClose(event: Event): void {
@@ -229,6 +231,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
     if (event) {
       event.stopPropagation();
     }
+    // console.log('systemSettings', systemSettings);
     this.dialog
       .open(SharedConfirmationModalComponent, {
         minWidth: '20%',
@@ -249,11 +252,10 @@ export class ApproveUserAccountsModalComponent implements OnInit {
           this.saving = true;
           // Create potential usernames
           const countOfUsersRemainedToCreate = (
-            request?.payload?.filter(
-              (user) =>
-                user?.status !== 'CREATED' || user?.status !== 'REJECTED'
-            ) || []
+            request?.payload?.filter((user) => user?.status !== 'CREATED' || user?.status !== 'REJECTED') || []
           )?.length;
+
+          
 
           this.messageAndDataStoreService
             .searchMessageConversationByTicketNumber(
@@ -476,8 +478,9 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                           // If datastore key is complete please delete
                           if (countOfUsersRemainedToCreate == 1) {
                             // delete first
-                            // Example usage
-                            this.deleteDataStoreKey(request?.id);
+                           // Example usage
+                          this.deleteDataStoreKey(request?.id);
+
                           } else {
                             this.getRequestInformation();
                             this.saving = false;
@@ -619,8 +622,9 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                         // If datastore key is complete please delete
                         if (countOfUsersRemainedToCreate == 1) {
                           // delete first
-                          // Example usage
-                          this.deleteDataStoreKey(request?.id);
+                       // Example usage
+                      this.deleteDataStoreKey(request?.id);
+
                         } else {
                           this.getRequestInformation();
                           this.saving = false;
@@ -774,6 +778,7 @@ export class ApproveUserAccountsModalComponent implements OnInit {
                           // delete first
                           // Example usage
                           this.deleteDataStoreKey(request?.id);
+
                         } else {
                           this.getRequestInformation();
                           this.saving = false;

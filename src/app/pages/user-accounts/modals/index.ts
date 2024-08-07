@@ -1,3 +1,5 @@
+import { AcountActivationDeactivationModalComponent } from './acount-activation-deactivation-modal/acount-activation-deactivation-modal.component';
+import { ApprovalUpdatePasswordModalComponent } from './approval-update-password-modal/approval-update-password-modal.component';
 import { ApproveUserAccountsModalComponent } from './approve-user-accounts-modal/approve-user-accounts-modal.component';
 import { ConfirmSendingAccountsRequestComponent } from './confirm-sending-accounts-request/confirm-sending-accounts-request.component';
 import { DuplicateUserAccountsListModalComponent } from './duplicate-user-accounts-list-modal/duplicate-user-accounts-list-modal.component';
@@ -18,4 +20,6 @@ export const accountsModals: any[] = [
   ConfirmSendingAccountsRequestComponent,
   RejectUserAccountModalComponent,
   DuplicateUserAccountsListModalComponent,
+  ApprovalUpdatePasswordModalComponent,
+  AcountActivationDeactivationModalComponent
 ];

@@ -7,6 +7,8 @@ import { RejectUserAccountModalComponent } from '../../modals/reject-user-accoun
 import { State } from 'src/app/store/reducers';
 import { Store } from '@ngrx/store';
 import { getCurrentTranslations } from 'src/app/store/selectors/translations.selectors';
+import { ApprovalUpdatePasswordModalComponent } from '../../modals/approval-update-password-modal/approval-update-password-modal.component';
+import { AcountActivationDeactivationModalComponent } from '../../modals/acount-activation-deactivation-modal/acount-activation-deactivation-modal.component';
 
 @Component({
   selector: 'app-user-accounts-feedbacks-list',
@@ -21,7 +23,7 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
   allDataForUserSupport$: Observable<any[]>;
   moreOpenedDetails: any = {};
   searchingText: string = '';
-translations$: Observable<any>;
+  translations$: Observable<any>;
   constructor(
     private dataStoreService: DataStoreDataService,
     private dialog: MatDialog,
@@ -58,22 +60,53 @@ translations$: Observable<any>;
 
   onOpenApprovalModal(event: Event, request, isFeedbackRecepient): void {
     event.stopPropagation();
-    this.dialog
-      .open(ApproveUserAccountsModalComponent, {
-        minWidth: '50%',
-        data: {
-          request,
-          configurations: this.configurations,
-          isFeedbackRecepient,
-          isSecondTier: this.isSecondTier,
-        },
-      })
-      .afterClosed()
-      .subscribe((shouldReload) => {
-        if (shouldReload) {
+
+    if (request.type === 'password') {
+      this.dialog
+        .open(ApprovalUpdatePasswordModalComponent, {
+          // minWidth: '50%',
+          data: {
+            request,
+            configurations: this.configurations,
+          },
+        })
+        .afterClosed()
+        .subscribe((response) => {
           this.getUserRequests();
-        }
-      });
+        });
+    } else if (request.type === 'activate' || request.type === 'deactivate') {
+      this.dialog
+        .open(AcountActivationDeactivationModalComponent, {
+          // minWidth: '50%',
+          data: {
+            request,
+            configurations: this.configurations,
+            isFeedbackRecepient,
+            isSecondTier: this.isSecondTier,
+          },
+        })
+        .afterClosed()
+        .subscribe((response) => {
+          this.getUserRequests();
+        });
+    } else {
+      this.dialog
+        .open(ApproveUserAccountsModalComponent, {
+          minWidth: '50%',
+          data: {
+            request,
+            configurations: this.configurations,
+            isFeedbackRecepient,
+            isSecondTier: this.isSecondTier,
+          },
+        })
+        .afterClosed()
+        .subscribe((shouldReload) => {
+          if (shouldReload) {
+            this.getUserRequests();
+          }
+        });
+    }
   }
   onOpenRejectModal(event: Event, data: any): void {
     event.stopPropagation();
@@ -89,5 +122,4 @@ translations$: Observable<any>;
         }
       });
   }
-
 }
