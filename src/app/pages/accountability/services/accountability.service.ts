@@ -13,7 +13,7 @@ export class AccountabilityService {
 
   getUsersAndMessageConversations(
     userGroupId: string,
-    selectedPeriod: { startDate: Date; endDate: Date }
+    selectedPeriod: { startDate: Date; endDate: Date; name?: string }
   ): Observable<any> {
     return this.httpClientService
       .get(

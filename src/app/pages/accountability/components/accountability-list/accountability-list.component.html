@@ -12,12 +12,22 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field class="w-25 ml-2" appearance="outline">
-    <mat-label>Quarter</mat-label>
+    <mat-label>Period type</mat-label>
+    <mat-select (selectionChange)="onPeriodTypeChange($event)">
+      <mat-option value="Monthly">Monthly</mat-option>
+      <mat-option value="Quarterly">Quarterly</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field
+    class="w-25 ml-2"
+    appearance="outline"
+    *ngIf="periods && periods?.length > 0"
+  >
+    <mat-label>{{ selectedPeriodType }}</mat-label>
     <mat-select (selectionChange)="onPeriodChange($event)">
-      <mat-option value="Q1">Jan-March</mat-option>
-      <mat-option value="Q2">April-June</mat-option>
-      <mat-option value="Q3">July-Sept</mat-option>
-      <mat-option value="Q4">Oct-Dec</mat-option>
+      <mat-option *ngFor="let period of periods" [value]="period">{{
+        period?.name
+      }}</mat-option>
     </mat-select>
   </mat-form-field>
   <mat-progress-bar
