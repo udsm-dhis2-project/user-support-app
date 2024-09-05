@@ -28,7 +28,11 @@
         </ng-template>
       </mat-tab>
       <mat-tab
-        label="{{ params?.translations['Requesting'] || 'Requesting' }}"
+        label="{{
+          params?.translations && params?.translations['Requesting']
+            ? params?.translations['Requesting']
+            : 'Requesting'
+        }}"
         *ngIf="currentUser?.keyedAuthorities['ALL']"
       >
         <ng-template matTabContent>
@@ -67,9 +71,14 @@
     *ngIf="!canRequest && !canApprove"
   >
     {{
+      params?.translations &&
       params?.translations[
         'You do not access to request or approve validation rules'
-      ] || 'You do not access to request or approve validation rules'
+      ]
+        ? params?.translations[
+            'You do not access to request or approve validation rules'
+          ]
+        : 'You do not access to request or approve validation rules'
     }}
   </div>
 </div>

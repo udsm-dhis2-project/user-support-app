@@ -95,10 +95,9 @@
                   <mat-list-item
                     *ngIf="
                       params?.currentUser &&
-                      (params?.currentUser?.keyedAuthorities['ALL'] ||
-                        params?.currentUser?.keyedAuthorities[
-                          'US_VALIDATION_RULE_REQUEST'
-                        ] ||
+                      (params?.currentUser?.keyedAuthorities[
+                        'US_VALIDATION_RULE_REQUEST'
+                      ] ||
                         params?.currentUser?.keyedAuthorities[
                           'US_VALIDATION_RULE_APPROVE'
                         ])
@@ -293,10 +292,9 @@
                   <mat-list-item
                     *ngIf="
                       params?.currentUser &&
-                      (params?.currentUser?.keyedAuthorities['ALL'] ||
-                        params?.currentUser?.keyedAuthorities[
-                          'US_VALIDATION_RULE_REQUEST'
-                        ] ||
+                      (params?.currentUser?.keyedAuthorities[
+                        'US_VALIDATION_RULE_REQUEST'
+                      ] ||
                         params?.currentUser?.keyedAuthorities[
                           'US_VALIDATION_RULE_APPROVE'
                         ])

@@ -14,9 +14,27 @@
     <table class="table table-striped table-bordered mat-elevation-z1">
       <thead>
         <tr>
-          <th style="width: 40px">{{ params?.translations['SN'] || 'SN' }}</th>
-          <th>{{ params?.translations['Request'] || 'Request' }}</th>
-          <th>{{ params?.translations['Actions'] || 'Actions' }}</th>
+          <th style="width: 40px">
+            {{
+              params?.translations && params?.translations['SN']
+                ? params?.translations['SN']
+                : 'SN'
+            }}
+          </th>
+          <th>
+            {{
+              params?.translations && params?.translations['Request']
+                ? params?.translations['Request']
+                : 'Request'
+            }}
+          </th>
+          <th>
+            {{
+              params?.translations && params?.translations['Actions']
+                ? params?.translations['Actions']
+                : 'Actions'
+            }}
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -36,7 +54,11 @@
                   mat-button
                   (click)="onViewDetails($event, validationRuleRequest)"
                 >
-                  {{ params?.translations['View details'] || 'View details' }}
+                  {{
+                    params?.translations && params?.translations['View details']
+                      ? params?.translations['View details']
+                      : 'View details'
+                  }}
                 </button>
               </td>
             </tr>
@@ -61,7 +83,11 @@
                     currentUser?.keyedAuthorities['US_VALIDATION_RULE_APPROVE']
                   "
                 >
-                  {{ params?.translations['Approve'] || 'Approve' }}
+                  {{
+                    params?.translations && params?.translations['Approve']
+                      ? params?.translations['Approve']
+                      : 'Approve'
+                  }}
                 </button>
               </td>
             </tr>
@@ -73,7 +99,14 @@
           <tr>
             <td colspan="100%">
               <div class="alert alert-info" role="alert">
-                {{ params?.translations['There is no validation rule request'] || 'There is no validation rule request' }}
+                {{
+                  params?.translations &&
+                  params?.translations['There is no validation rule request']
+                    ? params?.translations[
+                        'There is no validation rule request'
+                      ]
+                    : 'There is no validation rule request'
+                }}
               </div>
             </td>
           </tr>
