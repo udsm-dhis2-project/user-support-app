@@ -178,7 +178,6 @@ export class UsersDataService {
         );
       } else if (data?.method === 'POST') {
         return zip(
-
           data?.payload
             ? this.httpClientService.post(
                 `../../../api/${data?.url}`,
@@ -197,7 +196,10 @@ export class UsersDataService {
                 `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
                 null
               )
-            : this.httpClient.post(`messageConversations`, data?.messageBody || data?.replyMessage)
+            : this.httpClient.post(
+                `messageConversations`,
+                data?.messageBody || data?.replyMessage
+              )
         ).pipe(
           map((response) => response),
           catchError((error) => of(error))
@@ -222,27 +224,43 @@ export class UsersDataService {
       return zip(
         data?.payload
           ? this.httpClient.patch(`${data?.url}`, data?.payload, httpOptions)
-          : of(null),
-        this.httpClient.delete(`dataStore/dhis2-user-support/${data?.id}`),
-        data?.messageConversation
-          ? this.httpClient.post(
-              `messageConversations/${data?.messageConversation?.id}`,
-              data?.messageConversation?.approvalMessage
-            )
-          : of(null),
-        data?.messageConversation
-          ? this.httpClient.post(
-              `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
-              null
-            )
-          : this.httpClient.post(`messageConversations`, data?.messageBody),
-        data?.payload[0] && data?.payload[0]?.path === '/password'
-          ? this.httpClient.post(`messageConversations`, data?.privateMessage)
           : of(null)
-      ).pipe(
-        map((response) => response),
-        catchError((error) => of(error))
-      );
+      )
+        .pipe(
+          switchMap((passwordChangeResponse: any) => {
+            return zip(
+              this.httpClient.delete(
+                `dataStore/dhis2-user-support/${data?.id}`
+              ),
+              data?.messageConversation?.id
+                ? this.httpClient.post(
+                    `messageConversations/${data?.messageConversation?.id}`,
+                    data?.messageConversation?.approvalMessage
+                  )
+                : of(null),
+              data?.messageConversation?.id
+                ? this.httpClient.post(
+                    `messageConversations/${data?.messageConversation?.id}/status?messageConversationStatus=SOLVED`,
+                    null
+                  )
+                : of(null),
+              data?.payload[0] && data?.payload[0]?.path === '/password'
+                ? this.httpClient.post(
+                    `messageConversations`,
+                    data?.privateMessage
+                  )
+                : of(null)
+            ).pipe(
+              map((responses: any[]) => {
+                return [...responses, passwordChangeResponse];
+              })
+            );
+          })
+        )
+        .pipe(
+          map((response) => response),
+          catchError((error) => of(error))
+        );
     } else {
       return of(null);
     }
@@ -286,7 +304,9 @@ export class UsersDataService {
                 ...userNameData,
                 key: userNameData?.key,
                 username:
-                  response?.users?.length > 0 ? null : userNameData?.username?.replace(/\s+/g, ''),
+                  response?.users?.length > 0
+                    ? null
+                    : userNameData?.username?.replace(/\s+/g, ''),
               };
             })
           );

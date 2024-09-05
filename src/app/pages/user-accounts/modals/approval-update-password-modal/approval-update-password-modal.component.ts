@@ -1,15 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogRef,
-} from '@angular/material/dialog';
-import { ApproveUserAccountsModalComponent } from '../approve-user-accounts-modal/approve-user-accounts-modal.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UsersDataService } from 'src/app/core/services/users.service';
-import { DataStoreDataService } from 'src/app/core/services/datastore.service';
-import { MessagesAndDatastoreService } from 'src/app/core/services/messages-and-datastore.service';
-import { Store } from '@ngrx/store';
-import { State } from 'src/app/store/reducers';
 
 @Component({
   selector: 'app-approval-update-password-modal',
@@ -23,32 +14,27 @@ export class ApprovalUpdatePasswordModalComponent {
   constructor(
     private dialogRef: MatDialogRef<ApprovalUpdatePasswordModalComponent>,
     @Inject(MAT_DIALOG_DATA) data,
-    private dataStoreDataService: DataStoreDataService,
-    private usersDataService: UsersDataService,
-    private messageAndDataStoreService: MessagesAndDatastoreService,
-    private store: Store<State>,
-    private dialog: MatDialog
+    private usersDataService: UsersDataService
   ) {
     this.dialogData = data;
-
-
   }
 
-  ngOnInit(): void {
-    // this.onApprove();
-  }
+  ngOnInit(): void {}
 
-  onApprove(): void {
+  onApprove(event: Event): void {
+    event.stopPropagation();
     const request = this.dialogData?.request;
-
-    console.log(request);
-
+    this.saving = true;
     this.usersDataService.approveChanges(request).subscribe((response) => {
       if (response) {
-        console.log('response', response);
         this.saving = false;
       }
     });
+  }
+
+  onReject(event: Event): void {
+    event.stopPropagation();
+    this.dialogRef.close();
   }
 
   onClose(event: Event): void {

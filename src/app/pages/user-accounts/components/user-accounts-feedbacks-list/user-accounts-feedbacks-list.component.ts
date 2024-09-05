@@ -60,11 +60,10 @@ export class UserAccountsFeedbacksListComponent implements OnInit {
 
   onOpenApprovalModal(event: Event, request, isFeedbackRecepient): void {
     event.stopPropagation();
-
     if (request.type === 'password') {
       this.dialog
         .open(ApprovalUpdatePasswordModalComponent, {
-          // minWidth: '50%',
+          minWidth: '50%',
           data: {
             request,
             configurations: this.configurations,
