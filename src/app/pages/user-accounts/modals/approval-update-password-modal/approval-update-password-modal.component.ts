@@ -28,6 +28,7 @@ export class ApprovalUpdatePasswordModalComponent {
     this.usersDataService.approveChanges(request).subscribe((response) => {
       if (response) {
         this.saving = false;
+        this.dialogRef.close();
       }
     });
   }
